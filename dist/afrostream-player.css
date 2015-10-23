@@ -1180,6 +1180,9 @@ body.vjs-full-window {
   top: 50%;
   cursor: pointer;
 }
+.video-js.vjs-afrostream-skin .vjs-time-divider {
+  line-height: 2.8em;
+}
 .video-js.vjs-afrostream-skin .vjs-loading-spinner {
   /* Should be hidden by default */
   display: none;
