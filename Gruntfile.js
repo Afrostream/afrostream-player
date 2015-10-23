@@ -116,6 +116,26 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+    copy: {
+      swf: {
+        expand: true,
+        flatten: true,
+        src: [
+          './node_modules/videojs-swf/**/*.swf',
+          './lib/castlab/**/*.swf',
+          './lib/castlab/**/*.{xap,xaml}'
+
+        ],
+        dest: 'dist/'
+      },
+      videojs: {
+        expand: true,
+        flatten: false,
+        cwd: './node_modules/video.js/dist/video-js/',
+        src: '**/*.{less,eot,svg,ttf,woff}',
+        dest: 'dist/'
+      }
     }
   });
 
@@ -127,6 +147,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   grunt.registerMultiTask('closure', 'Add closure around the app', function () {
 
@@ -171,6 +192,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'default',
     'closure',
-    'qunit'
+    'qunit',
+    'copy'
   ]);
 };

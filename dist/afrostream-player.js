@@ -1,4 +1,21 @@
-/*! afrostream-player - v0.2.0 - 2015-10-23
+(function (global, factory) {
+
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    module.exports = global.document ?
+      factory(global, true) :
+      function (w) {
+        if (!w.document) {
+          throw new Error('vjs requires a window with a document');
+        }
+        return factory(w);
+      };
+  } else {
+    factory(global);
+  }
+
+  // Pass this if window is not defined yet
+}(typeof window !== 'undefined' ? window : this, function (window, noGlobal) { /*jshint unused:false*/
+  /*! afrostream-player - v0.2.0 - 2015-10-23
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 /*! afrostream-player - v0.0.0 - 2015-10-21
  * Copyright (c) 2015 benjipott
@@ -1441,3 +1458,6 @@ videojs.ProgressTip.prototype.updateContent = function (event) {
   //videojs.plugin('metrics', videojs.Metrics);
 
 })(window, window.videojs);
+
+  return videojs;
+}));
