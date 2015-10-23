@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>castLabs DASH Everywhere Player Integration example</title>
+    <link href="http://vjs.zencdn.net/4.11.4/video-js.css" rel="stylesheet">
+    <script src="http://vjs.zencdn.net/4.11.4/video.js"></script>
+    <style>
+        .vjs-default-skin .vjs-audiotracks-button:before {
+            content: "\e600"; /* cog icon */
+        }
+
+        .vjs-default-skin .vjs-texttracks-button:before {
+            content: "\e00c"; /* subtitles icon */
+        }
+    </style>
+    <script src="cldasheverywhere.min.js"></script>
+</head>
+<body>
+<video id="vid" class="video-js vjs-default-skin vjs-big-play-centered" preload="auto" width="640px" height="480px">
+</video>
+<script>
+    //Init player
+    var config, player;
+    var config = {
+        "customData": {
+            "userId": "sample-user-id",
+            "sessionId": "sample-session-id",
+            "merchant": "sample-merchant"
+        },
+        "sendCustomData": true,
+        "widevineHeader": {
+            "provider": "castlabs",
+            "contentId": "fkj3ljaSdfalkr3j",
+            "trackType": "",
+            "policy": ""
+        },
+        "assetId": "",
+        "variantId": "",
+        "debug": true,
+        "ABRParameters": {
+            "qualitySwitchThreshold": 2000,
+            "bandwidthSafetyFactor": 1.75,
+            "minBufferLength": 15,
+            "maxBufferLength": 20,
+            "liveDelay": 2,
+            "disableBufferOccupancyRule": false
+        },
+        "authenticationToken": null,
+        "widevineLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
+        "accessLicenseServerURL": "https://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
+        "playReadyLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
+        "silverlightFile": "./dashcs/dashcs.xap",
+        "flashFile": './dashas/dashas.swf',
+        "techs": ['dashjs', 'dashas', 'dashcs']
+    };
+
+    player = videojs('vid', {
+        plugins: {
+            audiotracks: {
+                title: 'Languages'
+            },
+            texttracks: {
+                title: 'Subtitles'
+            }
+        },
+        autoplay: true,
+        controls: true,
+        dasheverywhere: config,
+        techOrder: ['dasheverywhere']
+    }).ready(function () {
+        this.loadVideo("https://origin.cdn.afrostream.net/vod/TheWild_s1ep001/c4ebd55b8bc55289.ism/c4ebd55b8bc55289.mpd", {});
+    });
+
+</script>
+</body>
+</html>

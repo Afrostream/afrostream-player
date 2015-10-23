@@ -1,0 +1,31 @@
+{
+  "name": "afrostream-player",
+  "description": "Player afrostream",
+  "main": "dist/afrostream.player.js",
+  "authors": [
+    "benjipott"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "videojs",
+    "html5",
+    "flash",
+    "video",
+    "player"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "videojs-ga": "~0.4.2"
+  }
+}
