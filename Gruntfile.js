@@ -134,7 +134,7 @@ module.exports = function (grunt) {
         flatten: false,
         cwd: './node_modules/video.js/dist/video-js/',
         src: '**/*.{less,eot,svg,ttf,woff}',
-        dest: 'dist/'
+        dest: 'lib/'
       }
     }
   });
@@ -183,6 +183,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'clean',
+    'copy',
     'jshint',
     'concat',
     'uglify',
@@ -192,7 +193,6 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'default',
     'closure',
-    'qunit',
-    'copy'
+    'qunit'
   ]);
 };
