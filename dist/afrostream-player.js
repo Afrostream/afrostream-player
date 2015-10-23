@@ -1,21 +1,4 @@
-(function (global, factory) {
-
-  if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = global.document ?
-      factory(global, true) :
-      function (w) {
-        if (!w.document) {
-          throw new Error('vjs requires a window with a document');
-        }
-        return factory(w);
-      };
-  } else {
-    factory(global);
-  }
-
-  // Pass this if window is not defined yet
-}(typeof window !== 'undefined' ? window : this, function (window, noGlobal) { /*jshint unused:false*/
-  /*! afrostream-player - v0.2.0 - 2015-10-23
+/*! afrostream-player - v0.2.0 - 2015-10-23
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 /*! afrostream-player - v0.0.0 - 2015-10-21
  * Copyright (c) 2015 benjipott
@@ -335,164 +318,198 @@
   return videojs;
 }));
 
-(function (window, videojs) {
-  'use strict';
-  /**
-   * The component for controlling the playback rate
-   *
-   * @param {videojs.Player|Object} player
-   * @param {Object=} options
-   * @constructor
-   */
-  videojs.BitrateMenuButton = videojs.MenuButton.extend({
-    /** @constructor */
-    init: function (player, options) {
-      videojs.MenuButton.call(this, player, options);
+videojs.BitrateMenuButton = videojs.MenuButton.extend({
+  /** @constructor */
+  init: function (player, options) {
+    videojs.MenuButton.call(this, player, options);
 
-      this.updateVisibility();
-      this.updateLabel();
+    this.updateVisibility();
+    this.updateLabel();
 
-      this.on(player, 'loadstart', this.updateVisibility);
-      this.on(player, 'initialized', this.update);
-      this.on(player, 'bitratechange', this.updateVisibility);
-      this.on(player, 'bitratechange', this.updateLabel);
-    }
+    this.on(player, 'loadstart', this.updateVisibility);
+    this.on(player, 'initialized', this.update);
+    this.on(player, 'bitratechange', this.updateVisibility);
+    this.on(player, 'bitratechange', this.updateLabel);
+  }
+});
+
+
+videojs.ControlBar.prototype.options_.children.bitrateMenuButton = {};
+
+videojs.BitrateMenuButton.Labels = ['bas', 'moyen', 'normal', 'HD', 'auto'];
+videojs.BitrateMenuButton.prototype.buttonText = 'Quality Selection';
+videojs.BitrateMenuButton.prototype.className = 'vjs-bitrate';
+
+
+videojs.BitrateMenuButton.prototype.createEl = function () {
+  var el = videojs.MenuButton.prototype.createEl.call(this);
+
+  this.labelEl_ = videojs.createEl('div', {
+    className: 'vjs-bitrate-value',
+    innerHTML: 1.0
   });
 
+  el.appendChild(this.labelEl_);
 
-  videojs.ControlBar.prototype.options_.children.bitrateMenuButton = {};
-
-  videojs.BitrateMenuButton.Labels = ['bas', 'moyen', 'normal', 'HD', 'auto'];
-  videojs.BitrateMenuButton.prototype.buttonText = 'Quality Selection';
-  videojs.BitrateMenuButton.prototype.className = 'vjs-bitrate';
-
-
-  videojs.BitrateMenuButton.prototype.createEl = function () {
-    var el = videojs.MenuButton.prototype.createEl.call(this);
-
-    this.labelEl_ = videojs.createEl('div', {
-      className: 'vjs-bitrate-value',
-      innerHTML: 1.0
-    });
-
-    el.appendChild(this.labelEl_);
-
-    return el;
-  };
+  return el;
+};
 
 // Menu creation
-  videojs.BitrateMenuButton.prototype.createMenu = function () {
-    if (!this.player().tech) {
-      return;
-    }
-    var menu = new videojs.Menu(this.player());
-    /*jshint sub:true*/
-    var bitRates = this.player().tech['featuresBitrates'];
+videojs.BitrateMenuButton.prototype.createMenu = function () {
+  if (!this.player().tech) {
+    return;
+  }
+  var menu = new videojs.Menu(this.player());
+  /*jshint sub:true*/
+  var bitRates = this.player().tech['featuresBitrates'];
 
-    if (bitRates) {
+  if (bitRates) {
+    menu.addChild(
+      new videojs.BitrateMenuItem(this.player(), {
+        qualityIndex: bitRates.length,
+        bitrate: 'Auto'
+      })
+    );
+    for (var i = bitRates.length - 1; i >= 0; i--) {
+      var bitRate = bitRates[i];
       menu.addChild(
-        new videojs.BitrateMenuItem(this.player(), {
-          qualityIndex: bitRates.length,
-          bitrate: 'Auto'
-        })
+        new videojs.BitrateMenuItem(this.player(), bitRate)
       );
-      for (var i = bitRates.length - 1; i >= 0; i--) {
-        var bitRate = bitRates[i];
-        menu.addChild(
-          new videojs.BitrateMenuItem(this.player(), bitRate)
-        );
-      }
     }
+  }
 
-    return menu;
-  };
+  return menu;
+};
 
-  videojs.BitrateMenuButton.prototype.updateARIAAttributes = function () {
-    // Current playback rate
-    this.el().setAttribute('aria-valuenow', this.player().tech.getBitrate());
-  };
+videojs.BitrateMenuButton.prototype.updateARIAAttributes = function () {
+  // Current playback rate
+  this.el().setAttribute('aria-valuenow', this.player().tech.getBitrate());
+};
 
-  videojs.BitrateMenuButton.prototype.onClick = function () {
-    // select next rate option
-    var currentRate = this.player().playbackRate();
+videojs.BitrateMenuButton.prototype.onClick = function () {
+  // select next rate option
+  var currentRate = this.player().playbackRate();
+  /*jshint sub:true*/
+  var rates = this.player().tech['featuresBitrateIndex'];
+  // this will select first one if the last one currently selected
+  var newRate = rates[0];
+  for (var i = 0; i < rates.length; i++) {
+    if (rates[i] > currentRate) {
+      newRate = rates[i];
+      break;
+    }
+  }
+  this.player().playbackRate(newRate);
+};
+
+videojs.BitrateMenuButton.prototype.bitratesSupported = function () {
+  /*jshint sub:true*/
+  return this.player().tech && this.player().tech['featuresBitrates'] &&
+    this.player().tech['featuresBitrates'].length > 0;
+};
+
+/**
+ * Hide playback rate controls when they're no playback rate options to select
+ */
+videojs.BitrateMenuButton.prototype.updateVisibility = function () {
+  if (this.bitratesSupported()) {
+    this.removeClass('vjs-hidden');
+  } else {
+    this.addClass('vjs-hidden');
+  }
+};
+
+/**
+ * Update button label when rate changed
+ */
+videojs.BitrateMenuButton.prototype.updateLabel = function () {
+  if (this.bitratesSupported()) {
     /*jshint sub:true*/
-    var rates = this.player().tech['featuresBitrateIndex'];
-    // this will select first one if the last one currently selected
-    var newRate = rates[0];
-    for (var i = 0; i < rates.length; i++) {
-      if (rates[i] > currentRate) {
-        newRate = rates[i];
-        break;
-      }
-    }
-    this.player().playbackRate(newRate);
-  };
+    var selected = this.player().tech['featuresBitrateIndex'];
+    this.labelEl_.innerHTML = videojs.BitrateMenuButton.Labels[selected];
+  }
+};
 
-  videojs.BitrateMenuButton.prototype.bitratesSupported = function () {
+/**
+ * The specific menu item type for selecting a playback rate
+ *
+ * @constructor
+ */
+videojs.BitrateMenuItem = videojs.MenuItem.extend({
+  contentElType: 'button',
+  /** @constructor */
+  init: function (player, options) {
     /*jshint sub:true*/
-    return this.player().tech && this.player().tech['featuresBitrates'] &&
-      this.player().tech['featuresBitrates'].length > 0;
-  };
+    var label = this.label =
+      parseInt(options['bitrate'], 10) ? options['bitrate'] / 1000 : options['bitrate'];
+    var qualityIndex = this.qualityIndex = options['qualityIndex'];
+    // Modify options for parent MenuItem class's init.
+    options['label'] = videojs.BitrateMenuButton.Labels[qualityIndex] || label;
+    options['selected'] =
+      (qualityIndex === player.tech['featuresBitrates'].length) ||
+        /* (qualityIndex === player.tech['featuresBitrateIndex']) ||*/ 1;
+    videojs.MenuItem.call(this, player, options);
 
-  /**
-   * Hide playback rate controls when they're no playback rate options to select
-   */
-  videojs.BitrateMenuButton.prototype.updateVisibility = function () {
-    if (this.bitratesSupported()) {
-      this.removeClass('vjs-hidden');
-    } else {
-      this.addClass('vjs-hidden');
-    }
-  };
+    this.on(player, 'bitratechange', this.update);
+  }
+});
 
-  /**
-   * Update button label when rate changed
-   */
-  videojs.BitrateMenuButton.prototype.updateLabel = function () {
-    if (this.bitratesSupported()) {
-      /*jshint sub:true*/
-      var selected = this.player().tech['featuresBitrateIndex'];
-      this.labelEl_.innerHTML = videojs.BitrateMenuButton.Labels[selected];
-    }
-  };
+videojs.BitrateMenuItem.prototype.onClick = function () {
+  videojs.MenuItem.prototype.onClick.call(this);
+  //this.player().playbackRate(this.rate);
+  this.player().tech.setQuality(this.qualityIndex);
+};
 
-  /**
-   * The specific menu item type for selecting a playback rate
-   *
-   * @constructor
-   */
-  videojs.BitrateMenuItem = videojs.MenuItem.extend({
-    contentElType: 'button',
-    /** @constructor */
-    init: function (player, options) {
-      /*jshint sub:true*/
-      var label = this.label =
-        parseInt(options['bitrate'], 10) ? options['bitrate'] / 1000 : options['bitrate'];
-      var qualityIndex = this.qualityIndex = options['qualityIndex'];
-      // Modify options for parent MenuItem class's init.
-      options['label'] = videojs.BitrateMenuButton.Labels[qualityIndex] || label;
-      options['selected'] =
-        (qualityIndex === player.tech['featuresBitrates'].length) ||
-          /* (qualityIndex === player.tech['featuresBitrateIndex']) ||*/ 1;
-      videojs.MenuItem.call(this, player, options);
+videojs.BitrateMenuItem.prototype.update = function () {
+  /*jshint sub:true*/
+  this.selected(this.player().tech['featuresBitrateIndex'] === this.bitrateIndex);
+};
 
-      this.on(player, 'bitratechange', this.update);
-    }
+
+videojs.ProgressTip = videojs.Component.extend({
+  /** @constructor */
+  init: function (player, options) {
+    videojs.Component.call(this, player, options);
+    player.on('loadedmetadata', videojs.bind(this, function () {
+      this.player().controlBar.progressControl.on('mousemove', videojs.bind(this, this.updateContent));
+      this.player().controlBar.progressControl.on('mouseover', videojs.bind(this, this.show));
+      this.player().controlBar.on('mouseout', videojs.bind(this, this.hide));
+    }));
+  }
+});
+
+
+videojs.ProgressControl.prototype.options_.children.progressTip = {};
+
+videojs.ProgressTip.prototype.createEl = function () {
+  return videojs.createEl('div', {
+    className: 'vjs-tip vjs-hidden',
+    innerHTML: '<div id="vjs-tip-arrow"></div><div id="vjs-tip-inner"></div>'
   });
+};
 
-  videojs.BitrateMenuItem.prototype.onClick = function () {
-    videojs.MenuItem.prototype.onClick.call(this);
-    //this.player().playbackRate(this.rate);
-    this.player().tech.setQuality(this.qualityIndex);
-  };
-
-  videojs.BitrateMenuItem.prototype.update = function () {
-    /*jshint sub:true*/
-    this.selected(this.player().tech['featuresBitrateIndex'] === this.bitrateIndex);
-  };
-
-})(window, window.videojs);
-
+videojs.ProgressTip.prototype.updateContent = function (event) {
+  var barHeight, player, minutes, seconds, seekBar, seekBarPos, timeInSeconds;
+  player = this.player();
+  seekBar = player.controlBar.progressControl.seekBar;
+  seekBarPos = videojs.findPosition(seekBar.el());
+  var realPosition = (event.pageX - (seekBarPos.left));
+  var mousePosition = realPosition / seekBar.width();
+  timeInSeconds = mousePosition * player.duration();
+  if (timeInSeconds === player.duration()) {
+    timeInSeconds = timeInSeconds - 0.1;
+  }
+  minutes = Math.floor(timeInSeconds / 60);
+  seconds = Math.floor(timeInSeconds - minutes * 60);
+  if (seconds < 10) {
+    seconds = '0' + seconds;
+  }
+  //$('#vjs-tip-inner').html("" + minutes + ":" + seconds);
+  //barHeight = $('.vjs-control-bar').height();
+  //$("#vjs-tip").css("top", "" + (event.pageY - $(this).offset().top - barHeight - 20) + "px").css("left", "" + (event.pageX - $(this).offset().left - 20) + "px").css("visibility", "visible");
+  this.el().innerHTML = '<div id="vjs-tip-arrow"></div><div id="vjs-tip-inner">' + minutes + ':' + seconds + '</div>';
+  this.el().style.left = (realPosition - (this.width() * 0.5)) + 'px';
+};
 
 /*! videojs-chromecast - v1.1.1 - 2015-09-29
 * https://github.com/kim-company/videojs-chromecast
@@ -1424,6 +1441,3 @@
   //videojs.plugin('metrics', videojs.Metrics);
 
 })(window, window.videojs);
-
-  return videojs;
-}));

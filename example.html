@@ -33,7 +33,7 @@
   </p>
 </div>
 <video id="video"
-       class="video-js vjs-default-skin"
+       class="video-js vjs-afrostream-skin"
        height="300"
        width="600"
        controls>
@@ -43,10 +43,12 @@
   </p>
 </video>
 <script src="node_modules/video.js/dist/video-js/video.dev.js"></script>
+<script src="node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
 <script src="./lib/castlab/3.1.2/cldasheverywhere.min.js"></script>
 <script src="./lib/control-bar/bitrate-control.js"></script>
+<script src="./lib/control-bar/progress-tip.js"></script>
 <script src="./lib/afrostream-player.js"></script>
-<script src="http://localhost:8000/lib/videojs-metrics.js"></script>
+<!--<script src="http://localhost:8000/lib/videojs-metrics.js"></script>-->
 <script>
   //Init player
   var config, player;
@@ -85,7 +87,7 @@
 
   player = videojs('video', {
     muted: true,
-    metrics: {user_id:33},
+    metrics: {user_id: 33},
     plugins: {
       audiotracks: {
         title: 'Languages'
