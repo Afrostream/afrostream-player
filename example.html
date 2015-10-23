@@ -44,11 +44,11 @@
 </video>
 <script src="node_modules/video.js/dist/video-js/video.dev.js"></script>
 <script src="node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
+<!--<script src="http://localhost:8000/lib/videojs-metrics.js"></script>-->
 <script src="./lib/castlab/3.1.2/cldasheverywhere.min.js"></script>
 <script src="./lib/control-bar/bitrate-control.js"></script>
 <script src="./lib/control-bar/progress-tip.js"></script>
 <script src="./lib/afrostream-player.js"></script>
-<!--<script src="http://localhost:8000/lib/videojs-metrics.js"></script>-->
 <script>
   //Init player
   var config, player;
@@ -86,8 +86,31 @@
   };
 
   player = videojs('video', {
+    autoPlay: false,
     muted: true,
     metrics: {user_id: 33},
+    "sources": [
+      {
+        "_id": "6531a491-2967-49d3-ae7b-54ec8fd4c112",
+        "src": "https://origin.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/master.m3u8",
+        "type": "application/vnd.apple.mpegurl",
+        "videoId": "3bcc7d8a-8962-4029-a6ed-7d246bf60a8a",
+        "importId": 858,
+        "sort": null,
+        "active": false,
+        "episode": null
+      },
+      {
+        "_id": "7dcd3193-0efa-4f76-a8e3-9982f66c220c",
+        "src": "https://origin.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+        "type": "application/dash+xml",
+        "videoId": "3bcc7d8a-8962-4029-a6ed-7d246bf60a8a",
+        "importId": 858,
+        "sort": null,
+        "active": false,
+        "episode": null
+      }
+    ],
     plugins: {
       audiotracks: {
         title: 'Languages'
@@ -101,7 +124,7 @@
     dasheverywhere: config,
     techOrder: ['dasheverywhere']
   }).ready(function () {
-    this.loadVideo('https://origin.cdn.afrostream.net/vod/TheWild_s1ep001/c4ebd55b8bc55289.ism/c4ebd55b8bc55289.mpd', {});
+    //this.loadVideo('https://origin.cdn.afrostream.net/vod/TheWild_s1ep001/c4ebd55b8bc55289.ism/c4ebd55b8bc55289.mpd', {});
     this.enableABRSwitching(true);
   });
 </script>
