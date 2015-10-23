@@ -29,7 +29,7 @@ module.exports = function (grunt) {
           'node_modules/videojs-metrics/dist/videojs-metrics.js',
           //CASTLAB
           'lib/castlab/**/cldasheverywhere.min.js',
-          '!lib/castlab/**/*.js'
+          '!lib/castlab/**/cldashjs.min.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
       }
