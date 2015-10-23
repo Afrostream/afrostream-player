@@ -17,6 +17,9 @@ module.exports = function (grunt) {
       },
       dist: {
         src: [
+          //VJS
+          'node_modules/video.js/dist/video-js/video.dev.js',
+          //CORE
           'lib/**/*.js',
           //CHROMECAST
           'node_modules/videojs-chromecast/dist/videojs.chromecast.js',
