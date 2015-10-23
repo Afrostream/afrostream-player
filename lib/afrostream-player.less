@@ -11,7 +11,7 @@
 @big-play-font-size: 3em;
 @big-play-width: 3em;
 @big-play-height: 3em;
-@base-font-size: 1em;
+@base-font-size: 0.8em;
 @square-icon: '';
 @vjs-font-path: '../lib/font';
 @spinner5-icon: '\e601';
@@ -113,6 +113,7 @@ body.vjs-full-window {
 
 .video-js.vjs-afrostream-skin {
   color: @main-font-color;
+  font-size: @base-font-size;
   .vjs-control-bar {
     left: @app-padding;
     bottom: @app-padding;
@@ -135,8 +136,6 @@ body.vjs-full-window {
     padding: 0;
     top: 50%;
     cursor: pointer;
-    font-size: @base-font-size;
-    line-height: 1.5em;
   }
 
   /* Loading Spinner
