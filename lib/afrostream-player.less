@@ -13,7 +13,7 @@
 @big-play-height: 3em;
 @base-font-size: 0.8em;
 @square-icon: '';
-@vjs-font-path: '../lib/font';
+@vjs-font-path: 'font';
 @spinner5-icon: '\e601';
 @app-padding : 20px;
 
@@ -251,6 +251,7 @@ body.vjs-full-window {
     z-index: 2;
     font-size: @big-play-font-size;
     border: @big-play-border-width solid @big-play-border-color;
+    cursor: pointer;
     .border-radius(@big-play-border-radius);
     .background-color-with-alpha(@big-play-bg-color, @big-play-bg-alpha);
     .transition(opacity 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955));

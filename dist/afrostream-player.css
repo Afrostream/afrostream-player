@@ -20,8 +20,8 @@ The control icons are from a custom font. Each icon corresponds to a character
 */
 @font-face {
   font-family: 'VideoJS';
-  src: url('../lib/font/vjs.eot');
-  src: url('../lib/font/vjs.eot?#iefix') format('embedded-opentype'), url('../lib/font/vjs.woff') format('woff'), url('../lib/font/vjs.ttf') format('truetype'), url('../lib/font/vjs.svg#icomoon') format('svg');
+  src: url('font/vjs.eot');
+  src: url('font/vjs.eot?#iefix') format('embedded-opentype'), url('font/vjs.woff') format('woff'), url('font/vjs.ttf') format('truetype'), url('font/vjs.svg#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -1278,6 +1278,7 @@ body.vjs-full-window {
   z-index: 2;
   font-size: 3em;
   border: 0.1em solid #3b4249;
+  cursor: pointer;
   /* border-radius */
   -webkit-border-radius: 100%;
   -moz-border-radius: 100%;

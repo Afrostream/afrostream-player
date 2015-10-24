@@ -86,8 +86,6 @@
   };
 
   player = videojs('video', {
-    autoPlay: false,
-    muted: true,
     metrics: {user_id: 33},
     "sources": [
       {
@@ -119,7 +117,8 @@
         title: 'Subtitles'
       }
     },
-    autoplay: true,
+    autoplay: false,
+    muted: true,
     controls: true,
     dasheverywhere: config,
     techOrder: ['dasheverywhere']
