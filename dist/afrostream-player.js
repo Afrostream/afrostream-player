@@ -13173,7 +13173,7 @@ videojs.ProgressTip.prototype.updateContent = function (event) {
     evt.web_browser_version = this.browserInfo.version.toString();
     evt.resolution_size = screen.width + 'x' + screen.height;
     evt.flash_version = videojs.Flash.version().join(',');
-    evt.html5_video = player.techName === 'Html5';
+    evt.html5_video = player.tech.el().nodeName === 'VIDEO';//player.techName === 'Html5';
     evt.relative_url = this.pathUrl[2];
     evt.timeout = false;
     evt.frames_dropped = 0;

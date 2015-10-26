@@ -466,7 +466,14 @@ body.vjs-full-window {
   }
 
   .vjs-icon-tooltip () {
-    display: inline;
+    border: 0;
+    height: auto;
+    width: auto;
+    overflow: visible;
+    padding: 0;
+    clip: auto;
+
+    display: inline-block;
     visibility: hidden;
     opacity: 0;
     z-index: 1;
@@ -474,7 +481,7 @@ body.vjs-full-window {
     top: -4em;
     border-radius: 3px;
     padding: 0.5em;
-    clip: auto;
+
     background-color: black;
     margin-left: -1em;
     @trans: visibility 0.2s, opacity 0.2s, top 0.2s;
@@ -529,25 +536,32 @@ body.vjs-full-window {
 
   .vjs-menu {
     top: -1em;
+    left: 0.6em;
     display: block !important;
     opacity: 0;
     visibility: hidden;
     position: absolute;
+    text-align: center;
     //bottom: 0;
-    left: 0em; /* (Width of vjs-menu - width of button) / 2 */
-    width: 0em;
-    height: 0em;
+    //left: 0em; /* (Width of vjs-menu - width of button) / 2 */
+    position: absolute;
+    //left: -50%;
+    //width: 0em;
+    //height: 0em;
     @trans: visibility 0.3s, opacity 0.3s, top 0.3s;
     .transition(@trans);
   }
 
   /* Button Pop-up Menu */
   .vjs-menu-button .vjs-menu .vjs-menu-content {
-    display: block;
+    transform: translate(-50%, -100%);
+    display: inline-block;
     position: absolute;
-    width: 4em;
-    bottom: -0.6em;
-    left: -1.5em;
+    margin: auto;
+    //width: 4em;
+    //bottom: -0.6em;
+    //left: -1.5em;
+    //margin-left: -50%;
     border-radius: 3px;
     padding: 0.5em;
     background-color: black;
@@ -569,7 +583,7 @@ body.vjs-full-window {
 
   .vjs-menu-button:hover .vjs-control-content .vjs-menu,
   .vjs-control-content .vjs-menu.vjs-lock-showing {
-    top: 0;
+    //top: 0;
     display: block;
     opacity: 1;
     visibility: visible;

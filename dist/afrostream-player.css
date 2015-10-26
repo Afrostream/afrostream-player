@@ -1491,7 +1491,13 @@ body.vjs-full-window {
 .video-js.vjs-afrostream-skin .vjs-share-control .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-volume-handle .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-mute-control .vjs-control-text {
-  display: inline;
+  border: 0;
+  height: auto;
+  width: auto;
+  overflow: visible;
+  padding: 0;
+  clip: auto;
+  display: inline-block;
   visibility: hidden;
   opacity: 0;
   z-index: 1;
@@ -1499,7 +1505,6 @@ body.vjs-full-window {
   top: -4em;
   border-radius: 3px;
   padding: 0.5em;
-  clip: auto;
   background-color: black;
   margin-left: -1em;
   /* transition */
@@ -1559,14 +1564,12 @@ body.vjs-full-window {
 }
 .video-js.vjs-afrostream-skin .vjs-menu {
   top: -1em;
+  left: 0.6em;
   display: block !important;
   opacity: 0;
   visibility: hidden;
+  text-align: center;
   position: absolute;
-  left: 0em;
-  /* (Width of vjs-menu - width of button) / 2 */
-  width: 0em;
-  height: 0em;
   /* transition */
   -webkit-transition: visibility 0.3s, opacity 0.3s, top 0.3s;
   -moz-transition: visibility 0.3s, opacity 0.3s, top 0.3s;
@@ -1574,11 +1577,10 @@ body.vjs-full-window {
   transition: visibility 0.3s, opacity 0.3s, top 0.3s;
 }
 .video-js.vjs-afrostream-skin .vjs-menu-button .vjs-menu .vjs-menu-content {
-  display: block;
+  transform: translate(-50%, -100%);
+  display: inline-block;
   position: absolute;
-  width: 4em;
-  bottom: -0.6em;
-  left: -1.5em;
+  margin: auto;
   border-radius: 3px;
   padding: 0.5em;
   background-color: black;
@@ -1599,7 +1601,6 @@ body.vjs-full-window {
 }
 .video-js.vjs-afrostream-skin .vjs-menu-button:hover .vjs-control-content .vjs-menu,
 .video-js.vjs-afrostream-skin .vjs-control-content .vjs-menu.vjs-lock-showing {
-  top: 0;
   display: block;
   opacity: 1;
   visibility: visible;
