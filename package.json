@@ -35,6 +35,5 @@
     "video.js": "^4.5"
   },
   "peerDependencies": {
-    "video.js": "^4.5"
   }
 }
