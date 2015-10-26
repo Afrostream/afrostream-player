@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:Afrostream/afrostream-player.git"
+    "url": "https://github.com/Afrostream/afrostream-player.git"
   },
   "keywords": [
     "videojs",
@@ -17,9 +17,6 @@
     "player"
   ],
   "dependencies": {
-    "videojs-chromecast": "git+https://github.com/Afrostream/videojs-chromecast.git#master",
-    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#master",
-    "videojs-swf": "git+https://github.com/Afrostream/video-js-swf.git#feature/stage-video-hardware-accelerated"
   },
   "devDependencies": {
     "grunt-contrib-clean": "^0.4",
@@ -32,9 +29,11 @@
     "grunt-contrib-uglify": "^0.2",
     "grunt-contrib-watch": "^0.4",
     "qunitjs": "^1.12",
-    "video.js": "^4.5"
+    "video.js": "^4.5",
+    "videojs-chromecast": "git+https://github.com/Afrostream/videojs-chromecast.git#master",
+    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#master",
+    "videojs-swf": "git+https://github.com/Afrostream/video-js-swf.git#feature/stage-video-hardware-accelerated"
   },
   "peerDependencies": {
-    "video.js": "^4.5"
   }
 }
