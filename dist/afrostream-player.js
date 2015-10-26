@@ -13088,6 +13088,7 @@ videojs.ProgressTip.prototype.updateContent = function (event) {
   videojs.Metrics.prototype.browserInfo = {};
 
   videojs.Metrics.prototype.dispose = function (evt) {
+    this.clearInterval(this.intervalPing);
     this.setupTriggers('off');
   };
 
