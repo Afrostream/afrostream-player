@@ -9497,6 +9497,19 @@ videojs.ProgressTip = videojs.Component.extend({
   }
 });
 
+videojs.ProgressTip.prototype.show = function () {
+  if (this.hasClass('vjs-hidden')) {
+    this.removeClass('vjs-hidden');
+  }
+  return this;
+};
+videojs.ProgressTip.prototype.hide = function () {
+  if (!this.hasClass('vjs-hidden')) {
+    this.addClass('vjs-hidden');
+  }
+  return this;
+};
+
 
 videojs.ProgressControl.prototype.options_.children.progressTip = {};
 
@@ -9542,7 +9555,7 @@ videojs.LoadingSpinner.prototype.createEl = function () {
   var
     el = videojs.Component.prototype.createEl.call(this, 'div', {
       className: 'vjs-loading-spinner',
-      innerHTML: '<svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg>'
+      innerHTML: '<svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/> </svg>'
     });
 
   return el;

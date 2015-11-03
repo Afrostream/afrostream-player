@@ -1092,11 +1092,6 @@ body.vjs-full-window {
 .video-js.vjs-afrostream-skin {
   color: #ffffff;
   font-size: 0.8em;
-  /* Loading Spinner
-  --------------------------------------------------------------------------------
-  */
-  /* Show the spinner when waiting for data and seeking to a new time */
-  /* Errors are unrecoverable without user interaction so hide the spinner */
   /* Fullscreen
    --------------------------------------------------------------------------------
    */
@@ -1147,84 +1142,6 @@ body.vjs-full-window {
 }
 .video-js.vjs-afrostream-skin .vjs-time-divider {
   line-height: 2.8em;
-}
-.video-js.vjs-afrostream-skin .vjs-loading-spinner {
-  /* Should be hidden by default */
-  display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  font-size: 4em;
-  line-height: 1;
-  width: 1em;
-  height: 1em;
-  margin-left: -0.5em;
-  margin-top: -0.5em;
-  opacity: 0.75;
-}
-.video-js.vjs-afrostream-skin.vjs-playing .vjs-loading-spinner {
-  display: none;
-}
-.video-js.vjs-afrostream-skin.vjs-waiting .vjs-loading-spinner,
-.video-js.vjs-afrostream-skin.vjs-seeking .vjs-loading-spinner {
-  display: block;
-  /* only animate when showing because it can be processor heavy */
-  /* animation */
-  -webkit-animation: spin 1.5s infinite linear;
-  -moz-animation: spin 1.5s infinite linear;
-  -o-animation: spin 1.5s infinite linear;
-  animation: spin 1.5s infinite linear;
-}
-.video-js.vjs-afrostream-skin.vjs-error .vjs-loading-spinner {
-  display: none;
-  /* ensure animation doesn't continue while hidden */
-  /* animation */
-  -webkit-animation: none;
-  -moz-animation: none;
-  -o-animation: none;
-  animation: none;
-}
-.video-js.vjs-afrostream-skin .vjs-loading-spinner:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1em;
-  height: 1em;
-  text-align: center;
-  text-shadow: none;
-}
-@-moz-keyframes spin {
-  0% {
-    -moz-transform: rotate(0deg);
-  }
-  100% {
-    -moz-transform: rotate(359deg);
-  }
-}
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-  }
-}
-@-o-keyframes spin {
-  0% {
-    -o-transform: rotate(0deg);
-  }
-  100% {
-    -o-transform: rotate(359deg);
-  }
-}
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(359deg);
-  }
 }
 .video-js.vjs-afrostream-skin .vjs-poster:focus,
 .video-js.vjs-afrostream-skin .vjs-control:focus {
@@ -1794,16 +1711,31 @@ body.vjs-full-window {
   text-align: center;
 }
 
+/* Loading Spinner
+  --------------------------------------------------------------------------------
+  */
 .vjs-loading-spinner {
-  opacity: 1;
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 4em;
+  line-height: 1;
   width: 1em;
   height: 1em;
-  font-size: 6em;
-  -webkit-font-smoothing: antialiased;
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+  opacity: 1 !important;
 }
 .vjs-loading-spinner:before {
   content: '';
-  color: rgba(1, 1, 1, 0.75);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  text-shadow: none;
 }
 .vjs-loading-spinner .circular {
   animation: rotate 2s linear infinite;
@@ -1857,6 +1789,30 @@ body.vjs-full-window {
   90% {
     stroke: #ffc809;
   }
+}
+.vjs-playing .vjs-loading-spinner {
+  display: none;
+}
+/* Show the spinner when waiting for data and seeking to a new time */
+.vjs-waiting .vjs-loading-spinner,
+.vjs-seeking .vjs-loading-spinner {
+  display: block;
+  /* only animate when showing because it can be processor heavy */
+  animation: none !important;
+}
+.vjs-waiting .vjs-loading-spinner .circular,
+.vjs-seeking .vjs-loading-spinner .circular {
+  animation: rotate 2s linear infinite;
+}
+.vjs-waiting .vjs-loading-spinner .dash,
+.vjs-seeking .vjs-loading-spinner .dash {
+  animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+}
+/* Errors are unrecoverable without user interaction so hide the spinner */
+.vjs-error .vjs-loading-spinner {
+  display: none;
+  /* ensure animation doesn't continue while hidden */
+  animation: none !important;
 }
 
 /*!

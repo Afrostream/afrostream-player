@@ -1,19 +1,38 @@
 @import (reference) '../../lib/video-js.less';
 
+/* Loading Spinner
+  --------------------------------------------------------------------------------
+  */
 .vjs-loading-spinner {
+  display: none;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  font-size: 4em;
+  line-height: 1;
+
+  width: 1em;
+  height: 1em;
+
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+  opacity: 1 !important;
+
   @color-yellow: #ffc809;
   @color-indigo: #17071d;
   @color-purple: #663774;
-  opacity: 1;
-  width: 1em;
-  height: 1em;
-  font-size: 6em;
-  -webkit-font-smoothing: antialiased;
-  //text-shadow: #fff 0px 0px 1px;
 
   &:before {
     content: '';
-    color: rgba(1, 1, 1, 0.75);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    text-shadow: none;
   }
 
   .circular {
@@ -71,4 +90,35 @@
     }
   }
 
+}
+
+&.vjs-playing .vjs-loading-spinner {
+  display: none;
+}
+
+/* Show the spinner when waiting for data and seeking to a new time */
+&.vjs-waiting .vjs-loading-spinner,
+&.vjs-seeking .vjs-loading-spinner {
+  display: block;
+
+  /* only animate when showing because it can be processor heavy */
+  //
+  animation: none !important;
+
+  .circular {
+    animation: rotate 2s linear infinite;
+  }
+  .dash {
+    animation: dash 1.5s ease-in-out infinite,
+    color 6s ease-in-out infinite;
+  }
+}
+
+/* Errors are unrecoverable without user interaction so hide the spinner */
+&.vjs-error .vjs-loading-spinner {
+  display: none;
+
+  /* ensure animation doesn't continue while hidden */
+  //
+  animation: none !important;
 }
