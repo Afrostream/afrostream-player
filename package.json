@@ -1,7 +1,7 @@
 {
   "name": "afrostream-player",
   "main": "dist/afrostream-player.js",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "author": "benjipott",
   "description": "Player afrostream",
   "license": "Apache-2.0",

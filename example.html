@@ -32,13 +32,11 @@
     Look at the source of this page to see how to use it with your videos.
   </p>
 </div>
-<video id="video"
+<video id="video" crossorigin="anonymous"
        class="video-js vjs-afrostream-skin"
        height="300"
        width="600"
-       controls>
-  <track src="https://afrostream-img.s3-eu-west-1.amazonaws.com/production/caption/2015/09/913ed362da38f821ed4b-vimeocom136679382.fr.vtt"
-         kind="captions" srclang="fr" label="Francais/burkina">
+  >
   <p>
     Your browser doesn't support video. Please <a href="http://browsehappy.com/">upgrade your browser</a> to see the
     example.
@@ -83,7 +81,7 @@
     "accessLicenseServerURL": "https://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
     "playReadyLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
     "silverlightFile": "./lib/castlab/3.1.2/dashcs/dashcs.xap",
-    "flashFile": './lib/castlab/3.1.2/dashas/dashas.swf',
+    "flashFile": '/lib/castlab/3.1.2/dashas/dashas.swf',
     "techs": ['dashjs', 'dashas', 'dashcs']
   };
 
@@ -92,7 +90,7 @@
     "sources": [
       {
         "_id": "6531a491-2967-49d3-ae7b-54ec8fd4c112",
-        "src": "https://origin.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/master.m3u8",
+        "src": "http://origin.afrostream.tv/vod/24hourlovebis/d4eed726882a4be3-sub.ism/d4eed726882a4be3-sub.m3u8",
         "type": "application/vnd.apple.mpegurl",
         "videoId": "3bcc7d8a-8962-4029-a6ed-7d246bf60a8a",
         "importId": 858,
@@ -102,7 +100,7 @@
       },
       {
         "_id": "7dcd3193-0efa-4f76-a8e3-9982f66c220c",
-        "src": "https://origin.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+        "src": "http://origin.cdn.afrostream.net/vod/FINDINGFORRESTER_2001_235_25_ProRes422_FRA_ENG_HD_STEREO/c8559a60711813fe.ism/c8559a60711813fe.mpd",
         "type": "application/dash+xml",
         "videoId": "3bcc7d8a-8962-4029-a6ed-7d246bf60a8a",
         "importId": 858,
@@ -113,20 +111,20 @@
     ],
     plugins: {
       audiotracks: {
-        title: 'Languages'
+        title: 'Langues'
       },
       texttracks: {
-        title: 'Subtitles'
+        title: 'Sous titres'
       }
     },
-    autoplay: false,
+    autoplay: true,
     muted: true,
     controls: true,
     dasheverywhere: config,
-    techOrder: ['dasheverywhere']
+    techOrder: ['dasheverywhere', 'html5']
   }).ready(function () {
     //this.loadVideo('https://origin.cdn.afrostream.net/vod/TheWild_s1ep001/c4ebd55b8bc55289.ism/c4ebd55b8bc55289.mpd', {});
-    this.enableABRSwitching(true);
+//    this.enableABRSwitching(true);
   });
 </script>
 </body>

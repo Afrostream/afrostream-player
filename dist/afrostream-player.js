@@ -15,7 +15,7 @@
 
   // Pass this if window is not defined yet
 }(typeof window !== 'undefined' ? window : this, function (window, noGlobal) { /*jshint unused:false*/
-  /*! afrostream-player - v1.0.2 - 2015-10-26
+  /*! afrostream-player - v1.0.2 - 2015-11-03
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
@@ -11960,7 +11960,7 @@ vjs.plugin = function(name, init){
     // set max quality
     /*jshint sub:true*/
     this.tech_['featuresBitrates'] = bitrates;
-    this.tech_['featuresBitrateIndex'] = bitrates.length; //AUTO;
+    this.tech_['featuresBitrateIndex'] = this.tech_['featuresBitrateIndex'] || bitrates.length; //AUTO;
     videojs.log('Bitrates available:' + bitrates.length);
     //this.mediaPlayer_.setQualityFor('video', maxQuality);
     //TODO generate methods from array
@@ -12149,6 +12149,7 @@ vjs.plugin = function(name, init){
    * Get default metrix statistics object
    * @returns {{video: {bandwidth: number}, audio: {bandwidth: number}}}
    */
+
   /*jshint sub:true*/
   videojs.MediaTechController.prototype['getPlaybackStatistics'] = function () {
     return {
@@ -12195,9 +12196,10 @@ videojs.BitrateMenuButton = videojs.MenuButton.extend({
     this.updateLabel();
 
     this.on(player, 'loadstart', this.updateVisibility);
-    this.on(player, 'initialized', this.update);
     this.on(player, 'bitratechange', this.updateVisibility);
     this.on(player, 'bitratechange', this.updateLabel);
+    this.on(player, 'initialized', this.update);
+    this.on(player, 'initialized', this.createMenu);
   }
 });
 
@@ -12207,7 +12209,9 @@ videojs.ControlBar.prototype.options_.children.bitrateMenuButton = {};
 videojs.BitrateMenuButton.Labels = ['bas', 'moyen', 'normal', 'HD', 'auto'];
 videojs.BitrateMenuButton.prototype.buttonText = 'Quality Selection';
 videojs.BitrateMenuButton.prototype.className = 'vjs-bitrate';
-
+videojs.BitrateMenuButton.prototype.options_ = {
+  title: 'Bitrates'
+};
 
 videojs.BitrateMenuButton.prototype.createEl = function () {
   var el = videojs.MenuButton.prototype.createEl.call(this);
@@ -12221,32 +12225,34 @@ videojs.BitrateMenuButton.prototype.createEl = function () {
 
   return el;
 };
-
-// Menu creation
 videojs.BitrateMenuButton.prototype.createMenu = function () {
-  if (!this.player().tech) {
-    return;
-  }
   var menu = new videojs.Menu(this.player());
-  /*jshint sub:true*/
-  var bitRates = this.player().tech['featuresBitrates'];
+  if (this.bitratesSupported()) {
+    menu = videojs.MenuButton.prototype.createMenu.call(this);
+  }
+  return menu;
+};
+/**
+ * Create the list of menu items. Specific to each subclass.
+ */
+videojs.BitrateMenuButton.prototype.createItems = function () {
+  var items = [], bitRate = null;
 
-  if (bitRates) {
-    menu.addChild(
-      new videojs.BitrateMenuItem(this.player(), {
-        qualityIndex: bitRates.length,
-        bitrate: 'Auto'
-      })
-    );
-    for (var i = bitRates.length - 1; i >= 0; i--) {
-      var bitRate = bitRates[i];
-      menu.addChild(
-        new videojs.BitrateMenuItem(this.player(), bitRate)
-      );
-    }
+
+  /*jshint sub:true*/
+  var bitRates = this.player().tech['featuresBitrates'] || [];
+  // Add an OFF menu item to turn all tracks off
+  items.push(new videojs.BitrateMenuItem(this.player(), {
+    qualityIndex: bitRates.length,
+    bitrate: 'Auto'
+  }));
+
+  for (var i = 0; i < bitRates.length; i++) {
+    bitRate = bitRates[i];
+    items.push(new videojs.BitrateMenuItem(this.player(), bitRate));
   }
 
-  return menu;
+  return items;
 };
 
 videojs.BitrateMenuButton.prototype.updateARIAAttributes = function () {
@@ -12955,7 +12961,7 @@ videojs.ProgressTip.prototype.updateContent = function (event) {
 
 }).call(this);
 
-/*! videojs-metrics - v0.0.0 - 2015-10-26
+/*! videojs-metrics - v0.0.0 - 2015-11-02
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 /*! videojs-metrics - v0.0.0 - 2015-10-7
  * Copyright (c) 2015 benjipott
@@ -13200,8 +13206,8 @@ videojs.ProgressTip.prototype.updateContent = function (event) {
     try {
       var metrics = player.techGet('getPlaybackStatistics');
       this.metrics_ = videojs.util.mergeOptions(this.metrics_, metrics);
-      evt.video_bitrate = this.metrics_.video.bandwidth ? (Math.round(this.metrics_.video.bandwidth / 1000)) : -1;
-      evt.audio_bitrate = this.metrics_.audio.bandwidth ? (Math.round(this.metrics_.audio.bandwidth / 1000)) : -1;
+      evt.video_bitrate = this.metrics_.video.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.video.bandwidth / 1000)) : -1;
+      evt.audio_bitrate = this.metrics_.audio.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.audio.bandwidth / 1000)) : -1;
       var pickedData = videojs.Metrics.pick(evt, this.getRequiredKeys(evt.type));
       this.xhr(this.options(), pickedData);
     }

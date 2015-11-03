@@ -13,8 +13,8 @@
 @big-play-height: 3em;
 @base-font-size: 0.8em;
 @square-icon: '';
-@vjs-font-path: 'font';
-@spinner5-icon: '\e601';
+@vjs-font-path: '../lib/font';
+@spinner5-icon: '\e606';
 @app-padding : 20px;
 
 @main-font-color: #FFFFFF;
@@ -24,6 +24,18 @@
 @color-purple: #281430;
 @color-purple-1: #663774;
 @color-purple-transparent: rgba(102, 55, 116, 0.5);
+
+@font-face {
+  font-family: 'VideoJS';
+  src: url('@{vjs-font-path}/afrostream.eot');
+  src: url('@{vjs-font-path}/afrostream.eot?#iefix') format('embedded-opentype'),
+  url('@{vjs-font-path}/afrostream.woff') format('woff'),
+  url('@{vjs-font-path}/afrostream.ttf') format('truetype'),
+  url('@{vjs-font-path}/afrostream.svg#icomoon') format('svg');
+
+  font-weight: normal;
+  font-style: normal;
+}
 
 .video-js {
   background-color: black;
@@ -447,7 +459,8 @@ body.vjs-full-window {
   .vjs-volume-handle,
   .vjs-live-controls,
   .vjs-playback-rate,
-  .vjs-subtitles-button,
+    //.vjs-subtitles-button,
+    //.vjs-audiotracks-button,
     //.vjs-captions-button,
   .vjs-mute-control,
   .vjs-hidden {
@@ -629,6 +642,11 @@ body.vjs-full-window {
   /* Subtitles Button */
   .vjs-subtitles-button:before {
     content: @subtitles-icon;
+  }
+
+  /* Audio Button */
+  .vjs-audiotracks-button:before {
+    content: @subtitles-icon; //@audio-track-icon;
   }
 
   /* Captions Button */
