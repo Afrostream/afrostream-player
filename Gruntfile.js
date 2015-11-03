@@ -138,6 +138,13 @@ module.exports = function (grunt) {
         cwd: './node_modules/video.js/dist/video-js/',
         src: '**/*.{less,eot,svg,ttf,woff}',
         dest: 'lib/'
+      },
+      fonts: {
+        expand: true,
+        flatten: false,
+        cwd: 'lib/',
+        src: '**/*.{eot,svg,ttf,woff}',
+        dest: 'dist/'
       }
     }
   });

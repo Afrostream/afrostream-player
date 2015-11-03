@@ -36,7 +36,10 @@
        class="video-js vjs-afrostream-skin"
        height="300"
        width="600"
-  >
+>
+  <track
+    src="https://afrostream-img.s3-eu-west-1.amazonaws.com/production/caption/2015/09/913ed362da38f821ed4b-vimeocom136679382.fr.vtt"
+    kind="captions" srclang="fr" label="fr">
   <p>
     Your browser doesn't support video. Please <a href="http://browsehappy.com/">upgrade your browser</a> to see the
     example.
@@ -46,8 +49,9 @@
 <script src="node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
 <!--<script src="http://localhost:8000/lib/videojs-metrics.js"></script>-->
 <script src="./lib/castlab/3.1.2/cldasheverywhere.min.js"></script>
-<script src="./lib/control-bar/bitrate-control.js"></script>
-<script src="./lib/control-bar/progress-tip.js"></script>
+<script src="lib/component/control-bar/bitrate-control.js"></script>
+<script src="lib/component/control-bar/progress-tip.js"></script>
+<script src="lib/component/loading-spinner.js"></script>
 <script src="./lib/afrostream-player.js"></script>
 <script>
   //Init player
@@ -82,8 +86,26 @@
     "playReadyLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
     "silverlightFile": "./lib/castlab/3.1.2/dashcs/dashcs.xap",
     "flashFile": '/lib/castlab/3.1.2/dashas/dashas.swf',
-    "techs": ['dashjs', 'dashas', 'dashcs']
+    "techs": ['dashas', /*'dashjs',*/ 'dashcs'],
+    "flashVars": {
+      "log": true,
+      "watermark": false,//"https://afrostream.tv/assets/images/logo.png",
+      "debug": true,
+      "spinner": false,
+      "eventProxyFunction": "videojs.Afrostream.onEvent",
+      "javascriptCallbackFunction": "videojs.Afrostream.onHandleEvent"
+    }
   };
+
+  function handleEvents(events) {
+    console.log(events);
+    for (var i = 0; i < events.length; i++) {
+      var event = events[i];
+
+      console.log(event.level, event.message);
+    }
+  }
+
 
   player = videojs('video', {
     metrics: {user_id: 33},
@@ -100,7 +122,9 @@
       },
       {
         "_id": "7dcd3193-0efa-4f76-a8e3-9982f66c220c",
-        "src": "http://origin.cdn.afrostream.net/vod/FINDINGFORRESTER_2001_235_25_ProRes422_FRA_ENG_HD_STEREO/c8559a60711813fe.ism/c8559a60711813fe.mpd",
+//        "src": "http://origin.afrostream.tv/vod/24hourlovebis/d4eed726882a4be3-sub.ism/d4eed726882a4be3-sub.mpd",
+//        "src": "http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd",
+        "src": "https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
         "type": "application/dash+xml",
         "videoId": "3bcc7d8a-8962-4029-a6ed-7d246bf60a8a",
         "importId": 858,
@@ -119,6 +143,7 @@
     },
     autoplay: true,
     muted: true,
+    mute: true,
     controls: true,
     dasheverywhere: config,
     techOrder: ['dasheverywhere', 'html5']

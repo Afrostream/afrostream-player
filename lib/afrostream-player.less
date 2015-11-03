@@ -13,10 +13,10 @@
 @big-play-height: 3em;
 @base-font-size: 0.8em;
 @square-icon: '';
-@vjs-font-path: '../lib/font';
+@vjs-font-path: 'font';
 @spinner5-icon: '\e606';
+@audio-icon: '\e900';
 @app-padding : 20px;
-
 @main-font-color: #FFFFFF;
 @color-yellow: #ffc809;
 @color-indigo: #17071d;
@@ -199,16 +199,14 @@ body.vjs-full-window {
   }
 
   .vjs-loading-spinner:before {
-    content: @spinner5-icon;
-    font-family: VideoJS;
-
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 1em;
     height: 1em;
     text-align: center;
-    text-shadow: 0em 0em 0.1em #000;
+    text-shadow: none;
   }
 
   @-moz-keyframes spin {
@@ -646,7 +644,7 @@ body.vjs-full-window {
 
   /* Audio Button */
   .vjs-audiotracks-button:before {
-    content: @subtitles-icon; //@audio-track-icon;
+    content: @audio-icon; //@audio-icon;
   }
 
   /* Captions Button */
