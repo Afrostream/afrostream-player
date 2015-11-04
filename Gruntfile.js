@@ -19,8 +19,28 @@ module.exports = function (grunt) {
         src: [
           //VJS
           'node_modules/video.js/dist/video-js/video.dev.js',
-          //CORE
-          'lib/**/*.js',
+          //VJS MEDIA SOURCE
+          'node_modules/videojs-contrib-media-sources/src/videojs-media-sources.js',
+          //HLS
+          'node_modules/videojs-contrib-hls/src/videojs-hls.js',
+          'node_modules/videojs-contrib-hls/src/stream.js',
+          'node_modules/videojs-contrib-hls/src/flv-tag.js',
+          'node_modules/videojs-contrib-hls/src/exp-golomb.js',
+          'node_modules/videojs-contrib-hls/src/h264-extradata.js',
+          'node_modules/videojs-contrib-hls/src/h264-stream.js',
+          'node_modules/videojs-contrib-hls/src/aac-stream.js',
+          'node_modules/videojs-contrib-hls/src/metadata-stream.js',
+          'node_modules/videojs-contrib-hls/src/segment-parser.js',
+          'node_modules/videojs-contrib-hls/src/m3u8/m3u8-parser.js',
+          'node_modules/videojs-contrib-hls/src/xhr.js',
+          'node_modules/videojs-contrib-hls/src/playlist.js',
+          'node_modules/videojs-contrib-hls/src/playlist-loader.js',
+          'node_modules/pkcs7/dist/pkcs7.unpad.js',
+          'node_modules/videojs-contrib-hls/src/decrypter.js',
+          'node_modules/videojs-contrib-hls/src/bin-utils.js',
+          //DASH
+          'node_modules/dashjs/dist/dash.all.js',
+          'node_modules/videojs-contrib-dash/dist/videojs-dash.js',
           //CHROMECAST
           'node_modules/videojs-chromecast/dist/videojs.chromecast.js',
           //GoogleAnaltics
@@ -28,8 +48,11 @@ module.exports = function (grunt) {
           //METRICS
           'node_modules/videojs-metrics/dist/videojs-metrics.js',
           //CASTLAB
-          'lib/castlab/**/cldasheverywhere.min.js',
-          '!lib/castlab/**/cldashjs.min.js'
+          //'lib/castlab/**/cldasheverywhere.min.js',
+          //'!lib/castlab/**/cldashjs.min.js'
+          //CORE
+          'lib/**/*.js',
+          '!lib/castlab/**/*.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
       }

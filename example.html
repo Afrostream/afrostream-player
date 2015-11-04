@@ -32,7 +32,7 @@
     Look at the source of this page to see how to use it with your videos.
   </p>
 </div>
-<video id="video"
+<video id="video" crossorigin="anonymous"
        class="video-js vjs-afrostream-skin"
        height="300"
        width="600"
@@ -52,22 +52,23 @@
   <!--<track-->
   <!--src="https://s3-eu-west-1.amazonaws.com/tracks.afrostream.tv/production/caption/2015/10/e55f3ffbcfee21658c05-vimeocom138854234.fr_bis.vtt"-->
   <!--kind="captions" srclang="fr" label="fr">-->
-  <track
-    src="https://afrostream-img.s3-eu-west-1.amazonaws.com/production/caption/2015/09/913ed362da38f821ed4b-vimeocom136679382.fr.vtt
- "
-    kind="captions" srclang="fr" label="fr">
+  <!--<track-->
+    <!--src="https://afrostream-img.s3-eu-west-1.amazonaws.com/production/caption/2015/09/913ed362da38f821ed4b-vimeocom136679382.fr.vtt-->
+ <!--"-->
+    <!--kind="captions" srclang="fr" label="fr">-->
   <p>
     Your browser doesn't support video. Please <a href="http://browsehappy.com/">upgrade your browser</a> to see the
     example.
   </p>
 </video>
-<script src="node_modules/video.js/dist/video-js/video.dev.js"></script>
-<script src="node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
-<script src="./lib/castlab/3.1.2/cldasheverywhere.min.js"></script>
-<script src="lib/component/control-bar/bitrate-control.js"></script>
-<script src="lib/component/control-bar/progress-tip.js"></script>
-<script src="lib/component/loading-spinner.js"></script>
-<script src="./lib/afrostream-player.js"></script>
+<!--<script src="node_modules/video.js/dist/video-js/video.dev.js"></script>-->
+<!--<script src="node_modules/videojs-metrics/dist/videojs-metrics.js"></script>-->
+<!--<script src="./lib/castlab/3.1.2/cldasheverywhere.min.js"></script>-->
+<!--<script src="lib/component/control-bar/bitrate-control.js"></script>-->
+<!--<script src="lib/component/control-bar/progress-tip.js"></script>-->
+<!--<script src="lib/component/loading-spinner.js"></script>-->
+<!--<script src="./lib/afrostream-player.js"></script>-->
+<script src="dist/afrostream-player.js"></script>
 <script>
   //Init player
   var config, player;
