@@ -29,6 +29,6 @@
     "videojs-ga": "~0.4.2"
   },
   "devDependencies": {
-    "video.js": "4.11"
+    "video.js": "4.12"
   }
 }

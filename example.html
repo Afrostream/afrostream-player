@@ -32,13 +32,29 @@
     Look at the source of this page to see how to use it with your videos.
   </p>
 </div>
-<video id="video" crossorigin="anonymous"
+<video id="video"
        class="video-js vjs-afrostream-skin"
        height="300"
        width="600"
 >
+
+  <!--<track
+    src="https://afrostream-img.s3-eu-west-1.amazonaws.com/production/caption/2015/08/762b89cd2dfcd74bce0a-vimeocom134123404.fr.vtt"
+    kind="captions" srclang="fr" label="fr" default>
   <track
-    src="https://afrostream-img.s3-eu-west-1.amazonaws.com/production/caption/2015/09/913ed362da38f821ed4b-vimeocom136679382.fr.vtt"
+    src="https://afrostream-img.s3-eu-west-1.amazonaws.com/production/caption/2015/08/f0514b6a90111d3a3678-vimeocom134123404.en.vtt"
+    kind="captions" srclang="en" label="en">-->
+  <!-- <track kind="captions" src="./bower_components/video.js/dist/video-js/demo.captions.vtt" srclang="en"
+          label="English"></track>-->
+  <!-- Tracks need an ending tag thanks to IE9 -->
+  <!--<track kind="subtitles" src="./bower_components/video.js/dist/video-js/demo.captions.vtt" srclang="en"
+         label="English"></track>-->
+  <!--<track-->
+  <!--src="https://s3-eu-west-1.amazonaws.com/tracks.afrostream.tv/production/caption/2015/10/e55f3ffbcfee21658c05-vimeocom138854234.fr_bis.vtt"-->
+  <!--kind="captions" srclang="fr" label="fr">-->
+  <track
+    src="https://afrostream-img.s3-eu-west-1.amazonaws.com/production/caption/2015/09/913ed362da38f821ed4b-vimeocom136679382.fr.vtt
+ "
     kind="captions" srclang="fr" label="fr">
   <p>
     Your browser doesn't support video. Please <a href="http://browsehappy.com/">upgrade your browser</a> to see the
@@ -47,7 +63,6 @@
 </video>
 <script src="node_modules/video.js/dist/video-js/video.dev.js"></script>
 <script src="node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
-<!--<script src="http://localhost:8000/lib/videojs-metrics.js"></script>-->
 <script src="./lib/castlab/3.1.2/cldasheverywhere.min.js"></script>
 <script src="lib/component/control-bar/bitrate-control.js"></script>
 <script src="lib/component/control-bar/progress-tip.js"></script>
@@ -86,7 +101,7 @@
     "playReadyLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
     "silverlightFile": "./lib/castlab/3.1.2/dashcs/dashcs.xap",
     "flashFile": '/lib/castlab/3.1.2/dashas/dashas.swf',
-    "techs": ['dashas', 'dashjs', 'dashcs'],
+    "techs": ['dashas', /* 'dashjs',*/ 'dashcs'],
     "flashVars": {
       "log": true,
       "watermark": false,//"https://afrostream.tv/assets/images/logo.png",
@@ -123,9 +138,10 @@
       {
         "_id": "7dcd3193-0efa-4f76-a8e3-9982f66c220c",
         "src": "http://origin.afrostream.tv/vod/24hourlovebis/d4eed726882a4be3-sub.ism/d4eed726882a4be3-sub.mpd",
-//        "src": "http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd",
-//        "src": "https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
-//        "src": "https://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.mpd",
+        //        "src": "https://hw.cdn.afrostream.net/vod/Family_Time_ep_101rev/360a9ebfef73ffdf.ism/360a9ebfef73ffdf.mpd",
+        //        "src": "http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd",
+        //        "src": "https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
+        //        "src": "https://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.mpd",
         "type": "application/dash+xml",
         "videoId": "3bcc7d8a-8962-4029-a6ed-7d246bf60a8a",
         "importId": 858,
@@ -137,17 +153,18 @@
     plugins: {
       audiotracks: {
         title: 'Langues'
-      },
-      texttracks: {
-        title: 'Sous titres'
       }
+//      ,
+//     texttracks: {
+//     title: 'Sous titres'
+//     }
     },
     autoplay: true,
     muted: true,
     mute: true,
     controls: true,
     dasheverywhere: config,
-    techOrder: ['dasheverywhere', 'html5']
+    techOrder: ['dasheverywhere', 'flash', 'html5']
   }).ready(function () {
     //this.loadVideo('https://origin.cdn.afrostream.net/vod/TheWild_s1ep001/c4ebd55b8bc55289.ism/c4ebd55b8bc55289.mpd', {});
 //    this.enableABRSwitching(true);
