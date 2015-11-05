@@ -15,7 +15,7 @@ module.exports = function (grunt) {
         banner: '<%= banner %>',
         stripBanners: true
       },
-      dist: {
+      dashjs: {
         src: [
           //VJS
           'node_modules/video.js/dist/video-js/video.dev.js',
@@ -54,6 +54,24 @@ module.exports = function (grunt) {
           '!lib/castlab/**/*.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
+      },
+      castlab: {
+        src: [
+          //VJS
+          'node_modules/video.js/dist/video-js/video.dev.js',
+          //CHROMECAST
+          'node_modules/videojs-chromecast/dist/videojs.chromecast.js',
+          //GoogleAnaltics
+          'bower_components/videojs-ga/dist/videojs.ga.js',
+          //METRICS
+          'node_modules/videojs-metrics/dist/videojs-metrics.js',
+          //CORE
+          'lib/**/*.js',
+          //CASTLAB
+          'lib/castlab/**/cldasheverywhere.min.js',
+          '!lib/castlab/**/cldashjs.min.js'
+        ],
+        dest: 'dist/<%= pkg.name %>.castlab.js'
       }
     },
     uglify: {
@@ -61,7 +79,7 @@ module.exports = function (grunt) {
         banner: '<%= banner %>'
       },
       dist: {
-        src: '<%= concat.dist.dest %>',
+        src: '<%= concat.dashjs.dest %>',
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
