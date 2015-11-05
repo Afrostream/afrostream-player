@@ -12621,7 +12621,7 @@ vjs.plugin = function(name, init){
     var player = this.player();
     for (var i = events.length - 1; i >= 0; i--) {
       //just call event start only one time
-      if (events[i] === 'firststart' && addOrRemove === 'on') {
+      if (events[i] === 'firstplay' && addOrRemove === 'on') {
         addOrRemove = 'one';
       }
       player[addOrRemove](events[i], videojs.bind(this, this.eventHandler));
