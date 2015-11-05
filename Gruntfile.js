@@ -40,7 +40,6 @@ module.exports = function (grunt) {
           'node_modules/videojs-contrib-hls/src/bin-utils.js',
           //DASH
           'node_modules/dashjs/dist/dash.all.js',
-          'node_modules/videojs-contrib-dash/dist/videojs-dash.js',
           //CHROMECAST
           'node_modules/videojs-chromecast/dist/videojs.chromecast.js',
           //GoogleAnaltics
@@ -100,7 +99,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: '<%= jshint.src.src %>',
-        tasks: ['jshint:src', 'qunit']
+        tasks: ['default', 'qunit']
       },
       less: {
         files: '<%= less.style.src %>',

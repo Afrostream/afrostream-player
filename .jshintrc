@@ -8,6 +8,7 @@
   "predef": [
     "videojs",
     "module",
+    "Dash",
     "MediaPlayer"
   ]
 }
