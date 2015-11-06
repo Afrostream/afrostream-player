@@ -15,7 +15,7 @@
 
   // Pass this if window is not defined yet
 }(typeof window !== 'undefined' ? window : this, function (window, noGlobal) { /*jshint unused:false*/
-  /*! afrostream-player - v1.0.5 - 2015-11-05
+  /*! afrostream-player - v1.0.5 - 2015-11-06
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
@@ -17824,7 +17824,7 @@ MediaPlayer.utils.DOMStorage.LOCAL_STORAGE_AUDIO_BITRATE_KEY="dashjs_abitrate",M
 
 }).call(this);
 
-/*! videojs-metrics - v0.0.0 - 2015-11-05
+/*! videojs-metrics - v0.0.0 - 2015-11-06
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 /*! videojs-metrics - v0.0.0 - 2015-10-7
  * Copyright (c) 2015 benjipott
@@ -17841,7 +17841,7 @@ MediaPlayer.utils.DOMStorage.LOCAL_STORAGE_AUDIO_BITRATE_KEY="dashjs_abitrate",M
       videojs.Component.call(this, player, options);
       this.browserInfo = videojs.Metrics.getBrowser();
       var source = this.player().manifestUrl || this.player().currentSrc();
-      this.pathUrl = source.match(videojs.Metrics.URL_MATCH);
+      this.pathUrl = source.match(videojs.Metrics.URL_MATCH) || ['', ''];
       this.setupTriggers();
     }
   });
@@ -17853,7 +17853,7 @@ MediaPlayer.utils.DOMStorage.LOCAL_STORAGE_AUDIO_BITRATE_KEY="dashjs_abitrate",M
     'responseType': 'json',
     'timeout': 1000,
     'url': '//stats.afrostream.tv/api/v1/events',
-    'trackEvents': ['loadstart', 'ping', 'firstplay', 'ended', 'dispose', 'waiting', 'error', 'bandwidthIncrease', 'bandwidthDecrease', 'dispose']
+    'trackEvents': ['loadstart', 'ping', 'firstplay', 'ended', 'dispose', 'waiting', 'error', 'bandwidthIncrease', 'bandwidthDecrease']
   };
   /**
    * Get browser infos
@@ -17956,7 +17956,7 @@ MediaPlayer.utils.DOMStorage.LOCAL_STORAGE_AUDIO_BITRATE_KEY="dashjs_abitrate",M
   videojs.Metrics.prototype.intervalPing = 0;
   videojs.Metrics.prototype.browserInfo = {};
 
-  videojs.Metrics.prototype.dispose = function (evt) {
+  videojs.Metrics.prototype.dispose = function () {
     this.clearInterval(this.intervalPing);
     this.setupTriggers('off');
   };
@@ -18020,10 +18020,11 @@ MediaPlayer.utils.DOMStorage.LOCAL_STORAGE_AUDIO_BITRATE_KEY="dashjs_abitrate",M
     var player = this.player();
     for (var i = events.length - 1; i >= 0; i--) {
       //just call event start only one time
+      var firstCall = addOrRemove;
       if (events[i] === 'firstplay' && addOrRemove === 'on') {
-        addOrRemove = 'one';
+        firstCall = 'one';
       }
-      player[addOrRemove](events[i], videojs.bind(this, this.eventHandler));
+      player[firstCall](events[i], videojs.bind(this, this.eventHandler));
     }
   };
 
