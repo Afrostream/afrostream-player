@@ -18732,7 +18732,7 @@ videojs.BitrateMenuItem.prototype.onClick = function () {
 
 videojs.BitrateMenuItem.prototype.update = function () {
   /*jshint sub:true*/
-  this.selected(this.player().tech['featuresBitrateIndex'] === this.bitrateIndex);
+  this.selected(this.player().tech['featuresBitrateIndex'] === this.qualityIndex);
 };
 
 
@@ -18867,18 +18867,13 @@ videojs.Dash.prototype.setSrc = function (source) {
   // But make a fresh MediaPlayer each time the sourceHandler is used
   this.player().mediaPlayer_ = this.mediaPlayer_ = new MediaPlayer(this.context_);
 
-  //this.mediaPlayer_.addEventListener(MediaPlayer.events.STREAM_INITIALIZED,
-  //  videojs.bind(this, this.onInitialized));
-  //this.mediaPlayer_.addEventListener(MediaPlayer.events.STREAM_SWITCH_STARTED,
-  //  videojs.bind(this, this.onStreamSwitchComplete));
-  //this.mediaPlayer_.addEventListener(MediaPlayer.events.STREAM_SWITCH_COMPLETED,
-  //  videojs.bind(this, this.onStreamSwitchComplete));
-
 
   // Must run controller before these two lines or else there is no
   // element to bind to.
   this.mediaPlayer_.startup();
   this.mediaPlayer_.attachView(this.el());
+  this.mediaPlayer_.addEventListener(MediaPlayer.events.STREAM_INITIALIZED,
+    videojs.bind(this, this.onInitialized));
 
   // Dash.js autoplays by default
   if (!this.player().options().autoplay) {
@@ -18888,6 +18883,20 @@ videojs.Dash.prototype.setSrc = function (source) {
   this.player().trigger('loadstart');
   // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
   this.mediaPlayer_.retrieveManifest(source.src, videojs.bind(this, this.initializeDashJS));
+};
+
+videojs.Dash.prototype.onInitialized = function (manifest, err) {
+  if (err) {
+    this.player().error(err);
+  }
+  var bitrates = this.mediaPlayer().getBitrateInfoListFor('video');
+  // bitrates are sorted from lowest to the best values
+  // so the last one has the best quality
+  //  maxQuality = bitrates[bitrates.length - 1].qualityIndex;
+  // set max quality
+  /*jshint sub:true*/
+  this['featuresBitrates'] = bitrates;
+  this['featuresBitrateIndex'] = bitrates.length; //AUTO;
 };
 
 videojs.Dash.prototype.getPlaybackStatistics = function () {
