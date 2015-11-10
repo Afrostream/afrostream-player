@@ -18,7 +18,9 @@
   ],
   "dependencies": {
     "dashjs": "https://github.com/Dash-Industry-Forum/dash.js.git#v1.5.1",
+    "express": "^4.13.3",
     "pkcs7": "^0.2.3",
+    "smoothie": "^1.27.0",
     "videojs-chromecast": "git+https://github.com/Afrostream/videojs-chromecast.git#master",
     "videojs-contrib-hls": "^0.17.9",
     "videojs-contrib-media-sources": "^1.0.0",

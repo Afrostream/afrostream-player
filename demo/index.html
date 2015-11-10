@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Afrostream Player</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+        integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+        crossorigin="anonymous">
+  <link href="afrostream-player.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .info {
+      background-color: #eee;
+      border: thin solid #333;
+      border-radius: 3px;
+      padding: 0 5px;
+      text-align: center;
+    }
+
+    .video-js {
+      margin: 40px auto;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div id="wrapper">
+      <video id="player" crossorigin="anonymous"
+             class="video-js vjs-afrostream-skin"
+             height="300"
+             width="600"
+      >
+
+        <p>
+          Your browser doesn't support video. Please <a href="http://browsehappy.com/">upgrade your browser</a> to see
+          the
+          example.
+        </p>
+      </video>
+    </div>
+  </div>
+</div>
+<div class="container" ng-show="playerV">
+  <div id="graphWrapper" class="row">
+    <h2>Video Bitrate Graph</h2>
+    <canvas id="_chart" height="250" width="500"></canvas>
+  </div>
+  <div id="debugData" class="row">
+    <p id="version">unkown version</p>
+
+    <div id="videoData">
+      <p>
+        <br>
+        <span id='audioBuffer'>0.0</span> [sec]<br>
+        <span id='videoBuffer'>0.0</span> [sec]<br>
+        <span id='resolution'>000 x 000</span><br>
+        <br>
+        <br>
+        <span id='dlAudioBitrate'>0.0</span> [kbps]<br>
+        <span id='dlVideoBitrate'>0.0</span> [kbps]<br>
+        <span id='dlResolution'>000 x 000</span><br>
+      </p>
+    </div>
+    <div id="videoDataLabels">
+      <p>
+        <strong>Playback Data</strong><br>
+        Audio Buffer Length:<br>
+        Video Buffer Length:<br>
+        Resolution:<br>
+        <br>
+        <strong>Download Data</strong><br>
+        Audio Bitrate:<br>
+        Video Bitrate:<br>
+        Resolution:<br>
+      </p>
+    </div>
+  </div>
+
+</div>
+<script src="//code.jquery.com/jquery-2.1.4.js"></script>
+<script src="./libs/smoothie.js"></script>
+<script src="afrostream-player.js"></script>
+<script src="./demo.js"></script>
+</body>
+</html>

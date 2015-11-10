@@ -115,6 +115,10 @@ module.exports = function (grunt) {
         files: '<%= jshint.gruntfile.src %>',
         tasks: ['jshint:gruntfile']
       },
+      demo: {
+        files: 'demo/demo.js',
+        tasks: ['default']
+      },
       src: {
         files: '<%= jshint.src.src %>',
         tasks: ['default', 'qunit']
@@ -156,12 +160,21 @@ module.exports = function (grunt) {
       dev: {
         options: {
           open: {
-            target: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>/example.html'
+            target: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>/demo/index.html'
           }
         }
       }
     },
     copy: {
+      smoothie: {
+        expand: true,
+        flatten: true,
+        src: [
+          './node_modules/smoothie/smoothie.js'
+
+        ],
+        dest: 'demo/libs'
+      },
       swf: {
         expand: true,
         flatten: true,
