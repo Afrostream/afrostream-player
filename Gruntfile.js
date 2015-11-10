@@ -39,7 +39,7 @@ module.exports = function (grunt) {
           'node_modules/videojs-contrib-hls/src/decrypter.js',
           'node_modules/videojs-contrib-hls/src/bin-utils.js',
           //DASH
-          'node_modules/dashjs/dist/dash.all.js',
+          'node_modules/dashjs/dist/dash.debug.js',
           //CHROMECAST
           'node_modules/videojs-chromecast/dist/videojs.chromecast.js',
           //GoogleAnaltics

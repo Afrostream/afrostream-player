@@ -115,7 +115,6 @@
     }
   }
 
-  videojs.Metrics.INTERVAL_PING = 6000;
   player = videojs('video', {
     metrics: {user_id: 33},
     "sources": [
@@ -132,10 +131,12 @@
       {
         "_id": "7dcd3193-0efa-4f76-a8e3-9982f66c220c",
         "src": "http://origin.afrostream.tv/vod/24hourlovebis/d4eed726882a4be3-sub.ism/d4eed726882a4be3-sub.mpd",
-        //        "src": "https://hw.cdn.afrostream.net/vod/Family_Time_ep_101rev/360a9ebfef73ffdf.ism/360a9ebfef73ffdf.mpd",
-        //        "src": "http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd",
-        //        "src": "https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
-        //        "src": "https://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.mpd",
+//                "src": "https://hw.cdn.afrostream.net/vod/Family_Time_ep_101rev/360a9ebfef73ffdf.ism/360a9ebfef73ffdf.mpd",
+//                "src": "http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd",
+//                "src": "https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
+//                "src": "https://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.mpd",
+//                "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
+
         "type": "application/dash+xml",
         "videoId": "3bcc7d8a-8962-4029-a6ed-7d246bf60a8a",
         "importId": 858,
@@ -154,8 +155,8 @@
 //     }
     },
     autoplay: true,
-    muted: true,
-    mute: true,
+//    muted: true,
+//    mute: true,
     controls: true,
     dasheverywhere: config,
     techOrder: ['dash', 'html5']

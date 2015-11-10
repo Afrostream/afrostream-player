@@ -12896,6 +12896,15 @@ vjs.plugin = function(name, init){
 
   };
 
+  videojs.Afrostream.prototype.setAudio = function (qualityIndex) {
+    var audios = this.mediaPlayer().getTracksFor('audio');
+    this.mediaPlayer().setCurrentTrack(audios[qualityIndex]);
+    /*jshint sub:true*/
+    this.tech_['featuresAudioIndex'] = qualityIndex; //AUTO;
+    this.tech_.trigger('audiochange');
+
+  };
+
   videojs.Afrostream.prototype.onStreamSwitchComplete = function (e) {
     /*jshint sub:true*/
     this.tech_['featuresBitrateIndex'] = e.data.toStreamInfo.index;
@@ -12932,6 +12941,8 @@ vjs.plugin = function(name, init){
       this.player().error(err);
     }
     var bitrates = this.mediaPlayer().getBitrateInfoListFor('video');
+    var audios = this.mediaPlayer().getTracksFor('audio');
+    var autoSwitch = this.mediaPlayer().getAutoSwitchQuality();
     // bitrates are sorted from lowest to the best values
     // so the last one has the best quality
     //  maxQuality = bitrates[bitrates.length - 1].qualityIndex;
@@ -12940,11 +12951,14 @@ vjs.plugin = function(name, init){
     this.tech_['featuresBitrates'] = bitrates;
     this.tech_['featuresBitrateIndex'] = this.tech_['featuresBitrateIndex'] || bitrates.length; //AUTO;
     videojs.log('Bitrates available:' + bitrates.length);
-    //this.mediaPlayer().setQualityFor('video', maxQuality);
+    this.tech_['featuresAudios'] = audios;
+    this.tech_['featuresAudioIndex'] = this.tech_['featuresAudioIndex'] || (audios.length - 1);
     //TODO generate methods from array
     this.tech_.setQuality = videojs.bind(this, this.setQuality);
+    this.tech_.setAudio = videojs.bind(this, this.setAudio);
     this.tech_.trigger('initialized');
     this.tech_.trigger('bitratechange');
+    this.tech_.trigger('audiochange');
   };
 
   videojs.Afrostream.METRICS_DATA = {
@@ -13128,6 +13142,9 @@ vjs.plugin = function(name, init){
    */
 
   /*jshint sub:true*/
+  videojs.MediaTechController.prototype['featuresBitrates'] = [];
+  videojs.MediaTechController.prototype['featuresAudios'] = [];
+
   videojs.MediaTechController.prototype['getPlaybackStatistics'] = function () {
     return {
       video: {
@@ -13163,6 +13180,160 @@ vjs.plugin = function(name, init){
   /*#replaceCode#*/
   return videojs;
 }));
+
+videojs.AudioMenuButton = videojs.MenuButton.extend({
+  /** @constructor */
+  init: function (player, options) {
+    videojs.MenuButton.call(this, player, options);
+    this.updateVisibility();
+    this.updateLabel();
+    this.on(player, 'loadstart', this.updateVisibility);
+    this.on(player, 'audiochange', this.updateVisibility);
+    this.on(player, 'audiochange', this.updateLabel);
+    this.on(player, 'initialized', this.updateLabel);
+    this.on(player, 'initialized', this.updateItems);
+  }
+});
+
+
+videojs.ControlBar.prototype.options_.children.AudioMenuButton = {};
+
+videojs.AudioMenuButton.prototype.buttonText = 'Audio Selection';
+videojs.AudioMenuButton.prototype.className = 'vjs-audio-button';
+videojs.AudioMenuButton.prototype.options_ = {
+  title: 'Audio'
+};
+
+videojs.AudioMenuButton.prototype.createEl = function () {
+  return videojs.MenuButton.prototype.createEl.call(this);
+};
+/**
+ * Update all items in menu
+ */
+videojs.AudioMenuButton.prototype.updateItems = function () {
+  /*jshint sub:true*/
+  this.items = this['createItems']();
+
+  if (this.items) {
+    while (this.menu.children().length) {
+      this.menu.removeChild(this.menu.children()[0]);
+    }
+    // Add menu items to the menu
+    for (var i = 0; i < this.items.length; i++) {
+      this.menu.addItem(this.items[i]);
+    }
+  }
+
+  this.updateVisibility();
+};
+/**
+ * Create the list of menu items. Specific to each subclass.
+ */
+videojs.AudioMenuButton.prototype.createItems = function () {
+  var items = [], audio = null;
+
+  /*jshint sub:true*/
+  var audios = this.player().tech['featuresAudios'] || [];
+  for (var i = 0; i < audios.length; i++) {
+    audio = audios[i];
+    items.push(new videojs.AudioMenuItem(this.player(), audio));
+  }
+
+  return items;
+};
+
+videojs.AudioMenuButton.prototype.updateARIAAttributes = function () {
+  // Current playback rate
+  this.el().setAttribute('aria-valuenow', this.player().tech.getBitrate());
+};
+
+videojs.AudioMenuButton.prototype.onClick = function () {
+  // select next rate option
+  var currentRate = this.player().playbackRate();
+  /*jshint sub:true*/
+  var rates = this.player().tech['featuresAudioIndex'];
+  // this will select first one if the last one currently selected
+  var newRate = rates[0];
+  for (var i = 0; i < rates.length; i++) {
+    if (rates[i] > currentRate) {
+      newRate = rates[i];
+      break;
+    }
+  }
+  this.player().playbackRate(newRate);
+};
+
+videojs.AudioMenuButton.prototype.audiosSupported = function () {
+  /*jshint sub:true*/
+  return this.player().tech && this.player().tech['featuresAudios'] &&
+    this.player().tech['featuresAudios'].length > 0;
+};
+
+/**
+ * Hide playback rate controls when they're no playback rate options to select
+ */
+videojs.AudioMenuButton.prototype.updateVisibility = function () {
+  //VJS 4.12.5
+  if (this.audiosSupported()) {
+    this.show();
+    this.removeClass('vjs-hidden');
+  } else {
+    this.hide();
+    this.addClass('vjs-hidden');
+  }
+  //VJS 4.11.4
+  //if (this.items && this.items.length === 0) {
+  //  this.hide();
+  //}
+  //else {
+  //  this.show();
+  //}
+
+};
+
+/**
+ * Update button label when rate changed
+ */
+videojs.AudioMenuButton.prototype.updateLabel = function () {
+  if (this.audiosSupported()) {
+    /*jshint sub:true*/
+    var selected = this.player().tech['featuresAudioIndex'];
+    //this.labelEl_.innerHTML = videojs.AudioMenuButton.Labels[Math.min(selected, videojs.AudioMenuButton.Labels.length - 1)];
+  }
+};
+
+/**
+ * The specific menu item type for selecting a playback rate
+ *
+ * @constructor
+ */
+videojs.AudioMenuItem = videojs.MenuItem.extend({
+  contentElType: 'button',
+  /** @constructor */
+  init: function (player, options) {
+    /*jshint sub:true*/
+    var label = this.label = options.lang;
+    var audioIndex = this.audioIndex = options.index || 0;
+    //// Modify options for parent MenuItem class's init.
+    options['label'] = label;
+    options['selected'] = (audioIndex === player.tech['featuresAudioIndex']) || label === 'fr';
+    videojs.MenuItem.call(this, player, options);
+
+    this.on(player, 'audiochange', this.update);
+  }
+});
+
+videojs.AudioMenuItem.prototype.onClick = function () {
+  videojs.MenuItem.prototype.onClick.call(this);
+  this.player().tech.setAudio(this.audioIndex);
+
+};
+
+videojs.AudioMenuItem.prototype.update = function () {
+  /*jshint sub:true*/
+  this.selected(this.player().tech['featuresAudioIndex'] === this.audioIndex);
+};
+
 
 videojs.BitrateMenuButton = videojs.MenuButton.extend({
   /** @constructor */
@@ -13210,6 +13381,9 @@ videojs.BitrateMenuButton.prototype.updateItems = function () {
   this.items = this['createItems']();
 
   if (this.items) {
+    while (this.menu.children().length) {
+      this.menu.removeChild(this.menu.children()[0]);
+    }
     // Add menu items to the menu
     for (var i = 0; i < this.items.length; i++) {
       this.menu.addItem(this.items[i]);
@@ -13319,8 +13493,7 @@ videojs.BitrateMenuItem = videojs.MenuItem.extend({
     // Modify options for parent MenuItem class's init.
     options['label'] = videojs.BitrateMenuButton.Labels[qualityIndex] || label;
     options['selected'] =
-      (qualityIndex === player.tech['featuresBitrates'].length) ||
-        /* (qualityIndex === player.tech['featuresBitrateIndex']) ||*/ 1;
+      (qualityIndex === player.tech['featuresBitrateIndex']) || 1;
     videojs.MenuItem.call(this, player, options);
 
     this.on(player, 'bitratechange', this.update);
@@ -13483,6 +13656,10 @@ videojs.Dash.prototype.setSrc = function (source) {
     this.mediaPlayer_.setAutoPlay(false);
   }
   this.mediaPlayer_.setAutoSwitchQuality(this.options().autoSwitch);
+
+  this.mediaPlayer_.setInitialMediaSettingsFor('audio', {lang: 'fr'});
+  //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
+
   this.player().trigger('loadstart');
   // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
   this.mediaPlayer_.retrieveManifest(source.src, videojs.bind(this, this.initializeDashJS));
@@ -13493,13 +13670,17 @@ videojs.Dash.prototype.onInitialized = function (manifest, err) {
     this.player().error(err);
   }
   var bitrates = this.mediaPlayer().getBitrateInfoListFor('video');
+  var audios = this.mediaPlayer().getTracksFor('audio');
+  var autoSwitch = this.mediaPlayer().getAutoSwitchQuality();
   // bitrates are sorted from lowest to the best values
   // so the last one has the best quality
   //  maxQuality = bitrates[bitrates.length - 1].qualityIndex;
   // set max quality
   /*jshint sub:true*/
   this['featuresBitrates'] = bitrates;
-  this['featuresBitrateIndex'] = bitrates.length; //AUTO;
+  this['featuresAudios'] = audios;
+  this['featuresAudioIndex'] = this['featuresAudioIndex'] || (audios.length - 1);
+  this['featuresBitrateIndex'] = autoSwitch ? bitrates.length : (this['featuresBitrateIndex'] || bitrates.length);
 };
 
 videojs.Dash.prototype.getPlaybackStatistics = function () {
@@ -13530,7 +13711,7 @@ videojs.Dash.prototype.initializeDashJS = function (manifest, err) {
     this.showErrors();
 
     // Attach the source with any protection data
-    this.mediaPlayer_.attachSource(manifest, null, this.keySystemOptions_);
+    this.mediaPlayer_.attachSource(manifest, null, this.keySystemOptions_, 'fr');
 
     this.triggerReady();
   }));
@@ -13683,7 +13864,7 @@ videojs.Dash['nativeSourceHandler']['handleSource'] = function (source, tech) {
 
 /**
  * Clean up the source handler when disposing the player or switching sources..
- * (no cleanup is needed when supporting the format natively)
+ * (no cleanup is needed when supporting the getTracksForformat natively)
  */
 /*jshint sub:true*/
 videojs.Dash['nativeSourceHandler']['dispose'] = function () {
