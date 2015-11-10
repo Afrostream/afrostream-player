@@ -40,5 +40,8 @@
     "qunitjs": "^1.12",
     "video.js": "4.12"
   },
+  "scripts": {
+    "start": "node express.js"
+  },
   "peerDependencies": {}
 }
