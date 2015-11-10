@@ -1,4 +1,4 @@
-/*! afrostream-player - v1.0.5 - 2015-11-06
+/*! afrostream-player - v1.0.5 - 2015-11-10
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
@@ -11849,7 +11849,7 @@ vjs.plugin = function(name, init){
 
 }(this, (this.vttjs || {})));
 
-/*! videojs-chromecast - v1.1.1 - 2015-09-29
+/*! videojs-chromecast - v1.1.1 - 2015-11-10
 * https://github.com/kim-company/videojs-chromecast
 * Copyright (c) 2015 KIM Keep In Mind GmbH, srl; Licensed MIT */
 
@@ -12203,7 +12203,7 @@ vjs.plugin = function(name, init){
     };
 
     ChromecastTech.canPlaySource = function(source) {
-      return source.type === "video/mp4" || source.type === "video/webm" || source.type === "application/x-mpegURL" || source.type === "application/vnd.apple.mpegURL";
+      return source.type === "video/mp4" || source.type === "application/dash+xml" || source.type === "video/webm" || source.type === "application/x-mpegURL" || source.type === "application/vnd.apple.mpegURL";
     };
 
     function ChromecastTech(player, options, ready) {

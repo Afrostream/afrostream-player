@@ -1029,9 +1029,8 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 }
 .vjs-tech-chromecast .casting-overlay .casting-information {
   position: absolute;
-  left: 15px;
-  bottom: 50px;
-  right: 15px;
+  bottom: 8em;
+  right: 8em;
   height: 50px;
   color: #FFF;
 }
