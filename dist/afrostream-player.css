@@ -1472,7 +1472,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   text-transform: lowercase;
 }
 .video-js.vjs-afrostream-skin .vjs-menu-button ul li.vjs-selected {
-  background-color: #000;
+  background-color: #5d2d6f;
 }
 .video-js.vjs-afrostream-skin .vjs-menu-button ul li:focus,
 .video-js.vjs-afrostream-skin .vjs-menu-button ul li:hover,
@@ -1493,6 +1493,10 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   margin: 0 0 0.3em 0;
   font-weight: bold;
   cursor: default;
+}
+.video-js.vjs-afrostream-skin .vjs-menu-button ul li.vjs-menu-title:hover {
+  background: #000;
+  color: #FFF;
 }
 .video-js.vjs-afrostream-skin .vjs-subtitles-button:before {
   content: "\e00c";
@@ -1618,6 +1622,11 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 .video-js.vjs-afrostream-skin .vjs-caption-settings input[type="button"] {
   width: 40px;
   height: 40px;
+}
+
+/* Captions Button */
+.vjs-audio-button:before {
+  content: '\e900';
 }
 
 /* Quality toggle
@@ -1786,6 +1795,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   /* ensure animation doesn't continue while hidden */
   animation: none !important;
 }
+
 
 .vjs-dashjs-hide-errors .vjs-error-display {
   display: none !important;

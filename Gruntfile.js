@@ -39,7 +39,7 @@ module.exports = function (grunt) {
           'node_modules/videojs-contrib-hls/src/decrypter.js',
           'node_modules/videojs-contrib-hls/src/bin-utils.js',
           //DASH
-          'node_modules/dashjs/dist/dash.all.js',
+          'node_modules/dashjs/dist/dash.debug.js',
           //CHROMECAST
           'node_modules/videojs-chromecast/dist/videojs.chromecast.js',
           //GoogleAnaltics
@@ -115,9 +115,13 @@ module.exports = function (grunt) {
         files: '<%= jshint.gruntfile.src %>',
         tasks: ['jshint:gruntfile']
       },
+      demo: {
+        files: 'demo/demo.js',
+        tasks: ['default']
+      },
       src: {
         files: '<%= jshint.src.src %>',
-        tasks: ['default', 'qunit']
+        tasks: ['default']
       },
       less: {
         files: '<%= less.style.src %>',
@@ -150,18 +154,26 @@ module.exports = function (grunt) {
       options: {
         port: 9000,
         hostname: 'localhost',//set 0.0.0.0 for external access
-        livereload: 35728,
-        base: ['']
+        livereload: 35728
       },
       dev: {
         options: {
           open: {
-            target: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>/example.html'
+            target: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>/demo/index.html'
           }
         }
       }
     },
     copy: {
+      smoothie: {
+        expand: true,
+        flatten: true,
+        src: [
+          './node_modules/smoothie/smoothie.js'
+
+        ],
+        dest: 'demo/libs'
+      },
       swf: {
         expand: true,
         flatten: true,
@@ -187,6 +199,27 @@ module.exports = function (grunt) {
         src: '**/*.{eot,svg,ttf,woff}',
         dest: 'dist/'
       }
+    },
+    injector: {
+      options: {
+        addRootSlash: false,
+        relative: true
+      },
+      dev: {
+        files: [{
+          src: [
+            '<%= concat.dashjs.src %>'],
+          dest: 'demo/index.html'
+        }]
+      },
+      build: {
+        files: [{
+          src: [
+            'dist/afrostream-player.css',
+            '<%= concat.dashjs.dest %>'],
+          dest: 'demo/index.html'
+        }]
+      }
     }
   });
 
@@ -199,6 +232,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-injector');
 
   grunt.registerMultiTask('closure', 'Add closure around the app', function () {
 
@@ -236,14 +270,16 @@ module.exports = function (grunt) {
     'clean',
     'copy',
     'jshint',
-    'concat',
-    'uglify',
-    'less'
+    'less',
+    'injector:dev'
   ]);
 
   grunt.registerTask('build', [
     'default',
+    'concat',
+    'uglify',
     'closure',
-    'qunit'
+    'qunit',
+    'injector:build'
   ]);
 };
