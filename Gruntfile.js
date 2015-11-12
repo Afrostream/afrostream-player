@@ -121,7 +121,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: '<%= jshint.src.src %>',
-        tasks: ['default', 'qunit']
+        tasks: ['default']
       },
       less: {
         files: '<%= less.style.src %>',
@@ -270,14 +270,14 @@ module.exports = function (grunt) {
     'clean',
     'copy',
     'jshint',
-    'concat',
-    'uglify',
     'less',
     'injector:dev'
   ]);
 
   grunt.registerTask('build', [
     'default',
+    'concat',
+    'uglify',
     'closure',
     'qunit',
     'injector:build'
