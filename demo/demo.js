@@ -62,10 +62,10 @@ var loadPlayer = function (url) {
         "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/master.m3u8",
         "type": "application/vnd.apple.mpegurl"
       },
-      //{
-      //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
-      //  "type": "application/dash+xml"
-      //}
+      {
+        "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
+        "type": "application/dash+xml"
+      }
     ];
 
   var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5'];
