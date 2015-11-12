@@ -68,7 +68,7 @@ var loadPlayer = function (url) {
       }
     ];
 
-  var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5'];
+  var techOrder = qs.tech ? qs.tech.split(',') : [/*'dash', 'html5',*/'hls', 'flash'];
 
   if (url) {
     sources = [
@@ -86,6 +86,9 @@ var loadPlayer = function (url) {
     width: '100%',
     height: '550',
     techOrder: techOrder,
+    hls: {
+      swf: 'bower_components/video.js/dist/video-js/video-js.swf'
+    },
     sources: sources
   }).ready(function () {
     var player = this;
