@@ -154,8 +154,7 @@ module.exports = function (grunt) {
       options: {
         port: 9000,
         hostname: 'localhost',//set 0.0.0.0 for external access
-        livereload: 35728,
-        base: ['']
+        livereload: 35728
       },
       dev: {
         options: {
@@ -200,6 +199,27 @@ module.exports = function (grunt) {
         src: '**/*.{eot,svg,ttf,woff}',
         dest: 'dist/'
       }
+    },
+    injector: {
+      options: {
+        addRootSlash: false,
+        relative: true
+      },
+      dev: {
+        files: [{
+          src: [
+            '<%= concat.dashjs.src %>'],
+          dest: 'demo/index.html'
+        }]
+      },
+      build: {
+        files: [{
+          src: [
+            'dist/afrostream-player.css',
+            '<%= concat.dashjs.dest %>'],
+          dest: 'demo/index.html'
+        }]
+      }
     }
   });
 
@@ -212,6 +232,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-injector');
 
   grunt.registerMultiTask('closure', 'Add closure around the app', function () {
 
@@ -251,12 +272,14 @@ module.exports = function (grunt) {
     'jshint',
     'concat',
     'uglify',
-    'less'
+    'less',
+    'injector:dev'
   ]);
 
   grunt.registerTask('build', [
     'default',
     'closure',
-    'qunit'
+    'qunit',
+    'injector:build'
   ]);
 };

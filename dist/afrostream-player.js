@@ -1,4 +1,21 @@
-/*! afrostream-player - v1.0.5 - 2015-11-10
+(function (global, factory) {
+
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    module.exports = global.document ?
+      factory(global, true) :
+      function (w) {
+        if (!w.document) {
+          throw new Error('vjs requires a window with a document');
+        }
+        return factory(w);
+      };
+  } else {
+    factory(global);
+  }
+
+  // Pass this if window is not defined yet
+}(typeof window !== 'undefined' ? window : this, function (window, noGlobal) { /*jshint unused:false*/
+  /*! afrostream-player - v1.0.5 - 2015-11-12
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
@@ -19619,7 +19636,7 @@ Dash.dependencies.DashHandler = function() {
             url = url.substring(0, startPos) + paddedValue + url.substring(endPos + 1);
         }
     }, unescapeDollarsInTemplate = function(url) {
-        return url.split("$$").join("$");
+        return url.split("$").join("$");
     }, replaceIDForTemplate = function(url, value) {
         if (value === null || url.indexOf("$RepresentationID$") === -1) {
             return url;
@@ -33106,27 +33123,6 @@ MediaPlayer.vo.protection.SessionToken = function() {};
 
   };
 
-  videojs.Afrostream.prototype.setQuality = function (qualityIndex) {
-    var bitrates = this.mediaPlayer().getBitrateInfoListFor('video');
-    this.mediaPlayer().setAutoSwitchQuality(qualityIndex >= bitrates.length);
-    this.mediaPlayer().setQualityFor('video', qualityIndex);
-
-    //TODO supprimer ca pour le switch auto
-    /*jshint sub:true*/
-    this.tech_['featuresBitrateIndex'] = qualityIndex; //AUTO;
-    this.tech_.trigger('bitratechange');
-
-  };
-
-  videojs.Afrostream.prototype.setAudio = function (qualityIndex) {
-    var audios = this.mediaPlayer().getTracksFor('audio');
-    this.mediaPlayer().setCurrentTrack(audios[qualityIndex]);
-    /*jshint sub:true*/
-    this.tech_['featuresAudioIndex'] = qualityIndex; //AUTO;
-    this.tech_.trigger('audiochange');
-
-  };
-
   videojs.Afrostream.prototype.onStreamSwitchComplete = function (e) {
     /*jshint sub:true*/
     this.tech_['featuresBitrateIndex'] = e.data.toStreamInfo.index;
@@ -33170,14 +33166,12 @@ MediaPlayer.vo.protection.SessionToken = function() {};
     //  maxQuality = bitrates[bitrates.length - 1].qualityIndex;
     // set max quality
     /*jshint sub:true*/
-    this.tech_['featuresBitrates'] = bitrates;
+    this.tech_.videoTracks(bitrates);
     this.tech_['featuresBitrateIndex'] = this.tech_['featuresBitrateIndex'] || bitrates.length; //AUTO;
     videojs.log('Bitrates available:' + bitrates.length);
-    this.tech_['featuresAudios'] = audios;
+    this.tech_.audioTracks(audios);
     this.tech_['featuresAudioIndex'] = this.tech_['featuresAudioIndex'] || (audios.length - 1);
     //TODO generate methods from array
-    this.tech_.setQuality = videojs.bind(this, this.setQuality);
-    this.tech_.setAudio = videojs.bind(this, this.setAudio);
     this.tech_.trigger('initialized');
     this.tech_.trigger('bitratechange');
     this.tech_.trigger('audiochange');
@@ -33358,26 +33352,6 @@ MediaPlayer.vo.protection.SessionToken = function() {};
    */
   videojs.options.children.afrostream = {};
 
-  /**
-   * Get default metrix statistics object
-   * @returns {{video: {bandwidth: number}, audio: {bandwidth: number}}}
-   */
-
-  /*jshint sub:true*/
-  videojs.MediaTechController.prototype['featuresBitrates'] = [];
-  videojs.MediaTechController.prototype['featuresAudios'] = [];
-
-  videojs.MediaTechController.prototype['getPlaybackStatistics'] = function () {
-    return {
-      video: {
-        bandwidth: this.el().webkitVideoDecodedByteCount || -1
-      },
-      audio: {
-        bandwidth: this.el().webkitAudioDecodedByteCount || -1
-      }
-    };
-  };
-
 })(window, window.videojs);
 
 (function (global, factory) {
@@ -33406,12 +33380,11 @@ videojs.AudioMenuButton = videojs.MenuButton.extend({
   init: function (player, options) {
     videojs.MenuButton.call(this, player, options);
     this.updateVisibility();
-    this.updateLabel();
     this.on(player, 'loadstart', this.updateVisibility);
     this.on(player, 'audiochange', this.updateVisibility);
-    this.on(player, 'audiochange', this.updateLabel);
-    this.on(player, 'initialized', this.updateLabel);
     this.on(player, 'initialized', this.updateItems);
+    this.on(player, 'canplay', this.updateItems);
+
   }
 });
 
@@ -33451,9 +33424,11 @@ videojs.AudioMenuButton.prototype.updateItems = function () {
  */
 videojs.AudioMenuButton.prototype.createItems = function () {
   var items = [], audio = null;
-
+  if (!this.audiosSupported()) {
+    return items;
+  }
   /*jshint sub:true*/
-  var audios = this.player().tech['featuresAudios'] || [];
+  var audios = this.player().audioTracks();
   for (var i = 0; i < audios.length; i++) {
     audio = audios[i];
     items.push(new videojs.AudioMenuItem(this.player(), audio));
@@ -33485,8 +33460,8 @@ videojs.AudioMenuButton.prototype.onClick = function () {
 
 videojs.AudioMenuButton.prototype.audiosSupported = function () {
   /*jshint sub:true*/
-  return this.player().tech && this.player().tech['featuresAudios'] &&
-    this.player().tech['featuresAudios'].length > 0;
+  return this.player().audioTracks() &&
+    this.player().audioTracks().length > 0;
 };
 
 /**
@@ -33512,17 +33487,6 @@ videojs.AudioMenuButton.prototype.updateVisibility = function () {
 };
 
 /**
- * Update button label when rate changed
- */
-videojs.AudioMenuButton.prototype.updateLabel = function () {
-  if (this.audiosSupported()) {
-    /*jshint sub:true*/
-    var selected = this.player().tech['featuresAudioIndex'];
-    //this.labelEl_.innerHTML = videojs.AudioMenuButton.Labels[Math.min(selected, videojs.AudioMenuButton.Labels.length - 1)];
-  }
-};
-
-/**
  * The specific menu item type for selecting a playback rate
  *
  * @constructor
@@ -33532,27 +33496,32 @@ videojs.AudioMenuItem = videojs.MenuItem.extend({
   /** @constructor */
   init: function (player, options) {
     /*jshint sub:true*/
-    var label = this.label = options.lang;
-    var audioIndex = this.audioIndex = options.index || 0;
+    var label = this.label = options.lang || options.language || options.label;
+    var audioIndex = parseInt(this.audioIndex = options.id || options.index, 10);
+    var selected = options.enabled = (audioIndex === player.tech['featuresAudioIndex']) || label === 'fr';
     //// Modify options for parent MenuItem class's init.
-    options['label'] = label;
-    options['selected'] = (audioIndex === player.tech['featuresAudioIndex']) || label === 'fr';
-    videojs.MenuItem.call(this, player, options);
+    var data = {
+      label: label,
+      selected: selected,
+      reference: options
+    };
 
-    this.on(player, 'audiochange', this.update);
+    videojs.MenuItem.call(this, player, data);
+
+    //this.on(player, 'audiochange', this.update);
   }
 });
 
 videojs.AudioMenuItem.prototype.onClick = function () {
   videojs.MenuItem.prototype.onClick.call(this);
-  this.player().tech.setAudio(this.audioIndex);
+  this.player().setAudioTrack(this.options().reference);
 
 };
 
-videojs.AudioMenuItem.prototype.update = function () {
-  /*jshint sub:true*/
-  this.selected(this.player().tech['featuresAudioIndex'] === this.audioIndex);
-};
+//videojs.AudioMenuItem.prototype.update = function () {
+//  /*jshint sub:true*/
+//  this.selected(this.player().tech['featuresAudioIndex'] === this.audioIndex);
+//};
 
 
 videojs.BitrateMenuButton = videojs.MenuButton.extend({
@@ -33622,7 +33591,7 @@ videojs.BitrateMenuButton.prototype.createItems = function () {
   }
 
   /*jshint sub:true*/
-  var bitRates = this.player().tech['featuresBitrates'] || [];
+  var bitRates = this.player().videoTracks();
   // Add an OFF menu item to turn all tracks off
   items.push(new videojs.BitrateMenuItem(this.player(), {
     qualityIndex: bitRates.length,
@@ -33639,7 +33608,7 @@ videojs.BitrateMenuButton.prototype.createItems = function () {
 
 videojs.BitrateMenuButton.prototype.updateARIAAttributes = function () {
   // Current playback rate
-  this.el().setAttribute('aria-valuenow', this.player().tech.getBitrate());
+  this.el().setAttribute('aria-valuenow', 'bitrate-control');
 };
 
 videojs.BitrateMenuButton.prototype.onClick = function () {
@@ -33660,8 +33629,8 @@ videojs.BitrateMenuButton.prototype.onClick = function () {
 
 videojs.BitrateMenuButton.prototype.bitratesSupported = function () {
   /*jshint sub:true*/
-  return this.player().tech && this.player().tech['featuresBitrates'] &&
-    this.player().tech['featuresBitrates'].length > 0;
+  return this.player().tech && this.player().videoTracks() &&
+    this.player().videoTracks().length > 0;
 };
 
 /**
@@ -33808,6 +33777,21 @@ videojs.LoadingSpinner.prototype.createEl = function () {
   return el;
 };
 
+videojs.Player.prototype.audioTracks = function () {
+  /*jshint sub:true*/
+  return this.tech && this.tech['audioTracks']();
+};
+
+videojs.Player.prototype.setAudioTrack = function (track) {
+  /*jshint sub:true*/
+  return this.tech && this.tech['setAudioTrack'](track);
+};
+
+videojs.Player.prototype.videoTracks = function () {
+  /*jshint sub:true*/
+  return this.tech && this.tech['videoTracks']();
+};
+
 /**
  * DASH Media Controller - Wrapper for fallback SWF API
  *
@@ -33897,12 +33881,13 @@ videojs.Dash.prototype.onInitialized = function (manifest, err) {
   //  maxQuality = bitrates[bitrates.length - 1].qualityIndex;
   // set max quality
   /*jshint sub:true*/
-  this['featuresBitrates'] = bitrates;
-  this['featuresAudios'] = audios;
+  this.videoTracks(bitrates);
+  this.audioTracks(audios);
   this['featuresAudioIndex'] = this['featuresAudioIndex'] || (audios.length - 1);
   this['featuresBitrateIndex'] = autoSwitch ? bitrates.length : (this['featuresBitrateIndex'] || bitrates.length);
 };
 
+/*jshint sub:true*/
 videojs.Dash.prototype.getPlaybackStatistics = function () {
   return this.player().afrostream.getPlaybackStatistics();
 };
@@ -33935,6 +33920,22 @@ videojs.Dash.prototype.initializeDashJS = function (manifest, err) {
 
     this.triggerReady();
   }));
+};
+
+videojs.Dash.prototype.setVideoTrack = function (track) {
+  var bitrates = this.mediaPlayer().getBitrateInfoListFor('video');
+  this.mediaPlayer().setAutoSwitchQuality(track.index >= bitrates.length);
+  this.mediaPlayer().setQualityFor('video', track.index);
+
+  //TODO supprimer ca pour le switch auto
+  /*jshint sub:true*/
+  this.tech_['featuresBitrateIndex'] = track.index; //AUTO;
+  videojs.MediaTechController.prototype.setVideoTrack.call(this, track);
+};
+
+videojs.Dash.prototype.setAudioTrack = function (track) {
+  this.mediaPlayer().setCurrentTrack(track);
+  videojs.MediaTechController.prototype.setAudioTrack.call(this, track);
 };
 
 videojs.Dash.prototype.getWidevineProtectionData = null;
@@ -34094,447 +34095,90 @@ videojs.Dash['nativeSourceHandler']['dispose'] = function () {
 /*jshint sub:true*/
 videojs.Dash['registerSourceHandler'](videojs.Dash['nativeSourceHandler']);
 
+videojs.Html5.prototype.videoTracks = function (tracks) {
+  /*jshint sub:true*/
+  if (!this['featuresNativeVideoTracks']) {
+    return videojs.MediaTechController.prototype.videoTracks.call(this, tracks);
+  }
+
+  return this.el_.videoTracks;
+};
+
+videojs.Html5.prototype.audioTracks = function (tracks) {
+  /*jshint sub:true*/
+  if (!this['featuresNativeAudioTracks']) {
+    return videojs.MediaTechController.prototype.audioTracks.call(this, tracks);
+  }
+
+  return this.el_.audioTracks;
+};
+
+videojs.Html5.supportsNativeTracks = function (type) {
+  var supportsTracks;
+
+  supportsTracks = !!videojs.TEST_VID[type + 'Tracks'];
+  if (supportsTracks && videojs.TEST_VID[type + 'Tracks'].length > 0) {
+    /*jshint sub:true*/
+    supportsTracks = typeof videojs.TEST_VID[type + 'Tracks'][0]['mode'] !== 'number';
+  }
+  if (supportsTracks && videojs.IS_FIREFOX) {
+    supportsTracks = false;
+  }
+
+  return supportsTracks;
+};
 /**
- * Flash Media Controller - Wrapper for fallback SWF API
- *
- * @param {vjs.Player} player
- * @param {Object=} options
- * @param {Function=} ready
- * @constructor
+ * Sets the tech's status on native video/audio track support
+ * @type {Boolean}
  */
-vjs.Flash = vjs.MediaTechController.extend({
-  /** @constructor */
-  init: function (player, options, ready) {
-    vjs.MediaTechController.call(this, player, options, ready);
+/*jshint sub:true*/
+videojs.Html5.prototype['featuresNativeVideoTracks'] = videojs.Html5.supportsNativeTracks('video');
+videojs.Html5.prototype['featuresNativeAudioTracks'] = videojs.Html5.supportsNativeTracks('audio');
 
-    var source = options['source'],
 
-    // Generate ID for swf object
-      objId = player.id() + '_flash_api',
-
-    // Store player options in local var for optimization
-    // TODO: switch to using player methods instead of options
-    // e.g. player.autoplay();
-      playerOptions = player.options_,
-
-    // Merge default flashvars with ones passed in to init
-      flashVars = vjs.obj.merge({
-
-        // SWF Callback Functions
-        'readyFunction': 'videojs.Flash.onReady',
-        'eventProxyFunction': 'videojs.Flash.onEvent',
-        'errorEventProxyFunction': 'videojs.Flash.onError',
-
-        // Player Settings
-        'autoplay': playerOptions.autoplay,
-        'preload': playerOptions.preload,
-        'loop': playerOptions.loop,
-        'muted': playerOptions.muted
-
-      }, options['flashVars']),
-
-    // Merge default parames with ones passed in
-      params = vjs.obj.merge({
-        'wmode': 'opaque', // Opaque is needed to overlay controls, but can affect playback performance
-        'bgcolor': '#000000' // Using bgcolor prevents a white flash when the object is loading
-      }, options['params']),
-
-    // Merge default attributes with ones passed in
-      attributes = vjs.obj.merge({
-        'id': objId,
-        'name': objId, // Both ID and Name needed or swf to identify itself
-        'class': 'vjs-tech'
-      }, options['attributes'])
-      ;
-
-    // If source was supplied pass as a flash var.
-    if (source) {
-      this.ready(function () {
-        this.setSource(source);
-      });
+videojs.MediaTechController.prototype.getPlaybackStatistics = function () {
+  return {
+    video: {
+      bandwidth: this.el().webkitVideoDecodedByteCount || -1
+    },
+    audio: {
+      bandwidth: this.el().webkitAudioDecodedByteCount || -1
     }
+  };
+};
 
-    // Add placeholder to player div
-    vjs.insertFirst(this.el_, options['parentEl']);
+videojs.MediaTechController.prototype.videoTracks_ = null;
 
-    // Having issues with Flash reloading on certain page actions (hide/resize/fullscreen) in certain browsers
-    // This allows resetting the playhead when we catch the reload
-    if (options['startTime']) {
-      this.ready(function () {
-        this.load();
-        this.play();
-        this['currentTime'](options['startTime']);
-      });
-    }
-
-    // firefox doesn't bubble mousemove events to parent. videojs/video-js-swf#37
-    // bugzilla bug: https://bugzilla.mozilla.org/show_bug.cgi?id=836786
-    if (vjs.IS_FIREFOX) {
-      this.ready(function () {
-        this.on('mousemove', function () {
-          // since it's a custom event, don't bubble higher than the player
-          this.player().trigger({'type': 'mousemove', 'bubbles': false});
-        });
-      });
-    }
-
-    // native click events on the SWF aren't triggered on IE11, Win8.1RT
-    // use stageclick events triggered from inside the SWF instead
-    player.on('stageclick', player.reportUserActivity);
-
-    this.el_ = vjs.Flash.embed(options['swf'], this.el_, flashVars, params, attributes);
+videojs.MediaTechController.prototype.videoTracks = function (tracks) {
+  if (tracks !== undefined) {
+    this.videoTracks_ = tracks;
   }
-});
-
-vjs.Flash.prototype.dispose = function () {
-  vjs.MediaTechController.prototype.dispose.call(this);
+  return this.el_.videoTracks || this.videoTracks_ || new videojs.TextTrackList();
 };
 
-vjs.Flash.prototype.play = function () {
-  if (this.ended()) {
-    this['setCurrentTime'](0);
+videojs.MediaTechController.prototype.audioTracks_ = null;
+
+videojs.MediaTechController.prototype.audioTracks = function (tracks) {
+  if (tracks !== undefined) {
+    this.audioTracks_ = tracks;
   }
-
-  this.el_.vjs_play();
+  return this.el_.audioTracks || this.audioTracks_ || new videojs.TextTrackList();
 };
 
-vjs.Flash.prototype.pause = function () {
-  this.el_.vjs_pause();
-};
-
-vjs.Flash.prototype.src = function (src) {
-  if (src === undefined) {
-    return this['currentSrc']();
+videojs.MediaTechController.prototype.setAudioTrack = function (track) {
+  var tracks = this.player().audioTracks();
+  for (var i = 0; i < tracks.length; i++) {
+    var audioTrack = tracks[i];
+    audioTrack.enabled = audioTrack === track;
   }
-
-  // Setting src through `src` not `setSrc` will be deprecated
-  return this.setSrc(src);
+  this.trigger('audiochange');
 };
 
-vjs.Flash.prototype.setSrc = function (src) {
-  // Make sure source URL is absolute.
-  src = vjs.getAbsoluteURL(src);
-  this.el_.vjs_src(src);
-
-  // Currently the SWF doesn't autoplay if you load a source later.
-  // e.g. Load player w/ no source, wait 2s, set src.
-  if (this.player_.autoplay()) {
-    var tech = this;
-    this.setTimeout(function () {
-      tech.play();
-    }, 0);
-  }
+/*jshint sub:true*/
+videojs.MediaTechController.prototype.setVideoTrack = function (track) {
+  track.enabled = true;
+  this.trigger('bitratechange');
 };
 
-vjs.Flash.prototype['setCurrentTime'] = function (time) {
-  this.lastSeekTarget_ = time;
-  this.el_.vjs_setProperty('currentTime', time);
-  vjs.MediaTechController.prototype.setCurrentTime.call(this);
-};
-
-vjs.Flash.prototype['currentTime'] = function (time) {
-  // when seeking make the reported time keep up with the requested time
-  // by reading the time we're seeking to
-  if (this.seeking()) {
-    return this.lastSeekTarget_ || 0;
-  }
-  return this.el_.vjs_getProperty('currentTime');
-};
-
-vjs.Flash.prototype['currentSrc'] = function () {
-  if (this.currentSource_) {
-    return this.currentSource_.src;
-  } else {
-    return this.el_.vjs_getProperty('currentSrc');
-  }
-};
-
-vjs.Flash.prototype.load = function () {
-  this.el_.vjs_load();
-};
-
-vjs.Flash.prototype.poster = function () {
-  this.el_.vjs_getProperty('poster');
-};
-vjs.Flash.prototype['setPoster'] = function () {
-  // poster images are not handled by the Flash tech so make this a no-op
-};
-
-vjs.Flash.prototype.seekable = function () {
-  var duration = this.duration();
-  if (duration === 0) {
-    // The SWF reports a duration of zero when the actual duration is unknown
-    return vjs.createTimeRange();
-  }
-  return vjs.createTimeRange(0, this.duration());
-};
-
-vjs.Flash.prototype.buffered = function () {
-  if (!this.el_.vjs_getProperty) {
-    return vjs.createTimeRange();
-  }
-  return vjs.createTimeRange(0, this.el_.vjs_getProperty('buffered'));
-};
-
-vjs.Flash.prototype.duration = function () {
-  if (!this.el_.vjs_getProperty) {
-    return 0;
-  }
-  return this.el_.vjs_getProperty('duration');
-};
-
-vjs.Flash.prototype.supportsFullScreen = function () {
-  return false; // Flash does not allow fullscreen through javascript
-};
-
-vjs.Flash.prototype.enterFullScreen = function () {
-  return false;
-};
-
-(function () {
-  // Create setters and getters for attributes
-  var api = vjs.Flash.prototype,
-    readWrite = 'rtmpConnection,rtmpStream,preload,defaultPlaybackRate,playbackRate,autoplay,loop,mediaGroup,controller,controls,volume,muted,defaultMuted'.split(','),
-    readOnly = 'error,networkState,readyState,seeking,initialTime,startOffsetTime,paused,played,ended,videoTracks,audioTracks,videoWidth,videoHeight'.split(','),
-  // Overridden: buffered, currentTime, currentSrc
-    i;
-
-  function createSetter(attr) {
-    var attrUpper = attr.charAt(0).toUpperCase() + attr.slice(1);
-    api['set' + attrUpper] = function (val) {
-      return this.el_.vjs_setProperty(attr, val);
-    };
-  }
-
-  function createGetter(attr) {
-    api[attr] = function () {
-      return this.el_.vjs_getProperty(attr);
-    };
-  }
-
-  // Create getter and setters for all read/write attributes
-  for (i = 0; i < readWrite.length; i++) {
-    createGetter(readWrite[i]);
-    createSetter(readWrite[i]);
-  }
-
-  // Create getters for read-only attributes
-  for (i = 0; i < readOnly.length; i++) {
-    createGetter(readOnly[i]);
-  }
-})();
-
-/* Flash Support Testing -------------------------------------------------------- */
-
-vjs.Flash.isSupported = function () {
-  return vjs.Flash.version()[0] >= 10;
-  // return swfobject.hasFlashPlayerVersion('10');
-};
-
-// Add Source Handler pattern functions to this tech
-vjs.MediaTechController.withSourceHandlers(vjs.Flash);
-
-/**
- * The default native source handler.
- * This simply passes the source to the video element. Nothing fancy.
- * @param  {Object} source   The source object
- * @param  {vjs.Flash} tech  The instance of the Flash tech
- */
-vjs.Flash['nativeSourceHandler'] = {};
-
-/**
- * Check Flash can handle the source natively
- * @param  {Object} source  The source object
- * @return {String}         'probably', 'maybe', or '' (empty string)
- */
-vjs.Flash['nativeSourceHandler']['canHandleSource'] = function (source) {
-  var type;
-
-  if (!source.type) {
-    return '';
-  }
-
-  // Strip code information from the type because we don't get that specific
-  type = source.type.replace(/;.*/, '').toLowerCase();
-
-  if (type in vjs.Flash.formats) {
-    return 'maybe';
-  }
-
-  return '';
-};
-
-/**
- * Pass the source to the flash object
- * Adaptive source handlers will have more complicated workflows before passing
- * video data to the video element
- * @param  {Object} source    The source object
- * @param  {vjs.Flash} tech   The instance of the Flash tech
- */
-vjs.Flash['nativeSourceHandler']['handleSource'] = function (source, tech) {
-  tech.setSrc(source.src);
-};
-
-/**
- * Clean up the source handler when disposing the player or switching sources..
- * (no cleanup is needed when supporting the format natively)
- */
-vjs.Flash['nativeSourceHandler']['dispose'] = function () {
-};
-
-// Register the native source handler
-vjs.Flash['registerSourceHandler'](vjs.Flash['nativeSourceHandler']);
-
-vjs.Flash.formats = {
-  'video/flv': 'FLV',
-  'video/x-flv': 'FLV',
-  'video/mp4': 'MP4',
-  'video/m4v': 'MP4'
-};
-
-vjs.Flash['onReady'] = function (currSwf) {
-  var el, player;
-
-  el = vjs.el(currSwf);
-
-  // get player from the player div property
-  player = el && el.parentNode && el.parentNode['player'];
-
-  // if there is no el or player then the tech has been disposed
-  // and the tech element was removed from the player div
-  if (player) {
-    // reference player on tech element
-    el['player'] = player;
-    // check that the flash object is really ready
-    vjs.Flash['checkReady'](player.tech);
-  }
-};
-
-// The SWF isn't always ready when it says it is. Sometimes the API functions still need to be added to the object.
-// If it's not ready, we set a timeout to check again shortly.
-vjs.Flash['checkReady'] = function (tech) {
-  // stop worrying if the tech has been disposed
-  if (!tech.el()) {
-    return;
-  }
-
-  // check if API property exists
-  if (tech.el().vjs_getProperty) {
-    // tell tech it's ready
-    tech.triggerReady();
-  } else {
-    // wait longer
-    this.setTimeout(function () {
-      vjs.Flash['checkReady'](tech);
-    }, 50);
-  }
-};
-
-// Trigger events from the swf on the player
-vjs.Flash['onEvent'] = function (swfID, eventName) {
-  var player = vjs.el(swfID)['player'];
-  player.trigger(eventName);
-};
-
-// Log errors from the swf
-vjs.Flash['onError'] = function (swfID, err) {
-  var player = vjs.el(swfID)['player'];
-  var msg = 'FLASH: ' + err;
-
-  if (err == 'srcnotfound') {
-    player.error({code: 4, message: msg});
-
-    // errors we haven't categorized into the media errors
-  } else {
-    player.error(msg);
-  }
-};
-
-// Flash Version Check
-vjs.Flash.version = function () {
-  var version = '0,0,0';
-
-  // IE
-  try {
-    version = new window.ActiveXObject('ShockwaveFlash.ShockwaveFlash').GetVariable('$version').replace(/\D+/g, ',').match(/^,?(.+),?$/)[1];
-
-    // other browsers
-  } catch (e) {
-    try {
-      if (navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin) {
-        version = (navigator.plugins['Shockwave Flash 2.0'] || navigator.plugins['Shockwave Flash']).description.replace(/\D+/g, ',').match(/^,?(.+),?$/)[1];
-      }
-    } catch (err) {
-    }
-  }
-  return version.split(',');
-};
-
-// Flash embedding method. Only used in non-iframe mode
-vjs.Flash.embed = function (swf, placeHolder, flashVars, params, attributes) {
-  var code = vjs.Flash.getEmbedCode(swf, flashVars, params, attributes),
-
-  // Get element by embedding code and retrieving created element
-    obj = vjs.createEl('div', {innerHTML: code}).childNodes[0],
-
-    par = placeHolder.parentNode
-    ;
-
-  placeHolder.parentNode.replaceChild(obj, placeHolder);
-  obj[vjs.expando] = placeHolder[vjs.expando];
-
-  // IE6 seems to have an issue where it won't initialize the swf object after injecting it.
-  // This is a dumb fix
-  var newObj = par.childNodes[0];
-  setTimeout(function () {
-    newObj.style.display = 'block';
-  }, 1000);
-
-  return obj;
-
-};
-
-vjs.Flash.getEmbedCode = function (swf, flashVars, params, attributes) {
-
-  var objTag = '<object type="application/x-shockwave-flash" ',
-    flashVarsString = '',
-    paramsString = '',
-    attrsString = '';
-
-  // Convert flash vars to string
-  if (flashVars) {
-    vjs.obj.each(flashVars, function (key, val) {
-      flashVarsString += (key + '=' + val + '&amp;');
-    });
-  }
-
-  // Add swf, flashVars, and other default params
-  params = vjs.obj.merge({
-    'movie': swf,
-    'flashvars': flashVarsString,
-    'allowScriptAccess': 'always', // Required to talk to swf
-    'allowNetworking': 'all' // All should be default, but having security issues.
-  }, params);
-
-  // Create param tags string
-  vjs.obj.each(params, function (key, val) {
-    paramsString += '<param name="' + key + '" value="' + val + '" />';
-  });
-
-  attributes = vjs.obj.merge({
-    // Add swf to attributes (need both for IE and Others to work)
-    'data': swf,
-
-    // Default to 100% width/height
-    'width': '100%',
-    'height': '100%'
-
-  }, attributes);
-
-  // Create Attributes string
-  vjs.obj.each(attributes, function (key, val) {
-    attrsString += (key + '="' + val + '" ');
-  });
-
-  return objTag + attrsString + '>' + paramsString + '</object>';
-};
+  return videojs;
+}));

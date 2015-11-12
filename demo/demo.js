@@ -55,11 +55,11 @@ var loadPlayer = function (url) {
   var sources =
     [
       {
-        "src": "https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/master.m3u8",
+        "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/master.m3u8",
         "type": "application/vnd.apple.mpegurl"
       },
       {
-        "src": "https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+        "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
         "type": "application/dash+xml"
       }
     ];
@@ -85,6 +85,7 @@ var loadPlayer = function (url) {
     sources: sources
   }).ready(function () {
     var player = this;
+
     console.log('Video Ready');
 
     var smoothie = new SmoothieChart({

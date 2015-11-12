@@ -9,12 +9,10 @@ var express = require('express');
 var app = express();
 var env = app.get('env');
 app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/demo');
 app.use(express.static('demo'));
-app.use(express.static('dist'));
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
+app.use('/dist', express.static('dist'));
+//app.use(express.static('dist'));
 
 // Start server
 var server = app.listen(process.env.PORT, process.env.IP, function () {
