@@ -69,6 +69,7 @@ var loadPlayer = function (url) {
     ];
 
   var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'hls', 'flash'];
+  var muted = qs.muted ? qs.muted : false;
 
   if (url) {
     sources = [
@@ -83,6 +84,7 @@ var loadPlayer = function (url) {
     metrics: {user_id: 33},
     autoplay: true,
     controls: true,
+    muted: muted,
     width: '100%',
     height: '550',
     techOrder: techOrder,
