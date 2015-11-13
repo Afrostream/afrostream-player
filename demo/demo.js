@@ -68,7 +68,7 @@ var loadPlayer = function (url) {
       }
     ];
 
-  var techOrder = qs.tech ? qs.tech.split(',') : [/*'dash', 'html5',*/'hls', 'flash'];
+  var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'hls', 'flash'];
 
   if (url) {
     sources = [
