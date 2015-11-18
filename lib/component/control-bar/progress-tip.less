@@ -3,20 +3,21 @@
 .vjs-tip {
   display: block;
   opacity: 1;
-  top: -1em;
+  bottom: 100%;
   padding: 0.3em;
   font-size: 0.8em;
   position: absolute;
   z-index: 100000;
-  @trans: visibility 0.1s, opacity 0.1s, top 0.1s;
+  @trans: visibility 0.1s, opacity 0.1s, bottom 0.1s;
   .transition(@trans);
+  pointer-events: none;
 }
 
 .vjs-tip.vjs-hidden {
-  top: -1.2em;
+  bottom: 120%;
   display: block !important;
   opacity: 0;
-  @trans: visibility 0.3s, opacity 0.3s, top 0.3s;
+  @trans: visibility 0.3s, opacity 0.3s, bottom 0.3s;
   .transition(@trans);
 }
 
