@@ -1,7 +1,9 @@
 {
-  "name":"afrostream-player",
-  "description":"",
-  "scripts":{},
-  "env":{},
-  "addons":[]
+  "name": "afrostream-player",
+  "description": "Player for afrostream",
+  "scripts": {},
+  "env": {
+    "NODE_ENV": "staging"
+  },
+  "addons": []
 }
