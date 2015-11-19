@@ -11,7 +11,7 @@ skin name to your video tag instead of the default skin.
 e.g. <video class="video-js my-skin-name">
 */
 .vjs-default-skin {
-  color: #ffffff;
+  color: #FFFFFF;
 }
 /* Custom Icon Font
 --------------------------------------------------------------------------------
@@ -41,9 +41,9 @@ The control icons are from a custom font. Each icon corresponds to a character
 }
 .vjs-default-skin .vjs-slider:focus {
   /* box-shadow */
-  -webkit-box-shadow: 0 0 2em #ffffff;
-  -moz-box-shadow: 0 0 2em #ffffff;
-  box-shadow: 0 0 2em #ffffff;
+  -webkit-box-shadow: 0 0 2em #fff;
+  -moz-box-shadow: 0 0 2em #fff;
+  box-shadow: 0 0 2em #fff;
 }
 .vjs-default-skin .vjs-slider-handle {
   position: absolute;
@@ -86,7 +86,7 @@ The default control bar that is a container for most of the controls.
   /* Height includes any margin you want above or below control items */
   height: 3.0em;
   /* background-color-with-alpha */
-  background-color: #07141e;
+  background-color: #07141E;
   background-color: rgba(7, 20, 30, 0.7);
 }
 /* Show the control bar only once the video has started playing */
@@ -254,7 +254,7 @@ fonts to show/hide properly.
   height: 0.5em;
   /* assuming volume starts at 1.0 */
   width: 100%;
-  background: #66a8cc url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAP0lEQVQIHWWMAQoAIAgDR/QJ/Ub//04+w7ZICBwcOg5FZi5iBB82AGzixEglJrd4TVK5XUJpskSTEvpdFzX9AB2pGziSQcvAAAAAAElFTkSuQmCC) -50% 0 repeat;
+  background: #66A8CC url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAP0lEQVQIHWWMAQoAIAgDR/QJ/Ub//04+w7ZICBwcOg5FZi5iBB82AGzixEglJrd4TVK5XUJpskSTEvpdFzX9AB2pGziSQcvAAAAAAElFTkSuQmCC) -50% 0 repeat;
 }
 .vjs-default-skin .vjs-volume-bar .vjs-volume-handle {
   width: 0.5em;
@@ -356,7 +356,7 @@ fonts to show/hide properly.
     Also using a paralax effect to make the lines move backwards.
       The -50% left position makes that happen.
   */
-  background: #66a8cc url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAP0lEQVQIHWWMAQoAIAgDR/QJ/Ub//04+w7ZICBwcOg5FZi5iBB82AGzixEglJrd4TVK5XUJpskSTEvpdFzX9AB2pGziSQcvAAAAAAElFTkSuQmCC) -50% 0 repeat;
+  background: #66A8CC url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAP0lEQVQIHWWMAQoAIAgDR/QJ/Ub//04+w7ZICBwcOg5FZi5iBB82AGzixEglJrd4TVK5XUJpskSTEvpdFzX9AB2pGziSQcvAAAAAAElFTkSuQmCC) -50% 0 repeat;
 }
 .vjs-default-skin .vjs-load-progress {
   background: #646464 /* IE8- Fallback */;
@@ -452,7 +452,7 @@ easily in the skin designer. http://designer.videojs.com/
   opacity: 1;
   /* Need a slightly gray bg so it can be seen on black backgrounds */
   /* background-color-with-alpha */
-  background-color: #07141e;
+  background-color: #07141E;
   background-color: rgba(7, 20, 30, 0.7);
   border: 0.1em solid #3b4249;
   /* border-radius */
@@ -499,9 +499,9 @@ easily in the skin designer. http://designer.videojs.com/
   background-color: #505050;
   background-color: rgba(50, 50, 50, 0.75);
   /* box-shadow */
-  -webkit-box-shadow: 0 0 3em #ffffff;
-  -moz-box-shadow: 0 0 3em #ffffff;
-  box-shadow: 0 0 3em #ffffff;
+  -webkit-box-shadow: 0 0 3em #fff;
+  -moz-box-shadow: 0 0 3em #fff;
+  box-shadow: 0 0 3em #fff;
   /* transition */
   -webkit-transition: all 0s;
   -moz-transition: all 0s;
@@ -688,7 +688,7 @@ easily in the skin designer. http://designer.videojs.com/
   left: -5em;
   /* Width of menu - width of button / 2 */
   /* background-color-with-alpha */
-  background-color: #07141e;
+  background-color: #07141E;
   background-color: rgba(7, 20, 30, 0.7);
   /* box-shadow */
   -webkit-box-shadow: -0.2em -0.2em 0.3em rgba(255, 255, 255, 0.2);
@@ -1059,7 +1059,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   font-style: normal;
 }
 .video-js.vjs-afrostream-skin {
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: 0.8em;
   /* Fullscreen
    --------------------------------------------------------------------------------
@@ -1134,7 +1134,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   -moz-border-radius: 100%;
   border-radius: 100%;
   /* background-color-with-alpha */
-  background-color: #07141e;
+  background-color: #07141E;
   background-color: rgba(7, 20, 30, 0.7);
   /* transition */
   -webkit-transition: opacity 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
@@ -1165,7 +1165,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 .video-js.vjs-afrostream-skin .vjs-big-play-button:focus {
   outline: 0;
   border-color: #fff;
-  background-color: #07141e;
+  background-color: #07141E;
   /* box-shadow */
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -1572,7 +1572,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   width: 40em;
 }
 .video-js.vjs-afrostream-skin .vjs-captions {
-  color: #ffffff /* Captions are white */;
+  color: #FFF /* Captions are white */;
 }
 .video-js.vjs-afrostream-skin .vjs-caption-settings .vjs-tracksettings {
   top: 0;
@@ -1818,7 +1818,7 @@ skin name to your video tag instead of the default skin.
 e.g. <video class="video-js my-skin-name">
 */
 .vjs-default-skin {
-  color: #cccccc;
+  color: #CCCCCC;
 }
 /* Custom Icon Font
 --------------------------------------------------------------------------------
@@ -1848,9 +1848,9 @@ The control icons are from a custom font. Each icon corresponds to a character
 }
 .vjs-default-skin .vjs-slider:focus {
   /* box-shadow */
-  -webkit-box-shadow: 0 0 2em #ffffff;
-  -moz-box-shadow: 0 0 2em #ffffff;
-  box-shadow: 0 0 2em #ffffff;
+  -webkit-box-shadow: 0 0 2em #fff;
+  -moz-box-shadow: 0 0 2em #fff;
+  box-shadow: 0 0 2em #fff;
 }
 .vjs-default-skin .vjs-slider-handle {
   position: absolute;
@@ -1893,7 +1893,7 @@ The default control bar that is a container for most of the controls.
   /* Height includes any margin you want above or below control items */
   height: 3.0em;
   /* background-color-with-alpha */
-  background-color: #07141e;
+  background-color: #07141E;
   background-color: rgba(7, 20, 30, 0.7);
 }
 /* Show the control bar only once the video has started playing */
@@ -2061,7 +2061,7 @@ fonts to show/hide properly.
   height: 0.5em;
   /* assuming volume starts at 1.0 */
   width: 100%;
-  background: #66a8cc url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAP0lEQVQIHWWMAQoAIAgDR/QJ/Ub//04+w7ZICBwcOg5FZi5iBB82AGzixEglJrd4TVK5XUJpskSTEvpdFzX9AB2pGziSQcvAAAAAAElFTkSuQmCC) -50% 0 repeat;
+  background: #66A8CC url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAP0lEQVQIHWWMAQoAIAgDR/QJ/Ub//04+w7ZICBwcOg5FZi5iBB82AGzixEglJrd4TVK5XUJpskSTEvpdFzX9AB2pGziSQcvAAAAAAElFTkSuQmCC) -50% 0 repeat;
 }
 .vjs-default-skin .vjs-volume-bar .vjs-volume-handle {
   width: 0.5em;
@@ -2163,7 +2163,7 @@ fonts to show/hide properly.
     Also using a paralax effect to make the lines move backwards.
       The -50% left position makes that happen.
   */
-  background: #66a8cc url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAP0lEQVQIHWWMAQoAIAgDR/QJ/Ub//04+w7ZICBwcOg5FZi5iBB82AGzixEglJrd4TVK5XUJpskSTEvpdFzX9AB2pGziSQcvAAAAAAElFTkSuQmCC) -50% 0 repeat;
+  background: #66A8CC url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAP0lEQVQIHWWMAQoAIAgDR/QJ/Ub//04+w7ZICBwcOg5FZi5iBB82AGzixEglJrd4TVK5XUJpskSTEvpdFzX9AB2pGziSQcvAAAAAAElFTkSuQmCC) -50% 0 repeat;
 }
 .vjs-default-skin .vjs-load-progress {
   background: #646464 /* IE8- Fallback */;
@@ -2259,7 +2259,7 @@ easily in the skin designer. http://designer.videojs.com/
   opacity: 1;
   /* Need a slightly gray bg so it can be seen on black backgrounds */
   /* background-color-with-alpha */
-  background-color: #07141e;
+  background-color: #07141E;
   background-color: rgba(7, 20, 30, 0.7);
   border: 0.1em solid #3b4249;
   /* border-radius */
@@ -2306,9 +2306,9 @@ easily in the skin designer. http://designer.videojs.com/
   background-color: #505050;
   background-color: rgba(50, 50, 50, 0.75);
   /* box-shadow */
-  -webkit-box-shadow: 0 0 3em #ffffff;
-  -moz-box-shadow: 0 0 3em #ffffff;
-  box-shadow: 0 0 3em #ffffff;
+  -webkit-box-shadow: 0 0 3em #fff;
+  -moz-box-shadow: 0 0 3em #fff;
+  box-shadow: 0 0 3em #fff;
   /* transition */
   -webkit-transition: all 0s;
   -moz-transition: all 0s;
@@ -2495,7 +2495,7 @@ easily in the skin designer. http://designer.videojs.com/
   left: -5em;
   /* Width of menu - width of button / 2 */
   /* background-color-with-alpha */
-  background-color: #07141e;
+  background-color: #07141E;
   background-color: rgba(7, 20, 30, 0.7);
   /* box-shadow */
   -webkit-box-shadow: -0.2em -0.2em 0.3em rgba(255, 255, 255, 0.2);

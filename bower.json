@@ -26,7 +26,8 @@
     "tests"
   ],
   "dependencies": {
-    "videojs-ga": "~0.4.2"
+    "videojs-ga": "~0.4.2",
+    "js_mse_eme": "git+https://github.com/youtube/js_mse_eme.git#master"
   },
   "devDependencies": {
     "video.js": "4.12"
