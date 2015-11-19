@@ -165,12 +165,11 @@ module.exports = function (grunt) {
       }
     },
     copy: {
-      smoothie: {
+      demo: {
         expand: true,
         flatten: true,
         src: [
           './node_modules/smoothie/smoothie.js'
-
         ],
         dest: 'demo/libs'
       },
@@ -208,7 +207,8 @@ module.exports = function (grunt) {
       dev: {
         files: [{
           src: [
-            '<%= concat.dashjs.src %>'],
+            '<%= concat.dashjs.src %>'
+          ],
           dest: 'demo/index.html'
         }]
       },

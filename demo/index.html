@@ -45,34 +45,60 @@
     <h2>Video Bitrate Graph</h2>
     <canvas id="_chart" height="250" width="500"></canvas>
   </div>
-  <div id="debugData" class="row">
-    <p id="version">unkown version</p>
-
-    <div id="videoData">
-      <p>
-        <br>
-        <span id='audioBuffer'>0.0</span> [sec]<br>
-        <span id='videoBuffer'>0.0</span> [sec]<br>
-        <span id='resolution'>000 x 000</span><br>
-        <br>
-        <br>
-        <span id='dlAudioBitrate'>0.0</span> [kbps]<br>
-        <span id='dlVideoBitrate'>0.0</span> [kbps]<br>
-        <span id='dlResolution'>000 x 000</span><br>
-      </p>
-    </div>
-    <div id="videoDataLabels">
-      <p>
-        <strong>Playback Data</strong><br>
-        Audio Buffer Length:<br>
-        Video Buffer Length:<br>
-        Resolution:<br>
-        <br>
-        <strong>Download Data</strong><br>
-        Audio Bitrate:<br>
-        Video Bitrate:<br>
-        Resolution:<br>
-      </p>
+  <div class="table-responsive dotted">
+    <table class="table  table_indent ">
+      <tbody>
+      <tr class="active table_nointent">
+        <td style="vertical-align:middle"><strong>Playback Data</strong></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Audio Buffer Length:</td>
+        <td><span id='audioBuffer'>0.0</span> [sec]</td>
+      </tr>
+      <tr>
+        <td>Video Buffer Length:</td>
+        <td><span id='videoBuffer'>0.0</span> [sec]</td>
+      </tr>
+      <tr>
+        <td>Resolution:</td>
+        <td><span id='resolution'>000 x 000</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="table-responsive dotted">
+    <table class="table  table_indent ">
+      <tbody>
+      <tr class="active table_nointent">
+        <td style="vertical-align:middle"><strong>Download Data</strong></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Videojs Version</td>
+        <td><span id="version">0.0</span></td>
+      </tr>
+      <tr>
+        <td>Audio Bitrate:</td>
+        <td><span id='dlAudioBitrate'>0.0</span> [kbps]</td>
+      </tr>
+      <tr>
+        <td>Video Bitrate:</td>
+        <td><span id='dlVideoBitrate'>0.0</span> [kbps]</td>
+      </tr>
+      <tr>
+        <td>Resolution:</td>
+        <td><span id='dlResolution'>000 x 000</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="page-slice white-gradient shadow-top">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+        </div>
+      </div>
     </div>
   </div>
   <div class="page-slice white-gradient shadow-top">
@@ -82,7 +108,9 @@
           <h2>Platform Native DRM Support</h2>
 
           <p>Please note that this table is a general guideline listing the DRM supported by popular platforms and
-            devices. While we list the <em>built-in</em> DRM support that ships with each, there may be other methods of
+            devices. While we list the <em>built-in</em> DRM support that ships with each, there may be other
+            methods
+            of
             enabling additional DRM systems such as implementing an SDK. For example, our <a
               href="http://castlabs.com/products/video-player-sdk/" target="_blank">castLabs Video Player SDKs</a>
             provide additional DRM support for playback on iOS and Android devices.</p>
@@ -108,74 +136,74 @@
               </tr>
               <tr>
                 <td>Chrome <span class="text-muted">(35+)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Firefox <span class="text-muted">(38+ on Windows)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Internet Explorer <span class="text-muted">(11+ on Windows 8.1+)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Microsoft Edge <span class="text-muted">(Windows 10+)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Opera <span class="text-muted">(31+)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Safari <span class="text-muted">(8+ on OS X)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
 
               <!--  <tr>
                   <td>Opera <span class="text-muted">(31+?)</span></td>
-                  <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                  <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                  <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                  <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                  <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                  <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                  <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                  <td><img src="./assets/images/cross.png" alt="NO"></td>
+                  <td><img src="./assets/images/check.png" alt="YES"></td>
+                  <td><img src="./assets/images/cross.png" alt="NO"></td>
+                  <td><img src="./assets/images/cross.png" alt="NO"></td>
+                  <td><img src="./assets/images/cross.png" alt="NO"></td>
+                  <td><img src="./assets/images/cross.png" alt="NO"></td>
+                  <td><img src="./assets/images/cross.png" alt="NO"></td>
                 </tr>-->
               <tr class="active table_nointent">
                 <td><strong>Plugins &amp; Run-time Environments</strong></td>
@@ -193,23 +221,23 @@
               <tr>
                 <td>Adobe Flash / AIR</td>
 
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Silverlight</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
 
               <tr class="active table_nointent">
@@ -227,44 +255,44 @@
               </tr>
               <tr>
                 <td>Android <span class="text-muted">(4.3+)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Android <span class="text-muted">(3+)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>iOS <span class="text-muted">(6+)</span></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
 
               <tr>
                 <td>Windows Phone <!--<span class="text-muted">(8.1+)</span>--></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td><a href="http://castlabs.com/products/video-player-sdk/" target="_blank">castLabs Video Player
@@ -272,13 +300,13 @@
 
                   <div class="small-caps text-muted">For iOS<sup>1</sup> &amp; Android</div>
                 </td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
               </tr>
               <tr class="active table_nointent">
                 <td><strong>Set-top Boxes &amp; Casting </strong></td>
@@ -295,63 +323,63 @@
               </tr>
               <tr>
                 <td>Chromecast</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Android TV</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Google TV</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Roku</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Apple TV</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Amazon Fire TV</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr class="active table_nointent">
                 <td><strong>TVs</strong></td>
@@ -368,35 +396,35 @@
               </tr>
               <tr>
                 <td>Samsung Smart TVs <sup class="text-muted small-caps">2</sup></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Smart TV Alliance <span class="text-muted">(LG, Philips, Toshiba, Vestel)</span> <sup
                   class="text-muted small-caps">3</sup></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>Connected TVs <span class="text-muted">(HbbTV 1.5 / TNT 2.0)</span> <sup
                   class="text-muted small-caps">4</sup></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr class="active table_nointent">
                 <td><strong>Game Consoles</strong></td>
@@ -413,24 +441,24 @@
               </tr>
               <tr>
                 <td>Xbox One / 360</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               <tr>
                 <td>PlayStation 3 / 4</td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
 
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/check.png" alt="YES"></td>
-                <td><img src="//d1g4b464qmnt1q.cloudfront.net/p/img/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
+                <td><img src="./assets/images/check.png" alt="YES"></td>
+                <td><img src="./assets/images/cross.png" alt="NO"></td>
               </tr>
               </tbody>
             </table>
@@ -446,12 +474,14 @@
             <br>
             <sup>3</sup> Some Smart TV Alliance models may not support Widevine
             <br>
-            <sup>4</sup> Depends on manufacturer: some Connected TV models do not support both DRM systems - Support is
+            <sup>4</sup> Depends on manufacturer: some Connected TV models do not support both DRM systems - Support
+            is
             mainly for PlayReady</p>
 
           <p class="text-muted small-caps legal-text">
             Apple, FairPlay, Safari, and Apple TV are trademarks of Apple Inc., registered in the U.S. and other
-            countries. IOS is a trademark or registered trademark of Cisco in the U.S. and other countries and is used
+            countries. IOS is a trademark or registered trademark of Cisco in the U.S. and other countries and is
+            used
             under license.
           </p>
 
@@ -463,8 +493,64 @@
 </div>
 <script src="//code.jquery.com/jquery-2.1.4.js"></script>
 <!-- injector:js -->
-<script src="../dist/afrostream-player.js"></script>
-<!-- endinjector -->
+<script src="../node_modules/video.js/dist/video-js/video.dev.js"></script>
+<script src="../node_modules/videojs-contrib-media-sources/src/videojs-media-sources.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/videojs-hls.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/xhr.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/flv-tag.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/stream.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/exp-golomb.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/h264-extradata.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/h264-stream.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/aac-stream.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/metadata-stream.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/segment-parser.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/m3u8/m3u8-parser.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/playlist.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/playlist-loader.js"></script>
+<script src="../node_modules/pkcs7/dist/pkcs7.unpad.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/decrypter.js"></script>
+<script src="../node_modules/videojs-contrib-hls/src/bin-utils.js"></script>
+<script src="../node_modules/dashjs/dist/dash.all.js"></script>
+<script src="../node_modules/videojs-chromecast/dist/videojs.chromecast.js"></script>
+<script src="../bower_components/videojs-ga/dist/videojs.ga.js"></script>
+<script src="../node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
+<script src="../lib/afrostream-player.js"></script>
+<script src="../lib/closure.js"></script>
+<script src="../lib/component/control-bar/audio-tracks.js"></script>
+<script src="../lib/component/control-bar/bitrate-control.js"></script>
+<script src="../lib/component/control-bar/progress-tip.js"></script>
+<script src="../lib/component/loading-spinner.js"></script>
+<script src="../lib/core/player.js"></script>
+<script src="../lib/media/dash.js"></script>
+<script src="../lib/media/html5.js"></script>
+<script src="../lib/media/media.js"></script>
+<!--&lt;!&ndash; endinjector &ndash;&gt;-->
+<!--<script src="./libs/util.js"></script>-->
+<!--<script src="./libs/streamDef.js"></script>-->
+<!--<script src="./libs/focusManager.js"></script>-->
+<!--<script src="./libs/logger.js"></script>-->
+<!--<script src="./libs/xhr.js"></script>-->
+<!--<script src="./libs/timeout.js"></script>-->
+<!--<script src="./libs/testView.js"></script>-->
+<!--<script src="./libs/fullTestList.js"></script>-->
+<!--<script src="./libs/fullTestView.js"></script>-->
+<!--<script src="./libs/compactTestList.js"></script>-->
+<!--<script src="./libs/compactTestView.js"></script>-->
+<!--<script src="./libs/mediaSourcePortability.js"></script>-->
+<!--<script src="./libs/encryptedMediaPortability.js"></script>-->
+<!--<script src="./libs/emeManager.js"></script>-->
+<!--<script src="./libs/test.js"></script>-->
+<!--<script src="./libs/testTypes.js"></script>-->
+<!--<script src="./libs/msutil.js"></script>-->
+<!--<script src="./libs/mp4.js"></script>-->
+<!--<script src="./libs/webm.js"></script>-->
+<!--<script src="./libs/conformanceTest.js"></script>-->
+<!--<script src="./libs/performanceTest.js"></script>-->
+<!--<script src="./libs/enduranceTest.js"></script>-->
+<!--<script src="./libs/emeTest.js"></script>-->
+<!--<script src="./libs/progressiveTest.js"></script>-->
+<!--<script src="./libs/main.js"></script>-->
 <script src="./libs/smoothie.js"></script>
 <script src="./demo.js"></script>
 <!--<script src="afrostream-player.js"></script>-->
