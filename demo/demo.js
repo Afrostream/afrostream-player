@@ -68,8 +68,8 @@ var loadPlayer = function (url) {
         //}
         //DRM
         {
-          "src": "http://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3-drm.ism/d4eed726882a4be3-drm.mpd",
-          "type": "application/dash+xml",
+          "src": "https://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3-drm.ism/d4eed726882a4be3-drm.mpd",
+          "type": "application/dash+xml"
         }
         //{
         //  "src": "http://html5.cablelabs.com:8100/cenc/wvck/dash_initdata.mpd",
