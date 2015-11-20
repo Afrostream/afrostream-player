@@ -43,7 +43,21 @@
 <div class="container" ng-show="playerV">
   <div id="graphWrapper" class="row">
     <h2>Video Bitrate Graph</h2>
-    <canvas id="_chart" height="250" width="500"></canvas>
+    <canvas id="_chart" height="250"></canvas>
+  </div>
+  <div class="table-responsive dotted">
+    <table class="table  table_indent ">
+      <tbody>
+      <tr class="active table_nointent">
+        <td style="vertical-align:middle"><strong>Player Info</strong></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Videojs Version</td>
+        <td><span id="version">0.0</span></td>
+      </tr>
+      </tbody>
+    </table>
   </div>
   <div class="table-responsive dotted">
     <table class="table  table_indent ">
@@ -73,10 +87,6 @@
       <tr class="active table_nointent">
         <td style="vertical-align:middle"><strong>Download Data</strong></td>
         <td></td>
-      </tr>
-      <tr>
-        <td>Videojs Version</td>
-        <td><span id="version">0.0</span></td>
       </tr>
       <tr>
         <td>Audio Bitrate:</td>

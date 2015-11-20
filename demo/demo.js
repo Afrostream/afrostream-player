@@ -164,31 +164,44 @@ var loadPlayer = function (url) {
 
       var smoothie = new SmoothieChart({
         millisPerPixel: 20,
-        interpolation: 'bezier'
+        interpolation: 'bezier',
+        grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
+        maxValue: 5000,
+        minValue: -50
       });
 
-      var timeSerie = new TimeSeries();
+      var audioSerie = new TimeSeries();
+      var videoSerie = new TimeSeries();
 
-      setTimeout(function () {
-        smoothie.streamTo($('#_chart')[0], 1000);
-        smoothie.addTimeSeries(timeSerie, {
-          strokeStyle: '#00ff00',
-          fillStyle: 'rgba(255, 0, 0, 0.4)',
-          lineWidth: 2
-        });
-      }, 100);
+      smoothie.addTimeSeries(audioSerie, {
+        strokeStyle: 'rgb(100,255,255)',
+        fillStyle: 'rgba(150,255,255, 0.4)',
+        lineWidth: 2
+      });
+
+      smoothie.addTimeSeries(videoSerie, {
+        strokeStyle: '#00ff00',
+        fillStyle: 'rgba(255, 0, 0, 0.4)',
+        lineWidth: 2
+      });
+
+      var chart = $('#_chart')[0];
+      chart.width = player.width();
+      smoothie.streamTo(chart, 1000);
 
       setInterval(function () {
         var statistics = player.afrostream.getPlaybackStatistics();
+        var dlAudioBitrate = Math.round(statistics.audio.bandwidth / 10.24) / 100;
+        var dlVidBitrate = Math.round(statistics.video.bandwidth / 10.24) / 100;
         document.getElementById('version').innerHTML = videojs.CDN_VERSION;
         document.getElementById('resolution').innerHTML = player.width() + ' x ' + player.height();
         document.getElementById('audioBuffer').innerHTML = statistics.audio.bufferLength;
         document.getElementById('videoBuffer').innerHTML = statistics.video.bufferLength;
-        document.getElementById('dlAudioBitrate').innerHTML = Math.round(statistics.audio.bandwidth / 10.24) / 100;
-        var dlVidBitrate = Math.round(statistics.video.bandwidth / 10.24) / 100;
+        document.getElementById('dlAudioBitrate').innerHTML = dlAudioBitrate;
         document.getElementById('dlVideoBitrate').innerHTML = dlVidBitrate;
-        timeSerie.append(new Date().getTime(), dlVidBitrate);
-
+        var now = new Date().getTime();
+        audioSerie.append(now, dlAudioBitrate);
+        videoSerie.append(now, dlVidBitrate);
       }, 500);
     });
   }
