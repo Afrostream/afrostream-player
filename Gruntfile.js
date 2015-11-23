@@ -100,7 +100,8 @@ module.exports = function (grunt) {
           'lib/**/*.js',
           '!lib/**/flash.js',
           '!lib/**/dashas.js',
-          '!lib/castlab/**/*.js'
+          '!lib/castlab/**/*.js',
+          '!lib/**/osmf.js'
         ]
       },
       test: {

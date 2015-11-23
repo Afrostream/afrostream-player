@@ -98,9 +98,13 @@ playerAfrostream.controller('PlayerCtrl', function ($scope) {
         //  "type": "application/dash+xml"
         //}
         //DRM
+        //{
+        //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
+        //  "type": "application/dash+xml"
+        //}
         {
-          "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
-          "type": "application/dash+xml"
+          "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.f4m",
+          "type": "application/adobe-f4m"
         }
         //{
         //  "src": "http://html5.cablelabs.com:8100/cenc/wvck/dash_initdata.mpd",
@@ -215,6 +219,9 @@ playerAfrostream.controller('PlayerCtrl', function ($scope) {
         //},
         //swf: './assets/swf/videojs-osmf.swf',
         protData: protData
+      },
+      osmf: {
+        swf: './assets/swf/videojs-osmf.swf'
       },
       dash: {
         protData: protData

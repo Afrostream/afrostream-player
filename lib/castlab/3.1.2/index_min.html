@@ -24,9 +24,9 @@
     var config, player;
     var config = {
         "customData": {
-            "userId": "sample-user-id",
-            "sessionId": "sample-session-id",
-            "merchant": "sample-merchant"
+            "userId": 224,
+            "sessionId": "737cd1b36f54af356c81eab31de2a3bf9999bef6",
+            "merchant": "afrostream"
         },
         "sendCustomData": true,
         "widevineHeader": {
@@ -52,7 +52,7 @@
         "playReadyLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
         "silverlightFile": "./dashcs/dashcs.xap",
         "flashFile": './dashas/dashas.swf',
-        "techs": ['dashjs', 'dashas', 'dashcs']
+        "techs": [ 'dashas', 'dashcs']
     };
 
     player = videojs('vid', {
@@ -69,7 +69,7 @@
         dasheverywhere: config,
         techOrder: ['dasheverywhere']
     }).ready(function () {
-        this.loadVideo("https://origin.cdn.afrostream.net/vod/TheWild_s1ep001/c4ebd55b8bc55289.ism/c4ebd55b8bc55289.mpd", {});
+        this.loadVideo("https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd", {});
     });
 
 </script>
