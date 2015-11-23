@@ -141,6 +141,7 @@ playerAfrostream.controller('PlayerCtrl', function ($scope) {
 
     var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'dashas', 'html5', 'hls', 'flash'];
     var muted = qs.muted ? qs.muted : false;
+    var customData = qs.customData ? qs.customData : '';
 
     if (url) {
       sources = [
@@ -156,21 +157,21 @@ playerAfrostream.controller('PlayerCtrl', function ($scope) {
         "drmtoday": true,
         "serverURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
         "httpRequestHeaders": {
-          "dt-custom-data": "eyJ1c2VySWQiOiIyMjQiLCJzZXNzaW9uSWQiOiI1OThkZGNkMjczOGRiOWEyZjQxNDhkOTRiNmU5NWRmMWJjNzMxNmM3IiwibWVyY2hhbnQiOiJhZnJvc3RyZWFtIn0========"
+          "dt-custom-data": customData
         }
       },
       "com.microsoft.playready": {
         "drmtoday": true,
         "serverURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
         "httpRequestHeaders": {
-          "http-header-CustomData": "eyJ1c2VySWQiOiIyMjQiLCJzZXNzaW9uSWQiOiI1OThkZGNkMjczOGRiOWEyZjQxNDhkOTRiNmU5NWRmMWJjNzMxNmM3IiwibWVyY2hhbnQiOiJhZnJvc3RyZWFtIn0========"
+          "http-header-CustomData": customData
         }
       },
       "com.adobe.flashaccess": {
         "drmtoday": true,
         "serverURL": "http://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
         "httpRequestHeaders": {
-          "customData": "eyJ1c2VySWQiOiIyMjQiLCJzZXNzaW9uSWQiOiI1OThkZGNkMjczOGRiOWEyZjQxNDhkOTRiNmU5NWRmMWJjNzMxNmM3IiwibWVyY2hhbnQiOiJhZnJvc3RyZWFtIn0========"
+          "customData": customData
         }
       },
       "org.w3.clearkey": {
@@ -179,24 +180,6 @@ playerAfrostream.controller('PlayerCtrl', function ($scope) {
         }
       }
     };
-    //
-    //$.ajax
-    //({
-    //  type: 'POST',
-    //  url: 'https://afr-back-end-staging.herokuapp.com/auth/local',
-    //  dataType: 'json',
-    //  async: false,
-    //  data: {
-    //    "grant_type": "password",
-    //    "client_id": "3ab39d86-9281-4fc1-bca9-276073c1de75",
-    //    "client_secret": "0e68ed55-defa-4a6a-80ff-5fa84373bc42",
-    //    "email": "pott.benjamin@gmail.com",
-    //    "password": "spectroman"
-    //  },
-    //  success: function () {
-    //    alert('Thanks for your comment!');
-    //  }
-    //});
 
     //Init player
     var dasheverywhere = {
@@ -217,7 +200,7 @@ playerAfrostream.controller('PlayerCtrl', function ($scope) {
     };
 
     var config = $scope.config = {
-      //metrics: {user_id: 33},
+      metrics: {user_id: 33},
       autoplay: true,
       controls: true,
       muted: muted,
