@@ -1,63 +1,90 @@
-var qs = (function (a) {
-  if (a == '') return {};
-  var b = {};
-  for (var i = 0; i < a.length; ++i) {
-    var p = a[i].split('=', 2);
-    if (p.length == 1)
-      b[p[0]] = '';
-    else
-      b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, ' '));
-  }
-  return b;
-})(window.location.search.substr(1).split('&'));
+var playerAfrostream = angular.module('playerAfrostream', []);
 
-var extractMime = function (filename) {
-  var reg = /(\/[^?]+).*/;
-  var filePath = filename.match(reg);
+playerAfrostream.controller('PlayerCtrl', function ($scope) {
 
-  var parts = filePath[1].split('.');
-  var type = (parts.length > 1) ? parts.pop() : 'mp4';
-  return type;
-};
+  //var qs = $location.search();
+  var qs = (function (a) {
+    if (a == '') return {};
+    var b = {};
+    for (var i = 0; i < a.length; ++i) {
+      var p = a[i].split('=', 2);
+      if (p.length == 1)
+        b[p[0]] = '';
+      else
+        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, ' '));
+    }
+    return b;
+  })(window.location.search.substr(1).split('&'));
 
-var replaceType = function (filename, replacement) {
-  var type = extractMime(filename);
-  var newFile = filename.replace(type, replacement);
-  return newFile;
-};
+  var extractMime = function (filename) {
+    var reg = /(\/[^?]+).*/;
+    var filePath = filename.match(reg);
 
-var extractType = function (filename) {
-  var type = extractMime(filename);
-  var rtType = {};
-  switch (type) {
-    case 'm3u8':
-      rtType.type = 'application/x-mpegURL';
-      rtType.format = 'hls';
-      break;
-    case 'mpd':
-      rtType.type = 'application/dash+xml';
-      rtType.format = 'mpd';
-      break;
-    case 'f4m':
-      rtType.type = 'application/adobe-f4m';
-      rtType.format = 'hds';
-      break;
-    default:
-      rtType.type = 'video/' + type;
-      rtType.format = 'progressive';
-      break;
-  }
-  return rtType;
-};
+    var parts = filePath[1].split('.');
+    var type = (parts.length > 1) ? parts.pop() : 'mp4';
+    return type;
+  };
 
-var loadPlayer = function (url) {
+  var replaceType = function (filename, replacement) {
+    var type = extractMime(filename);
+    var newFile = filename.replace(type, replacement);
+    return newFile;
+  };
+
+  var extractType = function (filename) {
+    var type = extractMime(filename);
+    var rtType = {};
+    switch (type) {
+      case 'm3u8':
+        rtType.type = 'application/x-mpegURL';
+        rtType.format = 'hls';
+        break;
+      case 'mpd':
+        rtType.type = 'application/dash+xml';
+        rtType.format = 'mpd';
+        break;
+      case 'f4m':
+        rtType.type = 'application/adobe-f4m';
+        rtType.format = 'hds';
+        break;
+      default:
+        rtType.type = 'video/' + type;
+        rtType.format = 'progressive';
+        break;
+    }
+    return rtType;
+  };
+
+  $scope.urls = [
+    {
+      'name': 'Nexus S',
+      'snippet': 'Fast just got faster with Nexus S.'
+    },
+    {
+      'name': 'Motorola XOOM™ with Wi-Fi',
+      'snippet': 'The Next, Next Generation tablet.'
+    },
+    {
+      'name': 'MOTOROLA XOOM™',
+      'snippet': 'The Next, Next Generation tablet.'
+    }
+  ];
+
+  var loadPlayer = function (url) {
+
 
     var sources =
       [
+        //EXTERNAL SIMPLE
+        //{
+        //  "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
+        //  "type": "application/dash+xml"
+        //}
         //{
         //  "src": "http://playertest.longtailvideo.com/adaptive/eleph-audio/playlist.m3u8",
         //  "type": "application/vnd.apple.mpegurl"
         //}
+        //DIGIBOS/AFRO
         //{
         //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/master.m3u8",
         //  "type": "application/vnd.apple.mpegurl"
@@ -66,9 +93,13 @@ var loadPlayer = function (url) {
         //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
         //  "type": "application/dash+xml"
         //}
+        //{
+        //  "src": "http://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+        //  "type": "application/dash+xml"
+        //}
         //DRM
         {
-          "src": "https://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3-drm.ism/d4eed726882a4be3-drm.mpd",
+          "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
           "type": "application/dash+xml"
         }
         //{
@@ -108,7 +139,7 @@ var loadPlayer = function (url) {
         //}
       ];
 
-    var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'hls', 'flash'];
+    var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'dashas', 'html5', 'hls', 'flash'];
     var muted = qs.muted ? qs.muted : false;
 
     if (url) {
@@ -125,14 +156,21 @@ var loadPlayer = function (url) {
         "drmtoday": true,
         "serverURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
         "httpRequestHeaders": {
-          "dt-custom-data": "eyJ1c2VySWQiOiJiZW5qaXBvdHQiLCJzZXNzaW9uSWQiOiIxMjMiLCJtZXJjaGFudCI6ImFmcm9zdHJlYW0ifQ0K"
+          "dt-custom-data": "eyJ1c2VySWQiOiIyMjQiLCJzZXNzaW9uSWQiOiI1OThkZGNkMjczOGRiOWEyZjQxNDhkOTRiNmU5NWRmMWJjNzMxNmM3IiwibWVyY2hhbnQiOiJhZnJvc3RyZWFtIn0========"
         }
       },
       "com.microsoft.playready": {
         "drmtoday": true,
         "serverURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
         "httpRequestHeaders": {
-          "http-header-CustomData": "eyJ1c2VySWQiOiJiZW5qaXBvdHQiLCJzZXNzaW9uSWQiOiIxMjMiLCJtZXJjaGFudCI6ImFmcm9zdHJlYW0ifQ0K"
+          "http-header-CustomData": "eyJ1c2VySWQiOiIyMjQiLCJzZXNzaW9uSWQiOiI1OThkZGNkMjczOGRiOWEyZjQxNDhkOTRiNmU5NWRmMWJjNzMxNmM3IiwibWVyY2hhbnQiOiJhZnJvc3RyZWFtIn0========"
+        }
+      },
+      "com.adobe.flashaccess": {
+        "drmtoday": true,
+        "serverURL": "http://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
+        "httpRequestHeaders": {
+          "customData": "eyJ1c2VySWQiOiIyMjQiLCJzZXNzaW9uSWQiOiI1OThkZGNkMjczOGRiOWEyZjQxNDhkOTRiNmU5NWRmMWJjNzMxNmM3IiwibWVyY2hhbnQiOiJhZnJvc3RyZWFtIn0========"
         }
       },
       "org.w3.clearkey": {
@@ -140,24 +178,72 @@ var loadPlayer = function (url) {
           "21920416600048BC8DBB9A45FD4A3B9E": "0001020304050607"
         }
       }
-    }
+    };
+    //
+    //$.ajax
+    //({
+    //  type: 'POST',
+    //  url: 'https://afr-back-end-staging.herokuapp.com/auth/local',
+    //  dataType: 'json',
+    //  async: false,
+    //  data: {
+    //    "grant_type": "password",
+    //    "client_id": "3ab39d86-9281-4fc1-bca9-276073c1de75",
+    //    "client_secret": "0e68ed55-defa-4a6a-80ff-5fa84373bc42",
+    //    "email": "pott.benjamin@gmail.com",
+    //    "password": "spectroman"
+    //  },
+    //  success: function () {
+    //    alert('Thanks for your comment!');
+    //  }
+    //});
 
-    var player = videojs('player', {
-      metrics: {user_id: 33},
+    //Init player
+    var dasheverywhere = {
+      "customData": {
+        "userId": "224",
+        "sessionId": "598ddcd2738db9a2f4148d94b6e95df1bc7316c7",
+        "merchant": "afrostream"
+      },
+      "sendCustomData": true,
+      "assetId": "b829352c949f8bfc",
+      "variantId": "",
+      "debug": true,
+      "widevineLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
+      "accessLicenseServerURL": "https://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
+      "playReadyLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
+      "flashFile": './libs/dashas.swf',
+      "techs": ['dashas', 'dashcs']
+    };
+
+    var config = $scope.config = {
+      //metrics: {user_id: 33},
       autoplay: true,
       controls: true,
       muted: muted,
       width: '100%',
       height: '550',
       techOrder: techOrder,
+      dashas: {
+        swf: './libs/dashas.swf',
+        //swf: '../bower_components/dashas/site/demo/StrobeMediaPlayback.swf',
+        //flashVars: {
+        //  'plugin_DashPlugin': encodeURIComponent('../bower_components/dashas/site/demo/debug/dashas.swf?log=true')
+        //},
+        //swf: './assets/swf/videojs-osmf.swf',
+        protData: protData
+      },
       dash: {
         protData: protData
       },
       hls: {
         swf: 'bower_components/video.js/dist/video-js/video-js.swf'
       },
+      dasheverywhere: dasheverywhere,
       sources: sources
-    }).ready(function () {
+    };
+
+    var player = $scope.player = videojs('player', config).ready(function () {
       var player = this;
 
       console.log('Video Ready');
@@ -190,7 +276,7 @@ var loadPlayer = function (url) {
       smoothie.streamTo(chart, 1000);
 
       setInterval(function () {
-        var statistics = player.afrostream.getPlaybackStatistics();
+        var statistics = player.tech.getPlaybackStatistics();
         var dlAudioBitrate = Math.round(statistics.audio.bandwidth / 10.24) / 100;
         var dlVidBitrate = Math.round(statistics.video.bandwidth / 10.24) / 100;
         document.getElementById('version').innerHTML = videojs.CDN_VERSION;
@@ -204,7 +290,8 @@ var loadPlayer = function (url) {
         videoSerie.append(now, dlVidBitrate);
       }, 500);
     });
-  }
-  ;
+  };
 
-loadPlayer(qs.url ? decodeURIComponent(qs.url) : '');
+  loadPlayer(qs.url ? decodeURIComponent(qs.url) : '');
+});
+

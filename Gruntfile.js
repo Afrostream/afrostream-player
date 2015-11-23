@@ -46,11 +46,9 @@ module.exports = function (grunt) {
           'bower_components/videojs-ga/dist/videojs.ga.js',
           //METRICS
           'node_modules/videojs-metrics/dist/videojs-metrics.js',
-          //CASTLAB
-          //'lib/castlab/**/cldasheverywhere.min.js',
-          //'!lib/castlab/**/cldashjs.min.js'
           //CORE
           'lib/**/*.js',
+          //CASTLAB
           '!lib/castlab/**/*.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
@@ -69,7 +67,8 @@ module.exports = function (grunt) {
           'lib/**/*.js',
           //CASTLAB
           'lib/castlab/**/cldasheverywhere.min.js',
-          '!lib/castlab/**/cldashjs.min.js'
+          '!lib/castlab/**/cldashjs.min.js',
+          '!lib/**/{dash,dashas}.js'
         ],
         dest: 'dist/<%= pkg.name %>.castlab.js'
       }
@@ -100,6 +99,7 @@ module.exports = function (grunt) {
         src: [
           'lib/**/*.js',
           '!lib/**/flash.js',
+          '!lib/**/dashas.js',
           '!lib/castlab/**/*.js'
         ]
       },
@@ -169,7 +169,8 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true,
         src: [
-          './node_modules/smoothie/smoothie.js'
+          './node_modules/smoothie/smoothie.js',
+          './lib/castlab/**/*.swf'
         ],
         dest: 'demo/libs'
       },
@@ -204,10 +205,18 @@ module.exports = function (grunt) {
         addRootSlash: false,
         relative: true
       },
-      dev: {
+      dashjs: {
         files: [{
           src: [
             '<%= concat.dashjs.src %>'
+          ],
+          dest: 'demo/index.html'
+        }]
+      },
+      castlab: {
+        files: [{
+          src: [
+            '<%= concat.castlab.src %>'
           ],
           dest: 'demo/index.html'
         }]
@@ -271,7 +280,7 @@ module.exports = function (grunt) {
     'copy',
     'jshint',
     'less',
-    'injector:dev'
+    'injector:dashjs'
   ]);
 
   grunt.registerTask('build', [
