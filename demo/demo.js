@@ -278,11 +278,12 @@ playerAfrostream.controller('PlayerCtrl', function ($scope, $rootScope, Authenti
         });
 
         var chart = $('#_chart')[0];
-        chart.width = player.width();
+        player.on('loadedmetadata', function () {
+          chart.width = player.width();
+        })
         smoothie.streamTo(chart, 1000);
 
         setInterval(function () {
-          chart.width = player.width();
           var statistics = player.tech.getPlaybackStatistics();
           var dlAudioBitrate = Math.round(statistics.audio.bandwidth / 10.24) / 100;
           var dlVidBitrate = Math.round(statistics.video.bandwidth / 10.24) / 100;
