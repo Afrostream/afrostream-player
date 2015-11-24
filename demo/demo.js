@@ -193,7 +193,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
       },
       "com.adobe.flashaccess": {
         "drmtoday": true,
-        "serverURL": "http://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
+        "serverURL": "https://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
         "httpRequestHeaders": {
           "customData": $scope.customData
         }
