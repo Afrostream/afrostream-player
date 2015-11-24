@@ -1,6 +1,6 @@
 var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth']);
 
-playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'AuthenticationServicefunction', function ($scope, $rootScope, AuthenticationService) {
+playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'AuthenticationService', function ($scope, $rootScope, AuthenticationService) {
   // listen for login events
   $scope.user = null;
   // method to log-in
