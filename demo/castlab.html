@@ -14,7 +14,7 @@
       content: "\e00c"; /* subtitles icon */
     }
   </style>
-  <script src="cldasheverywhere.min.js"></script>
+  <script src="../lib/castlab/3.1.2/cldasheverywhere.min.js"></script>
 </head>
 <body>
 <video id="vid" class="video-js vjs-default-skin vjs-big-play-centered" preload="auto" width="640px" height="480px">
@@ -24,9 +24,9 @@
   var config, player;
   var config = {
     "customData": {
-      "userId": 224,
-      "sessionId": "737cd1b36f54af356c81eab31de2a3bf9999bef6",
-      "merchant": "afrostream"
+      "userId": 12345,
+      "sessionId": "ewogICJwcm9maWxlIiA6IHsKICAgICJwdXJjaGFzZSIgOiB7IH0KICB9LAogICJvdXRwdXRQcm90ZWN0aW9uIiA6IHsKICAgICJkaWdpdGFsIiA6IGZhbHNlLAogICAgImFuYWxvZ3VlIiA6IGZhbHNlLAogICAgImVuZm9yY2UiIDogZmFsc2UKICB9LAogICJzdG9yZUxpY2Vuc2UiIDogZmFsc2UKfQoK",
+      "merchant": "cablelabs"
     },
     "sendCustomData": true,
     "widevineHeader": {
@@ -51,8 +51,8 @@
     "accessLicenseServerURL": "https://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
     "playReadyLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
     "silverlightFile": "./dashcs/dashcs.xap",
-    "flashFile": './dashas/dashas.swf',
-    "techs": [/*'dashjs', */'dashas', 'dashcs']
+    "flashFile": './libs/dashas.swf',
+    "techs": ['dashas', 'dashcs']
   };
 
   player = videojs('vid', {
@@ -65,8 +65,8 @@
       }
     },
     sources: [{
-      src: 'http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd',
-      type: 'application/dash+xml'
+      "src": "http://html5.cablelabs.com:8100/cenc/prwv/dash_init.mpd",
+      "type": "application/dash+xml"
     }],
     autoplay: true,
     controls: true,

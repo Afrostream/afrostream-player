@@ -3424,6 +3424,7 @@ vjs.MenuButton.prototype.onClick = function(){
 };
 
 vjs.MenuButton.prototype.onKeyPress = function(event){
+  event.preventDefault();
 
   // Check for space bar (32) or enter (13) keys
   if (event.which == 32 || event.which == 13) {
@@ -3432,13 +3433,11 @@ vjs.MenuButton.prototype.onKeyPress = function(event){
     } else {
       this.pressButton();
     }
-    event.preventDefault();
   // Check for escape (27) key
   } else if (event.which == 27){
     if (this.buttonPressed_){
       this.unpressButton();
     }
-    event.preventDefault();
   }
 };
 
@@ -4784,9 +4783,7 @@ vjs.Player.prototype.src = function(source){
 
         // The setSource tech method was added with source handlers
         // so older techs won't support it
-        // We need to check the direct prototype for the case where subclasses
-        // of the tech do not support source handlers
-        if (window['videojs'][this.techName].prototype.hasOwnProperty('setSource')) {
+        if (this.tech['setSource']) {
           this.techCall('setSource', source);
         } else {
           this.techCall('src', source.src);
@@ -6068,11 +6065,11 @@ vjs.PlaybackRateMenuButton = vjs.MenuButton.extend({
   }
 });
 
-vjs.PlaybackRateMenuButton.prototype.buttonText = 'Playback Rate';
-vjs.PlaybackRateMenuButton.prototype.className = 'vjs-playback-rate';
-
 vjs.PlaybackRateMenuButton.prototype.createEl = function(){
-  var el = vjs.MenuButton.prototype.createEl.call(this);
+  var el = vjs.Component.prototype.createEl.call(this, 'div', {
+    className: 'vjs-playback-rate vjs-menu-button vjs-control',
+    innerHTML: '<div class="vjs-control-content"><span class="vjs-control-text">' + this.localize('Playback Rate') + '</span></div>'
+  });
 
   this.labelEl_ = vjs.createEl('div', {
     className: 'vjs-playback-rate-value',
@@ -7734,8 +7731,8 @@ vjs.Flash.rtmpSourceHandler.canHandleSource = function(source){
 vjs.Flash.rtmpSourceHandler.handleSource = function(source, tech){
   var srcParts = vjs.Flash.streamToParts(source.src);
 
-  tech['setRtmpConnection'](srcParts.connection);
-  tech['setRtmpStream'](srcParts.stream);
+  tech.setRtmpConnection(srcParts.connection);
+  tech.setRtmpStream(srcParts.stream);
 };
 
 // Register the native source handler
@@ -16405,10 +16402,6 @@ videojs.Dashas = videojs.Flash.extend({
       'maxBufferLength': 8
     }, options.flashVars || {});
 
-    //player.on('playerready', function () {
-    //  this.isReady = true;
-    //});
-
     videojs.Flash.call(this, player, options, ready);
   }
 });
@@ -16556,17 +16549,17 @@ videojs.Dashas.prototype.setSrc = function (src) {
   var serverUrl = videojs.Dashas.buildMetadataUrl(this.options().protData, src);
   var customData = videojs.Dashas.buildOptData(this.options().protData, src);
 
-  //this.el_.vjs_source(src, autoPlay, serverUrl, customData);
+  //this.el_.vjs_source(src, autoPlay, '', '');
   this.el_.vjs_source(serverUrl, autoPlay, serverUrl, customData);
 
   // Currently the SWF doesn't autoplay if you load a source later.
   // e.g. Load player w/ no source, wait 2s, set src.
-  if (autoPlay) {
-    var tech = this;
-    this.setTimeout(function () {
-      tech.play();
-    }, 0);
-  }
+  //if (autoPlay) {
+  //  var tech = this;
+  //  this.setTimeout(function () {
+  //    tech.play();
+  //  }, 0);
+  //}
 };
 
 videojs.Dashas.extractAssetId = function (source) {

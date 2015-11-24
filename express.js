@@ -12,6 +12,7 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/demo');
 app.use(express.static('demo'));
 app.use('/dist', express.static('dist'));
+app.use('/lib', express.static('lib'));
 //app.use(express.static('dist'));
 
 // Start server
