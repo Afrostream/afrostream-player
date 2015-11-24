@@ -1,4 +1,8 @@
-var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth']);
+var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth'])
+  .config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+  }]);
 
 playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'AuthenticationService', function ($scope, $rootScope, AuthenticationService) {
   // listen for login events
@@ -123,6 +127,13 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
           "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
           "type": "application/dash+xml"
         }
+        //DRM CASTLAB
+
+        //{
+        //  //"src": "http://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism/Manifest",
+        //  "src": "http://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/Manifest",
+        //  "type": "application/dash+xml"
+        //}
         //{
         //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.f4m",
         //  "type": "application/adobe-f4m"
@@ -164,7 +175,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
         //}
       ];
 
-    var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'osmf', 'dashas', 'html5', 'hls', 'flash'];
+    var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'dashas', 'osmf', 'html5', 'hls', 'flash'];
     var muted = qs.muted ? qs.muted : false;
 
     if (url) {
@@ -257,7 +268,6 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
       var player = this;
 
       console.log('Video Ready');
-
       var smoothie = new SmoothieChart({
         millisPerPixel: 20,
         interpolation: 'bezier',

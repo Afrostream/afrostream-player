@@ -34,7 +34,7 @@
     "pkcs7": "^0.2.3",
     "qunitjs": "^1.12",
     "smoothie": "^1.27.0",
-    "video.js": "4.11.1",
+    "video.js": "4.12",
     "videojs-chromecast": "git+https://github.com/Afrostream/videojs-chromecast.git#master",
     "videojs-contrib-hls": "^0.17.9",
     "videojs-contrib-media-sources": "^1.0.0",

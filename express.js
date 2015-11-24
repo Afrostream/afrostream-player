@@ -13,8 +13,6 @@ app.set('views', __dirname + '/demo');
 app.use(express.static('demo'));
 app.use('/dist', express.static('dist'));
 app.use('/lib', express.static('lib'));
-//app.use(express.static('dist'));
-
 // Start server
 var server = app.listen(process.env.PORT, process.env.IP, function () {
   var host = server.address().address;

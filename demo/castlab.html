@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8"/>
   <title>castLabs DASH Everywhere Player Integration example</title>
-  <link href="//vjs.zencdn.net/4.11.4/video-js.css" rel="stylesheet">
-  <script src="//vjs.zencdn.net/4.11.4/video.js"></script>
+  <link href="//vjs.zencdn.net/4.12.5/video-js.css" rel="stylesheet">
+  <script src="//vjs.zencdn.net/4.12.5/video.js"></script>
   <style>
     .vjs-default-skin .vjs-audiotracks-button:before {
       content: "\e600"; /* cog icon */
@@ -24,9 +24,9 @@
   var config, player;
   var config = {
     "customData": {
-      "userId": 12345,
-      "sessionId": "ewogICJwcm9maWxlIiA6IHsKICAgICJwdXJjaGFzZSIgOiB7IH0KICB9LAogICJvdXRwdXRQcm90ZWN0aW9uIiA6IHsKICAgICJkaWdpdGFsIiA6IGZhbHNlLAogICAgImFuYWxvZ3VlIiA6IGZhbHNlLAogICAgImVuZm9yY2UiIDogZmFsc2UKICB9LAogICJzdG9yZUxpY2Vuc2UiIDogZmFsc2UKfQoK",
-      "merchant": "cablelabs"
+      "userId": "rental1",
+      "sessionId": "p0",
+      "merchant": "six"
     },
     "sendCustomData": true,
     "widevineHeader": {
@@ -35,7 +35,7 @@
       "trackType": "",
       "policy": ""
     },
-    "assetId": "",
+    "assetId": "qa_test",
     "variantId": "",
     "debug": true,
     "ABRParameters": {
@@ -65,7 +65,7 @@
       }
     },
     sources: [{
-      "src": "http://html5.cablelabs.com:8100/cenc/prwv/dash_init.mpd",
+      "src": "http://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism/Manifest",
       "type": "application/dash+xml"
     }],
     autoplay: true,
