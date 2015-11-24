@@ -2,6 +2,11 @@
 
 angular.module('afrostreamAuth', ['ngCookies'])
 
+  .config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+  }
+  ])
   .factory('AuthenticationService',
     ['Base64', '$http', '$cookies', '$rootScope', '$timeout',
       function (Base64, $http, $cookies, $rootScope, $timeout) {
