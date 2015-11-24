@@ -171,6 +171,7 @@ module.exports = function (grunt) {
         flatten: true,
         src: [
           './node_modules/smoothie/smoothie.js',
+          './bower_components/angular-cookies/angular-cookies.js',
           './lib/castlab/**/*.swf'
         ],
         dest: 'demo/libs'
@@ -209,7 +210,8 @@ module.exports = function (grunt) {
       dashjs: {
         files: [{
           src: [
-            '<%= concat.dashjs.src %>'
+            '<%= concat.dashjs.src %>',
+            './demo/libs/**/*.js'
           ],
           dest: 'demo/index.html'
         }]
@@ -217,7 +219,8 @@ module.exports = function (grunt) {
       castlab: {
         files: [{
           src: [
-            '<%= concat.castlab.src %>'
+            '<%= concat.castlab.src %>',
+            'demo/libs/**/*.js'
           ],
           dest: 'demo/index.html'
         }]
@@ -226,7 +229,9 @@ module.exports = function (grunt) {
         files: [{
           src: [
             'dist/afrostream-player.css',
-            '<%= concat.dashjs.dest %>'],
+            '<%= concat.dashjs.dest %>',
+            'demo/libs/**/*.js'
+          ],
           dest: 'demo/index.html'
         }]
       }

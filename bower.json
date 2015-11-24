@@ -27,6 +27,8 @@
   ],
   "dependencies": {
     "videojs-ga": "~0.4.2",
-    "dashas": "git+https://github.com/castlabs/dashas.git#master"
+    "dashas": "git+https://github.com/castlabs/dashas.git#master",
+    "angular-basicauth": "~0.3.0",
+    "angular-cookies": "~1.4.8"
   }
 }
