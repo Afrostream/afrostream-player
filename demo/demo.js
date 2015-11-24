@@ -93,10 +93,10 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
     var sources =
       [
         //EXTERNAL SIMPLE
-        {
-          "src": "http://str01.enterplay.com.br/pi/picenc.ism/.mpd",
-          "type": "application/dash+xml"
-        }
+        //{
+        //  "src": "http://str01.enterplay.com.br/pi/picenc.ism/.mpd",
+        //  "type": "application/dash+xml"
+        //}
         //{
         //  "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
         //  "type": "application/dash+xml"
@@ -119,10 +119,10 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
         //  "type": "application/dash+xml"
         //}
         //DRM
-        //{
-        //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
-        //  "type": "application/dash+xml"
-        //}
+        {
+          "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
+          "type": "application/dash+xml"
+        }
         //{
         //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.f4m",
         //  "type": "application/adobe-f4m"
@@ -207,15 +207,10 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
 
     //Init player
     var dasheverywhere = {
-      //"customData": {
-      //  "userId": $scope.user.userId,
-      //  "sessionId": $scope.user.token,
-      //  "merchant": "afrostream"
-      //},
       "customData": {
-        "merchant": "enterplay",
-        "userId": "purchase",
-        "sessionId": "p0"
+        "userId": $scope.user.userId,
+        "sessionId": $scope.user.token,
+        "merchant": "afrostream"
       },
       "sendCustomData": true,
       "assetId": "b829352c949f8bfc",

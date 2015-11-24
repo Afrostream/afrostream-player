@@ -171,7 +171,6 @@ module.exports = function (grunt) {
         flatten: true,
         src: [
           './node_modules/smoothie/smoothie.js',
-          './bower_components/angular/angular.js',
           './bower_components/angular-cookies/angular-cookies.js',
           './lib/castlab/**/*.swf'
         ],
