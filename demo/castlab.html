@@ -64,10 +64,16 @@
         title: 'Subtitles'
       }
     },
-    sources: [{
-      "src": "http://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism/Manifest",
-      "type": "application/dash+xml"
-    }],
+    sources: [
+//      {
+//        "src": "http://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism/Manifest",
+//        "type": "application/dash+xml"
+//      }
+      {
+        "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
+        "type": "application/dash+xml"
+      }
+    ],
     autoplay: true,
     controls: true,
     dasheverywhere: config,
