@@ -24,10 +24,15 @@
   var config, player;
   var config = {
     "customData": {
-      "userId": "rental1",
+      "userId": "224",
       "sessionId": "p0",
-      "merchant": "six"
+      "merchant": "afrostream"
     },
+//    "customData": {
+//      "userId": "rental1",
+//      "sessionId": "p0",
+//      "merchant": "six"
+//    },
     "sendCustomData": true,
     "widevineHeader": {
       "provider": "castlabs",
@@ -52,7 +57,7 @@
     "playReadyLicenseServerURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
     "silverlightFile": "./dashcs/dashcs.xap",
     "flashFile": './libs/dashas.swf',
-    "techs": ['dashas', 'dashcs']
+    "techs": [/*'dashjs',*/ 'dashas', 'dashcs']
   };
 
   player = videojs('vid', {
