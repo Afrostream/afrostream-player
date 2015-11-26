@@ -320,7 +320,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
       smoothie.streamTo(chart, 1000);
 
       setInterval(function () {
-        var statistics = player.afrostream.getPlaybackStatistics();
+        var statistics = player.tech.getPlaybackStatistics();
         var dlAudioBitrate = Math.round(statistics.audio.bandwidth / 10.24) / 100;
         var dlVidBitrate = Math.round(statistics.video.bandwidth / 10.24) / 100;
         document.getElementById('version').innerHTML = videojs.CDN_VERSION;
