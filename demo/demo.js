@@ -119,10 +119,6 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
       [
         //EXTERNAL SIMPLE
         //{
-        //  "src": "http://str01.enterplay.com.br/pi/picenc.ism/.mpd",
-        //  "type": "application/dash+xml"
-        //}
-        //{
         //  "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
         //  "type": "application/dash+xml"
         //}
@@ -139,15 +135,22 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
         //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
         //  "type": "application/dash+xml"
         //}
+        //DIGIBOS SIMPLE
         //{
-        //  "src": "http://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+        //  "src": "https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
         //  "type": "application/dash+xml"
         //}
-        //DRM
+        //MULTI-AUDIO
         {
-          "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
+          "src": "https://hw.cdn.afrostream.net/vod/XXXTHESTATEOFTHEUNION_240_25_ProRes422_FRA_ENG_HD_STEREO/fc1ada9fa3339b3e.ism/fc1ada9fa3339b3e.mpd",
           "type": "application/dash+xml"
         }
+        //DRM
+        //{
+        //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
+        //  "type": "application/dash+xml",
+        //  "drm":true
+        //}
         //DRM CASTLAB
 
         //{
