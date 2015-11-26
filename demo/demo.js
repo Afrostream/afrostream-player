@@ -2,11 +2,31 @@ var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth'])
   .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-  }]);
+  }])
+  .run(['$rootScope', '$location', '$cookies', '$http', 'AuthenticationService',
+    function ($rootScope, $location, $cookies, $http, AuthenticationService) {
+      // keep user logged in after page refresh
+      $rootScope.globals = $cookies.getObject('globals') || {};
+      if ($rootScope.globals.user) {
+        if ($rootScope.globals.user.expires_in > new Date().getTime()) {
+          AuthenticationService.ClearCredentials();
+        }
+        $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.user.token; // jshint ignore:line
+      }
+
+      //$rootScope.$on('$locationChangeStart', function (event, next, current) {
+      //  // redirect to login page if not logged in
+      //  if ($location.path() !== '/login' && !$rootScope.globals.currentUser) {
+      //    $location.path('/login');
+      //  }
+      //});
+    }]);
+
 
 playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'AuthenticationService', function ($scope, $rootScope, AuthenticationService) {
   // listen for login events
-  $scope.user = null;
+  $scope.user = $rootScope.globals.user;
+  $scope.customData = $rootScope.globals.customData;
   // method to log-in
   $scope.onLoginButton = function () {
     $scope.dataLoading = true;
@@ -22,6 +42,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
       }
     });
   };
+
 
   //var qs = $location.search();
   var qs = (function (a) {
@@ -313,6 +334,9 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
         videoSerie.append(now, dlVidBitrate);
       }, 500);
     });
+  }
+  if ($scope.user) {
+    loadPlayer(qs.url ? decodeURIComponent(qs.url) : '');
   }
 }
 ]);

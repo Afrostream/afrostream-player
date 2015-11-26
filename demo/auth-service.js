@@ -24,6 +24,7 @@ angular.module('afrostreamAuth', ['ngCookies'])
           $http.post('https://afr-back-end-staging.herokuapp.com/auth/local', {email: email, password: password})
             .success(function (response) {
               var userData = {
+                expires_in: (response.info.expires_in + new Date().getTime()),
                 token: response.token
               };
 
@@ -47,7 +48,7 @@ angular.module('afrostreamAuth', ['ngCookies'])
 
         service.SetCredentials = function (data) {
           $rootScope.globals = data;
-          $cookies.put('globals', $rootScope.globals);
+          $cookies.putObject('globals', $rootScope.globals);
         };
 
         service.ClearCredentials = function () {
