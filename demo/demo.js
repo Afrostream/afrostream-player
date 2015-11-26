@@ -1,3 +1,5 @@
+'use strict';
+
 var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth'])
   .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
@@ -6,8 +8,12 @@ var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth'])
   .run(['$rootScope', '$location', '$cookies', '$http', 'AuthenticationService',
     function ($rootScope, $location, $cookies, $http, AuthenticationService) {
       // keep user logged in after page refresh
-      $rootScope.globals = $cookies.getObject('globals') || {};
-      if ($rootScope.globals.user) {
+      try {
+        $rootScope.globals = $cookies.getObject('globals') || {};
+      } catch (e) {
+        angular.log(e);
+      }
+      if ($rootScope.globals && $rootScope.globals.user) {
         if ($rootScope.globals.user.expires_in > new Date().getTime()) {
           AuthenticationService.ClearCredentials();
         }
