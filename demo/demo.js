@@ -5,13 +5,13 @@ var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth'])
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
   }])
-  .run(['$rootScope', '$location', '$cookies', '$http', 'AuthenticationService',
-    function ($rootScope, $location, $cookies, $http, AuthenticationService) {
+  .run(['$rootScope', '$location', '$cookies', '$http', '$log', 'AuthenticationService',
+    function ($rootScope, $location, $cookies, $http, $log, AuthenticationService) {
       // keep user logged in after page refresh
       try {
         $rootScope.globals = $cookies.getObject('globals') || {};
       } catch (e) {
-        angular.log(e);
+        $log.debug(e);
       }
       if ($rootScope.globals && $rootScope.globals.user) {
         if ($rootScope.globals.user.expires_in > new Date().getTime()) {
