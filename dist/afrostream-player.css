@@ -1086,6 +1086,12 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   /* Captions Button */
   /* Chapters Button */
   /* Captions Settings Dialog */
+  /* Live Mode
+  --------------------------------------------------------------------------------
+  */
+  /* Live Display
+  --------------------------------------------------------------------------------
+  */
 }
 .video-js.vjs-afrostream-skin .vjs-control-bar {
   left: 20px;
@@ -1626,6 +1632,27 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   width: 40px;
   height: 40px;
 }
+.video-js.vjs-afrostream-skin.vjs-live .vjs-time-controls,
+.video-js.vjs-afrostream-skin.vjs-live .vjs-time-divider,
+.video-js.vjs-afrostream-skin.vjs-live .vjs-tip {
+  display: none;
+}
+.video-js.vjs-afrostream-skin.vjs-live .vjs-progress-control .vjs-progress-holder {
+  display: none;
+  cursor: null;
+}
+.video-js.vjs-afrostream-skin .vjs-live-controls {
+  top: 30%;
+}
+.video-js.vjs-afrostream-skin.vjs-live .vjs-live-controls,
+.video-js.vjs-afrostream-skin.vjs-live .vjs-live-display {
+  display: block;
+}
+.video-js.vjs-afrostream-skin .vjs-live-display {
+  display: none;
+  font-size: 1em;
+  line-height: 3em;
+}
 
 /* Captions Button */
 .vjs-audio-button:before {
@@ -1694,6 +1721,59 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   color: white;
   max-width: 200px;
   text-align: center;
+}
+
+/* Error screen
+--------------------------------------------------------------------------------
+*/
+.vjs-error-screen {
+  display: none;
+}
+.vjs-error .vjs-error-display {
+  display: none;
+}
+.vjs-error .vjs-error-screen {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.vjs-error-screen div {
+  position: absolute;
+  bottom: 1em;
+  right: 0;
+  left: 0;
+  font-size: 1.1em;
+  text-align: center;
+  padding: 3px;
+  background: #000000;
+  background: rgba(0, 0, 0, 0.8);
+}
+.vjs-error-screen a,
+.vjs-error-screen a:visited {
+  color: #ffffff;
+}
+.vjs-geo-message {
+  position: absolute;
+  width: 100%;
+  margin: 23% 0;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1.2em;
+  text-align: center;
+  background: #000000;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+}
+.vjs-geo-message a,
+.vjs-geo-message a:visited {
+  color: #ffffff;
+}
+
+.video-js.flash-block .vjs-tech {
+  z-index: 3;
 }
 
 /* Loading Spinner

@@ -31,7 +31,7 @@ var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth'])
 
 playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'AuthenticationService', function ($scope, $rootScope, AuthenticationService) {
   // listen for login events
-  $scope.user = $rootScope.globals.user;
+  $scope.user = $rootScope.globals ? $rootScope.globals.user : null;
   $scope.customData = $rootScope.globals.customData;
   // method to log-in
   $scope.onLoginButton = function () {
@@ -345,7 +345,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
     });
   }
   if ($scope.user) {
-    loadPlayer(qs.url ? decodeURIComponent(qs.url) : '');
+    loadPlayer(qs.url ? decodeURIComponent(qs.url) : null);
   }
 }
 ]);

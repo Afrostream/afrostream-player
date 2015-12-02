@@ -601,5 +601,34 @@
     width: 40px;
     height: 40px;
   }
+  /* Live Mode
+  --------------------------------------------------------------------------------
+  */
+  &.vjs-live .vjs-time-controls,
+  &.vjs-live .vjs-time-divider,
+  &.vjs-live .vjs-tip {
+    display: none;
+  }
+  &.vjs-live .vjs-progress-control {
+    .vjs-progress-holder {
+      display: none;
+      cursor: null;
+    }
+  }
+  .vjs-live-controls {
+    top: 30%;
+  }
+  &.vjs-live .vjs-live-controls,
+  &.vjs-live .vjs-live-display {
+    display: block;
+  }
 
+  /* Live Display
+  --------------------------------------------------------------------------------
+  */
+  .vjs-live-display {
+    display: none;
+    font-size: 1em;
+    line-height: 3em;
+  }
 }
