@@ -12,8 +12,7 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/demo');
 app.use(express.static('demo'));
 app.use('/dist', express.static('dist'));
-//app.use(express.static('dist'));
-
+app.use('/lib', express.static('lib'));
 // Start server
 var server = app.listen(process.env.PORT, process.env.IP, function () {
   var host = server.address().address;

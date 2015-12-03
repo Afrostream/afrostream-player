@@ -9,6 +9,8 @@
     "videojs",
     "module",
     "Dash",
+    "UTF8",
+    "BASE64",
     "MediaPlayer"
   ]
 }

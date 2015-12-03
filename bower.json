@@ -26,9 +26,9 @@
     "tests"
   ],
   "dependencies": {
-    "videojs-ga": "~0.4.2"
-  },
-  "devDependencies": {
-    "video.js": "4.12"
+    "videojs-ga": "~0.4.2",
+    "dashas": "git+https://github.com/castlabs/dashas.git#master",
+    "angular-cookies": "~1.4.8",
+    "angular": "~1.4.8"
   }
 }

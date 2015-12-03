@@ -17,6 +17,15 @@ module.exports = function (grunt) {
       },
       dashjs: {
         src: [
+          //DASH
+          'node_modules/dashjs/dist/dash.debug.js',
+          //'node_modules/dashjs/src/lib/*.js',
+          //'node_modules/dashjs/src/streaming/MediaPlayer.js',
+          //'node_modules/dashjs/src/streaming/Context.js',
+          //'node_modules/dashjs/src/dash/Dash.js',
+          //'node_modules/dashjs/src/dash/DashContext.js',
+          //'node_modules/dashjs/src/dash/**/*.js',
+          //'node_modules/dashjs/src/streaming/**/*.js',
           //VJS
           'node_modules/video.js/dist/video-js/video.dev.js',
           //VJS MEDIA SOURCE
@@ -38,20 +47,17 @@ module.exports = function (grunt) {
           'node_modules/pkcs7/dist/pkcs7.unpad.js',
           'node_modules/videojs-contrib-hls/src/decrypter.js',
           'node_modules/videojs-contrib-hls/src/bin-utils.js',
-          //DASH
-          'node_modules/dashjs/dist/dash.all.js',
           //CHROMECAST
           'node_modules/videojs-chromecast/dist/videojs.chromecast.js',
           //GoogleAnaltics
           'bower_components/videojs-ga/dist/videojs.ga.js',
           //METRICS
           'node_modules/videojs-metrics/dist/videojs-metrics.js',
-          //CASTLAB
-          //'lib/castlab/**/cldasheverywhere.min.js',
-          //'!lib/castlab/**/cldashjs.min.js'
           //CORE
           'lib/**/*.js',
-          '!lib/castlab/**/*.js'
+          //CASTLAB
+          '!lib/castlab/**/*.js',
+          '!lib/**/closure.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
       },
@@ -69,7 +75,9 @@ module.exports = function (grunt) {
           'lib/**/*.js',
           //CASTLAB
           'lib/castlab/**/cldasheverywhere.min.js',
-          '!lib/castlab/**/cldashjs.min.js'
+          '!lib/castlab/**/cldashjs.min.js',
+          '!lib/**/{dash,dashas}.js',
+          '!lib/**/closure.js'
         ],
         dest: 'dist/<%= pkg.name %>.castlab.js'
       }
@@ -100,7 +108,9 @@ module.exports = function (grunt) {
         src: [
           'lib/**/*.js',
           '!lib/**/flash.js',
-          '!lib/castlab/**/*.js'
+          '!lib/**/dashas.js',
+          '!lib/castlab/**/*.js',
+          '!lib/**/osmf.js'
         ]
       },
       test: {
@@ -165,12 +175,13 @@ module.exports = function (grunt) {
       }
     },
     copy: {
-      smoothie: {
+      demo: {
         expand: true,
         flatten: true,
         src: [
-          './node_modules/smoothie/smoothie.js'
-
+          './node_modules/smoothie/smoothie.js',
+          './bower_components/angular-cookies/angular-cookies.js',
+          './lib/castlab/**/*.swf'
         ],
         dest: 'demo/libs'
       },
@@ -205,10 +216,21 @@ module.exports = function (grunt) {
         addRootSlash: false,
         relative: true
       },
-      dev: {
+      dashjs: {
         files: [{
           src: [
-            '<%= concat.dashjs.src %>'],
+            '<%= concat.dashjs.src %>',
+            './demo/libs/**/*.js'
+          ],
+          dest: 'demo/index.html'
+        }]
+      },
+      castlab: {
+        files: [{
+          src: [
+            '<%= concat.castlab.src %>',
+            'demo/libs/**/*.js'
+          ],
           dest: 'demo/index.html'
         }]
       },
@@ -216,7 +238,9 @@ module.exports = function (grunt) {
         files: [{
           src: [
             'dist/afrostream-player.css',
-            '<%= concat.dashjs.dest %>'],
+            '<%= concat.dashjs.dest %>',
+            'demo/libs/**/*.js'
+          ],
           dest: 'demo/index.html'
         }]
       }
@@ -271,7 +295,7 @@ module.exports = function (grunt) {
     'copy',
     'jshint',
     'less',
-    'injector:dev'
+    'injector:dashjs'
   ]);
 
   grunt.registerTask('build', [

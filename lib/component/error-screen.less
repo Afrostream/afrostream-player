@@ -1,0 +1,58 @@
+/* Error screen
+--------------------------------------------------------------------------------
+*/
+
+.vjs-error-screen {
+  display: none;
+}
+
+// hide the main video.js error message
+.vjs-error .vjs-error-display {
+  display: none;
+}
+
+.vjs-error .vjs-error-screen {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vjs-error-screen div {
+  position: absolute;
+  bottom: 1em;
+  right: 0;
+  left: 0;
+
+  font-size: 1.1em;
+  text-align: center;
+  padding: 3px;
+  background: rgb(0, 0, 0); // fallback to just black
+  background: rgba(0, 0, 0, 0.8); // Normally show black at 50% opacity
+}
+
+.vjs-error-screen a, .vjs-error-screen a:visited {
+  color: #ffffff;
+}
+
+.vjs-geo-message {
+  position: absolute;
+  width: 100%;
+
+  margin: 23% 0;
+  display: inline-block;
+  vertical-align: middle;
+
+  font-size: 1.2em;
+  text-align: center;
+
+  background: rgb(0, 0, 0); // fallback to just black
+  background: rgba(0, 0, 0, 0.8); // Normally show black at 50% opacity
+  color: #ffffff;
+}
+
+.vjs-geo-message a, .vjs-geo-message a:visited {
+  color: #ffffff;
+}
