@@ -27712,9 +27712,9 @@ vjs.plugin = function(name, init){
   };
 
   videojs.Afrostream.prototype.addMediaPlayerHandlers = function () {
-    videojs.on(this.player(), MediaPlayer.events.STREAM_INITIALIZED,
+    videojs.on(this.mediaPlayer(), MediaPlayer.events.STREAM_INITIALIZED,
       videojs.bind(this, this.onInitialized));
-    videojs.on(this.player(), MediaPlayer.events.METRIC_CHANGED,
+    videojs.on(this.mediaPlayer(), MediaPlayer.events.METRIC_CHANGED,
       videojs.bind(this, this.onMetricChanged));
   };
 
@@ -29386,13 +29386,13 @@ videojs.MediaTechController.prototype.detectBandwithChange = function () {
       break;
   }
   if (metricsChangeType) {
-    var metricsChangeEvent = videojs.fixEvent({
+    var metricsChangeEvent = {
       type: MediaPlayer.events.METRIC_CHANGED,
       data: {
         stream: metricsChangeType
       }
-    });
-    this.player().trigger(metricsChangeEvent);
+    };
+    this.trigger(metricsChangeEvent);
   }
 };
 /**
