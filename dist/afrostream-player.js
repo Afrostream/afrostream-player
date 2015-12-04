@@ -27680,7 +27680,7 @@ vjs.plugin = function(name, init){
     init: function (player, options) {
       videojs.Component.call(this, player, options);
 
-      player.on('loadstart', videojs.bind(this, this.onLoadStart));
+      player.one('loadstart', videojs.bind(this, this.onLoadStart));
       this.tech_ = player.tech;
     }
   });
