@@ -28546,7 +28546,7 @@ videojs.Dash.prototype.duration = function () {
   var isDynamic = false;
   //FIXME WTF for detect live we should get duration to Infinity
   try {
-    isDynamic = this.mediaPlayer().getVideoModel().system.getObject('playbackController').getIsDynamic();
+    isDynamic = this.mediaPlayer_.getVideoModel().system.getObject('playbackController').getIsDynamic();
   } catch (e) {
     videojs.warn(e);
   }
@@ -28575,6 +28575,8 @@ videojs.Dash.prototype.setSrc = function (source) {
   this.mediaPlayer_.attachView(this.el());
   this.mediaPlayer_.addEventListener(MediaPlayer.events.STREAM_INITIALIZED,
     videojs.bind(this, this.onInitialized));
+  this.mediaPlayer_.addEventListener(MediaPlayer.events.TEXT_TRACKS_ADDED,
+    videojs.bind(this, this.onTextTracksAdded));
 
   // Dash.js autoplays by default
   if (!this.player().options().autoplay) {
@@ -28592,13 +28594,31 @@ videojs.Dash.prototype.setSrc = function (source) {
   });
 };
 
+videojs.Dash.prototype.onTextTracksAdded = function (e) {
+  var tracks = e.data.tracks;
+  if (tracks) {
+    var l = tracks.length, track;
+    for (var i = 0; i < l; i++) {
+      track = tracks[i];
+
+      if (track.kind !== 'captions') {
+        break;
+      }
+      if (track.lang === 'fra') {
+        track.defaultTrack = true;
+        this.mediaPlayer_.setTextTrack(i);
+      }
+    }
+  }
+};
+
 videojs.Dash.prototype.onInitialized = function (manifest, err) {
   if (err) {
     this.player().error(err);
   }
-  var bitrates = this.mediaPlayer().getBitrateInfoListFor('video');
-  var audios = this.mediaPlayer().getTracksFor('audio');
-  var autoSwitch = this.mediaPlayer().getAutoSwitchQuality();
+  var bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
+  var audios = this.mediaPlayer_.getTracksFor('audio');
+  var autoSwitch = this.mediaPlayer_.getAutoSwitchQuality();
   // bitrates are sorted from lowest to the best values
   // so the last one has the best quality
   //  maxQuality = bitrates[bitrates.length - 1].qualityIndex;
@@ -28648,27 +28668,27 @@ videojs.Dash.prototype.initializeDashJS = function (manifest, err) {
 videojs.Dash.prototype.videoTracks = function () {
   var bitrates;
   try {
-    bitrates = this.mediaPlayer().getBitrateInfoListFor('video');
+    bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
   } catch (e) {
     videojs.log('get bitrate not possible');
   }
-  return bitrates || this.mediaPlayer().getTracksFor('video');
+  return bitrates || this.mediaPlayer_.getTracksFor('video');
 };
 
 videojs.Dash.prototype.setVideoTrack = function (track) {
-  var bitrates = this.mediaPlayer().getBitrateInfoListFor('video');
-  this.mediaPlayer().setAutoSwitchQuality(track.qualityIndex >= bitrates.length);
-  this.mediaPlayer().setQualityFor('video', track.qualityIndex);
+  var bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
+  this.mediaPlayer_.setAutoSwitchQuality(track.qualityIndex >= bitrates.length);
+  this.mediaPlayer_.setQualityFor('video', track.qualityIndex);
   videojs.MediaTechController.prototype.setVideoTrack.call(this, track);
 };
 
 videojs.Dash.prototype.audioTracks = function () {
-  return this.mediaPlayer().getTracksFor('audio');
+  return this.mediaPlayer_.getTracksFor('audio');
 };
 
 
 videojs.Dash.prototype.setAudioTrack = function (track) {
-  this.mediaPlayer().setCurrentTrack(track);
+  this.mediaPlayer_.setCurrentTrack(track);
   videojs.MediaTechController.prototype.setAudioTrack.call(this, track);
 };
 
