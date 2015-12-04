@@ -12832,14 +12832,7 @@ vjs.plugin = function(name, init){
 
   videojs.Afrostream.prototype.tech_ = null;
 
-  videojs.Afrostream.prototype.mediaPlayer = function () {
-    return this.player().mediaPlayer_;
-  };
-
   videojs.Afrostream.prototype.onLoadStart = function () {
-    if (!this.mediaPlayer()) {
-      return;
-    }
     this.addMediaPlayerHandlers();
   };
 
@@ -12856,9 +12849,8 @@ vjs.plugin = function(name, init){
     if (e.data.stream !== 'video' && e.data.stream !== 'audio') {
       return;
     }
-    var metrics = this.getCribbedMetricsFor(e.data.stream);
+    var metrics = this.player().getCribbedMetricsFor(e.data.stream);
     if (metrics) {
-      this.metrics_[e.data.stream] = videojs.util.mergeOptions(this.metrics_[e.data.stream], metrics);
       if (e.data.stream === 'video') {
         /*jshint sub:true*/
         if (metrics.bitrateIndex !== this.oldBitrateIndex) {
@@ -12876,176 +12868,6 @@ vjs.plugin = function(name, init){
     }
   };
 
-  videojs.Afrostream.METRICS_DATA = {
-    bandwidth: -1,
-    bitrateIndex: 0,
-    pendingIndex: '',
-    numBitrates: 0,
-    bufferLength: 0,
-    droppedFrames: 0,
-    movingLatency: 0,
-    movingDownload: 0,
-    movingRatio: 0,
-    requestsQueue: 0
-  };
-
-  videojs.Afrostream.prototype.metrics_ = {
-    video: videojs.util.mergeOptions({}, videojs.Afrostream.METRICS_DATA),
-    audio: videojs.util.mergeOptions({}, videojs.Afrostream.METRICS_DATA)
-  };
-
-  videojs.Afrostream.prototype.getPlaybackStatistics = function () {
-    return this.metrics_;
-  };
-
-  videojs.Afrostream.prototype.getCribbedMetricsFor = function (type) {
-    var metrics = this.mediaPlayer().getMetricsFor(type),
-      metricsExt = this.mediaPlayer().getMetricsExt(),
-      repSwitch,
-      bufferLevel,
-      httpRequests,
-      droppedFramesMetrics,
-      bitrateIndex,
-      bandwidth,
-      pendingValue,
-      numBitrates,
-      bufferLength = 0,
-      movingLatency = {},
-      movingDownload = {},
-      movingRatio = {},
-      droppedFrames = 0,
-      requestsQueue,
-      fillmoving = function (type, Requests) {
-        var requestWindow,
-          downloadTimes,
-          latencyTimes,
-          durationTimes;
-
-        requestWindow = Requests
-          .slice(-20)
-          .filter(function (req) {
-            return req.responsecode >= 200 && req.responsecode < 300 && !!req.mediaduration && req.type === 'Media Segment' && req.stream === type;
-          })
-          .slice(-4);
-        if (requestWindow.length > 0) {
-
-          latencyTimes = requestWindow.map(function (req) {
-            return Math.abs(req.tresponse.getTime() - req.trequest.getTime()) / 1000;
-          });
-
-          movingLatency[type] = {
-            average: latencyTimes.reduce(function (l, r) {
-              return l + r;
-            }) / latencyTimes.length,
-            high: latencyTimes.reduce(function (l, r) {
-              return l < r ? r : l;
-            }),
-            low: latencyTimes.reduce(function (l, r) {
-              return l < r ? l : r;
-            }),
-            count: latencyTimes.length
-          };
-
-          downloadTimes = requestWindow.map(function (req) {
-            return Math.abs(req.tfinish.getTime() - req.tresponse.getTime()) / 1000;
-          });
-
-          movingDownload[type] = {
-            average: downloadTimes.reduce(function (l, r) {
-              return l + r;
-            }) / downloadTimes.length,
-            high: downloadTimes.reduce(function (l, r) {
-              return l < r ? r : l;
-            }),
-            low: downloadTimes.reduce(function (l, r) {
-              return l < r ? l : r;
-            }),
-            count: downloadTimes.length
-          };
-
-          durationTimes = requestWindow.map(function (req) {
-            return req.mediaduration;
-          });
-
-          movingRatio[type] = {
-            average: (durationTimes.reduce(function (l, r) {
-              return l + r;
-            }) / downloadTimes.length) / movingDownload[type].average,
-            high: durationTimes.reduce(function (l, r) {
-              return l < r ? r : l;
-            }) / movingDownload[type].low,
-            low: durationTimes.reduce(function (l, r) {
-              return l < r ? l : r;
-            }) / movingDownload[type].high,
-            count: durationTimes.length
-          };
-        }
-      };
-
-    if (metrics && metricsExt) {
-      repSwitch = metricsExt.getCurrentRepresentationSwitch(metrics);
-      bufferLevel = metricsExt.getCurrentBufferLevel(metrics);
-      httpRequests = metricsExt.getHttpRequests(metrics);
-      droppedFramesMetrics = metricsExt.getCurrentDroppedFrames(metrics);
-      requestsQueue = metricsExt.getRequestsQueue ? metricsExt.getRequestsQueue(metrics) : {};
-
-      fillmoving('video', httpRequests);
-      fillmoving('audio', httpRequests);
-
-      var streamIdx = this.streamInfo ? this.streamInfo.index : 0;
-
-      if (repSwitch !== null) {
-        bitrateIndex = metricsExt.getIndexForRepresentation(repSwitch.to, streamIdx);
-        bandwidth = metricsExt.getBandwidthForRepresentation(repSwitch.to, streamIdx);
-        bandwidth = bandwidth;
-        bandwidth = Math.round(bandwidth);
-      }
-
-      numBitrates = metricsExt.getMaxIndexForBufferType(type, streamIdx);
-
-      if (bufferLevel !== null) {
-        bufferLength = bufferLevel.level.toPrecision(5);
-      }
-
-      if (droppedFramesMetrics !== null) {
-        droppedFrames = droppedFramesMetrics.droppedFrames;
-      }
-
-      if (isNaN(bandwidth) || bandwidth === undefined) {
-        bandwidth = 0;
-      }
-
-      if (isNaN(bitrateIndex) || bitrateIndex === undefined) {
-        bitrateIndex = 0;
-      }
-
-      if (isNaN(numBitrates) || numBitrates === undefined) {
-        numBitrates = 0;
-      }
-
-      if (isNaN(bufferLength) || bufferLength === undefined) {
-        bufferLength = 0;
-      }
-
-      pendingValue = this.mediaPlayer().getQualityFor(type);
-
-      return {
-        bandwidth: bandwidth,
-        bitrateIndex: bitrateIndex,
-        pendingIndex: (pendingValue !== bitrateIndex) ? '(-> ' + (pendingValue) + ')' : '',
-        numBitrates: numBitrates,
-        bufferLength: bufferLength,
-        movingLatency: movingLatency,
-        movingDownload: movingDownload,
-        droppedFrames: droppedFrames,
-        movingRatio: movingRatio,
-        requestsQueue: requestsQueue
-      };
-    }
-    else {
-      return null;
-    }
-  };
   /**
    * add afrostream to videojs childs
    * @type {{}}
@@ -13602,6 +13424,16 @@ videojs.Player.prototype.setVideoTrack = function (track) {
   return this.tech && this.tech['setVideoTrack'](track);
 };
 
+videojs.Player.prototype.getPlaybackStatistics = function (type) {
+  /*jshint sub:true*/
+  return this.tech && this.tech['getPlaybackStatistics']();
+};
+
+videojs.Player.prototype.getCribbedMetricsFor = function (type) {
+  /*jshint sub:true*/
+  return this.tech && this.tech['getCribbedMetricsFor'](type);
+};
+
 videojs.Html5.prototype.videoTracks = function (tracks) {
   /*jshint sub:true*/
   if (!this['featuresNativeVideoTracks']) {
@@ -13666,8 +13498,12 @@ videojs.MediaTechController.METRICS_DATA = {
 };
 
 videojs.MediaTechController.prototype.metrics_ = {
-  video: videojs.util.mergeOptions({}, videojs.MediaTechController.METRICS_DATA),
-  audio: videojs.util.mergeOptions({}, videojs.MediaTechController.METRICS_DATA)
+  video: videojs.util.mergeOptions({
+    bandwidth: /*this.el().webkitVideoDecodedByteCount ||*/ -1
+  }, videojs.MediaTechController.METRICS_DATA),
+  audio: videojs.util.mergeOptions({
+    bandwidth: /*this.el().webkitAudioDecodedByteCount || */-1
+  }, videojs.MediaTechController.METRICS_DATA)
 };
 
 
@@ -13677,46 +13513,21 @@ videojs.MediaTechController.prototype.mediaPlayer = function () {
   return this.mediaPlayer_;
 };
 
-videojs.MediaTechController.prototype.detectBandwithChange = function () {
-  var metrics = this.getPlaybackStatistics(), metricsChangeType;
-  if (!metrics) {
-    return;
-  }
-  switch (true) {
-    case metrics.video.bandwidth !== this.metrics_.video.bandwidth:
-      this.metrics_.video.bandwidth = metrics.video.bandwidth;
-      metricsChangeType = 'video';
-      break;
-    case metrics.audio.bandwidth !== this.metrics_.audio.bandwidth:
-      this.metrics_.audio.bandwidth = metrics.audio.bandwidth;
-      metricsChangeType = 'audio';
-      break;
-    default:
-      break;
-  }
-  if (metricsChangeType) {
-    var metricsChangeEvent = {
-      type: MediaPlayer.events.METRIC_CHANGED,
-      data: {
-        stream: metricsChangeType
-      }
-    };
-    this.trigger(metricsChangeEvent);
-  }
-};
 /**
  * Get default metrix statistics object
  * @returns {{video: {bandwidth: number}, audio: {bandwidth: number}}}
  */
 videojs.MediaTechController.prototype.getPlaybackStatistics = function () {
-  return {
-    video: {
-      bandwidth: this.el().webkitVideoDecodedByteCount || -1
-    },
-    audio: {
-      bandwidth: this.el().webkitAudioDecodedByteCount || -1
-    }
-  };
+  return this.metrics_;
+};
+
+/**
+ * Get default metrix statistics object for specified type
+ * @param type
+ * @returns {*}
+ */
+videojs.MediaTechController.prototype.getCribbedMetricsFor = function (type) {
+  return this.metrics_[type];
 };
 
 videojs.MediaTechController.prototype.videoTracks_ = null;
