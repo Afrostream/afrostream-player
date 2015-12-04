@@ -12828,6 +12828,8 @@ vjs.plugin = function(name, init){
     return (str + '').replace(/^\s+|\s+$/g, '').replace(/^NOTE Paragraph$/g, '');
   };
 
+  videojs.Afrostream.prototype.oldBandwidth = 0;
+
   videojs.Afrostream.prototype.streamInfo = null;
 
   videojs.Afrostream.prototype.tech_ = null;
@@ -12853,10 +12855,10 @@ vjs.plugin = function(name, init){
     if (metrics) {
       if (e.data.stream === 'video') {
         /*jshint sub:true*/
-        if (metrics.bitrateIndex !== this.oldBitrateIndex) {
+        if (metrics.bandwidth !== this.oldBandwidth) {
           this.tech_['featuresBitrate'] = metrics;
-          this.player().trigger(metrics.bitrateIndex > this.oldBitrateIndex ? 'bandwidthIncrease' : 'bandwidthDecrease');
-          this.oldBitrateIndex = metrics.bitrateIndex;
+          this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
+          this.oldBandwidth = metrics.bandwidth;
         }
       }
     }
