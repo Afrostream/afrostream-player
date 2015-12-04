@@ -15,17 +15,8 @@ module.exports = function (grunt) {
         banner: '<%= banner %>',
         stripBanners: true
       },
-      dashjs: {
+      hls: {
         src: [
-          //DASH
-          'node_modules/dashjs/dist/dash.debug.js',
-          //'node_modules/dashjs/src/lib/*.js',
-          //'node_modules/dashjs/src/streaming/MediaPlayer.js',
-          //'node_modules/dashjs/src/streaming/Context.js',
-          //'node_modules/dashjs/src/dash/Dash.js',
-          //'node_modules/dashjs/src/dash/DashContext.js',
-          //'node_modules/dashjs/src/dash/**/*.js',
-          //'node_modules/dashjs/src/streaming/**/*.js',
           //VJS
           'node_modules/video.js/dist/video-js/video.dev.js',
           //VJS MEDIA SOURCE
@@ -47,6 +38,22 @@ module.exports = function (grunt) {
           'node_modules/pkcs7/dist/pkcs7.unpad.js',
           'node_modules/videojs-contrib-hls/src/decrypter.js',
           'node_modules/videojs-contrib-hls/src/bin-utils.js',
+        ],
+        dest: 'dist/<%= pkg.name %>.hls.js'
+      },
+      dashjs: {
+        src: [
+          //DASH
+          'node_modules/dashjs/dist/dash.debug.js',
+          //'node_modules/dashjs/src/lib/*.js',
+          //'node_modules/dashjs/src/streaming/MediaPlayer.js',
+          //'node_modules/dashjs/src/streaming/Context.js',
+          //'node_modules/dashjs/src/dash/Dash.js',
+          //'node_modules/dashjs/src/dash/DashContext.js',
+          //'node_modules/dashjs/src/dash/**/*.js',
+          //'node_modules/dashjs/src/streaming/**/*.js',
+          //VJS
+          'node_modules/video.js/dist/video-js/video.dev.js',
           //CHROMECAST
           'node_modules/videojs-chromecast/dist/videojs.chromecast.js',
           //GoogleAnaltics
