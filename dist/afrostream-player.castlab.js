@@ -12844,10 +12844,10 @@ vjs.plugin = function(name, init){
   };
 
   videojs.Afrostream.prototype.addMediaPlayerHandlers = function () {
-    videojs.on(this.mediaPlayer(), MediaPlayer.events.STREAM_INITIALIZED,
-      videojs.bind(this, this.onInitialized));
-    videojs.on(this.mediaPlayer(), MediaPlayer.events.METRIC_CHANGED,
-      videojs.bind(this, this.onMetricChanged));
+    this.on(this.mediaPlayer(), MediaPlayer.events.STREAM_INITIALIZED,
+      this.onInitialized);
+    this.on(this.mediaPlayer(), MediaPlayer.events.METRIC_CHANGED,
+      this.onMetricChanged);
   };
 
   videojs.Afrostream.prototype.onMetricChanged = function (e) {
@@ -13036,6 +13036,7 @@ vjs.plugin = function(name, init){
         bufferLength: bufferLength,
         movingLatency: movingLatency,
         movingDownload: movingDownload,
+        droppedFrames: droppedFrames,
         movingRatio: movingRatio,
         requestsQueue: requestsQueue
       };

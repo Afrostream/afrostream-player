@@ -27712,10 +27712,10 @@ vjs.plugin = function(name, init){
   };
 
   videojs.Afrostream.prototype.addMediaPlayerHandlers = function () {
-    videojs.on(this.mediaPlayer(), MediaPlayer.events.STREAM_INITIALIZED,
-      videojs.bind(this, this.onInitialized));
-    videojs.on(this.mediaPlayer(), MediaPlayer.events.METRIC_CHANGED,
-      videojs.bind(this, this.onMetricChanged));
+    this.on(this.mediaPlayer(), MediaPlayer.events.STREAM_INITIALIZED,
+      this.onInitialized);
+    this.on(this.mediaPlayer(), MediaPlayer.events.METRIC_CHANGED,
+      this.onMetricChanged);
   };
 
   videojs.Afrostream.prototype.onMetricChanged = function (e) {
@@ -27904,6 +27904,7 @@ vjs.plugin = function(name, init){
         bufferLength: bufferLength,
         movingLatency: movingLatency,
         movingDownload: movingDownload,
+        droppedFrames: droppedFrames,
         movingRatio: movingRatio,
         requestsQueue: requestsQueue
       };
@@ -28900,6 +28901,7 @@ videojs.Dashas = videojs.Flash.extend({
       'language': 'fr',
       'spinner': !1,
       'watermark': !1,
+      'muted': player.options().muted,
       'debug': true,
       'quality': 'autolow',
       'maxBufferLength': 8
@@ -28911,7 +28913,6 @@ videojs.Dashas = videojs.Flash.extend({
     player.on('error', vjs.bind(this, function () {
       this.clearInterval(this.metricsInterval);
     }));
-
   }
 });
 
