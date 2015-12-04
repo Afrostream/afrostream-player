@@ -28915,10 +28915,7 @@ videojs.Dashas = videojs.Flash.extend({
     player.on('error', vjs.bind(this, function () {
       this.clearInterval(this.metricsInterval);
     }));
-    //player.ready(function () {
-    //  vjs.bind(this, this.detectBandwithChange);
-    //})
-    this.player().one('playerready', vjs.bind(this, this.initBandwith));
+    this.player().one('loadedmetadata', vjs.bind(this, this.initBandwith));
   }
 });
 
@@ -28926,7 +28923,7 @@ videojs.Dashas = videojs.Flash.extend({
  * Initialize metrics values
  */
 videojs.Dashas.prototype.initBandwith = function () {
-  var metrics = this.getPlaybackStatistics(), metricsChangeType;
+  var metrics = this.getPlaybackStatistics();
   if (!metrics) {
     return;
   }
