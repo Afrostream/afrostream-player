@@ -27712,10 +27712,11 @@ vjs.plugin = function(name, init){
   };
 
   videojs.Afrostream.prototype.addMediaPlayerHandlers = function () {
-    this.on(this.mediaPlayer(), MediaPlayer.events.STREAM_INITIALIZED,
-      this.onInitialized);
-    this.on(this.mediaPlayer(), MediaPlayer.events.METRIC_CHANGED,
-      this.onMetricChanged);
+    this.player().on(MediaPlayer.events.STREAM_INITIALIZED,
+      videojs.bind(this, this.onInitialized));
+    this.player().on(MediaPlayer.events.METRIC_CHANGED,
+      videojs.bind(this, this.onMetricChanged));
+
   };
 
   videojs.Afrostream.prototype.onMetricChanged = function (e) {
@@ -28549,7 +28550,8 @@ videojs.Dash.prototype.setSrc = function (source) {
     videojs.bind(this, this.onInitialized));
   this.mediaPlayer_.addEventListener(MediaPlayer.events.TEXT_TRACKS_ADDED,
     videojs.bind(this, this.onTextTracksAdded));
-
+  this.mediaPlayer_.addEventListener(MediaPlayer.events.METRIC_CHANGED,
+    videojs.bind(this, this.onMetricChanged));
   // Dash.js autoplays by default
   if (!this.player().options().autoplay) {
     this.mediaPlayer_.setAutoPlay(false);
@@ -28565,6 +28567,7 @@ videojs.Dash.prototype.setSrc = function (source) {
     this.mediaPlayer_.retrieveManifest(source.src, videojs.bind(this, this.initializeDashJS));
   });
 };
+
 
 videojs.Dash.prototype.onTextTracksAdded = function (e) {
   var tracks = e.data.tracks;
@@ -28584,7 +28587,12 @@ videojs.Dash.prototype.onTextTracksAdded = function (e) {
   }
 };
 
+videojs.Dash.prototype.onMetricChanged = function (e) {
+  this.trigger(videojs.obj.copy(e));
+};
+
 videojs.Dash.prototype.onInitialized = function (manifest, err) {
+  this.trigger(MediaPlayer.events.STREAM_INITIALIZED);
   if (err) {
     this.player().error(err);
   }
