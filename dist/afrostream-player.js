@@ -28478,8 +28478,6 @@ videojs.Dash.prototype.onInitialized = function (manifest, err) {
   //  maxQuality = bitrates[bitrates.length - 1].qualityIndex;
   // set max quality
   /*jshint sub:true*/
-  this.videoTracks(bitrates);
-  this.audioTracks(audios);
   this['featuresAudioIndex'] = this['featuresAudioIndex'] || (audios.length - 1);
   this['featuresBitrateIndex'] = autoSwitch ? bitrates.length : (this['featuresBitrateIndex'] || bitrates.length);
 };
@@ -28942,14 +28940,27 @@ videojs.Dashas = videojs.Flash.extend({
     player.on('error', vjs.bind(this, function () {
       this.clearInterval(this.metricsInterval);
     }));
-    this.player().one('loadedmetadata', vjs.bind(this, this.initBandwith));
+    this.player().one('loadedmetadata', vjs.bind(this, this.onInitialized));
+    this.player().one('playerready', vjs.bind(this, this.onReady));
   }
 });
 
+videojs.Dashas.prototype.onReady = function () {
+  var audios = this.audioTracks() || [], audio;
+  for (var i = 0; i < audios.length; i++) {
+    audio = audios[i];
+    if (typeof  audio === 'string') {
+      if (audio === 'fra' || audio === 'fr') {
+        this.setAudioTrack(i);
+        this['featuresAudioIndex'] = this['featuresAudioIndex'] || i;
+      }
+    }
+  }
+};
 /**
  * Initialize metrics values
  */
-videojs.Dashas.prototype.initBandwith = function () {
+videojs.Dashas.prototype.onInitialized = function () {
   var metrics = this.getPlaybackStatistics();
   if (!metrics) {
     return;
