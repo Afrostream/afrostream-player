@@ -28941,11 +28941,10 @@ videojs.Dashas = videojs.Flash.extend({
       this.clearInterval(this.metricsInterval);
     }));
     this.player().one('loadedmetadata', vjs.bind(this, this.onInitialized));
-    this.player().one('playerready', vjs.bind(this, this.onReady));
   }
 });
 
-videojs.Dashas.prototype.onReady = function () {
+videojs.Dashas.prototype.selectDefaultTrack = function () {
   var audios = this.audioTracks() || [], audio;
   for (var i = 0; i < audios.length; i++) {
     audio = audios[i];
@@ -28966,6 +28965,7 @@ videojs.Dashas.prototype.onInitialized = function () {
     return;
   }
   this.metrics_ = videojs.util.mergeOptions(this.metrics_, metrics);
+  this.selectDefaultTrack();
 };
 
 videojs.Dashas.prototype.detectBandwithChange = function () {
