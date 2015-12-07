@@ -1,4 +1,4 @@
-/*! afrostream-player - v1.1.2 - 2015-12-04
+/*! afrostream-player - v1.1.2 - 2015-12-07
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
@@ -12425,7 +12425,7 @@ vjs.plugin = function(name, init){
 
 }).call(this);
 
-/*! videojs-metrics - v0.0.0 - 2015-11-06
+/*! videojs-metrics - v0.0.0 - 2015-12-07
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 /*! videojs-metrics - v0.0.0 - 2015-10-7
  * Copyright (c) 2015 benjipott
@@ -12462,10 +12462,10 @@ vjs.plugin = function(name, init){
    */
   videojs.Metrics.getBrowser = function () {
     var data = {};
-    var browser = null;
-    var version = null;
-    var os = null;
-    var osVersion = null;
+    var browser = '';
+    var version = '';
+    var os = '';
+    var osVersion = '';
     var parseUserAgent, prepareData, renameOsx, cutSafariVersion;
 
     parseUserAgent = function () {
@@ -12490,7 +12490,7 @@ vjs.plugin = function(name, init){
 
     prepareData = function () {
       data.browser = browser;
-      data.version = parseInt(version, 10) || null;
+      data.version = parseInt(version, 10) || '';
       data.os = os;
       data.osVersion = osVersion;
     };
@@ -12658,8 +12658,8 @@ vjs.plugin = function(name, init){
     evt.fqdn = this.pathUrl[1];
     evt.os = this.browserInfo.os;
     evt.os_version = this.browserInfo.osVersion.toString();
-    evt.web_browser = this.browserInfo.browser;
-    evt.web_browser_version = this.browserInfo.version.toString();
+    evt.web_browser = this.browserInfo.browser.toString();
+    evt.web_browser_version = this.browserInfo.version ? this.browserInfo.version.toString() : '';
     evt.resolution_size = screen.width + 'x' + screen.height;
     evt.flash_version = videojs.Flash.version().join(',');
     evt.html5_video = player.tech ? player.tech.el().nodeName === 'VIDEO' : 'undefined';//player.techName === 'Html5';
@@ -12669,7 +12669,8 @@ vjs.plugin = function(name, init){
     //=== BITDASH
     //bandwidth
     //bitrateIndex
-    //pendingIndex
+    //pend
+    // ingIndex
     //numBitrates
     //bufferLength
     //droppedFrames
@@ -12935,8 +12936,12 @@ videojs.AudioMenuButton.prototype.createItems = function () {
     if (typeof  audio === 'string') {
       audio = {
         index: i,
-        label: audio
+        label: audio,
+        lang: audio
       };
+    }
+    if (!audio.lang) {
+      return;
     }
     items.push(new videojs.AudioMenuItem(this.player(), audio));
   }
@@ -12967,8 +12972,30 @@ videojs.AudioMenuButton.prototype.onClick = function () {
 
 videojs.AudioMenuButton.prototype.audiosSupported = function () {
   /*jshint sub:true*/
-  return this.player().audioTracks() &&
-    this.player().audioTracks().length > 0;
+  var autioSupported = this.player().audioTracks() &&
+    this.player().audioTracks().length || 0;
+
+  if (!autioSupported) {
+    return autioSupported;
+  }
+  /*jshint sub:true*/
+  var audios = this.player().audioTracks() || [], audio;
+  for (var i = 0; i < audios.length; i++) {
+    audio = audios[i];
+    if (typeof  audio === 'string') {
+      audio = {
+        index: i,
+        label: audio,
+        lang: audio
+      };
+    }
+    if (!audio.lang) {
+      return;
+    }
+    autioSupported++;
+  }
+
+  return autioSupported;
 };
 
 /**
