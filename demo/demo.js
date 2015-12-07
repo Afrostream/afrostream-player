@@ -285,7 +285,18 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
         swf: './assets/swf/videojs-osmf.swf'
       },
       dash: {
-        protData: protData
+        protData: protData,
+        autoSwitch: true,
+        buffer: {
+          minBufferTime: 12,
+          lowBufferThreshold: 4,
+          bufferTimeAtTopQuality: 30,
+          bufferTimeAtTopQualityLongForm: 300,
+          longFormContentDurationThreshold: 600,
+          richBufferThreshold: 20,
+          bufferToKeep: 30,
+          bufferPruningInterval: 30
+        }
       },
       hls: {
         swf: 'bower_components/video.js/dist/video-js/video-js.swf'

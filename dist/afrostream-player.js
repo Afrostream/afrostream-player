@@ -28375,16 +28375,37 @@ videojs.Dash.prototype.options_ = {
 videojs.Dash.prototype.getWidevineProtectionData = null;
 videojs.Dash.prototype.context_ = null;
 
-videojs.Dash.prototype.duration = function () {
-  var duration = videojs.Html5.prototype.duration.call(this);
+/**
+ * Detect if source is Live
+ * TODO detect with other method based on duration Infinity
+ * @returns {boolean}
+ */
+videojs.Dash.prototype.isDynamic = function () {
   var isDynamic = false;
-  //FIXME WTF for detect live we should get duration to Infinity
   try {
     isDynamic = this.mediaPlayer_.getVideoModel().system.getObject('playbackController').getIsDynamic();
   } catch (e) {
     videojs.log(e);
   }
-  return isDynamic ? Infinity : duration;
+  return isDynamic;
+};
+
+videojs.Dash.prototype.duration = function () {
+  var duration = videojs.Html5.prototype.duration.call(this);
+  //FIXME WTF for detect live we should get duration to Infinity
+  return this.isDynamic() ? Infinity : duration;
+};
+
+videojs.Dash.prototype.setCurrentTime = function (seconds) {
+  this.mediaPlayer_.seek(seconds);
+};
+
+videojs.Dash.prototype.play = function () {
+  var isDynamic = this.isDynamic();
+  if (isDynamic) {
+    this.mediaPlayer_.retrieveManifest(this.options().source.src, videojs.bind(this, this.initializeDashJS));
+  }
+  videojs.Html5.prototype.play.call(this);
 };
 
 videojs.Dash.prototype.setSrc = function (source) {
@@ -28418,7 +28439,6 @@ videojs.Dash.prototype.setSrc = function (source) {
     this.mediaPlayer_.setAutoPlay(false);
   }
   this.mediaPlayer_.setAutoSwitchQuality(this.options().autoSwitch);
-
   this.mediaPlayer_.setInitialMediaSettingsFor('audio', {lang: 'fr'});
   //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
 
