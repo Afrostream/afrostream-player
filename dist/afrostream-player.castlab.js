@@ -12990,12 +12990,12 @@ videojs.AudioMenuButton.prototype.audiosSupported = function () {
       };
     }
     if (!audio.lang) {
+      autioSupported--;
       return;
     }
-    autioSupported++;
   }
 
-  return autioSupported;
+  return autioSupported > 1;
 };
 
 /**
