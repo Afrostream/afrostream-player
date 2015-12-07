@@ -28358,6 +28358,7 @@ videojs.options.dash = {};
 
 videojs.Dash.prototype.options_ = {
   autoSwitch: true,
+  scheduleWhilePaused: false,
   buffer: {
     minBufferTime: 12,
     lowBufferThreshold: 4,
@@ -28438,6 +28439,8 @@ videojs.Dash.prototype.setSrc = function (source) {
   if (!this.player().options().autoplay) {
     this.mediaPlayer_.setAutoPlay(false);
   }
+
+  this.mediaPlayer_.setScheduleWhilePaused(this.options().scheduleWhilePaused);
   this.mediaPlayer_.setAutoSwitchQuality(this.options().autoSwitch);
   this.mediaPlayer_.setInitialMediaSettingsFor('audio', {lang: 'fr'});
   //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});

@@ -287,6 +287,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
       dash: {
         protData: protData,
         autoSwitch: true,
+        scheduleWhilePaused: true,
         buffer: {
           minBufferTime: 12,
           lowBufferThreshold: 4,
