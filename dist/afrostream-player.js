@@ -15,7 +15,7 @@
 
   // Pass this if window is not defined yet
 }(typeof window !== 'undefined' ? window : this, function (window, noGlobal) { /*jshint unused:false*/
-  /*! afrostream-player - v1.1.2 - 2015-12-07
+  /*! afrostream-player - v1.1.2 - 2015-12-08
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 function X2JS(matchers, attrPrefix, ignoreRoot) {
     if (attrPrefix === null || attrPrefix === undefined) {
@@ -28740,43 +28740,10 @@ videojs.TextTrackMenuItem.prototype.onClick = function () {
       track['mode'] = 'showing';
     } else {
       /*jshint sub:true*/
-      track['mode'] = 'hidden';
+      track['mode'] = this.player_.techName === 'Dash' ? 'hidden' : 'disabled';
     }
   }
 };
-
-//videojs.Dash.prototype.textTracks = function () {
-//  if (!this['featuresNativeTextTracks']) {
-//    return videojs.MediaTechController.prototype.textTracks.call(this);
-//  }
-//  var tracks = this.el_.textTracks;
-//  if (tracks) {
-//    var changeHandler = videojs.bind(this, function () {
-//      var l = tracks.length, track;
-//
-//      for (var i = 0; i < l; i++) {
-//        track = tracks[i];
-//        if (track['kind'] !== 'captions') {
-//          break;
-//        }
-//        if (track['mode'] === 'disabled') {
-//          track['mode'] = 'hidden';
-//        }
-//
-//        if (track['mode'] === 'showing') {
-//          this.mediaPlayer_.setTextTrack(i);
-//        }
-//      }
-//      tracks.removeEventListener('change', changeHandler);
-//    });
-//    tracks.addEventListener('change', changeHandler);
-//    this.player().on('dispose', function () {
-//      tracks.removeEventListener('change', changeHandler);
-//    });
-//  }
-//
-//  return tracks;
-//};
 
 /*
  * Add a css-class that is used to temporarily hide the error dialog while so that
