@@ -1,4 +1,4 @@
-/*! afrostream-player - v1.1.2 - 2015-12-08
+/*! afrostream-player - v1.1.8 - 2015-12-15
 * Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
@@ -13385,7 +13385,9 @@ videojs.FlashBlockDetector = videojs.CoreObject.extend({
       if (!techFounded) {
         return false;
       }
-
+      if (videojs.IS_ANDROID || videojs.IS_IOS) {
+        return false;
+      }
       var e = document.createElement(videojs.IS_IE ? 'object' : 'embed');
       e.type = 'application/x-shockwave-flash';
       document.body.appendChild(e);
