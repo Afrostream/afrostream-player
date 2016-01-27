@@ -24,7 +24,7 @@ angular.module('afrostreamAuth', ['ngCookies'])
           $http.post('https://afr-back-end-staging.herokuapp.com/auth/local', {email: email, password: password})
             .success(function (response) {
               var userData = {
-                expires_in: (response.info.expires_in + new Date().getTime()),
+                expires_in: (response.expires_in + new Date().getTime()),
                 token: response.token
               };
 
