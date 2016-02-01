@@ -149,15 +149,20 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', '$location', 
         //  "type": "application/dash+xml"
         //}
         //DIGIBOS SIMPLE
+        {
+          "src": "https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+          "type": "application/dash+xml"
+        }
+        //DIGIBOS LIVE
         //{
-        //  "src": "https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+        //  "src": "https://origin.cdn.afrostream.net/live/bet.isml/bet.mpd",
         //  "type": "application/dash+xml"
         //}
         //MULTI-AUDIO
-        {
-          "src": "https://hw.cdn.afrostream.net/vod/XXXTHESTATEOFTHEUNION_240_25_ProRes422_FRA_ENG_HD_STEREO/fc1ada9fa3339b3e.ism/fc1ada9fa3339b3e.mpd",
-          "type": "application/dash+xml"
-        }
+        //{
+        //  "src": "https://hw.cdn.afrostream.net/vod/XXXTHESTATEOFTHEUNION_240_25_ProRes422_FRA_ENG_HD_STEREO/fc1ada9fa3339b3e.ism/fc1ada9fa3339b3e.mpd",
+        //  "type": "application/dash+xml"
+        //}
         //DRM
         //{
         //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
@@ -212,7 +217,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', '$location', 
         //}
       ];
 
-    var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'dashas', 'osmf', 'html5', 'hls', 'flash'];
+    var techOrder = qs.tech ? qs.tech.split(',') : ['easyBroadcast', 'dash', 'dashas', 'osmf', 'html5', 'hls', 'flash'];
     var muted = qs.muted ? qs.muted : false;
     var drm = qs.drm ? qs.drm : false;
 
@@ -338,6 +343,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', '$location', 
 
       var audioSerie = new TimeSeries();
       var videoSerie = new TimeSeries();
+      var p2pSerie = new TimeSeries();
 
       smoothie.addTimeSeries(audioSerie, {
         strokeStyle: 'rgb(100,255,255)',
@@ -349,6 +355,12 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', '$location', 
         strokeStyle: '#00ff00',
         fillStyle: 'rgba(255, 0, 0, 0.4)',
         lineWidth: 2
+      })
+
+      smoothie.addTimeSeries(p2pSerie, {
+        strokeStyle: '#0000FF',
+        fillStyle: 'rgba(255, 230, 0, 0.4)',
+        lineWidth: 1
       });
 
       var chart = $('#_chart')[0];
@@ -362,18 +374,35 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', '$location', 
         var statistics = player.tech.getPlaybackStatistics();
         var dlAudioBitrate = Math.round(statistics.audio.bandwidth / 10.24) / 100;
         var dlVidBitrate = Math.round(statistics.video.bandwidth / 10.24) / 100;
+        var p2pRatio = Math.round(statistics.p2pweb.p2pRatio);
+        var chunksFromCDN = Math.round(statistics.p2pweb.chunksFromCDN);
+        var chunksFromP2P = Math.round(statistics.p2pweb.chunksFromP2P);
+        var chunksSent = Math.round(statistics.p2pweb.chunksSent);
+        var bufferLength = Math.round(statistics.p2pweb.bufferLength);
+        var swarmSize = Math.round(statistics.p2pweb.swarmSize);
+        var startupTime = Math.round(statistics.p2pweb.startupTime);
         document.getElementById('version').innerHTML = videojs.CDN_VERSION;
         document.getElementById('resolution').innerHTML = player.width() + ' x ' + player.height();
         document.getElementById('audioBuffer').innerHTML = statistics.audio.bufferLength;
         document.getElementById('videoBuffer').innerHTML = statistics.video.bufferLength;
         document.getElementById('dlAudioBitrate').innerHTML = dlAudioBitrate;
         document.getElementById('dlVideoBitrate').innerHTML = dlVidBitrate;
+        //P2P
+        document.getElementById('p2pWebRatio').innerHTML = p2pRatio;
+        document.getElementById('chunksFromCDN').innerHTML = chunksFromCDN;
+        document.getElementById('chunksFromP2P').innerHTML = chunksFromP2P;
+        document.getElementById('chunksSent').innerHTML = chunksSent;
+        document.getElementById('bufferLength').innerHTML = bufferLength;
+        document.getElementById('swarmSize').innerHTML = swarmSize;
+        document.getElementById('startupTime').innerHTML = startupTime;
         var now = new Date().getTime();
         audioSerie.append(now, dlAudioBitrate);
         videoSerie.append(now, dlVidBitrate);
+        p2pSerie.append(now, p2pRatio);
       }, 500);
     });
-  }
+  };
+
   if ($scope.user) {
     loadPlayer(qs.url ? decodeURIComponent(qs.url) : null);
   }
