@@ -3835,8 +3835,8 @@
     },
     "videojs-metrics": {
       "version": "0.0.0",
-      "from": "git+https://github.com/Afrostream/videojs-metrics.git#1.0.2",
-      "resolved": "git+https://github.com/Afrostream/videojs-metrics.git#011bd534acc5a1e1f4e4093739d7e77e3890b937"
+      "from": "git+https://github.com/Afrostream/videojs-metrics.git#1.0.4",
+      "resolved": "git+https://github.com/Afrostream/videojs-metrics.git#69b337f417bee1f6e0dccac9b41e711fe1dbccd7"
     },
     "videojs-swf": {
       "version": "5.0.0-rc1-sv",
