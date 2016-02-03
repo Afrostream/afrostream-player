@@ -1,5 +1,5 @@
-/*! afrostream-player - v1.1.8 - 2015-12-15
-* Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
+/*! afrostream-player - v1.1.8 - 2016-02-03
+* Copyright (c) 2016 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
 document.createElement('audio');
@@ -12425,8 +12425,8 @@ vjs.plugin = function(name, init){
 
 }).call(this);
 
-/*! videojs-metrics - v0.0.0 - 2015-12-07
-* Copyright (c) 2015 benjipott; Licensed Apache-2.0 */
+/*! videojs-metrics - v0.0.0 - 2016-02-02
+* Copyright (c) 2016 benjipott; Licensed Apache-2.0 */
 /*! videojs-metrics - v0.0.0 - 2015-10-7
  * Copyright (c) 2015 benjipott
  * Licensed under the Apache-2.0 license. */
@@ -12543,7 +12543,7 @@ vjs.plugin = function(name, init){
   videojs.Metrics.REQUIRED_KEY = {
     'bandwidthIncrease': ['video_bitrate', 'audio_bitrate'],
     'bandwidthDecrease': ['video_bitrate', 'audio_bitrate'],
-    'ping': [],
+    'ping': ['chunks_from_cdn', 'chunks_from_p2p'],
     'buffering': [],
     'error': ['number', 'message'],
     'start': ['video_bitrate', 'audio_bitrate', 'os', 'os_version', 'web_browser', 'web_browser_version', 'resolution_size', 'flash_version', 'html5_video', 'relative_url'],
@@ -12685,6 +12685,9 @@ vjs.plugin = function(name, init){
       this.metrics_ = videojs.util.mergeOptions(this.metrics_, metrics);
       evt.video_bitrate = this.metrics_.video.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.video.bandwidth / 1000)) : -1;
       evt.audio_bitrate = this.metrics_.audio.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.audio.bandwidth / 1000)) : -1;
+      evt.chunks_from_cdn = this.metrics_.p2pweb.chunksFromCDN;
+      evt.chunks_from_p2p = this.metrics_.p2pweb.chunksFromP2P;
+      evt.startup_time = this.metrics_.p2pweb.startupTime;
       var pickedData = videojs.Metrics.pick(evt, this.getRequiredKeys(evt.type));
       this.xhr(this.options(), pickedData);
     }
@@ -13245,6 +13248,89 @@ videojs.BitrateMenuItem.prototype.update = function () {
 
 };
 
+
+/**
+ * Button to toggle between play and pause
+ * @param {vjs.Player|Object} player
+ * @param {Object=} options
+ * @class
+ * @constructor
+ */
+videojs.NextButton = videojs.Button.extend({
+  /** @constructor */
+  init: function (player, options) {
+    videojs.Button.call(this, player, options);
+    this.update();
+  }
+});
+
+videojs.ControlBar.prototype.options_.children.NextButton = {};
+
+videojs.NextButton.prototype.buttonText = 'Next';
+
+videojs.NextButton.prototype.buildCSSClass = function () {
+  return 'vjs-next-control ' + videojs.Button.prototype.buildCSSClass.call(this);
+};
+videojs.NextButton.prototype.createEl = function (type, props) {
+
+  var el = videojs.Button.prototype.createEl.call(this, type, props);
+  this.content_ = videojs.createEl('div', {
+    className: 'thumb-tile-content'
+  });
+
+  this.fallbackImg_ = videojs.createEl(videojs.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
+    className: 'thumb-tile_thumb'
+  });
+  this.content_.appendChild(this.fallbackImg_);
+
+  var subUnfo = videojs.createEl('div', {
+    className: 'thumb-caption'
+  });
+
+  this.title = videojs.createEl('div', {
+    className: 'thumb-title'
+  });
+
+  subUnfo.appendChild(this.title);
+  this.content_.appendChild(subUnfo);
+  this.controlText_.appendChild(this.content_);
+  return el;
+};
+
+// OnClick - Toggle between play and pause
+videojs.NextButton.prototype.onClick = function () {
+  this.player_.trigger('next');
+};
+
+videojs.NextButton.prototype.update = function () {
+
+  var options = this.player_.options().next;
+  if (!options) {
+    return this.hide();
+  } else {
+    this.show();
+  }
+  this.title.innerHTML = options.title;
+  this.setSrc(options.poster);
+};
+
+/**
+ * Set the thumb source depending on the display method
+ */
+videojs.NextButton.prototype.setSrc = function (url) {
+  var backgroundImage;
+
+  if (!videojs.BACKGROUND_SIZE_SUPPORTED) {
+    this.fallbackImg_.src = url;
+  } else {
+    backgroundImage = '';
+    if (url) {
+      backgroundImage = 'url("' + url + '")';
+    }
+
+    this.fallbackImg_.style.backgroundImage = backgroundImage;
+  }
+};
 
 videojs.ProgressTip = videojs.Component.extend({
   /** @constructor */

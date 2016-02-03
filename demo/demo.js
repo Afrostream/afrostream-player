@@ -29,10 +29,17 @@ var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth'])
     }]);
 
 
-playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'AuthenticationService', function ($scope, $rootScope, AuthenticationService) {
+playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', '$location', 'AuthenticationService', function ($scope, $rootScope, $location, AuthenticationService) {
   // listen for login events
-  $scope.user = $rootScope.globals ? $rootScope.globals.user : null;
-  $scope.customData = $rootScope.globals.customData;
+  if ($location.search('drm')) {
+    $scope.user = $rootScope.globals ? $rootScope.globals.user : null;
+    $scope.customData = $rootScope.globals.customData;
+  } else {
+    $scope.user = {
+      userId: 666,
+      token: ''
+    }
+  }
   // method to log-in
   $scope.onLoginButton = function () {
     $scope.dataLoading = true;
@@ -207,6 +214,7 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
 
     var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'dashas', 'osmf', 'html5', 'hls', 'flash'];
     var muted = qs.muted ? qs.muted : false;
+    var drm = qs.drm ? qs.drm : false;
 
     if (url) {
       sources = [
@@ -303,7 +311,17 @@ playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', 'Authenticati
         swf: 'bower_components/video.js/dist/video-js/video-js.swf'
       },
       dasheverywhere: dasheverywhere,
-      sources: sources
+      sources: sources,
+      language: 'fr',
+      languages: {
+        fr: {
+          'Next': 'Video Suivante'
+        }
+      },
+      next: {
+        title: 'Dummy episode 2 and the wailers',
+        poster: 'http://fakeimg.pl/150'
+      }
     };
 
     var player = $scope.player = videojs('player', config).ready(function () {

@@ -1329,6 +1329,10 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   background-size: 22px 14px;
   height: 100%;
 }
+.video-js.vjs-afrostream-skin .vjs-control-content {
+  position: absolute;
+  bottom: 100%;
+}
 .video-js.vjs-afrostream-skin .vjs-remaining-time,
 .video-js.vjs-afrostream-skin .vjs-load-progress,
 .video-js.vjs-afrostream-skin .vjs-play-progress .vjs-control-text,
@@ -1344,6 +1348,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 .video-js.vjs-afrostream-skin .vjs-play-control .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-fullscreen-control .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-share-control .vjs-control-text,
+.video-js.vjs-afrostream-skin .vjs-next-control .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-volume-handle .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-mute-control .vjs-control-text {
   border: 0;
@@ -1357,7 +1362,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   opacity: 0;
   z-index: 1;
   position: relative;
-  top: -4em;
+  top: -2em;
   border-radius: 3px;
   padding: 0.5em;
   background-color: black;
@@ -1371,6 +1376,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 .video-js.vjs-afrostream-skin .vjs-play-control .vjs-control-text:before,
 .video-js.vjs-afrostream-skin .vjs-fullscreen-control .vjs-control-text:before,
 .video-js.vjs-afrostream-skin .vjs-share-control .vjs-control-text:before,
+.video-js.vjs-afrostream-skin .vjs-next-control .vjs-control-text:before,
 .video-js.vjs-afrostream-skin .vjs-volume-handle .vjs-control-text:before,
 .video-js.vjs-afrostream-skin .vjs-mute-control .vjs-control-text:before {
   content: '';
@@ -1387,19 +1393,17 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 .video-js.vjs-afrostream-skin .vjs-play-control:hover .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-fullscreen-control:hover .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-share-control:hover .vjs-control-text,
+.video-js.vjs-afrostream-skin .vjs-next-control:hover .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-volume-handle:hover .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-mute-control:hover .vjs-control-text {
   visibility: visible;
   opacity: 1;
-  top: -3em;
+  top: -1em;
   /* transition */
   -webkit-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
   -moz-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
   -o-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
   transition: visibility 0.2s, opacity 0.2s, top 0.2s;
-}
-.video-js.vjs-afrostream-skin .vjs-fullscreen-control:hover .vjs-control-text {
-  top: -3.3em;
 }
 .video-js.vjs-afrostream-skin.vjs-scrubbing .vjs-menu-button:hover .vjs-control-content .vjs-menu {
   display: none;
@@ -1511,7 +1515,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   content: "\e00c";
 }
 .video-js.vjs-afrostream-skin .vjs-audiotracks-button:before {
-  content: '\e900';
+  content: '\e901';
 }
 .video-js.vjs-afrostream-skin .vjs-captions-button:before {
   content: "\e00c";
@@ -1659,7 +1663,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 
 /* Captions Button */
 .vjs-audio-button:before {
-  content: '\e900';
+  content: '\e901';
 }
 
 /* Quality toggle
@@ -1680,6 +1684,61 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   width: 4em;
   left: -2em;
   list-style: none;
+}
+
+/* Next Button */
+.vjs-next-control:before {
+  content: '\e901';
+  font-family: VideoJS;
+}
+/* Play/Pause
+--------------------------------------------------------------------------------
+*/
+.vjs-afrostream-skin .vjs-next-control {
+  width: 3em;
+  cursor: pointer;
+}
+.vjs-afrostream-skin .vjs-next-control:before {
+  content: "\e900";
+}
+.vjs-afrostream-skin .vjs-next-control .vjs-control-content {
+  margin: 0 0 0 -50px;
+}
+.vjs-afrostream-skin .vjs-next-control .vjs-control-content .vjs-control-text {
+  position: relative;
+  float: left;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+.vjs-afrostream-skin .vjs-next-control .vjs-control-content .vjs-control-text .thumb-tile-content {
+  width: 150px;
+  height: 80px;
+}
+.vjs-afrostream-skin .vjs-next-control .vjs-control-content .vjs-control-text .thumb-tile-content .thumb-tile_thumb {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+.vjs-afrostream-skin .vjs-next-control .vjs-control-content .vjs-control-text .thumb-tile-content .thumb-caption {
+  color: #FFF;
+  font-weight: 100;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  max-height: 50%;
+  bottom: 0;
+}
+.vjs-afrostream-skin .vjs-next-control .vjs-control-content .vjs-control-text .thumb-tile-content .thumb-caption .thumb-title {
+  font-size: 1em;
+  max-height: 1.1em;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: left;
+  overflow: hidden;
 }
 
 .vjs-tip {

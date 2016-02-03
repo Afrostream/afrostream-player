@@ -247,6 +247,10 @@
     background-size: 22px 14px;
     height: 100%;
   }
+  .vjs-control-content {
+    position: absolute;
+    bottom: 100%;
+  }
   //.vjs-current-time,
   //.vjs-time-divider,
   //.vjs-duration,
@@ -273,7 +277,7 @@
   .vjs-icon-tooltip-show () {
     visibility: visible;
     opacity: 1;
-    top: -3em;
+    top: -1em;
     @trans: visibility 0.2s, opacity 0.2s, top 0.2s;
     .transition(@trans);
   }
@@ -291,7 +295,7 @@
     opacity: 0;
     z-index: 1;
     position: relative;
-    top: -4em;
+    top: -2em;
     border-radius: 3px;
     padding: 0.5em;
 
@@ -317,6 +321,7 @@
   .vjs-play-control,
   .vjs-fullscreen-control,
   .vjs-share-control,
+  .vjs-next-control,
   .vjs-volume-handle,
   .vjs-mute-control {
     .vjs-control-text {
@@ -325,13 +330,6 @@
     &:hover {
       .vjs-control-text {
         .vjs-icon-tooltip-show();
-      }
-    }
-  }
-  .vjs-fullscreen-control {
-    &:hover {
-      .vjs-control-text {
-        top: -3.3em;
       }
     }
   }
