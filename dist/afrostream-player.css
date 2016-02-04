@@ -1729,16 +1729,18 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   font-weight: 100;
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
-  max-height: 50%;
+  max-height: 85%;
   bottom: 0;
+  overflow: hidden;
+  width: 100%;
 }
 .vjs-afrostream-skin .vjs-next-control .vjs-control-content .vjs-control-text .thumb-tile-content .thumb-caption .thumb-title {
+  padding: 0.3em;
   font-size: 1em;
-  max-height: 1.1em;
-  font-weight: 500;
   text-transform: uppercase;
   text-align: left;
-  overflow: hidden;
+  margin: 0.3em;
+  word-wrap: break-word;
 }
 
 .vjs-tip {
