@@ -27702,6 +27702,8 @@ vjs.plugin = function(name, init){
 
   videojs.Afrostream.prototype.oldBandwidth = 0;
 
+  videojs.Afrostream.prototype.oldChunksFromP2P = 0;
+
   videojs.Afrostream.prototype.streamInfo = null;
 
   videojs.Afrostream.prototype.tech_ = null;
@@ -27720,18 +27722,30 @@ vjs.plugin = function(name, init){
 
   videojs.Afrostream.prototype.onMetricChanged = function (e) {
     // get current buffered ranges of video element and keep them up to date
-    if (e.data.stream !== 'video' && e.data.stream !== 'audio') {
+    if (e.data.stream !== 'video' && e.data.stream !== 'audio' && e.data.stream !== 'p2pweb') {
       return;
     }
     var metrics = this.player().getCribbedMetricsFor(e.data.stream);
     if (metrics) {
-      if (e.data.stream === 'video') {
-        /*jshint sub:true*/
-        if (metrics.bandwidth !== this.oldBandwidth) {
-          this.tech_['featuresBitrate'] = metrics;
-          this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
-          this.oldBandwidth = metrics.bandwidth;
-        }
+      switch (e.data.stream) {
+        case 'video':
+          /*jshint sub:true*/
+          if (metrics.bandwidth !== this.oldBandwidth) {
+            this.tech_['featuresBitrate'] = metrics;
+            this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
+            this.oldBandwidth = metrics.bandwidth;
+          }
+          break;
+        case 'p2pweb':
+          /*jshint sub:true*/
+          if (metrics.chunksFromP2P !== this.oldChunksFromP2P) {
+            this.tech_['featuresBitrate'] = metrics;
+            this.player().trigger('chunksFromP2P');
+            this.oldChunksFromP2P = metrics.chunksFromP2P;
+          }
+          break;
+        default:
+          break;
       }
     }
   };
@@ -28561,7 +28575,7 @@ videojs.Dash.prototype.onTextTracksAdded = function (e) {
 
 videojs.Dash.prototype.onMetricChanged = function (e) {
   // get current buffered ranges of video element and keep them up to date
-  if (e.data.stream !== 'video' && e.data.stream !== 'audio') {
+  if (e.data.stream !== 'video' && e.data.stream !== 'audio' && e.data.stream !== 'p2pweb') {
     return;
   }
   var metrics = this.getCribbedMetricsFor(e.data.stream);
@@ -29452,6 +29466,101 @@ videojs.Dashas.prototype.audioTracks = function () {
 //  return b9o.C9v(0, z) ? z : z + 1;
 //}
 
+/**
+ * DASH Media Controller
+ *
+ * @param {vjs.Player} player
+ * @param {Object=} options
+ * @param {Function=} ready
+ * @constructor
+ */
+videojs.EasyBroadcast = videojs.Dash.extend({
+  /** @constructor */
+  init: function (player, options, ready) {
+    videojs.Dash.call(this, player, options, ready);
+  }
+});
+
+
+videojs.options.easybroadcast = {};
+
+videojs.EasyBroadcast.prototype.setSrc = function (source) {
+  this.context_ = this.context_ || new DashEB.classes.Context({
+      source: source.src
+    });
+  videojs.Dash.prototype.setSrc.call(this, source);
+};
+
+videojs.EasyBroadcast.prototype.onMetricChanged = function (e) {
+  if (e.data.stream !== 'video') {
+    return;
+  }
+  var metricsKey = 'p2pweb';
+  var metrics = this.getCribbedMetricsFor(metricsKey);
+  if (metrics) {
+    this.metrics_[metricsKey] = videojs.util.mergeOptions(this.metrics_[metricsKey], metrics);
+  }
+  videojs.Dash.prototype.onMetricChanged.call(this, e);
+};
+videojs.EasyBroadcast.prototype.getCribbedMetricsFor = function (type) {
+  if (type !== 'p2pweb') {
+    return videojs.Dash.prototype.getCribbedMetricsFor.call(this, type);
+  }
+  var metrics = this.mediaPlayer_.getMetricsFor(type);
+  if (metrics) {
+    return metrics.metricsP2PWeb;
+  }
+  else {
+    return null;
+  }
+};
+/**
+ * Check if HTML5 video is supported by this browser/device
+ * @return {Boolean}
+ */
+videojs.EasyBroadcast.isSupported = function () {
+  return videojs.Dash.isSupported();
+};
+
+// Add Source Handler pattern functions to this tech
+videojs.MediaTechController.withSourceHandlers(videojs.EasyBroadcast);
+
+/**
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ * @param  {Object} source   The source object
+ * @param  {videojs.Dash} tech  The instance of the HTML5 tech
+ */
+/*jshint sub:true*/
+videojs.EasyBroadcast['nativeSourceHandler'] = {};
+/**
+ * Check if the video element can handle the source natively
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+/*jshint sub:true*/
+videojs.EasyBroadcast['nativeSourceHandler']['canHandleSource'] = videojs.Dash['nativeSourceHandler']['canHandleSource'];
+/**
+ * Pass the source to the video element
+ * Adaptive source handlers will have more complicated workflows before passing
+ * video data to the video element
+ * @param  {Object} source    The source object
+ * @param  {vjs.Html5} tech   The instance of the Html5 tech
+ */
+/*jshint sub:true*/
+videojs.EasyBroadcast['nativeSourceHandler']['handleSource'] = videojs.Dash['nativeSourceHandler']['handleSource'];
+
+/**
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the getTracksForformat natively)
+ */
+/*jshint sub:true*/
+videojs.EasyBroadcast['nativeSourceHandler']['dispose'] = videojs.Dash['nativeSourceHandler']['dispose'];
+
+// Register the native source handler
+/*jshint sub:true*/
+videojs.EasyBroadcast['registerSourceHandler'](videojs.EasyBroadcast['nativeSourceHandler']);
+
 videojs.Html5.prototype.videoTracks = function (tracks) {
   /*jshint sub:true*/
   if (!this['featuresNativeVideoTracks']) {
@@ -29521,7 +29630,16 @@ videojs.MediaTechController.prototype.metrics_ = {
   }, videojs.MediaTechController.METRICS_DATA),
   audio: videojs.util.mergeOptions({
     bandwidth: /*this.el().webkitAudioDecodedByteCount || */-1
-  }, videojs.MediaTechController.METRICS_DATA)
+  }, videojs.MediaTechController.METRICS_DATA),
+  p2pweb: {
+    chunksFromCDN: 0,
+    chunksFromP2P: 0,
+    chunksSent: 0,
+    bufferLength: -1,
+    swarmSize: -1,
+    p2pRatio: -1,
+    startupTime: -1
+  }
 };
 
 

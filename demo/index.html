@@ -136,6 +136,44 @@
         </tbody>
       </table>
     </div>
+    <div class="table-responsive dotted">
+      <table class="table  table_indent ">
+        <tbody>
+        <tr class="active table_nointent">
+          <td style="vertical-align:middle"><strong>P2P Data</strong></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>P2P Ratio:</td>
+          <td><span id='p2pWebRatio'>0.0</span></td>
+        </tr>
+        <tr>
+          <td>CDN Chunks</td>
+          <td><span id='chunksFromCDN'>0.0</span></td>
+        </tr>
+        <tr>
+          <td>P2P Chunks</td>
+          <td><span id='chunksFromP2P'>0.0</span></td>
+        </tr>
+        <tr>
+          <td>P2P Chunks Sent</td>
+          <td><span id='chunksSent'>0.0</span></td>
+        </tr>
+        <tr>
+          <td>P2P Buffer length</td>
+          <td><span id='bufferLength'>0.0</span></td>
+        </tr>
+        <tr>
+          <td>P2P Swarm size</td>
+          <td><span id='swarmSize'>0.0</span></td>
+        </tr>
+        <tr>
+          <td>P2P Startup Time</td>
+          <td><span id='startupTime'>0.0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="page-slice white-gradient shadow-top">
       <div class="container">
         <div class="row">
@@ -540,6 +578,8 @@
 <!-- injector:js -->
 <script src="../dist/afrostream-player.js"></script>
 <script src="libs/angular-cookies.js"></script>
+<script src="libs/easy-broadcast.js"></script>
+<script src="libs/primus.js"></script>
 <script src="libs/smoothie.js"></script>
 <!-- endinjector -->
 <script src="./auth-service.js"></script>

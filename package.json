@@ -38,12 +38,12 @@
     "videojs-chromecast": "git+https://github.com/Afrostream/videojs-chromecast.git#master",
     "videojs-contrib-hls": "^0.17.9",
     "videojs-contrib-media-sources": "^1.0.0",
-    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#1.0.1",
-    "videojs-swf": "git+https://github.com/Afrostream/video-js-swf.git#feature/stage-video-hardware-accelerated"
+    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#1.0.4",
+    "videojs-swf": "git+https://github.com/Afrostream/video-js-swf.git#feature/stage-video-hardware-accelerated",
+    "serve-static": "^1.10.0"
   },
   "devDependencies": {
-    "grunt-contrib-watch": "^0.4",
-    "serve-static": "^1.10.0"
+    "grunt-contrib-watch": "^0.4"
   },
   "scripts": {
     "start": "bower install && grunt build && node express.js",

@@ -37,7 +37,7 @@ module.exports = function (grunt) {
           'node_modules/videojs-contrib-hls/src/playlist-loader.js',
           'node_modules/pkcs7/dist/pkcs7.unpad.js',
           'node_modules/videojs-contrib-hls/src/decrypter.js',
-          'node_modules/videojs-contrib-hls/src/bin-utils.js',
+          'node_modules/videojs-contrib-hls/src/bin-utils.js'
         ],
         dest: 'dist/<%= pkg.name %>.hls.js'
       },
@@ -62,6 +62,10 @@ module.exports = function (grunt) {
           'node_modules/videojs-metrics/dist/videojs-metrics.js',
           //CORE
           'lib/**/*.js',
+          //EASY_BROADCAST
+          '!lib/easy_broadcast/*.js',
+          //STREAMROOT
+          '!lib/streamroot/**/*.js',
           //CASTLAB
           '!lib/castlab/**/*.js',
           '!lib/**/closure.js'
@@ -116,6 +120,8 @@ module.exports = function (grunt) {
           'lib/**/*.js',
           '!lib/**/flash.js',
           '!lib/**/dashas.js',
+          '!lib/easy_broadcast/**/*.js',
+          '!lib/streamroot/**/*.js',
           '!lib/castlab/**/*.js',
           '!lib/**/osmf.js'
         ]
@@ -188,6 +194,7 @@ module.exports = function (grunt) {
         src: [
           './node_modules/smoothie/smoothie.js',
           './bower_components/angular-cookies/angular-cookies.js',
+          './lib/easy_broadcast/*.js',
           './lib/castlab/**/*.swf'
         ],
         dest: 'demo/libs'
