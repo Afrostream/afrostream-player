@@ -1,4 +1,4 @@
-/*! afrostream-player - v1.1.8 - 2016-02-03
+/*! afrostream-player - v1.1.8 - 2016-02-04
 * Copyright (c) 2016 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
