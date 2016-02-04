@@ -31,7 +31,7 @@ var playerAfrostream = angular.module('afrostreamPlayer', ['afrostreamAuth'])
 
 playerAfrostream.controller('PlayerCtrl', ['$scope', '$rootScope', '$location', 'AuthenticationService', function ($scope, $rootScope, $location, AuthenticationService) {
   // listen for login events
-  if ($location.search('drm')) {
+  if ($location.search().drm) {
     $scope.user = $rootScope.globals ? $rootScope.globals.user : null;
     $scope.customData = $rootScope.globals.customData;
   } else {
