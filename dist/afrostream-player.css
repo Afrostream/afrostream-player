@@ -1378,7 +1378,6 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   height: auto;
   width: auto;
   overflow: visible;
-  padding: 0;
   clip: auto;
   display: none;
   visibility: hidden;
