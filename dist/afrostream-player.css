@@ -1345,33 +1345,53 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 .video-js.vjs-afrostream-skin .vjs-hidden {
   display: none;
 }
+@keyframes tooltip-show {
+  from {
+    transform: translate(0, -2em);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+@keyframes tooltip-hide {
+  from {
+    transform: translate(0, -1em);
+    opacity: 1;
+  }
+  to {
+    transform: translate(0, -2em);
+    opacity: 0;
+  }
+}
 .video-js.vjs-afrostream-skin .vjs-play-control .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-fullscreen-control .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-share-control .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-next-control .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-volume-handle .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-mute-control .vjs-control-text {
+  top: -1em;
+  border-radius: 3px;
+  padding: 0.5em;
   border: 0;
   height: auto;
   width: auto;
   overflow: visible;
   padding: 0;
   clip: auto;
-  display: inline-block;
+  display: none;
   visibility: hidden;
   opacity: 0;
   z-index: 1;
   position: relative;
-  top: -2em;
-  border-radius: 3px;
-  padding: 0.5em;
   background-color: black;
   margin-left: -1em;
-  /* transition */
-  -webkit-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
-  -moz-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
-  -o-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
-  transition: visibility 0.2s, opacity 0.2s, top 0.2s;
+  /* animation */
+  -webkit-animation: 'tooltip-hide' 0.2s;
+  -moz-animation: 'tooltip-hide' 0.2s;
+  -o-animation: 'tooltip-hide' 0.2s;
+  animation: 'tooltip-hide' 0.2s;
 }
 .video-js.vjs-afrostream-skin .vjs-play-control .vjs-control-text:before,
 .video-js.vjs-afrostream-skin .vjs-fullscreen-control .vjs-control-text:before,
@@ -1396,14 +1416,16 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 .video-js.vjs-afrostream-skin .vjs-next-control:hover .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-volume-handle:hover .vjs-control-text,
 .video-js.vjs-afrostream-skin .vjs-mute-control:hover .vjs-control-text {
+  display: inline-block;
   visibility: visible;
   opacity: 1;
-  top: -1em;
-  /* transition */
-  -webkit-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
-  -moz-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
-  -o-transition: visibility 0.2s, opacity 0.2s, top 0.2s;
-  transition: visibility 0.2s, opacity 0.2s, top 0.2s;
+  animation-name: example;
+  animation-duration: 4s;
+  /* animation */
+  -webkit-animation: 'tooltip-show' 0.2s;
+  -moz-animation: 'tooltip-show' 0.2s;
+  -o-animation: 'tooltip-show' 0.2s;
+  animation: 'tooltip-show' 0.2s;
 }
 .video-js.vjs-afrostream-skin.vjs-scrubbing .vjs-menu-button:hover .vjs-control-content .vjs-menu {
   display: none;
@@ -1669,22 +1691,6 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 /* Quality toggle
 --------------------------------------------------------------------------------
 */
-.vjs-default-skin .vjs-bitrate .vjs-bitrate-value {
-  font-size: 1.5em;
-  line-height: 2;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-}
-.vjs-default-skin .vjs-bitrate.vjs-menu-button .vjs-menu .vjs-menu-content {
-  width: 4em;
-  left: -2em;
-  list-style: none;
-}
 
 /* Next Button */
 .vjs-next-control:before {
@@ -1697,6 +1703,7 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
 .vjs-afrostream-skin .vjs-next-control {
   width: 3em;
   cursor: pointer;
+  float: left;
 }
 .vjs-afrostream-skin .vjs-next-control:before {
   content: "\e900";
@@ -1710,6 +1717,12 @@ https://github.com/videojs/video.js/blob/master/src/css/video-js.less */
   outline: none;
   margin: 0;
   padding: 1px !important;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1em;
+  line-height: 2em;
+  font-weight: bold;
+  cursor: pointer;
 }
 .vjs-afrostream-skin .vjs-next-control .vjs-control-content .vjs-control-text .thumb-tile-content {
   width: 150px;

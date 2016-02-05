@@ -259,6 +259,8 @@
   .vjs-play-progress .vjs-control-text,
     //.vjs-play-control .vjs-control-content,
   .vjs-fullscreen-control .vjs-control-text,
+    //.vjs-bitrate .vjs-control-text,
+    //.vjs-captions-button .vjs-control-text,
   .vjs-slider-handle,
   .vjs-volume-handle,
   .vjs-live-controls,
@@ -271,15 +273,36 @@
     display: none;
   }
 
+  @keyframes tooltip-show {
+    from {
+      transform: translate(0, -2em);
+      opacity: 0;
+    }
+    to {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+  }
+  @keyframes tooltip-hide {
+    from {
+      transform: translate(0, -1em);
+      opacity: 1;
+    }
+    to {
+      transform: translate(0, -2em);
+      opacity: 0;
+    }
+  }
   /**
    * Tooltip des icones (cf buttonText et fr.js).
    */
   .vjs-icon-tooltip-show () {
+    display: inline-block;
     visibility: visible;
     opacity: 1;
-    top: -1em;
-    @trans: visibility 0.2s, opacity 0.2s, top 0.2s;
-    .transition(@trans);
+    animation-name: example;
+    animation-duration: 4s;
+    .animation('tooltip-show' 0.2s);
   }
 
   .vjs-icon-tooltip () {
@@ -289,20 +312,15 @@
     overflow: visible;
     padding: 0;
     clip: auto;
-
-    display: inline-block;
+    display: none;
     visibility: hidden;
     opacity: 0;
     z-index: 1;
     position: relative;
-    top: -2em;
-    border-radius: 3px;
-    padding: 0.5em;
-
     background-color: black;
     margin-left: -1em;
-    @trans: visibility 0.2s, opacity 0.2s, top 0.2s;
-    .transition(@trans);
+
+    .animation('tooltip-hide' 0.2s);
 
     &:before {
       content: '';
@@ -325,6 +343,9 @@
   .vjs-volume-handle,
   .vjs-mute-control {
     .vjs-control-text {
+      top: -1em;
+      border-radius: 3px;
+      padding: 0.5em;
       .vjs-icon-tooltip();
     }
     &:hover {
@@ -333,6 +354,20 @@
       }
     }
   }
+  //.vjs-captions-button,
+  //.vjs-bitrate {
+  //  .vjs-control-content {
+  //    top: 0;
+  //    border-radius: 0;
+  //    padding: 0;
+  //    .vjs-icon-tooltip();
+  //  }
+  //  &:hover {
+  //    .vjs-control-content {
+  //      .vjs-icon-tooltip-show();
+  //    }
+  //  }
+  //}
   /* Menu Buttons (Captions/Subtitles/etc.)
   --------------------------------------------------------------------------------
   */
