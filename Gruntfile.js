@@ -194,7 +194,7 @@ module.exports = function (grunt) {
         src: [
           './node_modules/smoothie/smoothie.js',
           './bower_components/angular-cookies/angular-cookies.js',
-          './lib/easy_broadcast/*.js',
+          //'./lib/easy_broadcast/*.js',
           './lib/castlab/**/*.swf'
         ],
         dest: 'demo/libs'

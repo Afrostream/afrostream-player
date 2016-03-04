@@ -1,4 +1,4 @@
-/*! afrostream-player - v1.1.8 - 2016-03-04
+/*! afrostream-player - v1.1.15 - 2016-03-04
 * Copyright (c) 2016 benjipott; Licensed Apache-2.0 */
 // HTML5 Shiv. Must be in <head> to support older browsers.
 document.createElement('video');
@@ -27012,7 +27012,7 @@ videojs.EasyBroadcast = videojs.Dash.extend({
 videojs.options.easybroadcast = {};
 
 videojs.EasyBroadcast.prototype.setSrc = function (source) {
-  this.context_ = this.context_ || new DashEB.classes.Context({
+  this.context_ = this.context_ || new DashEB.Context({
       source: source.src
     });
   videojs.Dash.prototype.setSrc.call(this, source);
