@@ -15,7 +15,7 @@
 
   // Pass this if window is not defined yet
 }(typeof window !== 'undefined' ? window : this, function (window, noGlobal) { /*jshint unused:false*/
-  /*! afrostream-player - v1.1.15 - 2016-03-04
+  /*! afrostream-player - v1.1.16 - 2016-03-04
 * Copyright (c) 2016 benjipott; Licensed Apache-2.0 */
 function X2JS(matchers, attrPrefix, ignoreRoot) {
     if (attrPrefix === null || attrPrefix === undefined) {
