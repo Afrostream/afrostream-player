@@ -12654,7 +12654,7 @@ vjs.plugin = function(name, init){
   videojs.Metrics.prototype.notify = function (evt) {
     var player = this.player();
     // Merge with default options
-    evt.user_id = this.options().user_id;
+    evt.user_id = this.options_.user_id;
     evt.fqdn = this.pathUrl[1];
     evt.os = this.browserInfo.os;
     evt.os_version = this.browserInfo.osVersion.toString();
@@ -12688,12 +12688,12 @@ vjs.plugin = function(name, init){
       evt.chunks_from_cdn = this.metrics_.p2pweb.chunksFromCDN;
       evt.chunks_from_p2p = this.metrics_.p2pweb.chunksFromP2P;
       evt.startup_time = this.metrics_.p2pweb.startupTime;
-      var pickedData = videojs.Metrics.pick(evt, this.getRequiredKeys(evt.type));
-      this.xhr(this.options(), pickedData);
+      evt = videojs.Metrics.pick(evt, this.getRequiredKeys(evt.type));
     }
     catch (e) {
       videojs.log(e);
     }
+    this.xhr(this.options_, evt);
   };
 
   videojs.Metrics.prototype.xhr = function (url, data, callback) {
@@ -12740,7 +12740,7 @@ vjs.plugin = function(name, init){
     request.open(options.method, url);
     request.url = url;
     request.requestTime = new Date().getTime();
-    request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    request.setRequestHeader('Content-Type', 'application/json');
     if (options.responseType) {
       request.responseType = options.responseType;
     }
@@ -12785,14 +12785,7 @@ vjs.plugin = function(name, init){
       return callback.call(this, false, url);
     };
 
-    var queryString = '';
-    if (typeof data === 'object') {
-      for (var paramName in data) {
-        queryString += (queryString.length === 0 ? '' : '&') + paramName + '=' + encodeURIComponent(data[paramName]);
-      }
-    }
-
-    request.send(queryString);
+    request.send(JSON.stringify(data));
     return request;
   };
 

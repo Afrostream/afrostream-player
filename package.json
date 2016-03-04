@@ -39,7 +39,7 @@
     "videojs-chromecast": "git+https://github.com/Afrostream/videojs-chromecast.git#master",
     "videojs-contrib-hls": "^0.17.9",
     "videojs-contrib-media-sources": "^1.0.0",
-    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#1.0.5",
+    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#1.0.7",
     "videojs-swf": "git+https://github.com/Afrostream/video-js-swf.git#feature/stage-video-hardware-accelerated"
   },
   "devDependencies": {
