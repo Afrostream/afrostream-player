@@ -1,10 +1,11 @@
 {
   "name": "afrostream-player",
+  "version": "2.0.0",
   "description": "Player afrostream",
-  "main": "dist/afrostream.player.js",
-  "authors": [
-    "benjipott"
+  "main": [
+    "dist/dist/afrostream.player.js"
   ],
+  "author": "Afrostream, Inc. @benjipott",
   "license": "Apache-2.0",
   "keywords": [
     "videojs",

@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>videojs-metrics Demo</title>
+  <link href="/node_modules/video.js/dist/video-js.css" rel="stylesheet">
+  <style>
+
+    button {
+      margin: 1em;
+      width: 10em;
+    }
+
+    .autoadvance-group {
+      margin: 1em;
+    }
+
+    .autoadvance-group label {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+<video class="video-js vjs-default-skin" controls width="640px" height="360px">
+  <source src="https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd"
+          type="application/dash+xml"/>
+</video>
+<ul>
+  <li><a href="/test/">Run unit tests in browser.</a></li>
+</ul>
+<script src="/node_modules/video.js/dist/video.js"></script>
+<script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
+<script src="/dist/afrostream-player.js"></script>
+<script>
+
+  var player = videojs(document.querySelector('video'), {
+    techOrder: ["dash"]
+  });
+
+  try {
+    // try on ios
+    player.volume(0);
+  } catch (e) {
+  }
+
+</script>
+</body>
+</html>
