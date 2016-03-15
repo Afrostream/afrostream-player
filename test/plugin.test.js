@@ -1,13 +1,13 @@
 import QUnit from 'qunit';
 import sinon from 'sinon';
 import videojs from 'video.js';
-import afrostream from '../src/afrostream';
+import afrostream from '../src/js/afrostream';
 
 QUnit.test('the environment is sane', function (assert) {
   assert.strictEqual(typeof Array.isArray, 'function', 'es5 exists');
   assert.strictEqual(typeof sinon, 'object', 'sinon exists');
   assert.strictEqual(typeof videojs, 'function', 'videojs exists');
-  assert.strictEqual(typeof afrostream, 'object', 'afrostream is a component');
+  assert.strictEqual(typeof plugin, 'function', 'plugin is a function');
 });
 
 QUnit.test('registers itself with video.js', function (assert) {
@@ -15,6 +15,6 @@ QUnit.test('registers itself with video.js', function (assert) {
   assert.strictEqual(
     videojs.getComponent('Player').prototype.afrostream,
     afrostream,
-    'afrostream component was registered'
+    'afrostream plugin was registered'
   );
 });

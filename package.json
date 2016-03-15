@@ -2,7 +2,7 @@
   "name": "afrostream-player",
   "version": "2.0.0",
   "description": "Player afrostream",
-  "main": "es5/afrostream.js",
+  "main": "es5/js/afrostream.js",
   "scripts": {
     "prebuild": "npm run clean",
     "build": "npm-run-all -p build:*",
@@ -11,6 +11,7 @@
     "build:js:bannerize": "bannerize dist/afrostream-player.js --banner=scripts/banner.ejs",
     "build:js:browserify": "browserify . -s afrostream-player -o dist/afrostream-player.js",
     "build:js:uglify": "uglifyjs dist/afrostream-player.js --comments --mangle --compress -o dist/afrostream-player.min.js",
+    "build:css": "node-sass --include-path src --output-style compressed src/css/afrostream.scss -o dist",
     "build:test": "npm-run-all mkdirs build:test:browserify",
     "build:test:browserify": "browserify `find test -name '*.test.js'` -t babelify -o dist-test/afrostream-player.js",
     "clean": "rm -rf dist dist-test es5",
@@ -32,7 +33,8 @@
     "version": "./scripts/npm-version-for-bower.sh",
     "postversion": "./scripts/npm-postversion-for-bower.sh",
     "watch": "npm run mkdirs && npm-run-all -p watch:*",
-    "watch:js": "watchify src/afrostream.js -t babelify -v -o dist/afrostream-player.js",
+    "watch:css": "nodemon -e scss -x \"npm run build:css\"",
+    "watch:js": "watchify src/js/afrostream.js -t babelify -v -o dist/afrostream-player.js",
     "watch:test": "watchify `find test -name '*.test.js'` -t babelify -o dist-test/afrostream-player.js"
   },
   "keywords": [
@@ -85,7 +87,9 @@
     "karma-safari-launcher": "^0.1.0",
     "lodash-compat": "^3.10.0",
     "minimist": "^1.2.0",
+    "node-sass": "^3.4.2",
     "node.extend": "^1.1.5",
+    "nodemon": "^1.9.1",
     "npm-run-all": "~1.2.0",
     "portscanner": "^1.0.0",
     "qunitjs": "^1.0.0",

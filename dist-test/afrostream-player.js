@@ -891,21 +891,29 @@ var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof globa
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _techDash = require('./tech/dash');
-
-var _techDash2 = _interopRequireDefault(_techDash);
+//import Player from './core/player';
 
 var _techMedia = require('./tech/media');
 
 var _techMedia2 = _interopRequireDefault(_techMedia);
 
-var _corePlayer = require('./core/player');
+var _techDash = require('./tech/dash');
 
-var _corePlayer2 = _interopRequireDefault(_corePlayer);
+var _techDash2 = _interopRequireDefault(_techDash);
 
-var _componentControlBarTextTrackControlsCaptionTrackButton = require('./component/control-bar/text-track-controls/caption-track-button');
+var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
 
-var _componentControlBarTextTrackControlsCaptionTrackButton2 = _interopRequireDefault(_componentControlBarTextTrackControlsCaptionTrackButton);
+var _componentControlBarTrackControlsCaptionTrackButton = require('./component/control-bar/track-controls/caption-track-button');
+
+var _componentControlBarTrackControlsCaptionTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsCaptionTrackButton);
+
+var _componentControlBarTrackControlsAudioTrackButton = require('./component/control-bar/track-controls/audio-track-button');
+
+var _componentControlBarTrackControlsAudioTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsAudioTrackButton);
+
+var _componentControlBarTrackControlsVideoTrackButton = require('./component/control-bar/track-controls/video-track-button');
+
+var _componentControlBarTrackControlsVideoTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsVideoTrackButton);
 
 var Component = _videoJs2['default'].getComponent('Component');
 /**
@@ -916,11 +924,19 @@ var Component = _videoJs2['default'].getComponent('Component');
 var Afrostream = (function (_Component) {
   _inherits(Afrostream, _Component);
 
-  function Afrostream(options, ready) {
+  function Afrostream(player, options, ready) {
     _classCallCheck(this, Afrostream);
 
-    _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, options, ready);
-    this.player().one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
+    _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
+
+    player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
+
+    //player.audioTracks = ::this.audioTracks;
+    //player.setAudioTrack = ::this.setAudioTrack;
+    //player.videoTracks = ::this.videoTracks;
+    //player.setVideoTrack = ::this.setVideoTrack;
+    //player.getPlaybackStatistics = ::this.getPlaybackStatistics;
+    //player.getCribbedMetricsFor = ::this.getCribbedMetricsFor;
   }
 
   _createClass(Afrostream, [{
@@ -931,19 +947,19 @@ var Afrostream = (function (_Component) {
   }, {
     key: 'addMediaPlayerHandlers',
     value: function addMediaPlayerHandlers() {
-      this.player().on(MediaPlayer.events.STREAM_INITIALIZED, _videoJs2['default'].bind(this, this.onInitialized));
-      this.player().on(MediaPlayer.events.METRIC_CHANGED, _videoJs2['default'].bind(this, this.onMetricChanged));
+      this.player().on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+      this.player().on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
     }
   }, {
     key: 'onMetricChanged',
     value: function onMetricChanged(e) {
       // get current buffered ranges of video element and keep them up to date
-      if (e.data.stream !== 'video' && e.data.stream !== 'audio' && e.data.stream !== 'p2pweb') {
+      if (e.stream !== 'video' && e.stream !== 'audio' && e.stream !== 'p2pweb') {
         return;
       }
-      var metrics = this.player().getCribbedMetricsFor(e.data.stream);
+      var metrics = this.player().getCribbedMetricsFor(e.stream);
       if (metrics) {
-        switch (e.data.stream) {
+        switch (e.stream) {
           case 'video':
             /*jshint sub:true*/
             if (metrics.bandwidth !== this.oldBandwidth) {
@@ -972,6 +988,36 @@ var Afrostream = (function (_Component) {
         this.player().error(err);
       }
     }
+  }, {
+    key: 'audioTracks',
+    value: function audioTracks() {
+      return this.player().tech_ && this.player().techGet_('audioTracks');
+    }
+  }, {
+    key: 'setAudioTrack',
+    value: function setAudioTrack(track) {
+      return this.player().tech_ && this.player().techCall_('setAudioTrack', track);
+    }
+  }, {
+    key: 'videoTracks',
+    value: function videoTracks() {
+      return this.player().tech_ && this.player().techGet_('videoTracks');
+    }
+  }, {
+    key: 'setVideoTrack',
+    value: function setVideoTrack(track) {
+      return this.player().tech_ && this.player().tech_.setVideoTrack(track);
+    }
+  }, {
+    key: 'getPlaybackStatistics',
+    value: function getPlaybackStatistics() {
+      return this.player().tech_ && this.player().tech_.getPlaybackStatistics();
+    }
+  }, {
+    key: 'getCribbedMetricsFor',
+    value: function getCribbedMetricsFor(type) {
+      return this.player().tech_ && this.player().tech_.getCribbedMetricsFor(type);
+    }
   }]);
 
   return Afrostream;
@@ -991,14 +1037,247 @@ Afrostream.prototype.tech_ = null;
  * add afrostream to videojs childs
  * @type {{}}
  */
-_videoJs2['default'].options.children.afrostream = {};
+_videoJs2['default'].options.children.push('afrostream');
 
 Component.registerComponent('Afrostream', Afrostream);
 exports['default'] = Afrostream;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/text-track-controls/caption-track-button":6,"./core/player":9,"./tech/dash":10,"./tech/media":11}],6:[function(require,module,exports){
+},{"./component/control-bar/track-controls/audio-track-button":6,"./component/control-bar/track-controls/caption-track-button":8,"./component/control-bar/track-controls/video-track-button":13,"./tech/dash":15,"./tech/media":16}],6:[function(require,module,exports){
+(function (global){
+/**
+ * @file audio-track-button.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _audioTrackMenuItem = require('./audio-track-menu-item');
+
+var _audioTrackMenuItem2 = _interopRequireDefault(_audioTrackMenuItem);
+
+var _offAudioTrackMenuItem = require('./off-audio-track-menu-item');
+
+var _offAudioTrackMenuItem2 = _interopRequireDefault(_offAudioTrackMenuItem);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var ControlBar = _videoJs2['default'].getComponent('ControlBar');
+var MenuButton = _videoJs2['default'].getComponent('MenuButton');
+
+/**
+ * The base class for buttons that toggle specific audio track types (e.g. description)
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends MenuButton
+ * @class AudioTrackButton
+ */
+
+var AudioTrackButton = (function (_MenuButton) {
+  _inherits(AudioTrackButton, _MenuButton);
+
+  function AudioTrackButton(player, options) {
+    _classCallCheck(this, AudioTrackButton);
+
+    _get(Object.getPrototypeOf(AudioTrackButton.prototype), 'constructor', this).call(this, player, options);
+
+    var tracks = this.player_.audioTracks();
+
+    if (this.items.length <= 1) {
+      this.hide();
+    }
+
+    if (!tracks) {
+      return;
+    }
+
+    var updateHandler = this.update.bind(this);
+    tracks.addEventListener('removetrack', updateHandler);
+    tracks.addEventListener('addtrack', updateHandler);
+
+    this.player_.on('dispose', function () {
+      tracks.removeEventListener('removetrack', updateHandler);
+      tracks.removeEventListener('addtrack', updateHandler);
+    });
+  }
+
+  /**
+   * Allow sub components to stack CSS class names
+   *
+   * @return {String} The constructed class name
+   * @method buildCSSClass
+   */
+
+  _createClass(AudioTrackButton, [{
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-audio-button ' + _get(Object.getPrototypeOf(AudioTrackButton.prototype), 'buildCSSClass', this).call(this);
+    }
+
+    // Create a menu item for each text track
+  }, {
+    key: 'createItems',
+    value: function createItems() {
+      var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+      // Add an OFF menu item to turn all tracks off
+      items.push(new _offAudioTrackMenuItem2['default'](this.player_, {
+        'kind': this.kind_
+      }));
+
+      var tracks = this.player_.audioTracks();
+
+      if (!tracks) {
+        return items;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+
+        // only add tracks that are of the appropriate kind and have a label
+        if (track['kind'] === 'main') {
+          items.push(new _audioTrackMenuItem2['default'](this.player_, {
+            // MenuItem is selectable
+            'selectable': true,
+            'track': track
+          }));
+        }
+      }
+
+      return items;
+    }
+  }]);
+
+  return AudioTrackButton;
+})(MenuButton);
+
+AudioTrackButton.prototype.kind_ = 'audio';
+AudioTrackButton.prototype.controlText_ = 'Audio Selection';
+
+//Replace videojs CaptionButton child with this one
+ControlBar.prototype.options_.children.splice(12, 0, 'audioTrackButton');
+
+Component.registerComponent('AudioTrackButton', AudioTrackButton);
+exports['default'] = AudioTrackButton;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./audio-track-menu-item":7,"./off-audio-track-menu-item":10}],7:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var MenuItem = _videoJs2['default'].getComponent('MenuItem');
+
+var AudioTrackMenuItem = (function (_MenuItem) {
+  _inherits(AudioTrackMenuItem, _MenuItem);
+
+  function AudioTrackMenuItem(player, options) {
+    var _this = this;
+
+    _classCallCheck(this, AudioTrackMenuItem);
+
+    var track = options['track'];
+    var tracks = player.audioTracks();
+
+    // Modify options for parent MenuItem class's init.
+    options['label'] = track['label'] || track['language'] || 'Unknown';
+    options['selected'] = track['default'] || track['enabled'] === true;
+
+    _get(Object.getPrototypeOf(AudioTrackMenuItem.prototype), 'constructor', this).call(this, player, options);
+
+    this.track = track;
+
+    if (tracks) {
+      (function () {
+        var changeHandler = _this.handleTracksChange.bind(_this);
+
+        tracks.addEventListener('change', changeHandler);
+        _this.on('dispose', function () {
+          tracks.removeEventListener('change', changeHandler);
+        });
+      })();
+    }
+  }
+
+  /**
+   * Handle click on text track
+   *
+   * @method handleClick
+   */
+
+  _createClass(AudioTrackMenuItem, [{
+    key: 'handleClick',
+    value: function handleClick(event) {
+      var kind = this.track['kind'];
+      var tracks = this.player_.audioTracks();
+
+      _get(Object.getPrototypeOf(AudioTrackMenuItem.prototype), 'handleClick', this).call(this, event);
+
+      if (!tracks) return;
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        track['enabled'] = track === this.track;
+      }
+    }
+
+    /**
+     * Handle text track change
+     *
+     * @method handleTracksChange
+     */
+  }, {
+    key: 'handleTracksChange',
+    value: function handleTracksChange() {
+      this.selected(this.track['enabled']);
+    }
+  }]);
+
+  return AudioTrackMenuItem;
+})(MenuItem);
+
+Component.registerComponent('AudioTrackMenuItem', AudioTrackMenuItem);
+exports['default'] = AudioTrackMenuItem;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1024,9 +1303,9 @@ var _captionTrackMenuItem = require('./caption-track-menu-item');
 
 var _captionTrackMenuItem2 = _interopRequireDefault(_captionTrackMenuItem);
 
-var _captionTrackMenuItemOff = require('./caption-track-menu-item-off');
+var _offCaptionTrackMenuItem = require('./off-caption-track-menu-item');
 
-var _captionTrackMenuItemOff2 = _interopRequireDefault(_captionTrackMenuItemOff);
+var _offCaptionTrackMenuItem2 = _interopRequireDefault(_offCaptionTrackMenuItem);
 
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
@@ -1049,7 +1328,7 @@ var CaptionTrackButton = (function (_CaptionsButton) {
       var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
       // Add an OFF menu item to turn all tracks off
-      items.push(new _captionTrackMenuItemOff2['default'](this.player_, { 'kind': this.kind_, 'mode': 'hidden' }));
+      items.push(new _offCaptionTrackMenuItem2['default'](this.player_, { 'kind': this.kind_, 'mode': 'hidden' }));
 
       var tracks = this.player_.textTracks();
 
@@ -1063,6 +1342,7 @@ var CaptionTrackButton = (function (_CaptionsButton) {
         // only add tracks that are of the appropriate kind and have a label
         if (track['kind'] === this.kind_) {
           items.push(new _captionTrackMenuItem2['default'](this.player_, {
+            'selectable': true,
             'track': track
           }));
         }
@@ -1086,102 +1366,7 @@ exports['default'] = CaptionTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":8,"./caption-track-menu-item-off":7}],7:[function(require,module,exports){
-(function (global){
-/**
- * @file caption-track-button-off.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _videoJs2 = _interopRequireDefault(_videoJs);
-
-var _captionTrackMenuItem = require('./caption-track-menu-item');
-
-var _captionTrackMenuItem2 = _interopRequireDefault(_captionTrackMenuItem);
-
-var Component = _videoJs2['default'].getComponent('Component');
-/**
- * A special menu item for turning of a specific type of text track
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends TextTrackMenuItem
- * @class OffTextTrackMenuItem
- */
-
-var CaptionTrackMenuItemOff = (function (_CaptionTrackMenuItem) {
-  _inherits(CaptionTrackMenuItemOff, _CaptionTrackMenuItem);
-
-  function CaptionTrackMenuItemOff(player, options) {
-    _classCallCheck(this, CaptionTrackMenuItemOff);
-
-    // Create pseudo track info
-    // Requires options['kind']
-    options['track'] = {
-      'kind': options['kind'],
-      'player': player,
-      'label': options['kind'] + ' off',
-      'default': false,
-      'mode': 'hidden'
-    };
-
-    // MenuItem is selectable
-    options['selectable'] = true;
-
-    _get(Object.getPrototypeOf(CaptionTrackMenuItemOff.prototype), 'constructor', this).call(this, player, options);
-    this.selected(true);
-  }
-
-  /**
-   * Handle text track change
-   *
-   * @param {Object} event Event object
-   * @method handleTracksChange
-   */
-
-  _createClass(CaptionTrackMenuItemOff, [{
-    key: 'handleTracksChange',
-    value: function handleTracksChange(event) {
-      var tracks = this.player().textTracks();
-      var selected = true;
-
-      for (var i = 0, l = tracks.length; i < l; i++) {
-        var track = tracks[i];
-        if (track['kind'] === this.track['kind'] && track['mode'] === 'showing') {
-          selected = false;
-          break;
-        }
-      }
-
-      this.selected(selected);
-    }
-  }]);
-
-  return CaptionTrackMenuItemOff;
-})(_captionTrackMenuItem2['default']);
-
-Component.registerComponent('CaptionTrackMenuItemOff', CaptionTrackMenuItemOff);
-exports['default'] = CaptionTrackMenuItemOff;
-module.exports = exports['default'];
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":8}],8:[function(require,module,exports){
+},{"./caption-track-menu-item":9,"./off-caption-track-menu-item":11}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1311,46 +1496,524 @@ exports['default'] = CaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
+/**
+ * @file off-audio-track-menu-item.js
+ */
 'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var Player = _videoJs2['default'].getComponent('Player');
+var _audioTrackMenuItem = require('./audio-track-menu-item');
 
-var _api = Player.prototype;
+var _audioTrackMenuItem2 = _interopRequireDefault(_audioTrackMenuItem);
 
-_api['audioTracks'] = function () {
-  return undefined.tech_ && undefined.techGet_('audioTracks');
-};
+var Component = _videoJs2['default'].getComponent('Component');
+//const AudioTrackMenuItem = videojs.getComponent('AudioTrackMenuItem');
 
-_api['setAudioTrack'] = function (track) {
-  return undefined.tech_ && undefined.tech_.setAudioTrack(track);
-};
+/**
+ * A special menu item for turning of a specific type of audio track
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends AudioTrackMenuItem
+ * @class OffAudioTrackMenuItem
+ */
 
-_api['videoTracks'] = function () {
-  return undefined.tech_ && undefined.techGet_('videoTracks');
-};
+var OffAudioTrackMenuItem = (function (_AudioTrackMenuItem) {
+  _inherits(OffAudioTrackMenuItem, _AudioTrackMenuItem);
 
-_api['setVideoTrack'] = function (track) {
-  return undefined.tech_ && undefined.tech_.setVideoTrack(track);
-};
+  function OffAudioTrackMenuItem(player, options) {
+    _classCallCheck(this, OffAudioTrackMenuItem);
 
-_api['getPlaybackStatistics'] = function () {
-  return undefined.tech_ && undefined.tech_.getPlaybackStatistics();
-};
+    // Create pseudo track info
+    // Requires options['kind']
+    options['track'] = {
+      'kind': options['kind'],
+      'player': player,
+      'label': options['kind'] + ' off',
+      'default': false,
+      'enabled': false
+    };
 
-_api['getCribbedMetricsFor'] = function (type) {
-  return undefined.tech_ && undefined.tech_.getCribbedMetricsFor(type);
-};
+    // MenuItem is selectable
+    options['selectable'] = true;
+
+    _get(Object.getPrototypeOf(OffAudioTrackMenuItem.prototype), 'constructor', this).call(this, player, options);
+  }
+
+  /**
+   * Handle text track change
+   *
+   * @param {Object} event Event object
+   * @method handleTracksChange
+   */
+
+  _createClass(OffAudioTrackMenuItem, [{
+    key: 'handleTracksChange',
+    value: function handleTracksChange(event) {
+      var tracks = this.player().audioTracks();
+      var selected = true;
+
+      for (var i = 0, l = tracks.length; i < l; i++) {
+        var track = tracks[i];
+        if (track['kind'] === 'main' && track['enabled']) {
+          selected = false;
+          break;
+        }
+      }
+      this.selected(selected);
+    }
+  }]);
+
+  return OffAudioTrackMenuItem;
+})(_audioTrackMenuItem2['default']);
+
+Component.registerComponent('OffAudioTrackMenuItem', OffAudioTrackMenuItem);
+exports['default'] = OffAudioTrackMenuItem;
+module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{"./audio-track-menu-item":7}],11:[function(require,module,exports){
+(function (global){
+/**
+ * @file caption-track-button-off.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _captionTrackMenuItem = require('./caption-track-menu-item');
+
+var _captionTrackMenuItem2 = _interopRequireDefault(_captionTrackMenuItem);
+
+var Component = _videoJs2['default'].getComponent('Component');
+/**
+ * A special menu item for turning of a specific type of text track
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends TextTrackMenuItem
+ * @class OffTextTrackMenuItem
+ */
+
+var OffCaptionTrackMenuItem = (function (_CaptionTrackMenuItem) {
+  _inherits(OffCaptionTrackMenuItem, _CaptionTrackMenuItem);
+
+  function OffCaptionTrackMenuItem(player, options) {
+    _classCallCheck(this, OffCaptionTrackMenuItem);
+
+    // Create pseudo track info
+    // Requires options['kind']
+    options['track'] = {
+      'kind': options['kind'],
+      'player': player,
+      'label': options['kind'] + ' off',
+      'default': false,
+      'mode': 'hidden'
+    };
+
+    // MenuItem is selectable
+    options['selectable'] = true;
+
+    _get(Object.getPrototypeOf(OffCaptionTrackMenuItem.prototype), 'constructor', this).call(this, player, options);
+    this.selected(true);
+  }
+
+  /**
+   * Handle text track change
+   *
+   * @param {Object} event Event object
+   * @method handleTracksChange
+   */
+
+  _createClass(OffCaptionTrackMenuItem, [{
+    key: 'handleTracksChange',
+    value: function handleTracksChange(event) {
+      var tracks = this.player().textTracks();
+      var selected = true;
+
+      for (var i = 0, l = tracks.length; i < l; i++) {
+        var track = tracks[i];
+        if (track['kind'] === this.track['kind'] && track['mode'] === 'showing') {
+          selected = false;
+          break;
+        }
+      }
+
+      this.selected(selected);
+    }
+  }]);
+
+  return OffCaptionTrackMenuItem;
+})(_captionTrackMenuItem2['default']);
+
+Component.registerComponent('OffCaptionTrackMenuItem', OffCaptionTrackMenuItem);
+exports['default'] = OffCaptionTrackMenuItem;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./caption-track-menu-item":9}],12:[function(require,module,exports){
+(function (global){
+/**
+ * @file off-video-track-menu-item.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _videoTrackMenuItem = require('./video-track-menu-item');
+
+var _videoTrackMenuItem2 = _interopRequireDefault(_videoTrackMenuItem);
+
+var Component = _videoJs2['default'].getComponent('Component');
+
+/**
+ * A special menu item for turning of a specific type of video track
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends VideoTrackMenuItem
+ * @class OffVideoTrackMenuItem
+ */
+
+var OffVideoTrackMenuItem = (function (_VideoTrackMenuItem) {
+  _inherits(OffVideoTrackMenuItem, _VideoTrackMenuItem);
+
+  function OffVideoTrackMenuItem(player, options) {
+    _classCallCheck(this, OffVideoTrackMenuItem);
+
+    // Create pseudo track info
+    // Requires options['kind']
+    options['track'] = {
+      'kind': options['kind'],
+      'player': player,
+      'label': options['kind'] + ' off',
+      'default': false,
+      'selected': false
+    };
+
+    // MenuItem is selectable
+    options['selectable'] = true;
+
+    _get(Object.getPrototypeOf(OffVideoTrackMenuItem.prototype), 'constructor', this).call(this, player, options);
+  }
+
+  /**
+   * Handle text track change
+   *
+   * @param {Object} event Event object
+   * @method handleTracksChange
+   */
+
+  _createClass(OffVideoTrackMenuItem, [{
+    key: 'handleTracksChange',
+    value: function handleTracksChange(event) {
+      var tracks = this.player().videoTracks();
+      var selected = true;
+
+      for (var i = 0, l = tracks.length; i < l; i++) {
+        var track = tracks[i];
+        if (track['kind'] === 'main' && track['selected']) {
+          selected = false;
+          break;
+        }
+      }
+      this.selected(selected);
+    }
+  }]);
+
+  return OffVideoTrackMenuItem;
+})(_videoTrackMenuItem2['default']);
+
+Component.registerComponent('OffVideoTrackMenuItem', OffVideoTrackMenuItem);
+exports['default'] = OffVideoTrackMenuItem;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./video-track-menu-item":14}],13:[function(require,module,exports){
+(function (global){
+/**
+ * @file video-track-button.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _videoTrackMenuItem = require('./video-track-menu-item');
+
+var _videoTrackMenuItem2 = _interopRequireDefault(_videoTrackMenuItem);
+
+var _offVideoTrackMenuItem = require('./off-video-track-menu-item');
+
+var _offVideoTrackMenuItem2 = _interopRequireDefault(_offVideoTrackMenuItem);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var ControlBar = _videoJs2['default'].getComponent('ControlBar');
+var MenuButton = _videoJs2['default'].getComponent('MenuButton');
+
+/**
+ * The base class for buttons that toggle specific video track types (e.g. commentary)
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends MenuButton
+ * @class VideoTrackButton
+ */
+
+var VideoTrackButton = (function (_MenuButton) {
+  _inherits(VideoTrackButton, _MenuButton);
+
+  function VideoTrackButton(player, options) {
+    _classCallCheck(this, VideoTrackButton);
+
+    _get(Object.getPrototypeOf(VideoTrackButton.prototype), 'constructor', this).call(this, player, options);
+
+    var tracks = this.player_.videoTracks();
+
+    if (this.items.length <= 1) {
+      this.hide();
+    }
+
+    if (!tracks) {
+      return;
+    }
+
+    var updateHandler = this.update.bind(this);
+    tracks.addEventListener('removetrack', updateHandler);
+    tracks.addEventListener('addtrack', updateHandler);
+
+    this.player_.on('dispose', function () {
+      tracks.removeEventListener('removetrack', updateHandler);
+      tracks.removeEventListener('addtrack', updateHandler);
+    });
+  }
+
+  /**
+   * Allow sub components to stack CSS class names
+   *
+   * @return {String} The constructed class name
+   * @method buildCSSClass
+   */
+
+  _createClass(VideoTrackButton, [{
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-video-button ' + _get(Object.getPrototypeOf(VideoTrackButton.prototype), 'buildCSSClass', this).call(this);
+    }
+
+    // Create a menu item for each text track
+  }, {
+    key: 'createItems',
+    value: function createItems() {
+      var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+      // Add an OFF menu item to turn all tracks off
+      items.push(new _offVideoTrackMenuItem2['default'](this.player_, {
+        'kind': 'ABR'
+      }));
+
+      var tracks = this.player_.videoTracks();
+
+      if (!tracks) {
+        return items;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+
+        // only add tracks that are of the appropriate kind and have a label
+        if (track['kind'] === 'main') {
+          items.push(new _videoTrackMenuItem2['default'](this.player_, {
+            // MenuItem is selectable
+            'selectable': true,
+            'track': track
+          }));
+        }
+      }
+
+      return items;
+    }
+  }]);
+
+  return VideoTrackButton;
+})(MenuButton);
+
+VideoTrackButton.prototype.kind_ = 'video';
+VideoTrackButton.prototype.controlText_ = 'Video Selection';
+
+//Replace videojs CaptionButton child with this one
+ControlBar.prototype.options_.children.splice(12, 0, 'videoTrackButton');
+
+Component.registerComponent('VideoTrackButton', VideoTrackButton);
+exports['default'] = VideoTrackButton;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./off-video-track-menu-item":12,"./video-track-menu-item":14}],14:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var MenuItem = _videoJs2['default'].getComponent('MenuItem');
+
+var VideoTrackMenuItem = (function (_MenuItem) {
+  _inherits(VideoTrackMenuItem, _MenuItem);
+
+  function VideoTrackMenuItem(player, options) {
+    var _this = this;
+
+    _classCallCheck(this, VideoTrackMenuItem);
+
+    var track = options['track'];
+    var tracks = player.videoTracks();
+
+    // Modify options for parent MenuItem class's init.
+    options['label'] = track['label'] || track['language'] || 'Unknown';
+    options['selected'] = track['default'] || track['selected'] === true;
+
+    _get(Object.getPrototypeOf(VideoTrackMenuItem.prototype), 'constructor', this).call(this, player, options);
+
+    this.track = track;
+
+    if (tracks) {
+      (function () {
+        var changeHandler = _this.handleTracksChange.bind(_this);
+
+        tracks.addEventListener('change', changeHandler);
+        _this.on('dispose', function () {
+          tracks.removeEventListener('change', changeHandler);
+        });
+      })();
+    }
+  }
+
+  /**
+   * Handle click on text track
+   *
+   * @method handleClick
+   */
+
+  _createClass(VideoTrackMenuItem, [{
+    key: 'handleClick',
+    value: function handleClick(event) {
+      var kind = this.track['kind'];
+      var tracks = this.player_.videoTracks();
+
+      _get(Object.getPrototypeOf(VideoTrackMenuItem.prototype), 'handleClick', this).call(this, event);
+
+      if (!tracks) return;
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        track['selected'] = track === this.track;
+      }
+    }
+
+    /**
+     * Handle text track change
+     *
+     * @method handleTracksChange
+     */
+  }, {
+    key: 'handleTracksChange',
+    value: function handleTracksChange() {
+      this.selected(this.track['selected']);
+    }
+  }]);
+
+  return VideoTrackMenuItem;
+})(MenuItem);
+
+Component.registerComponent('VideoTrackMenuItem', VideoTrackMenuItem);
+exports['default'] = VideoTrackMenuItem;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],15:[function(require,module,exports){
 (function (global){
 /**
  * @file dash.js
@@ -1399,72 +2062,120 @@ var Dash = (function (_Html5) {
   _inherits(Dash, _Html5);
 
   function Dash(options, ready) {
+    var _this = this;
+
     _classCallCheck(this, Dash);
 
     _get(Object.getPrototypeOf(Dash.prototype), 'constructor', this).call(this, options, ready);
-    //override config
+
+    var tracks = undefined;
+    tracks = this.audioTracks();
+    if (tracks) {
+      (function () {
+        var changeHandler = _this.handleAudioTracksChange.bind(_this);
+
+        tracks.addEventListener('change', changeHandler);
+        _this.on('dispose', function () {
+          tracks.removeEventListener('change', changeHandler);
+        });
+      })();
+    }
+    tracks = this.videoTracks();
+    if (tracks) {
+      (function () {
+        var changeHandler = _this.handleVideoTracksChange.bind(_this);
+
+        tracks.addEventListener('change', changeHandler);
+        _this.on('dispose', function () {
+          tracks.removeEventListener('change', changeHandler);
+        });
+      })();
+    }
   }
 
   /**
    * Set video
    *
    * @param {Object=} src Source object
-   * @deprecated
    * @method setSrc
    */
 
   _createClass(Dash, [{
-    key: 'setSrc',
-    value: function setSrc(src) {
-      var _this = this;
+    key: 'src',
+    value: function src(_src) {
+      var _this2 = this;
 
-      this.keySystemOptions_ = this.buildDashJSProtData(this.options().protData);
+      if (_src === undefined) {
+        return this.el_.src;
+      } else {
+        this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
 
-      // Save the context after the first initialization for subsequent instances
-      this.context_ = this.context_ || {};
-      // But make a fresh MediaPlayer each time the sourceHandler is used
-      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+        // Save the context after the first initialization for subsequent instances
+        this.context_ = this.context_ || {};
+        // But make a fresh MediaPlayer each time the sourceHandler is used
+        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
 
-      // Must run controller before these two lines or else there is no
-      // element to bind to.
-      this.mediaPlayer_.initialize();
-      this.mediaPlayer_.attachView(this.el());
-      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
-      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
-      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
-      // Dash.js autoplays by default
-      if (!this.player().options().autoplay) {
-        this.mediaPlayer_.setAutoPlay(false);
+        // Must run controller before these two lines or else there is no
+        // element to bind to.
+        this.mediaPlayer_.initialize();
+        this.mediaPlayer_.attachView(this.el());
+        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
+        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+        // Dash.js autoplays by default
+        if (!this.player_.options().autoplay) {
+          this.mediaPlayer_.setAutoPlay(false);
+        }
+
+        this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
+        this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
+        this.mediaPlayer_.setInitialMediaSettingsFor('audio', { lang: this.options_.lang });
+        this.mediaPlayer_.setInitialMediaSettingsFor('video', { lang: this.options_.lang });
+        this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+        //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
+        this.player_.on('texttrackchange', this.textTracksChange.bind(this));
+
+        this.player_.trigger('loadstart');
+        // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
+        this.ready(function () {
+          _this2.mediaPlayer_.retrieveManifest(_src, _this2.initializeDashJS.bind(_this2));
+        });
       }
-
-      this.mediaPlayer_.setScheduleWhilePaused(this.options().scheduleWhilePaused);
-      this.mediaPlayer_.setAutoSwitchQuality(this.options().autoSwitch);
-      this.mediaPlayer_.setInitialMediaSettingsFor('audio', { lang: 'fr' });
-      //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
-      this.player().on('texttrackchange', this.onTextTracksChange.bind(this));
-      this.player().trigger('loadstart');
-      // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
-      this.ready(function () {
-        _this.mediaPlayer_.retrieveManifest(src, _this.initializeDashJS.bind(_this));
-      });
     }
   }, {
     key: 'onInitialized',
     value: function onInitialized(manifest, err) {
       this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
       if (err) {
-        this.player().error(err);
+        this.player_.error(err);
       }
+
       var bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
-      var audios = this.mediaPlayer_.getTracksFor('audio');
+      var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
+      var videoDashTracks = this.mediaPlayer_.getTracksFor('video');
       var autoSwitch = this.mediaPlayer_.getAutoSwitchQuality();
-      // bitrates are sorted from lowest to the best values
-      // so the last one has the best quality
-      //  maxQuality = bitrates[bitrates.length - 1].qualityIndex;
-      // set max quality
-      /*jshint sub:true*/
-      this['featuresAudioIndex'] = this['featuresAudioIndex'] || audios.length - 1;
-      this['featuresBitrateIndex'] = autoSwitch ? bitrates.length : this['featuresBitrateIndex'] || bitrates.length;
+
+      var defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio');
+      var defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video');
+      var initialVideoBitrate = this.mediaPlayer_.getInitialBitrateFor('video');
+
+      var i = undefined;
+
+      for (i = 0; i < audioDashTracks.length; i++) {
+        var track = audioDashTracks[i];
+        var plTrack = this.addAudioTrack('main', track.label, track.lang);
+        plTrack.enabled = plTrack['language'] === defaultAudio.lang;
+      }
+
+      for (i = 0; i < videoDashTracks.length; i++) {
+        var track = videoDashTracks[i];
+        var bitrateList = track.bitrateList;
+        for (var j = 0; j < bitrateList.length; j++) {
+          var bitRateInfo = bitrateList[j] / 1000;
+          var bitRateTrack = this.addVideoTrack('main', bitRateInfo, bitRateInfo);
+          bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
+        }
+      }
     }
   }, {
     key: 'onMetricChanged',
@@ -1649,7 +2360,7 @@ var Dash = (function (_Html5) {
   }, {
     key: 'initializeDashJS',
     value: function initializeDashJS(manifest, err) {
-      var _this2 = this;
+      var _this3 = this;
 
       var manifestProtectionData = {};
 
@@ -1669,7 +2380,7 @@ var Dash = (function (_Html5) {
 
       // We have to reset any mediaKeys before the attachSource call below
       this.resetSrc_(function () {
-        _this2.afterMediaKeysReset(manifest);
+        _this3.afterMediaKeysReset(manifest);
       });
     }
   }, {
@@ -1699,9 +2410,9 @@ var Dash = (function (_Html5) {
      * @method updateDisplay
      */
   }, {
-    key: 'onTextTracksChange',
-    value: function onTextTracksChange() {
-      var tracks = this.player_.textTracks();
+    key: 'textTracksChange',
+    value: function textTracksChange() {
+      var tracks = this.textTracks();
 
       if (!tracks) {
         return;
@@ -1712,6 +2423,39 @@ var Dash = (function (_Html5) {
         if (track['mode'] === 'showing') {
           this.mediaPlayer_.setTextTrack(i);
         }
+      }
+    }
+  }, {
+    key: 'handleAudioTracksChange',
+    value: function handleAudioTracksChange() {
+      var tracks = this.audioTracks();
+
+      if (!tracks || !this.playbackInitialized) {
+        return;
+      }
+
+      var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (track['enabled']) {
+          this.mediaPlayer_.setCurrentTrack(audioDashTracks[i]);
+        }
+      }
+    }
+  }, {
+    key: 'handleVideoTracksChange',
+    value: function handleVideoTracksChange() {
+      var tracks = this.videoTracks();
+
+      if (!tracks || !this.playbackInitialized) {
+        return;
+      }
+      var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && tracks.selectedIndex % 1 === 0;
+
+      this.mediaPlayer_.setAutoSwitchQuality(!isInt);
+      if (isInt) {
+        this.mediaPlayer_.setQualityFor('video', tracks.selectedIndex);
       }
     }
   }, {
@@ -1727,14 +2471,14 @@ var Dash = (function (_Html5) {
   }, {
     key: 'showErrors',
     value: function showErrors() {
-      var _this3 = this;
+      var _this4 = this;
 
       // The video element's src is set asynchronously so we have to wait a while
       // before we unhide any errors
       // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
       // in my testing
       this.setTimeout(function () {
-        _this3.player().removeClass('vjs-dashjs-hide-errors');
+        _this4.player_.removeClass('vjs-dashjs-hide-errors');
       }, 250);
     }
   }, {
@@ -1760,7 +2504,7 @@ var Dash = (function (_Html5) {
         this.mediaPlayer_.reset();
       }
       this.resetSrc_(Function.prototype);
-      _videoJs2['default'].Html5.prototype.dispose.call(this);
+      _get(Object.getPrototypeOf(Dash.prototype), 'dispose', this).call(this, this);
     }
   }]);
 
@@ -1768,7 +2512,9 @@ var Dash = (function (_Html5) {
 })(Html5);
 
 Dash.prototype.options_ = {
+  lang: 'fr',
   autoSwitch: true,
+  bolaEnabled: true,
   scheduleWhilePaused: false,
   buffer: {
     minBufferTime: 12,
@@ -1847,7 +2593,7 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
  * @param  {Flash} tech   The instance of the Flash tech
  */
 Dash.nativeSourceHandler.handleSource = function (source, tech) {
-  tech.setSrc(source.src);
+  tech.src(source.src);
 };
 
 /*
@@ -1860,12 +2606,14 @@ Dash.nativeSourceHandler.dispose = function () {};
 Dash.registerSourceHandler(Dash.nativeSourceHandler);
 
 _videoJs2['default'].options.dash = {};
+
+Component.registerComponent('Dash', Dash);
 Tech.registerTech('Dash', Dash);
 exports['default'] = Dash;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":1}],11:[function(require,module,exports){
+},{"global/window":1}],16:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1876,8 +2624,6 @@ var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof globa
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var MediaTechController = _videoJs2['default'].getComponent('MediaTechController');
-
-var _api = MediaTechController.prototype;
 
 MediaTechController.METRICS_DATA = {
   bandwidth: -1,
@@ -1892,7 +2638,7 @@ MediaTechController.METRICS_DATA = {
   requestsQueue: 0
 };
 
-_api['metrics_'] = {
+MediaTechController.prototype.metrics_ = {
   video: _videoJs2['default'].mergeOptions({
     bandwidth: /*this.el().webkitVideoDecodedByteCount ||*/-1
   }, MediaTechController.METRICS_DATA),
@@ -1910,18 +2656,18 @@ _api['metrics_'] = {
   }
 };
 
-_api['mediaPlayer_'] = null;
+MediaTechController.prototype.mediaPlayer = null;
 
-_api['mediaPlayer'] = function () {
-  return undefined.mediaPlayer_;
+MediaTechController.prototype.mediaPlayer = function () {
+  return this.mediaPlayer_;
 };
 
 /**
  * Get default metrix statistics object
  * @returns {{video: {bandwidth: number}, audio: {bandwidth: number}}}
  */
-_api['getPlaybackStatistics'] = function () {
-  return undefined.metrics_;
+MediaTechController.prototype.getPlaybackStatistics = function () {
+  return this.metrics_;
 };
 
 /**
@@ -1929,53 +2675,12 @@ _api['getPlaybackStatistics'] = function () {
  * @param type
  * @returns {*}
  */
-_api['getCribbedMetricsFor'] = function (type) {
-  return undefined.metrics_[type];
-};
-
-_api['videoTracks_'] = null;
-
-_api['videoTracks'] = function (tracks) {
-  if (tracks !== undefined) {
-    undefined.videoTracks_ = tracks;
-  }
-  return undefined.videoTracks_ || new _videoJs2['default'].TextTrackList();
-};
-
-_api['audioTracks_'] = null;
-
-_api['audioTracks'] = function (tracks) {
-  if (tracks !== undefined) {
-    undefined.audioTracks_ = tracks;
-  }
-  return undefined.audioTracks_ || new _videoJs2['default'].TextTrackList();
-};
-
-_api['setAudioTrack'] = function (track) {
-  var tracks = undefined.player().audioTracks();
-  for (var i = 0; i < tracks.length; i++) {
-    var audioTrack = tracks[i];
-    audioTrack.enabled = audioTrack === track;
-  }
-  /*jshint sub:true*/
-  undefined['featuresAudioIndex'] = parseInt(track.id || track.index, 10);
-  undefined.trigger('audiochange');
-};
-
-/*jshint sub:true*/
-_api['setVideoTrack'] = function (track) {
-  var tracks = undefined.player().videoTracks();
-  for (var i = 0; i < tracks.length; i++) {
-    var videoTrack = tracks[i];
-    videoTrack.enabled = videoTrack.qualityIndex === track.qualityIndex;
-  }
-  /*jshint sub:true*/
-  undefined['featuresBitrateIndex'] = track.qualityIndex; //AUTO;
-  undefined.trigger('bitratechange');
+MediaTechController.prototype.getCribbedMetricsFor = function (type) {
+  return this.metrics_[type];
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1989,9 +2694,9 @@ var _qunit = (typeof window !== "undefined" ? window['QUnit'] : typeof global !=
 
 var _qunit2 = _interopRequireDefault(_qunit);
 
-var _srcAfrostream = require('../src/afrostream');
+var _srcJsAfrostream = require('../src/js/afrostream');
 
-var _srcAfrostream2 = _interopRequireDefault(_srcAfrostream);
+var _srcJsAfrostream2 = _interopRequireDefault(_srcJsAfrostream);
 
 var _playerProxy = require('./player-proxy');
 
@@ -2010,13 +2715,13 @@ _qunit2['default'].module('afrostream', {
 });
 
 _qunit2['default'].test('afrostreamMaker takes a player and returns a metrics', function (assert) {
-  var metrics = (0, _srcAfrostream2['default'])((0, _playerProxy2['default'])(), {});
+  var afrostream = (0, _srcJsAfrostream2['default'])((0, _playerProxy2['default'])(), {});
 
-  assert.equal(typeof afrostream, 'object', 'metrics is an object');
+  assert.equal(typeof afrostream, 'function', 'afrostream is an object');
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/afrostream":5,"./player-proxy":13,"global/window":1}],13:[function(require,module,exports){
+},{"../src/js/afrostream":5,"./player-proxy":18,"global/window":1}],18:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2058,7 +2763,7 @@ exports['default'] = proxy;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"node.extend":2}],14:[function(require,module,exports){
+},{"node.extend":2}],19:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2076,21 +2781,21 @@ var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof globa
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _srcAfrostream = require('../src/afrostream');
+var _srcJsAfrostream = require('../src/js/afrostream');
 
-var _srcAfrostream2 = _interopRequireDefault(_srcAfrostream);
+var _srcJsAfrostream2 = _interopRequireDefault(_srcJsAfrostream);
 
 _qunit2['default'].test('the environment is sane', function (assert) {
   assert.strictEqual(typeof Array.isArray, 'function', 'es5 exists');
   assert.strictEqual(typeof _sinon2['default'], 'object', 'sinon exists');
   assert.strictEqual(typeof _videoJs2['default'], 'function', 'videojs exists');
-  assert.strictEqual(typeof _srcAfrostream2['default'], 'object', 'afrostream is a component');
+  assert.strictEqual(typeof plugin, 'function', 'plugin is a function');
 });
 
 _qunit2['default'].test('registers itself with video.js', function (assert) {
   assert.expect(1);
-  assert.strictEqual(_videoJs2['default'].getComponent('Player').prototype.afrostream, _srcAfrostream2['default'], 'afrostream component was registered');
+  assert.strictEqual(_videoJs2['default'].getComponent('Player').prototype.afrostream, _srcJsAfrostream2['default'], 'afrostream plugin was registered');
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/afrostream":5}]},{},[12,14]);
+},{"../src/js/afrostream":5}]},{},[17,19]);

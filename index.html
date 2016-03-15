@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>videojs-metrics Demo</title>
-  <link href="/node_modules/video.js/dist/video-js.css" rel="stylesheet">
+  <link href="/dist/afrostream.css" rel="stylesheet">
   <style>
 
     button {
@@ -22,26 +22,33 @@
 </head>
 <body>
 <video class="video-js vjs-default-skin" controls width="640px" height="360px">
-  <source src="https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd"
-          type="application/dash+xml"/>
+  <source
+    src="https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd"
+    type="application/dash+xml"/>
+  <source
+    src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+    type="application/x-mpegURL"/>
 </video>
 <ul>
   <li><a href="/test/">Run unit tests in browser.</a></li>
 </ul>
-<script src="/node_modules/video.js/dist/video.js"></script>
+<!--<script src="/node_modules/video.js/dist/video.js"></script>-->
+<script src="/lib/video.js"></script>
+<script> window.dashjs = {skipAutoCreate: true}; </script>
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
 <script src="/dist/afrostream-player.js"></script>
 <script>
 
   var player = videojs(document.querySelector('video'), {
-    techOrder: ["dash"]
+    autoplay: true,
+    techOrder: ["dash", "html5"]
   });
 
-  try {
-    // try on ios
-    player.volume(0);
-  } catch (e) {
-  }
+  //  try {
+  //    // try on ios
+  //    player.volume(0);
+  //  } catch (e) {
+  //  }
 
 </script>
 </body>

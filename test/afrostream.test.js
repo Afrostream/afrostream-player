@@ -1,6 +1,6 @@
 import window from 'global/window';
 import QUnit from 'qunit';
-import afrostreamMaker from '../src/afrostream';
+import afrostreamMaker from '../src/js/afrostream';
 import playerProxy from './player-proxy';
 
 QUnit.module('afrostream', {
@@ -18,8 +18,8 @@ QUnit.module('afrostream', {
 QUnit.test(
   'afrostreamMaker takes a player and returns a metrics',
   function (assert) {
-    let metrics = afrostreamMaker(playerProxy(), {});
+    let afrostream = afrostreamMaker(playerProxy(), {});
 
-    assert.equal(typeof afrostream, 'object', 'metrics is an object');
+    assert.equal(typeof afrostream, 'function', 'afrostream is an object');
   }
 );
