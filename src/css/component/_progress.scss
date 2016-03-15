@@ -1,0 +1,20 @@
+.video-js .vjs-load-progress,
+.video-js .vjs-play-progress {
+  border-radius: $progress-radius;
+}
+
+.video-js .vjs-mouse-display:after,
+.video-js .vjs-play-progress:after {
+  font-family: $text-font-family;
+}
+
+.video-js .vjs-play-progress {
+  background-color: $secondary-foreground-color;
+  color: $secondary-foreground-color;
+}
+
+// We need an increased hit area on hover
+.video-js .vjs-progress-control .vjs-progress-holder,
+.video-js .vjs-progress-control:hover .vjs-progress-holder {
+  font-size: 1.6em;
+}

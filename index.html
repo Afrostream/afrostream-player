@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>videojs-metrics Demo</title>
+  <title>Afrostream player based on videojs Demo</title>
   <link href="/dist/afrostream.css" rel="stylesheet">
   <style>
 
@@ -36,19 +36,24 @@
 <script src="/lib/video.js"></script>
 <script> window.dashjs = {skipAutoCreate: true}; </script>
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
+<script src="/node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
 <script src="/dist/afrostream-player.js"></script>
 <script>
 
   var player = videojs(document.querySelector('video'), {
     autoplay: true,
+    "metrics": {
+      "user_id": ""
+    },
     techOrder: ["dash", "html5"]
   });
 
-  //  try {
-  //    // try on ios
-  //    player.volume(0);
-  //  } catch (e) {
-  //  }
+  try {
+    // try on ios
+    player.volume(0);
+    player.metrics();
+  } catch (e) {
+  }
 
 </script>
 </body>

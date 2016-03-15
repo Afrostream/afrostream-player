@@ -68,6 +68,30 @@
     ]
   },
   "devDependencies": {
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "qunit": "global:QUnit",
+    "sinon": "global:sinon",
+    "video.js": "global:videojs",
+    "dashjs": "global:dashjs",
+    "dashjs.MediaPlayer": "global:dashjs.MediaPlayer"
+  },
+  "vjsstandard": {
+    "ignore": [
+      "dist",
+      "dist-test",
+      "docs",
+      "es5",
+      "test/karma",
+      "scripts"
+    ]
+  },
+  "dependencies": {
     "babel": "^5.8.0",
     "babelify": "^6.0.0",
     "bannerize": "^1.0.0",
@@ -98,31 +122,7 @@
     "uglify-js": "^2.5.0",
     "videojs-standard": "^4.0.0",
     "watchify": "^3.6.0",
-    "xhr": "^2.2.0"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
-  },
-  "browserify-shim": {
-    "qunit": "global:QUnit",
-    "sinon": "global:sinon",
-    "video.js": "global:videojs",
-    "dashjs": "global:dashjs",
-    "dashjs.MediaPlayer": "global:dashjs.MediaPlayer"
-  },
-  "vjsstandard": {
-    "ignore": [
-      "dist",
-      "dist-test",
-      "docs",
-      "es5",
-      "test/karma",
-      "scripts"
-    ]
-  },
-  "dependencies": {
+    "xhr": "^2.2.0",
     "global": "^4.3.0",
     "object.assign": "^4.0.3",
     "video.js": "^5.0.0",

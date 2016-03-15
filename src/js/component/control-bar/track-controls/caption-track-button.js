@@ -37,6 +37,16 @@ class CaptionTrackButton extends CaptionsButton {
     return items;
   }
 
+  /**
+   * Allow sub components to stack CSS class names
+   *
+   * @return {String} The constructed class name
+   * @method buildCSSClass
+   */
+  buildCSSClass() {
+    return `vjs-captions-extended-button ${super.buildCSSClass()}`;
+  }
+
 }
 
 

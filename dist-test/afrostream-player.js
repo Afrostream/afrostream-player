@@ -1350,6 +1350,18 @@ var CaptionTrackButton = (function (_CaptionsButton) {
 
       return items;
     }
+
+    /**
+     * Allow sub components to stack CSS class names
+     *
+     * @return {String} The constructed class name
+     * @method buildCSSClass
+     */
+  }, {
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-captions-extended-button ' + _get(Object.getPrototypeOf(CaptionTrackButton.prototype), 'buildCSSClass', this).call(this);
+    }
   }]);
 
   return CaptionTrackButton;
