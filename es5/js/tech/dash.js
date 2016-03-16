@@ -105,6 +105,7 @@ var Dash = (function (_Html5) {
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.PLAYBACK_PROGRESS, this.onProgress.bind(this));
         // Dash.js autoplays by default
         if (!this.player_.options().autoplay) {
           this.mediaPlayer_.setAutoPlay(false);
@@ -159,6 +160,11 @@ var Dash = (function (_Html5) {
           bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
         }
       }
+    }
+  }, {
+    key: 'onProgress',
+    value: function onProgress(e) {
+      this.trigger('progress');
     }
   }, {
     key: 'onMetricChanged',

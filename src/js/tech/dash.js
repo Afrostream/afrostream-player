@@ -67,6 +67,7 @@ class Dash extends Html5 {
       this.mediaPlayer_.on(MediaPlayer.events.STREAM_INITIALIZED, ::this.onInitialized);
       this.mediaPlayer_.on(MediaPlayer.events.TEXT_TRACKS_ADDED, ::this.onTextTracksAdded);
       this.mediaPlayer_.on(MediaPlayer.events.METRIC_CHANGED, ::this.onMetricChanged);
+      this.mediaPlayer_.on(MediaPlayer.events.PLAYBACK_PROGRESS, ::this.onProgress);
       // Dash.js autoplays by default
       if (!this.player_.options().autoplay) {
         this.mediaPlayer_.setAutoPlay(false);
@@ -120,6 +121,10 @@ class Dash extends Html5 {
         bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
       }
     }
+  }
+
+  onProgress(e) {
+    this.trigger('progress');
   }
 
   onMetricChanged(e) {

@@ -1,7 +1,9 @@
 // Text, icons, hover states
 $primary-foreground-color: #fff !default;
 $secondary-foreground-color: #ffc60b !default;
-
+$color-yellow: #ffc809;
+$color-indigo: #17071d;
+$color-purple: #663774;
 // Control backgrounds (control bar, big play, menus)
 $primary-background-color: #000 !default;
 $primary-background-transparency: 0.7 !default;
@@ -27,3 +29,4 @@ $controls-margin: 15px;
 // Make a slightly lighter version of the main background
 // for the slider background.
 $slider-bg-color: lighten($primary-background-color, 33%);
+$slider-load-bg-color: lighten($primary-foreground-color, 33%);

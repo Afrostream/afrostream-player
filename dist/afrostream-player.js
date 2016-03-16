@@ -64,6 +64,10 @@ var _componentControlBarTrackControlsVideoTrackButton = require('./component/con
 
 var _componentControlBarTrackControlsVideoTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsVideoTrackButton);
 
+var _componentControlBarProgressControlLoadProgressSpinner = require('./component/control-bar/progress-control/load-progress-spinner');
+
+var _componentControlBarProgressControlLoadProgressSpinner2 = _interopRequireDefault(_componentControlBarProgressControlLoadProgressSpinner);
+
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 /**
@@ -196,7 +200,152 @@ exports['default'] = Afrostream;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/track-controls/audio-track-button":3,"./component/control-bar/track-controls/caption-track-button":5,"./component/control-bar/track-controls/video-track-button":10,"./tech/dash":12,"./tech/media":13}],3:[function(require,module,exports){
+},{"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/media":14}],3:[function(require,module,exports){
+(function (global){
+/**
+ * @file load-progress-spinner.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var LoadProgressBar = _videoJs2['default'].getComponent('LoadProgressBar');
+
+/**
+ * Shows load progress
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends Component
+ * @class LoadProgressSpinner
+ */
+
+var LoadProgressSpinner = (function (_LoadProgressBar) {
+  _inherits(LoadProgressSpinner, _LoadProgressBar);
+
+  function LoadProgressSpinner(player, options) {
+    _classCallCheck(this, LoadProgressSpinner);
+
+    _get(Object.getPrototypeOf(LoadProgressSpinner.prototype), 'constructor', this).call(this, player, options);
+  }
+
+  /**
+   * Create the component's DOM element
+   *
+   * @return {Element}
+   * @method createEl
+   */
+
+  _createClass(LoadProgressSpinner, [{
+    key: 'createEl',
+    value: function createEl() {
+      var el = _videoJs2['default'].createEl('div', {
+        className: 'vjs-load-progress-spinner',
+        innerHTML: '<svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="' + this.options_.rayon + '" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg>'
+      });
+
+      this.circle = _videoJs2['default'].createEl('svg', {
+        className: 'circular',
+        innerHTML: '<circle class="path" cx="50" cy="50" r="' + this.options_.rayon + '" fill="none" stroke-width="2" stroke-miterlimit="10"/>'
+      }, {
+        viewBox: '25 25 50 50'
+      });
+
+      //el.appendChild(this.circle);
+      return el;
+    }
+
+    /**
+     * Update progress bar
+     *
+     * @method update
+     */
+  }, {
+    key: 'update',
+    value: function update() {
+      var buffered = this.player_.buffered();
+      var duration = this.player_.duration();
+      var bufferedEnd = this.player_.bufferedEnd();
+      var children = this.el_.children;
+      var rayon = this.options_.rayon;
+
+      // get the percent width of a time compared to the total end
+      //let percentify = function (time, end) {
+      //  let percent = (time / end) || 0; // no NaN
+      //  percent = ((percent >= 1 ? 1 : percent) * 100);
+      //
+      //  let c = Math.PI * (rayon * 2);
+      //  let pct = ((100 - percent) / 200) * c;
+      //  return pct;
+      //};
+
+      // get the percent width of a time compared to the total end
+      var percentify = function percentify(time, end) {
+        var percent = time / end || 0; // no NaN
+        return (percent >= 1 ? 1 : percent) * 125;
+      };
+
+      // update the width of the progress bar
+      var svg = this.el_.firstChild;
+      if (svg.firstChild) {
+        var i = buffered.length - 1;
+        var start = buffered.start(i);
+        var end = buffered.end(i);
+        var percent = percentify(end - start, 30);
+        console.log('dash :', percent);
+        svg.firstChild.nextElementSibling.style.strokeDasharray = [percent, 125];
+      }
+
+      //for (let i = 0; i < buffered.length; i++) {
+      //  let start = buffered.start(i);
+      //  let end = buffered.end(i);
+      //
+      //  // set the percent based on the width of the progress bar (bufferedEnd)
+      //  part.style.left = percentify(start, bufferedEnd);
+      //  part.style.width = percentify(end - start, bufferedEnd);
+      //}
+      //
+      //// remove unused buffered range elements
+      //for (let i = children.length; i > buffered.length; i--) {
+      //  this.el_.removeChild(children[i - 1]);
+      //}
+    }
+  }]);
+
+  return LoadProgressSpinner;
+})(LoadProgressBar);
+
+LoadProgressSpinner.prototype.options_ = {
+  rayon: 20
+};
+
+Component.registerComponent('LoadProgressSpinner', LoadProgressSpinner);
+
+//Replace videojs CaptionButton child with this one
+_videoJs2['default'].options.children.splice(3, 1, 'loadProgressSpinner');
+
+exports['default'] = LoadProgressSpinner;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],4:[function(require,module,exports){
 (function (global){
 /**
  * @file audio-track-button.js
@@ -331,7 +480,7 @@ exports['default'] = AudioTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":4,"./off-audio-track-menu-item":7}],4:[function(require,module,exports){
+},{"./audio-track-menu-item":5,"./off-audio-track-menu-item":8}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -429,7 +578,7 @@ exports['default'] = AudioTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -530,7 +679,7 @@ exports['default'] = CaptionTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":6,"./off-caption-track-menu-item":8}],6:[function(require,module,exports){
+},{"./caption-track-menu-item":7,"./off-caption-track-menu-item":9}],7:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -660,7 +809,7 @@ exports['default'] = CaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 /**
  * @file off-audio-track-menu-item.js
@@ -755,7 +904,7 @@ exports['default'] = OffAudioTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":4}],8:[function(require,module,exports){
+},{"./audio-track-menu-item":5}],9:[function(require,module,exports){
 (function (global){
 /**
  * @file caption-track-button-off.js
@@ -850,7 +999,7 @@ exports['default'] = OffCaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":6}],9:[function(require,module,exports){
+},{"./caption-track-menu-item":7}],10:[function(require,module,exports){
 (function (global){
 /**
  * @file off-video-track-menu-item.js
@@ -944,7 +1093,7 @@ exports['default'] = OffVideoTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./video-track-menu-item":11}],10:[function(require,module,exports){
+},{"./video-track-menu-item":12}],11:[function(require,module,exports){
 (function (global){
 /**
  * @file video-track-button.js
@@ -1079,7 +1228,7 @@ exports['default'] = VideoTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./off-video-track-menu-item":9,"./video-track-menu-item":11}],11:[function(require,module,exports){
+},{"./off-video-track-menu-item":10,"./video-track-menu-item":12}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1177,7 +1326,7 @@ exports['default'] = VideoTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (global){
 /**
  * @file dash.js
@@ -1286,6 +1435,7 @@ var Dash = (function (_Html5) {
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.PLAYBACK_PROGRESS, this.onProgress.bind(this));
         // Dash.js autoplays by default
         if (!this.player_.options().autoplay) {
           this.mediaPlayer_.setAutoPlay(false);
@@ -1340,6 +1490,11 @@ var Dash = (function (_Html5) {
           bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
         }
       }
+    }
+  }, {
+    key: 'onProgress',
+    value: function onProgress(e) {
+      this.trigger('progress');
     }
   }, {
     key: 'onMetricChanged',
@@ -1777,7 +1932,7 @@ exports['default'] = Dash;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":1}],13:[function(require,module,exports){
+},{"global/window":1}],14:[function(require,module,exports){
 (function (global){
 'use strict';
 

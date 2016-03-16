@@ -8,7 +8,7 @@
   font-family: $text-font-family;
 }
 
-.video-js .vjs-play-progress {
+.video-js .vjs-slider-bar.vjs-play-progress {
   background-color: $secondary-foreground-color;
   color: $secondary-foreground-color;
 }
@@ -16,18 +16,21 @@
 /* The main progress bar also has a bar that shows how much has been loaded. */
 .video-js .vjs-load-progress {
   /* For IE8 we'll lighten the color */
-  background: ligthen($slider-bg-color, 25%);
+  //background: ligthen($slider-load-bg-color, 45%);
   /* Otherwise we'll rely on stacked opacities */
-  background: rgba($slider-bg-color, 0.5);
+  //background: rgba($slider-load-bg-color, 0.5);
 }
 
 /* The load progress bar also has internal divs that represent
    smaller disconnected loaded time ranges */
 .video-js .vjs-load-progress div {
   /* For IE8 we'll lighten the color */
-  background: ligthen($slider-bg-color, 50%);
+  background: ligthen($slider-load-bg-color, 30%);
   /* Otherwise we'll rely on stacked opacities */
-  background: rgba($slider-bg-color, 0.75);
+  background: rgba($slider-load-bg-color, 0.45);
+  border-top-right-radius: $progress-radius $progress-radius;
+  border-bottom-right-radius: $progress-radius $progress-radius;
+
 }
 
 // We need an increased hit area on hover
