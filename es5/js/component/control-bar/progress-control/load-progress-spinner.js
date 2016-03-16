@@ -135,7 +135,7 @@ LoadProgressSpinner.prototype.options_ = {
 Component.registerComponent('LoadProgressSpinner', LoadProgressSpinner);
 
 //Replace videojs CaptionButton child with this one
-_videoJs2['default'].options.children.push('loadProgressSpinner');
+_videoJs2['default'].options.children.splice(3, 1, 'loadProgressSpinner');
 
 exports['default'] = LoadProgressSpinner;
 module.exports = exports['default'];
