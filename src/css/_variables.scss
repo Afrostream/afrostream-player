@@ -3,7 +3,7 @@ $primary-foreground-color: #fff !default;
 $secondary-foreground-color: #ffc60b !default;
 
 // Control backgrounds (control bar, big play, menus)
-$primary-background-color: #333333 !default;
+$primary-background-color: #000 !default;
 $primary-background-transparency: 0.7 !default;
 
 // Hover states, slider backgrounds
@@ -21,3 +21,9 @@ $big-play-button--transparency: 0.8 !default;
 $center-big-play-button: true;
 
 $progress-radius: 5px;
+
+$controls-margin: 15px;
+
+// Make a slightly lighter version of the main background
+// for the slider background.
+$slider-bg-color: lighten($primary-background-color, 33%);

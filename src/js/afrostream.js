@@ -15,6 +15,7 @@ import AudioTrackButton from './component/control-bar/track-controls/audio-track
 import VideoTrackButton from './component/control-bar/track-controls/video-track-button';
 
 const Component = videojs.getComponent('Component');
+const ControlBar = videojs.getComponent('ControlBar');
 /**
  * Initialize the plugin.
  * @param options (optional) {object} configuration for the plugin
@@ -123,6 +124,8 @@ Afrostream.prototype.tech_ = null;
  * @type {{}}
  */
 videojs.options.children.push('afrostream');
+
+ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
 
 Component.registerComponent('Afrostream', Afrostream);
 export default Afrostream;

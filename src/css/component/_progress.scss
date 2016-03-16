@@ -13,8 +13,53 @@
   color: $secondary-foreground-color;
 }
 
+/* The main progress bar also has a bar that shows how much has been loaded. */
+.video-js .vjs-load-progress {
+  /* For IE8 we'll lighten the color */
+  background: ligthen($slider-bg-color, 25%);
+  /* Otherwise we'll rely on stacked opacities */
+  background: rgba($slider-bg-color, 0.5);
+}
+
+/* The load progress bar also has internal divs that represent
+   smaller disconnected loaded time ranges */
+.video-js .vjs-load-progress div {
+  /* For IE8 we'll lighten the color */
+  background: ligthen($slider-bg-color, 50%);
+  /* Otherwise we'll rely on stacked opacities */
+  background: rgba($slider-bg-color, 0.75);
+}
+
 // We need an increased hit area on hover
 .video-js .vjs-progress-control .vjs-progress-holder,
 .video-js .vjs-progress-control:hover .vjs-progress-holder {
   font-size: 1.6em;
+}
+
+.vjs-afrostream-skin .vjs-progress-holder {
+  margin: 0;
+}
+
+.vjs-afrostream-skin .vjs-progress-control {
+}
+
+.vjs-afrostream-skin .vjs-progress-control .vjs-progress-holder:after {
+  border-radius: 2px;
+  display: block;
+  height: 4px;
+}
+
+.vjs-afrostream-skin .vjs-progress-control .vjs-load-progres, .vjs-afrostream-skin .vjs-progress-control .vjs-play-progress {
+  border-radius: 2px;
+  height: 4px;
+}
+
+.vjs-afrostream-skin .vjs-playback-rate {
+  display: none; //Remove Playback Rate
+}
+
+.vjs-afrostream-skin .vjs-mouse-display:before,
+.vjs-afrostream-skin .vjs-play-progress:before,
+.vjs-afrostream-skin .vjs-volume-level:before {
+  content: ''; //Remove Circle from Progress Bar
 }

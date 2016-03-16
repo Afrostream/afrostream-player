@@ -65,6 +65,7 @@ var _componentControlBarTrackControlsVideoTrackButton = require('./component/con
 var _componentControlBarTrackControlsVideoTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsVideoTrackButton);
 
 var Component = _videoJs2['default'].getComponent('Component');
+var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 /**
  * Initialize the plugin.
  * @param options (optional) {object} configuration for the plugin
@@ -187,6 +188,8 @@ Afrostream.prototype.tech_ = null;
  * @type {{}}
  */
 _videoJs2['default'].options.children.push('afrostream');
+
+ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
 
 Component.registerComponent('Afrostream', Afrostream);
 exports['default'] = Afrostream;
