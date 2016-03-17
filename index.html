@@ -43,6 +43,11 @@
   var player = videojs(document.querySelector('video'), {
     autoplay: true,
     aspectRatio: "640:267",
+    controlBar: {
+      volumeMenuButton: {
+        inline: false
+      }
+    },
     metrics: {
       "user_id": 34
     },

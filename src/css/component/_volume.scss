@@ -1,59 +1,82 @@
-.video-js .vjs-volume-level {
-  background-color: $secondary-foreground-color;
-  color: $secondary-foreground-color;
+.video-js .vjs-volume-bar {
+  .vjs-volume-level {
+    background-color: $secondary-foreground-color;
+    color: $secondary-foreground-color;
+    height: 0.6em;
+    border-radius: $progress-radius;
+  }
+
+  margin: 1.25em 0.45em;
+
+  &.vjs-slider-horizontal {
+    height: 0.6em;
+  }
+
+  &.vjs-slider-vertical {
+    margin: 1.35em auto;
+    width: 0.5em;
+    .vjs-volume-level {
+      width: 0.5em;
+      &:before {
+        right: -0.3em;
+      }
+    }
+  }
+
 }
 
-.vjs-afrostream-skin .vjs-volume-menu-button {
-}
-
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline .vjs-menu,
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline:focus .vjs-menu,
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline.vjs-slider-active .vjs-menu {
-  display: block;
-  opacity: 1;
-}
-
-.vjs-afrostream-skin .vjs-volume-menu-button,
-.vjs-afrostream-skin .vjs-volume-menu-button .vjs-menu-content,
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline:hover,
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline:focus,
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline.vjs-slider-active {
-  width: 3em;
-}
-
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline .vjs-menu {
-  left: 0; //Override to Align Volume To the Right Side
-}
-
-.vjs-afrostream-skin .vjs-mute-control:before,
-.vjs-afrostream-skin .vjs-volume-menu-button:before,
-.vjs-afrostream-skin .vjs-mute-control.vjs-vol-0:before,
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-vol-0:before,
-.vjs-afrostream-skin .vjs-mute-control.vjs-vol-1:before,
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-vol-1:before,
-.vjs-afrostream-skin .vjs-mute-control.vjs-vol-2:before,
-.vjs-afrostream-skin .vjs-volume-menu-button.vjs-vol-2:before {
-  content: ''; //Remove Volume Icons
-}
-
-.vjs-afrostream-skin .vjs-slider-bar.vjs-volume-bar {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAcCAQAAACw95UnAAAAMElEQVRIx2NgoBL4n4YKGUYNHkEG4zJg1OCRYDCpBowaPJwMppbLRg0eNXjUYBLEAXWNUA6QNm1lAAAAAElFTkSuQmCC);
-  background-size: 22px 14px;
-  background-repeat: no-repeat;
-  height: 100%;
-  width: 100%;
-  max-width: 22px;
-  max-height: 14px;
-  margin: 7px 4px;
-  border-radius: 0;
-}
-
-.vjs-afrostream-skin .vjs-slider-bar .vjs-volume-level {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAcAQAAAAAyhWABAAAAAnRSTlMAAHaTzTgAAAAZSURBVHgBYwAB/g9EUv+JokCqiaT+U4MCAPKPS7WUUOc1AAAAAElFTkSuQmCC);
-  background-size: 22px 14px;
-  background-repeat: no-repeat;
-  max-width: 22px;
-  max-height: 14px;
-  height: 100%;
-}
-
+//
+//.vjs-afrostream-skin .vjs-volume-menu-button {
+//}
+//
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline .vjs-menu,
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline:focus .vjs-menu,
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline.vjs-slider-active .vjs-menu {
+//  display: block;
+//  opacity: 1;
+//}
+//
+//.vjs-afrostream-skin .vjs-volume-menu-button,
+//.vjs-afrostream-skin .vjs-volume-menu-button .vjs-menu-content,
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline:hover,
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline:focus,
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline.vjs-slider-active {
+//  width: 3em;
+//}
+//
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-menu-button-inline .vjs-menu {
+//  left: 0; //Override to Align Volume To the Right Side
+//}
+//
+//.vjs-afrostream-skin .vjs-mute-control:before,
+//.vjs-afrostream-skin .vjs-volume-menu-button:before,
+//.vjs-afrostream-skin .vjs-mute-control.vjs-vol-0:before,
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-vol-0:before,
+//.vjs-afrostream-skin .vjs-mute-control.vjs-vol-1:before,
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-vol-1:before,
+//.vjs-afrostream-skin .vjs-mute-control.vjs-vol-2:before,
+//.vjs-afrostream-skin .vjs-volume-menu-button.vjs-vol-2:before {
+//  content: ''; //Remove Volume Icons
+//}
+//
+//.vjs-afrostream-skin .vjs-slider-bar.vjs-volume-bar {
+//  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAcCAQAAACw95UnAAAAMElEQVRIx2NgoBL4n4YKGUYNHkEG4zJg1OCRYDCpBowaPJwMppbLRg0eNXjUYBLEAXWNUA6QNm1lAAAAAElFTkSuQmCC);
+//  background-size: 22px 14px;
+//  background-repeat: no-repeat;
+//  height: 100%;
+//  width: 100%;
+//  max-width: 22px;
+//  max-height: 14px;
+//  margin: 7px 4px;
+//  border-radius: 0;
+//}
+//
+//.vjs-afrostream-skin .vjs-slider-bar .vjs-volume-level {
+//  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAcAQAAAAAyhWABAAAAAnRSTlMAAHaTzTgAAAAZSURBVHgBYwAB/g9EUv+JokCqiaT+U4MCAPKPS7WUUOc1AAAAAElFTkSuQmCC);
+//  background-size: 22px 14px;
+//  background-repeat: no-repeat;
+//  max-width: 22px;
+//  max-height: 14px;
+//  height: 100%;
+//}
+//
