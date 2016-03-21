@@ -21,7 +21,7 @@ class OffVideoTrackMenuItem extends VideoTrackMenuItem {
     options['track'] = {
       'kind': options['kind'],
       'player': player,
-      'label': options['kind'] + ' off',
+      'label': options['kind'],
       'default': false,
       'selected': false
     };

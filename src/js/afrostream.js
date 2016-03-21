@@ -13,6 +13,7 @@ import {MediaPlayer} from 'dashjs';
 import CaptionTrackButton from './component/control-bar/track-controls/caption-track-button';
 import AudioTrackButton from './component/control-bar/track-controls/audio-track-button';
 import VideoTrackButton from './component/control-bar/track-controls/video-track-button';
+import NextVideoButton from './component/control-bar/next/next-video-button';
 import LoadProgressSpinner from './component/control-bar/progress-control/load-progress-spinner';
 
 const Component = videojs.getComponent('Component');

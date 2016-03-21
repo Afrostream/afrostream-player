@@ -67,8 +67,7 @@
       "es7.decorators"
     ]
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "browserify": {
     "transform": [
       "browserify-shim"
@@ -99,6 +98,7 @@
     "browserify-shim": "^3.0.0",
     "connect": "^3.4.0",
     "cowsay": "^1.1.0",
+    "dashjs": "^2.0.0",
     "doctoc": "^0.15.0",
     "global": "^4.3.0",
     "karma": "^0.13.0",
@@ -115,21 +115,19 @@
     "node.extend": "^1.1.5",
     "nodemon": "^1.9.1",
     "npm-run-all": "~1.2.0",
+    "object.assign": "^4.0.3",
     "portscanner": "^1.0.0",
     "qunitjs": "^1.0.0",
     "serve-static": "^1.10.0",
     "sinon": "1.14.1",
+    "smoothie": "^1.27.0",
     "uglify-js": "^2.5.0",
+    "video.js": "^5.0.0",
+    "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#master",
+    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#es6",
     "videojs-standard": "^4.0.0",
     "watchify": "^3.6.0",
-    "xhr": "^2.2.0",
-    "global": "^4.3.0",
-    "object.assign": "^4.0.3",
-    "video.js": "^5.0.0",
-    "dashjs": "^2.0.0",
-    "smoothie": "^1.27.0",
-    "videojs-chromecast": "git+https://github.com/Afrostream/videojs-chromecast.git#master",
-    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#es6"
+    "xhr": "^2.2.0"
   },
   "peerDependencies": {},
   "private": true,

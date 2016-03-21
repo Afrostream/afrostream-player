@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Afrostream player based on videojs Demo</title>
   <link href="/dist/afrostream.css" rel="stylesheet">
+  <link href="/node_modules/videojs-chromecast/dist/videojs-chromecast.css" rel="stylesheet">
   <style>
 
     button {
@@ -23,6 +24,9 @@
 <body>
 <video class="video-js vjs-afrostream-skin" controls width="640px" height="360px">
   <source
+    src="http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd"
+    type="application/dash+xml"/>
+  <source
     src="https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd"
     type="application/dash+xml"/>
   <source
@@ -36,8 +40,11 @@
 <script src="/lib/video.js"></script>
 <script> window.dashjs = {skipAutoCreate: true}; </script>
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
+<script src="/node_modules/videojs-chromecast/dist/videojs-chromecast.js"></script>
 <script src="/node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
 <script src="/dist/afrostream-player.js"></script>
+<!-- chromecast sdk -->
+<script src="http://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
 <script>
 
   var player = videojs(document.querySelector('video'), {
@@ -46,18 +53,22 @@
     controlBar: {
       volumeMenuButton: {
         inline: false
+      },
+      nextVideoButton: {
+        title: 'Dummy episode 2',
+        poster: 'http://fakeimg.pl/150'
       }
     },
     metrics: {
       "user_id": 34
     },
+    chromecast: {},
     techOrder: ["dash", "html5"]
   });
 
   try {
     // try on ios
     player.volume(0);
-    player.metrics();
   } catch (e) {
   }
 

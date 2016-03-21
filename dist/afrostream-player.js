@@ -64,6 +64,10 @@ var _componentControlBarTrackControlsVideoTrackButton = require('./component/con
 
 var _componentControlBarTrackControlsVideoTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsVideoTrackButton);
 
+var _componentControlBarNextNextVideoButton = require('./component/control-bar/next/next-video-button');
+
+var _componentControlBarNextNextVideoButton2 = _interopRequireDefault(_componentControlBarNextNextVideoButton);
+
 var _componentControlBarProgressControlLoadProgressSpinner = require('./component/control-bar/progress-control/load-progress-spinner');
 
 var _componentControlBarProgressControlLoadProgressSpinner2 = _interopRequireDefault(_componentControlBarProgressControlLoadProgressSpinner);
@@ -200,7 +204,225 @@ exports['default'] = Afrostream;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/media":14}],3:[function(require,module,exports){
+},{"./component/control-bar/next/next-video-button":3,"./component/control-bar/progress-control/load-progress-spinner":5,"./component/control-bar/track-controls/audio-track-button":6,"./component/control-bar/track-controls/caption-track-button":8,"./component/control-bar/track-controls/video-track-button":13,"./tech/dash":15,"./tech/media":16}],3:[function(require,module,exports){
+(function (global){
+/**
+ * @file next-video-button.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _nextVideoItem = require('./next-video-item');
+
+var _nextVideoItem2 = _interopRequireDefault(_nextVideoItem);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var ControlBar = _videoJs2['default'].getComponent('ControlBar');
+var MenuButton = _videoJs2['default'].getComponent('MenuButton');
+
+/**
+ * The base class for buttons that toggle next video
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends MenuButton
+ * @class NextVideoButton
+ */
+
+var NextVideoButton = (function (_MenuButton) {
+  _inherits(NextVideoButton, _MenuButton);
+
+  function NextVideoButton(player) {
+    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    _classCallCheck(this, NextVideoButton);
+
+    _get(Object.getPrototypeOf(NextVideoButton.prototype), 'constructor', this).call(this, player, options);
+  }
+
+  /**
+   * Create the list of menu items. Specific to each subclass.
+   *
+   * @method createItems
+   */
+
+  _createClass(NextVideoButton, [{
+    key: 'createItems',
+    value: function createItems() {
+      var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+      items.push(new _nextVideoItem2['default'](this.player_, {
+        label: 'Next',
+        selectable: false,
+        poster: this.options_.poster
+      }));
+      return items;
+    }
+
+    /**
+     * Allow sub components to stack CSS class names
+     *
+     * @return {String} The constructed class name
+     * @method buildCSSClass
+     */
+  }, {
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-next-video-button ' + _get(Object.getPrototypeOf(NextVideoButton.prototype), 'buildCSSClass', this).call(this);
+    }
+
+    /**
+     * Handle click on mute
+     * @method handleClick
+     */
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      _get(Object.getPrototypeOf(NextVideoButton.prototype), 'handleClick', this).call(this);
+      this.player_.trigger('next');
+    }
+  }]);
+
+  return NextVideoButton;
+})(MenuButton);
+
+NextVideoButton.prototype.controlText_ = 'Next video';
+
+//Replace videojs CaptionButton child with this one
+ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 2, 0, 'nextVideoButton');
+
+Component.registerComponent('NextVideoButton', NextVideoButton);
+exports['default'] = NextVideoButton;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./next-video-item":4}],4:[function(require,module,exports){
+(function (global){
+/**
+ * @file next-video-item.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var MenuItem = _videoJs2['default'].getComponent('MenuItem');
+
+/**
+ * The base class for buttons that toggle next video
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends MenuItem
+ * @class NextVideoItem
+ */
+
+var NextVideoItem = (function (_MenuItem) {
+  _inherits(NextVideoItem, _MenuItem);
+
+  function NextVideoItem(player, options) {
+    _classCallCheck(this, NextVideoItem);
+
+    _get(Object.getPrototypeOf(NextVideoItem.prototype), 'constructor', this).call(this, player, options);
+    this.setSrc(options.poster);
+  }
+
+  /**
+   * Create the component's DOM element
+   *
+   * @param {String=} type Desc
+   * @param {Object=} props Desc
+   * @return {Element}
+   * @method createEl
+   */
+
+  _createClass(NextVideoItem, [{
+    key: 'createEl',
+    value: function createEl(type, props, attrs) {
+      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, 'div', {
+        className: 'vjs-menu-item',
+        tabIndex: -1
+      }, attrs);
+
+      this.fallbackImg_ = _videoJs2['default'].createEl(_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
+        className: 'thumb-tile_thumb'
+      });
+
+      el.appendChild(this.fallbackImg_);
+
+      return el;
+    }
+  }, {
+    key: 'setSrc',
+    value: function setSrc(url) {
+      var backgroundImage = undefined;
+
+      if (!_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED) {
+        this.fallbackImg_.src = url;
+      } else {
+        backgroundImage = '';
+        if (url) {
+          backgroundImage = 'url("' + url + '")';
+        }
+
+        this.fallbackImg_.style.backgroundImage = backgroundImage;
+      }
+    }
+
+    /**
+     * Handle click on mute
+     * @method handleClick
+     */
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      _get(Object.getPrototypeOf(NextVideoItem.prototype), 'handleClick', this).call(this);
+      this.player_.trigger('next');
+    }
+  }]);
+
+  return NextVideoItem;
+})(MenuItem);
+
+Component.registerComponent('NextVideoItem', NextVideoItem);
+exports['default'] = NextVideoItem;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],5:[function(require,module,exports){
 (function (global){
 /**
  * @file load-progress-spinner.js
@@ -345,7 +567,7 @@ exports['default'] = LoadProgressSpinner;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (global){
 /**
  * @file audio-track-button.js
@@ -480,7 +702,7 @@ exports['default'] = AudioTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":5,"./off-audio-track-menu-item":8}],5:[function(require,module,exports){
+},{"./audio-track-menu-item":7,"./off-audio-track-menu-item":10}],7:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -578,7 +800,7 @@ exports['default'] = AudioTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -679,7 +901,7 @@ exports['default'] = CaptionTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":7,"./off-caption-track-menu-item":9}],7:[function(require,module,exports){
+},{"./caption-track-menu-item":9,"./off-caption-track-menu-item":11}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -809,7 +1031,7 @@ exports['default'] = CaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 /**
  * @file off-audio-track-menu-item.js
@@ -904,7 +1126,7 @@ exports['default'] = OffAudioTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":5}],9:[function(require,module,exports){
+},{"./audio-track-menu-item":7}],11:[function(require,module,exports){
 (function (global){
 /**
  * @file caption-track-button-off.js
@@ -999,7 +1221,7 @@ exports['default'] = OffCaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":7}],10:[function(require,module,exports){
+},{"./caption-track-menu-item":9}],12:[function(require,module,exports){
 (function (global){
 /**
  * @file off-video-track-menu-item.js
@@ -1050,7 +1272,7 @@ var OffVideoTrackMenuItem = (function (_VideoTrackMenuItem) {
     options['track'] = {
       'kind': options['kind'],
       'player': player,
-      'label': options['kind'] + ' off',
+      'label': options['kind'],
       'default': false,
       'selected': false
     };
@@ -1093,7 +1315,7 @@ exports['default'] = OffVideoTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./video-track-menu-item":12}],11:[function(require,module,exports){
+},{"./video-track-menu-item":14}],13:[function(require,module,exports){
 (function (global){
 /**
  * @file video-track-button.js
@@ -1228,7 +1450,7 @@ exports['default'] = VideoTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./off-video-track-menu-item":10,"./video-track-menu-item":12}],12:[function(require,module,exports){
+},{"./off-video-track-menu-item":12,"./video-track-menu-item":14}],14:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1326,7 +1548,7 @@ exports['default'] = VideoTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 (function (global){
 /**
  * @file dash.js
@@ -1932,7 +2154,7 @@ exports['default'] = Dash;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":1}],14:[function(require,module,exports){
+},{"global/window":1}],16:[function(require,module,exports){
 (function (global){
 'use strict';
 
