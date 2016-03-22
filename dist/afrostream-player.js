@@ -2347,6 +2347,26 @@ var Dashas = (function (_Flash) {
       this.metrics_ = _videoJs2['default'].mergeOptions(this.metrics_, metrics);
     }
   }, {
+    key: 'handleAudioTracksChange',
+    value: function handleAudioTracksChange() {
+      var tracks = this.audioTracks();
+
+      if (!tracks) {
+        return;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (track['enabled']) {
+          try {
+            this.el_.vjs_setProperty('forcedAudioLang', i);
+          } catch (err) {
+            _videoJs2['default'].log(err);
+          }
+        }
+      }
+    }
+  }, {
     key: 'addAudioTracks',
     value: function addAudioTracks() {
       var tracks = this.el_.vjs_getProperty('audioTracks');
@@ -2369,6 +2389,13 @@ var Dashas = (function (_Flash) {
           this.setAudioTrack(track.lang);
         }
       }
+
+      var changeHandler = this.handleAudioTracksChange.bind(this);
+
+      tracks.addEventListener('change', changeHandler);
+      this.on('dispose', function () {
+        tracks.removeEventListener('change', changeHandler);
+      });
     }
   }, {
     key: 'detectBandwithChange',
@@ -2408,11 +2435,6 @@ var Dashas = (function (_Flash) {
     key: 'setSubsTrack',
     value: function setSubsTrack(track) {
       this.setTextTrack(track);
-    }
-  }, {
-    key: 'setAudioTrack',
-    value: function setAudioTrack(track) {
-      this.el_.vjs_setProperty('forcedAudioLang', track.index);
     }
   }, {
     key: 'getDroppedFrames',

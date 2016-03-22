@@ -71,6 +71,25 @@ class Dashas extends Flash {
     this.metrics_ = videojs.mergeOptions(this.metrics_, metrics);
   }
 
+  handleAudioTracksChange() {
+    const tracks = this.audioTracks();
+
+    if (!tracks) {
+      return;
+    }
+
+    for (let i = 0; i < tracks.length; i++) {
+      let track = tracks[i];
+      if (track['enabled']) {
+        try {
+          this.el_.vjs_setProperty('forcedAudioLang', i);
+        } catch (err) {
+          videojs.log(err);
+        }
+      }
+    }
+  }
+
   addAudioTracks() {
     const tracks = this.el_.vjs_getProperty('audioTracks');
 
@@ -92,6 +111,14 @@ class Dashas extends Flash {
         this.setAudioTrack(track.lang);
       }
     }
+
+    let changeHandler = ::this.handleAudioTracksChange;
+
+    tracks.addEventListener('change', changeHandler);
+    this.on('dispose', function () {
+      tracks.removeEventListener('change', changeHandler);
+    });
+
   }
 
   detectBandwithChange() {
@@ -128,10 +155,6 @@ class Dashas extends Flash {
 
   setSubsTrack(track) {
     this.setTextTrack(track);
-  }
-
-  setAudioTrack(track) {
-    this.el_.vjs_setProperty('forcedAudioLang', track.index);
   }
 
   getDroppedFrames() {
