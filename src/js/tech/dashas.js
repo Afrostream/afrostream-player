@@ -179,7 +179,7 @@ class Dashas extends Flash {
   }
 
   audioTracks() {
-    return super.audioTracks();
+    return Tech.prototype.audioTracks.call(this);
   }
 
   poster() {

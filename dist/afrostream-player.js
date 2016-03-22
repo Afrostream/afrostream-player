@@ -2481,7 +2481,7 @@ var Dashas = (function (_Flash) {
   }, {
     key: 'audioTracks',
     value: function audioTracks() {
-      return _get(Object.getPrototypeOf(Dashas.prototype), 'audioTracks', this).call(this);
+      return Tech.prototype.audioTracks.call(this);
     }
   }, {
     key: 'poster',
