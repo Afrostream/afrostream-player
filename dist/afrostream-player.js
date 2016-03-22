@@ -2495,11 +2495,14 @@ var Dashas = (function (_Flash) {
       var Z = this.getCurrentVideoBandwidth();
       var K = this.getCurrentAudioBandwidth();
       var R = {
-        bandwidth: Z,
+        bandwidth: Z / 1000,
         bufferLength: z,
         droppedFrames: W
-      },
-          N = { bandwidth: K, bufferLength: z };
+      };
+      var N = {
+        bandwidth: K / 1000,
+        bufferLength: z
+      };
       return _videoJs2['default'].mergeOptions(this.metrics_, { video: R, audio: N });
     }
   }, {

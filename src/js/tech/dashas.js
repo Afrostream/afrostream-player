@@ -191,10 +191,14 @@ class Dashas extends Flash {
     let Z = this.getCurrentVideoBandwidth();
     let K = this.getCurrentAudioBandwidth();
     let R = {
-      bandwidth: Z,
+      bandwidth: Z / 1000,
       bufferLength: z,
       droppedFrames: W
-    }, N = {bandwidth: K, bufferLength: z};
+    };
+    let N = {
+      bandwidth: K / 1000,
+      bufferLength: z
+    };
     return videojs.mergeOptions(this.metrics_, {video: R, audio: N});
   }
 
