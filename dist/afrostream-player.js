@@ -673,6 +673,7 @@ var AudioTrackButton = (function (_MenuButton) {
       }
 
       if (tracks.length < 2) {
+        this.hide();
         return items;
       }
 
@@ -1428,6 +1429,7 @@ var VideoTrackButton = (function (_MenuButton) {
 
       if (tracks.length < 2) {
         this.hide();
+        return items;
       }
 
       for (var i = 0; i < tracks.length; i++) {
@@ -2389,6 +2391,16 @@ var Dashas = (function (_Flash) {
       }
     }
   }, {
+    key: 'subtitleTracks',
+    value: function subtitleTracks() {
+      return this.textTracks();
+    }
+  }, {
+    key: 'setSubsTrack',
+    value: function setSubsTrack(track) {
+      this.setTextTrack(track);
+    }
+  }, {
     key: 'setAudioTrack',
     value: function setAudioTrack(track) {
       this.el_.vjs_setProperty('forcedAudioLang', track.index);
@@ -2510,32 +2522,10 @@ Dashas.buildOptData = function (options) {
 Dashas.prototype.options_ = {
   customData: {},
   protData: {
-    "com.widevine.alpha": {
-      "drmtoday": true,
-      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
-      "httpRequestHeaders": {
-        "dt-custom-data": ""
-      }
-    },
-    "com.microsoft.playready": {
-      "drmtoday": true,
-      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
-      "httpRequestHeaders": {
-        "http-header-CustomData": ""
-      }
-    },
-    "com.adobe.flashaccess": {
-      "drmtoday": true,
-      "serverURL": "https://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
-      "httpRequestHeaders": {
-        "customData": ""
-      }
-    },
-    "org.w3.clearkey": {
-      "clearkeys": {
-        "": ""
-      }
-    }
+    "com.widevine.alpha": {},
+    "com.microsoft.playready": {},
+    "com.adobe.flashaccess": {},
+    "org.w3.clearkey": {}
   }
 };
 

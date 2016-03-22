@@ -64,6 +64,7 @@ class AudioTrackButton extends MenuButton {
     }
 
     if (tracks.length < 2) {
+      this.hide();
       return items;
     }
 
