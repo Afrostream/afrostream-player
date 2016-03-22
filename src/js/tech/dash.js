@@ -169,7 +169,8 @@ class Dash extends Html5 {
       let bitrateList = track.bitrateList;
       for (let j = 0; j < bitrateList.length; j++) {
         let bitRateInfo = bitrateList[j] / 1000;
-        let bitRateTrack = this.addVideoTrack('main', bitRateInfo, bitRateInfo);
+        let label = Dash.qualityLabels[j];
+        let bitRateTrack = this.addVideoTrack('main', label, bitRateInfo);
         bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
       }
     }
@@ -595,6 +596,8 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
 
   return '';
 };
+
+Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD', 'auto'];
 
 /*
  * Pass the source to the flash object

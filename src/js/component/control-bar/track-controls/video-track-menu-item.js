@@ -4,6 +4,15 @@ const Component = videojs.getComponent('Component');
 const MenuItem = videojs.getComponent('MenuItem');
 
 class VideoTrackMenuItem extends MenuItem {
+
+  /**
+   * LABELS
+   *
+   * @static
+   */
+
+  static LABELS = ['bas', 'moyen', 'normal', 'HD', 'auto'];
+
   constructor(player, options) {
     let track = options['track'];
     let tracks = player.videoTracks();
