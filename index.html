@@ -35,15 +35,21 @@
   <!--src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"-->
   <!--type="application/x-mpegURL"/>-->
 </video>
+<div id="graphWrapper" class="row">
+  <h2>Video Bitrate Graph</h2>
+  <canvas id="_chart" width="640" height="360"></canvas>
+</div>
 <ul>
   <li><a href="/test/">Run unit tests in browser.</a></li>
 </ul>
 <!--<script src="/node_modules/video.js/dist/video.js"></script>-->
+<script src="//code.jquery.com/jquery-2.1.4.js"></script>
 <script src="/lib/video.js"></script>
 <script> window.dashjs = {skipAutoCreate: true}; </script>
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
 <script src="/node_modules/videojs-chromecast/dist/videojs-chromecast.js"></script>
 <script src="/node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
+<script src="/node_modules/smoothie/smoothie.js"></script>
 <script src="/dist/afrostream-player.js"></script>
 <!-- chromecast sdk -->
 <script src="http://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
@@ -51,7 +57,7 @@
 
   var player = videojs(document.querySelector('video'), {
     autoplay: true,
-    aspectRatio: "640:267",
+//    aspectRatio: "640:167",
     controlBar: {
       volumeMenuButton: {
         inline: false
@@ -66,6 +72,74 @@
     },
     chromecast: {},
     techOrder: ["dash", "html5"]
+  }).ready(function () {
+    var player = this;
+
+    var smoothie = new SmoothieChart({
+      millisPerPixel: 20,
+      interpolation: 'bezier',
+      grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
+      maxValue: 5000,
+      minValue: -50
+    });
+
+    var audioSerie = new TimeSeries();
+    var videoSerie = new TimeSeries();
+    var p2pSerie = new TimeSeries();
+
+    smoothie.addTimeSeries(audioSerie, {
+      strokeStyle: 'rgb(100,255,255)',
+      lineWidth: 1
+    });
+
+    smoothie.addTimeSeries(videoSerie, {
+      strokeStyle: '#00ff00',
+      lineWidth: 1
+    })
+
+    smoothie.addTimeSeries(p2pSerie, {
+      strokeStyle: '#0000FF',
+      lineWidth: 1
+    });
+
+    var chart = $('#_chart')[0];
+
+    player.on('loadedmetadata', function () {
+      chart.width = player.width();
+    });
+
+    smoothie.streamTo(chart, 1000);
+
+    setInterval(function () {
+      var statistics = player.getPlaybackStatistics();
+      var dlAudioBitrate = statistics.audio.bandwidth;//Math.round(statistics.audio.bandwidth / 10.24) / 100;
+      var dlVidBitrate = statistics.video.bandwidth// Math.round(statistics.video.bandwidth / 10.24) / 100;
+      var p2pRatio = Math.round(statistics.p2pweb.p2pRatio);
+      var chunksFromCDN = Math.round(statistics.p2pweb.chunksFromCDN);
+      var chunksFromP2P = Math.round(statistics.p2pweb.chunksFromP2P);
+      var chunksSent = Math.round(statistics.p2pweb.chunksSent);
+      var bufferLength = Math.round(statistics.p2pweb.bufferLength);
+      var swarmSize = Math.round(statistics.p2pweb.swarmSize);
+      var startupTime = Math.round(statistics.p2pweb.startupTime);
+//      document.getElementById('version').innerHTML = videojs.CDN_VERSION;
+//      document.getElementById('resolution').innerHTML = player.width() + ' x ' + player.height();
+//      document.getElementById('audioBuffer').innerHTML = statistics.audio.bufferLength;
+//      document.getElementById('videoBuffer').innerHTML = statistics.video.bufferLength;
+//      document.getElementById('dlAudioBitrate').innerHTML = dlAudioBitrate;
+//      document.getElementById('dlVideoBitrate').innerHTML = dlVidBitrate;
+//      //P2P
+//      document.getElementById('p2pWebRatio').innerHTML = p2pRatio;
+//      document.getElementById('chunksFromCDN').innerHTML = chunksFromCDN;
+//      document.getElementById('chunksFromP2P').innerHTML = chunksFromP2P;
+//      document.getElementById('chunksSent').innerHTML = chunksSent;
+//      document.getElementById('bufferLength').innerHTML = bufferLength;
+//      document.getElementById('swarmSize').innerHTML = swarmSize;
+//      document.getElementById('startupTime').innerHTML = startupTime;
+      var now = new Date().getTime();
+      audioSerie.append(now, dlAudioBitrate);
+      videoSerie.append(now, dlVidBitrate);
+      p2pSerie.append(now, p2pRatio);
+    }, 500);
   });
 
   try {

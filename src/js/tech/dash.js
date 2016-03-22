@@ -329,12 +329,12 @@ class Dash extends Html5 {
       pendingValue = this.mediaPlayer_.getQualityFor(type);
 
       return {
-        bandwidthValue: bandwidthValue,
-        bitrateIndexValue: bitrateIndexValue + 1,
+        bandwidth: bandwidthValue,
+        bitrateIndex: bitrateIndexValue + 1,
         pendingIndex: (pendingValue !== bitrateIndexValue) ? "(-> " + (pendingValue + 1) + ")" : "",
-        numBitratesValue: numBitratesValue,
-        bufferLengthValue: bufferLengthValue,
-        droppedFramesValue: droppedFramesValue,
+        numBitrates: numBitratesValue,
+        bufferLength: bufferLengthValue,
+        droppedFrames: droppedFramesValue,
         movingLatency: movingLatency,
         movingDownload: movingDownload,
         movingRatio: movingRatio,

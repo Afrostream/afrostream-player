@@ -33,7 +33,7 @@ class Afrostream extends Component {
     //player.setAudioTrack = ::this.setAudioTrack;
     //player.videoTracks = ::this.videoTracks;
     //player.setVideoTrack = ::this.setVideoTrack;
-    //player.getPlaybackStatistics = ::this.getPlaybackStatistics;
+    player.getPlaybackStatistics = ::this.getPlaybackStatistics;
     //player.getCribbedMetricsFor = ::this.getCribbedMetricsFor;
   }
 
