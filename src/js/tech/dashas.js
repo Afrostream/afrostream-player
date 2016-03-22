@@ -34,6 +34,15 @@ class Dashas extends Flash {
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
     this.one('loadedmetadata', ::this.onInitialized);
 
+    let tracks = this.audioTracks();
+
+    let changeHandler = ::this.handleAudioTracksChange;
+
+    tracks.addEventListener('change', changeHandler);
+    this.on('dispose', ()=> {
+      tracks.removeEventListener('change', changeHandler);
+    });
+
   }
 
   /**
@@ -107,18 +116,8 @@ class Dashas extends Flash {
         };
       }
       let plTrack = this.addAudioTrack('main', track.label, track.lang);
-      plTrack.enabled = plTrack['language'] === (track === 'fra' || track === 'fr');
-      if (plTrack.enabled) {
-        this.setAudioTrack(track.lang);
-      }
+      plTrack.enabled = plTrack['language'] === 'fra' || plTrack['language'] === 'fr';
     }
-
-    let changeHandler = ::this.handleAudioTracksChange;
-
-    tracks.addEventListener('change', changeHandler);
-    this.on('dispose', function () {
-      tracks.removeEventListener('change', changeHandler);
-    });
 
   }
 

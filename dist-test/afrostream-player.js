@@ -3173,6 +3173,15 @@ var Dashas = (function (_Flash) {
 
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
     this.one('loadedmetadata', this.onInitialized.bind(this));
+
+    var tracks = this.audioTracks();
+
+    var changeHandler = this.handleAudioTracksChange.bind(this);
+
+    tracks.addEventListener('change', changeHandler);
+    this.on('dispose', function () {
+      tracks.removeEventListener('change', changeHandler);
+    });
   }
 
   /**
@@ -3252,18 +3261,8 @@ var Dashas = (function (_Flash) {
           };
         }
         var plTrack = this.addAudioTrack('main', track.label, track.lang);
-        plTrack.enabled = plTrack['language'] === (track === 'fra' || track === 'fr');
-        if (plTrack.enabled) {
-          this.setAudioTrack(track.lang);
-        }
+        plTrack.enabled = plTrack['language'] === 'fra' || plTrack['language'] === 'fr';
       }
-
-      var changeHandler = this.handleAudioTracksChange.bind(this);
-
-      tracks.addEventListener('change', changeHandler);
-      this.on('dispose', function () {
-        tracks.removeEventListener('change', changeHandler);
-      });
     }
   }, {
     key: 'detectBandwithChange',
