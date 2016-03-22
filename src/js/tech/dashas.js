@@ -72,14 +72,24 @@ class Dashas extends Flash {
   }
 
   selectDefaultTrack() {
-    const tracks = this.audioTracks();
-    let track;
+    const tracks = this.el_.vjs_getProperty('audioTracks');
+
+    if (!tracks) {
+      return;
+    }
+
     for (let i = 0; i < tracks.length; i++) {
-      track = tracks[i];
+      let track = tracks[i];
       if (typeof  track === 'string') {
-        if ((track === 'fra' || track === 'fr')) {
-          this.setAudioTrack(track);
-        }
+        track = {
+          label: track,
+          lang: track
+        };
+      }
+      let plTrack = this.addAudioTrack('main', track.label, track.lang);
+      plTrack.enabled = plTrack['language'] === (track === 'fra' || track === 'fr');
+      if (plTrack.enabled) {
+        this.setAudioTrack(track.lang);
       }
     }
   }
@@ -173,9 +183,9 @@ class Dashas extends Flash {
     return this.el_.vjs_getProperty('buffered');
   }
 
-  audioTracks() {
-    return this.el_.vjs_getProperty('audioTracks');
-  }
+  //audioTracks() {
+  //  return this.el_.vjs_getProperty('audioTracks');
+  //}
 
 }
 

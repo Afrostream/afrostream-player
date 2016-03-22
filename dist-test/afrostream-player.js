@@ -3200,14 +3200,24 @@ var Dashas = (function (_Flash) {
   }, {
     key: 'selectDefaultTrack',
     value: function selectDefaultTrack() {
-      var tracks = this.audioTracks();
-      var track = undefined;
+      var tracks = this.el_.vjs_getProperty('audioTracks');
+
+      if (!tracks) {
+        return;
+      }
+
       for (var i = 0; i < tracks.length; i++) {
-        track = tracks[i];
+        var track = tracks[i];
         if (typeof track === 'string') {
-          if (track === 'fra' || track === 'fr') {
-            this.setAudioTrack(track);
-          }
+          track = {
+            label: track,
+            lang: track
+          };
+        }
+        var plTrack = this.addAudioTrack('main', track.label, track.lang);
+        plTrack.enabled = plTrack['language'] === (track === 'fra' || track === 'fr');
+        if (plTrack.enabled) {
+          this.setAudioTrack(track.lang);
         }
       }
     }
@@ -3314,11 +3324,11 @@ var Dashas = (function (_Flash) {
     value: function buffered() {
       return this.el_.vjs_getProperty('buffered');
     }
-  }, {
-    key: 'audioTracks',
-    value: function audioTracks() {
-      return this.el_.vjs_getProperty('audioTracks');
-    }
+
+    //audioTracks() {
+    //  return this.el_.vjs_getProperty('audioTracks');
+    //}
+
   }]);
 
   return Dashas;

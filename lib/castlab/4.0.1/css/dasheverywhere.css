@@ -1,0 +1,78 @@
+/*
+ *********************************************
+ **************Track Selection Buttons********
+ *********************************************
+ */
+.vjs-default-skin .vjs-audiotracks-button:before { content: "\e600"; /* cog icon */ }
+.vjs-default-skin .vjs-texttracks-button:before { content: "\e00c"; /* subtitles icon */ }
+
+
+ /*
+ *********************************************
+ **************Chromecast Plugin**************
+ *********************************************
+ */
+.vjs-chromecast-button {
+  float: right !important;
+  cursor: pointer;
+  margin-left: 5px !important;
+}
+.vjs-chromecast-button.disconnected {
+  background:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABBNJREFUaAXtWU1oE0EUnrdJbIWmVupB7a1CPXgQRKzaRpKgIgiKBfGgIAj2pKiIRUgqgSaX9lQ8eS8FW8Qq9NKWNBi1KlXwInjQg9AqaLE1wf4ku883TWec3SZNq/kr7F7evDeTmfe939kNY/ZjW8C2gG2BcloA1MOPhH80VENVN0PwAbBd6lwFjKeRYWwBFzsmgjumhD4SAFd+K1S9ZwzqxWRlUpyZx8X9AoQmlKxmVT2VrzzXFuqXo2RFcQmAJrwrssonFOJCSacYWGM+GqiR4SXWlJP6I0kU56u6Kh4Q05uL2gDK7S/bA+X2gKxClVZ11msYO4TWa6lirdv0HpA54AsnEtThphHZNMvQz4wZw7HgttdkPdkFi2XJf91XAgCAGtqkiUA08c2I0uMI+sLJb6T/U0QYjHXWjHFpJT15Q4iA7CRw7ZrGRv2RxDNveO7wpgJgVhY8GjgmfJHEo9bQbKN5rjyc9MDi3HztUsrYaxjoQ6Zfpvjvozegn9nUAgZtLpdj0tuVPJ5tvpSyNa/M3tC4U3McPEZJfY2S4lwWxXRm4K1op/t+lrmCitTrNN9YNN41Aaga+MO/jiJAN1m/RZVnxtgbDbhvrpYXTpILgAyhfEdFg7UvxwPuVsNgXFHdvB5u+LsS182y0nDSA6IP0LFT1AviadCfxAN177Kp4e+aPYngeEjVqU6Z1wncqWKV2rweyPQBoB7AP6nAPRdzvqWy+dEfTpxXlFweRjvrRtJp1oKIs8qcAzQcKHV1yhNCBAhgwBdJvrIqFg+5PwDqFwiADCfKj+1UnejrRumePAAyilCcNW9xOd54uxJeVTXuCQqb26qMl9hSNjsJwEj9dvM+gDq7yBAH6fKTUhXj32NAgxErCIr5XuoXL9S1wLSSeUEmsaoAH1Oi7mFA4bCq/uPMUko/9DxUR5e9zMNLLAPNBII8c6KQCZ03iYUyglJ4fIoG3W3IjA66ixpCzj3hcjn7//LUVKjEktceqzIAXJX86nyhxjKEcm04HqjtQTDuqvM8J6zVSdeZpRvDGfpNTg+r+/3PWALgfYBXG7qotVsP5iCsFibVwurBgJNx9e7Eb7GUzM3qmmKMJQDeB7hlqYo8IDBjnsh38+d11O+YExuaPJHZA0KpWMiXBobDgs9Q7bSZLzwnX2jUrQmM34nVfSTjt83ltzGeExQ2Q5TUMrad6DhL87JbkwdGyQiXxF7khUYxFtSajEK+QTot1ksPCIGgHASF01XBc4oGDKk8KehReTS0LypP0Heb+AIxZKiY2CongMwCuCIWcpoyjEmVp3GDyqd1lJbhcgJYBAA4w/+lEeeuDQBxn1jIqZMtmBSkS59JwXzz6l4bHdNZX8ny/eq/Mxvdw15vW8C2gG2BwlvgD5x+XYb1f6Z/AAAAAElFTkSuQmCC")
+    no-repeat
+    center center;
+    background-size: 24px 24px;
+}
+.vjs-chromecast-button.connected {
+  background:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABNdJREFUaAXtWV1om1UYPu+XxFZIoqMyprubMBUvRBH219YkeKOC4mB6oSAIzhuHf3QKTbtvayK6Dn+vFC/HLlZ/hjCQdSTZqp3TOtELYYJeCFbRjnZL5laT77w+p+05nO8zW9L6pe0ggXLe857Tc57nPe9fWiHan7YF2hZoW2AlLUD25VtyU+s7qWO/YEoTiZvttVUgT7Lg0mWe3X0qe9NvGo8hoMBfTx3fC0FdenF1jnzuEs/epUk4GmSn6Bhe/eAVWuqa85IF4IYAFlILutU/wMU1yKgWgj5f6I8b99J7VnLM5Cus77exWi+gl6+tsU1gpd/LxEAjILYPNtobxnqzMXjNu5B5gWYZh2HdMM9o/gVY9DHz2TAvD+OspgkUsvEDxWzids+Tvczi8zAuD+OMpgnoy04MJseK2fgDXo0z0H2j9Ss1mhhI58plVLhJWHdSzI+/CCGPlrI3nAY4UwU10BN7EkXhupvTsZdeEcLZi7Id02vLOZp24UppEoT+AP7PmGmkNBA/Xg9c777puyNOdISIbq23vhRdMKkE8en1hi6EV1kHYDsdR4xm8uWTqdz5zUFAJwfXfDdbE1uhX3aXakjAD5Z6HIqcSufLH3e7MxvstXE38efUdAVdIo/a+lbLhsDs+UvJf6ryNik5zcJ7Cv5/EN+ApusBIEHbY7HIRGqocr+9/sOBdRenpi8+Ct2yvYSJARuIllNuMepE7u1FUD8niBSw4McTkl8sDCTesxe2uuW1HVEx/n9iQvu4PndJMVBy0zWAKxSyie2C5Ta8yJf6wIUxIhx6F7Hxtq1X7uTJ2g6krqqtb4VsXKjR4YVscrzYn+iWUryAvZ5/Pz2fGSrvsnUqsOGGe2xdK2RDQNUBWPIsfgqQ9/bkZ+6pdyFS6TtC1h5EWzHjW3forWBMFKtvvoE9LY0HQwD+Gsf34o34SUMejInot3OEcuUdPqCYFAZuPFariW0BEhFy+LAvO7muRMVGoWvdxxCofwUIER1O5ytf+YBh85ib+JHYexyicSdkpzXITsP2Wapit7J3akBgHgpS1abrYpGvU0PllA1OvQRi4mVbp1LsffsubLF1UsrX7HmYsiEgq38nVB1gTzwhmEf+m0Goixw6FiShYiKYnRyH9tsgVQPYqlbcECi5aytfuMmfioPxQ0ibj5Gs3QEin9pA8BIxtBQfBd2JmHf79hF1BwMaL/OhvScs+aqFTF2Szl/oI3ZeRzEzZPE6p4v9cV9PlMmVP7GLHSz+Ab4/PBsW0CUVMnV5sT85zCRftYGomABgX3byPOGrxshmD+N3GhrIPncpsrGqqgMq26BR2xm8WJEIuhOg5ewLiSfG7N5JdbHoXDfZe1ohGwKqDijLwlffB5njPfm//H9eZ6/PH9i00S52qu0gwUf9IJ2H/PPwZ+YbmX00yGSi3HkQOtVtAvdc8foZbnMEfm5cJ8qRR7B0Rq2rD15gFEZ4cn4G/yGxQct6DPqy1i9ynNT7zQtohR4VCbjTM3quRpZ0xJ4DYI89Z+n8as/B6BbfPKQJDFXSR12RwPwGelpvVGNVygl7Dnm9Pa95bCyj9CDYAgJ8Tv2XRt97dQLMd+qNaoyKyz6AaBF8ABut22ctVsZdv8Pyh+z/ziz2jPb+tgXaFmhbIHwL/Auw88OIDWdgOwAAAABJRU5ErkJggg==")
+    no-repeat
+    center center;
+    background-size: 24px 24px;
+}
+.vjs-chromecast-button.error {
+  background:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABBNJREFUaAXtWU1oE0EUnrdJbIWmVupB7a1CPXgQRKzaRpKgIgiKBfGgIAj2pKiIRUgqgSaX9lQ8eS8FW8Qq9NKWNBi1KlXwInjQg9AqaLE1wf4ku883TWec3SZNq/kr7F7evDeTmfe939kNY/ZjW8C2gG2BcloA1MOPhH80VENVN0PwAbBd6lwFjKeRYWwBFzsmgjumhD4SAFd+K1S9ZwzqxWRlUpyZx8X9AoQmlKxmVT2VrzzXFuqXo2RFcQmAJrwrssonFOJCSacYWGM+GqiR4SXWlJP6I0kU56u6Kh4Q05uL2gDK7S/bA+X2gKxClVZ11msYO4TWa6lirdv0HpA54AsnEtThphHZNMvQz4wZw7HgttdkPdkFi2XJf91XAgCAGtqkiUA08c2I0uMI+sLJb6T/U0QYjHXWjHFpJT15Q4iA7CRw7ZrGRv2RxDNveO7wpgJgVhY8GjgmfJHEo9bQbKN5rjyc9MDi3HztUsrYaxjoQ6Zfpvjvozegn9nUAgZtLpdj0tuVPJ5tvpSyNa/M3tC4U3McPEZJfY2S4lwWxXRm4K1op/t+lrmCitTrNN9YNN41Aaga+MO/jiJAN1m/RZVnxtgbDbhvrpYXTpILgAyhfEdFg7UvxwPuVsNgXFHdvB5u+LsS182y0nDSA6IP0LFT1AviadCfxAN177Kp4e+aPYngeEjVqU6Z1wncqWKV2rweyPQBoB7AP6nAPRdzvqWy+dEfTpxXlFweRjvrRtJp1oKIs8qcAzQcKHV1yhNCBAhgwBdJvrIqFg+5PwDqFwiADCfKj+1UnejrRumePAAyilCcNW9xOd54uxJeVTXuCQqb26qMl9hSNjsJwEj9dvM+gDq7yBAH6fKTUhXj32NAgxErCIr5XuoXL9S1wLSSeUEmsaoAH1Oi7mFA4bCq/uPMUko/9DxUR5e9zMNLLAPNBII8c6KQCZ03iYUyglJ4fIoG3W3IjA66ixpCzj3hcjn7//LUVKjEktceqzIAXJX86nyhxjKEcm04HqjtQTDuqvM8J6zVSdeZpRvDGfpNTg+r+/3PWALgfYBXG7qotVsP5iCsFibVwurBgJNx9e7Eb7GUzM3qmmKMJQDeB7hlqYo8IDBjnsh38+d11O+YExuaPJHZA0KpWMiXBobDgs9Q7bSZLzwnX2jUrQmM34nVfSTjt83ltzGeExQ2Q5TUMrad6DhL87JbkwdGyQiXxF7khUYxFtSajEK+QTot1ksPCIGgHASF01XBc4oGDKk8KehReTS0LypP0Heb+AIxZKiY2CongMwCuCIWcpoyjEmVp3GDyqd1lJbhcgJYBAA4w/+lEeeuDQBxn1jIqZMtmBSkS59JwXzz6l4bHdNZX8ny/eq/Mxvdw15vW8C2gG2BwlvgD5x+XYb1f6Z/AAAAAElFTkSuQmCC")
+    no-repeat
+    center center;
+    background-size: 24px 24px;
+}
+
+.vjs-chromecast.hidden, .vjs-tech.hidden {
+  display: none;
+}
+
+.vjs-chromecast.casting {
+  height: 100%;
+  width: 100%;
+}
+
+.vjs-chromecast.casting #receiverName{
+  margin-top: 5px;
+}
+
+.vjs-chromecast.casting .cast-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 1em;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.vjs-chromecast.casting .cast-text{
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 1em;
+  padding: 10px 5px;
+  font-size: xx-large;
+}
+
+.vjs-default-skin.vjs-has-started .vjs-control-bar.disable-autohide {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
