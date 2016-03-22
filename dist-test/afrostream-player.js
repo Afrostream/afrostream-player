@@ -1454,6 +1454,7 @@ var _offAudioTrackMenuItem2 = _interopRequireDefault(_offAudioTrackMenuItem);
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var MenuButton = _videoJs2['default'].getComponent('MenuButton');
+var MenuItem = _videoJs2['default'].getComponent('MenuItem');
 
 /**
  * The base class for buttons that toggle specific audio track types (e.g. description)
@@ -1511,14 +1512,18 @@ var AudioTrackButton = (function (_MenuButton) {
     value: function createItems() {
       var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
-      // Add an OFF menu item to turn all tracks off
-      items.push(new _offAudioTrackMenuItem2['default'](this.player_, {
-        'kind': this.kind_
+      items.push(new MenuItem(this.player_, {
+        label: this.controlText_,
+        selectable: false
       }));
 
       var tracks = this.player_.audioTracks();
 
       if (!tracks) {
+        return items;
+      }
+
+      if (tracks.length < 2) {
         return items;
       }
 
@@ -2480,13 +2485,45 @@ var Dash = (function (_Html5) {
   }
 
   /**
-   * Set video
-   *
-   * @param {Object=} src Source object
-   * @method setSrc
+   * Detect if source is Live
+   * TODO detect with other method based on duration Infinity
+   * @returns {boolean}
    */
 
   _createClass(Dash, [{
+    key: 'isDynamic',
+    value: function isDynamic() {
+      var isDynamic = false;
+      try {
+        isDynamic = this.mediaPlayer_.time();
+      } catch (e) {
+        _videoJs2['default'].log(e);
+      }
+      return isDynamic;
+    }
+  }, {
+    key: 'duration',
+    value: function duration() {
+      var duration = _get(Object.getPrototypeOf(Dash.prototype), 'duration', this).call(this);
+      //FIXME WTF for detect live we should get duration to Infinity
+      return this.isDynamic() ? Infinity : duration;
+    }
+
+    //play() {
+    //  let isDynamic = this.isDynamic();
+    //  if (isDynamic) {
+    //    this.mediaPlayer_.retrieveManifest(this.options_.source.src, ::this.initializeDashJS);
+    //  }
+    //  super.play();
+    //}
+
+    /**
+     * Set video
+     *
+     * @param {Object=} src Source object
+     * @method setSrc
+     */
+  }, {
     key: 'src',
     value: function src(_src) {
       var _this2 = this;
@@ -2514,11 +2551,25 @@ var Dash = (function (_Html5) {
           this.mediaPlayer_.setAutoPlay(false);
         }
 
-        this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
-        this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
         this.mediaPlayer_.setInitialMediaSettingsFor('audio', { lang: this.options_.lang });
         this.mediaPlayer_.setInitialMediaSettingsFor('video', { lang: this.options_.lang });
+        this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace'); //alwaysReplace
+        this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace'); //alwaysReplace
+
+        this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
+        this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
         this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+
+        this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
+        this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
+        this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
+        this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
+        this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm);
+        this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
+        this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
+        this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
+        // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
+        // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
         //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
         this.player_.on('texttrackchange', this.textTracksChange.bind(this));
 
@@ -2532,10 +2583,18 @@ var Dash = (function (_Html5) {
   }, {
     key: 'onInitialized',
     value: function onInitialized(manifest, err) {
-      this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
+      if (this.playbackInitialized) {
+        return;
+      }
+      this.playbackInitialized = true;
+
       if (err) {
         this.player_.error(err);
       }
+
+      this.triggerReady();
+
+      this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
 
       var bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
       var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
@@ -2831,7 +2890,15 @@ var Dash = (function (_Html5) {
       for (var i = 0; i < tracks.length; i++) {
         var track = tracks[i];
         if (track['enabled']) {
-          this.mediaPlayer_.setCurrentTrack(audioDashTracks[i]);
+          var audioDashTrack = audioDashTracks[i];
+          if (track['language'] == audioDashTrack['lang']) {
+            audioDashTracks['enabled'] = true;
+            try {
+              this.mediaPlayer_.setCurrentTrack(audioDashTracks[i]);
+            } catch (err) {
+              _videoJs2['default'].log(err);
+            }
+          }
         }
       }
     }
@@ -2905,18 +2972,31 @@ var Dash = (function (_Html5) {
 
 Dash.prototype.options_ = {
   lang: 'fr',
+  //Set to false to switch off adaptive bitrate switching.
   autoSwitch: true,
+  //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
   bolaEnabled: true,
+  //Set to true if you would like dash.js to keep downloading fragments in the background
   scheduleWhilePaused: false,
+  //This value influences the buffer pruning logic.
+  //https://github.com/Dash-Industry-Forum/dash.js/blob/master/src/streaming/MediaPlayer.js
   buffer: {
-    minBufferTime: 12,
-    lowBufferThreshold: 4,
-    bufferTimeAtTopQuality: 30,
-    bufferTimeAtTopQualityLongForm: 300,
-    longFormContentDurationThreshold: 600,
-    richBufferThreshold: 20,
+    //Allows you to modify the buffer that is kept in source buffer in seconds.
     bufferToKeep: 30,
-    bufferPruningInterval: 30
+    //When the time is set higher than the default you will have to wait longer
+    minBufferTime: 12,
+    //Allows you to modify the interval of pruning buffer in seconds.
+    bufferPruningInterval: 30,
+    //A percentage between 0.0 and 1 to reduce the measured throughput calculations
+    bandwidthSafetyFactor: 0.9,
+    //The time that the internal buffer target will be set to once playing the top quality.
+    bufferTimeAtTopQuality: 30,
+    //The time that the internal buffer target will be set to once playing the top quality for long form content.
+    bufferTimeAtTopQualityLongForm: 60,
+    //This will directly affect the buffer targets when playing back at the top quality.
+    longFormContentDurationThreshold: 600,
+    //A threshold, in seconds, of when dashjs abr becomes less conservative since we have a larger "rich" buffer
+    richBufferThreshold: 20
   },
   protData: {}
 };

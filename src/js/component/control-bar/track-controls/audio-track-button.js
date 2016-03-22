@@ -8,6 +8,7 @@ import OffAudioTrackMenuItem from './off-audio-track-menu-item';
 const Component = videojs.getComponent('Component');
 const ControlBar = videojs.getComponent('ControlBar');
 const MenuButton = videojs.getComponent('MenuButton');
+const MenuItem = videojs.getComponent('MenuItem');
 
 /**
  * The base class for buttons that toggle specific audio track types (e.g. description)
@@ -54,14 +55,19 @@ class AudioTrackButton extends MenuButton {
 
   // Create a menu item for each text track
   createItems(items = []) {
-    // Add an OFF menu item to turn all tracks off
-    items.push(new OffAudioTrackMenuItem(this.player_, {
-      'kind': this.kind_
+
+    items.push(new MenuItem(this.player_, {
+      label: this.controlText_,
+      selectable: false
     }));
 
     let tracks = this.player_.audioTracks();
 
     if (!tracks) {
+      return items;
+    }
+
+    if (tracks.length < 2) {
       return items;
     }
 
