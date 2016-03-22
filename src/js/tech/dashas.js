@@ -32,8 +32,8 @@ class Dashas extends Flash {
     window.videojs.Dashas.onError = Flash.onError;
 
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
-    this.on('loadedmetadata', ::this.onInitialized);
-    this.on('firstplay', ::this.selectDefaultTrack);
+    this.one('loadedmetadata', ::this.onInitialized);
+    this.one('loadedmetadata', ::this.addAudioTracks);
 
   }
 
@@ -71,7 +71,7 @@ class Dashas extends Flash {
     this.metrics_ = videojs.mergeOptions(this.metrics_, metrics);
   }
 
-  selectDefaultTrack() {
+  addAudioTracks() {
     const tracks = this.el_.vjs_getProperty('audioTracks');
 
     if (!tracks) {

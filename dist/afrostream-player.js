@@ -2305,8 +2305,8 @@ var Dashas = (function (_Flash) {
     _globalWindow2['default'].videojs.Dashas.onError = Flash.onError;
 
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
-    this.on('loadedmetadata', this.onInitialized.bind(this));
-    this.on('firstplay', this.selectDefaultTrack.bind(this));
+    this.one('loadedmetadata', this.onInitialized.bind(this));
+    this.one('loadedmetadata', this.addAudioTracks.bind(this));
   }
 
   /**
@@ -2347,8 +2347,8 @@ var Dashas = (function (_Flash) {
       this.metrics_ = _videoJs2['default'].mergeOptions(this.metrics_, metrics);
     }
   }, {
-    key: 'selectDefaultTrack',
-    value: function selectDefaultTrack() {
+    key: 'addAudioTracks',
+    value: function addAudioTracks() {
       var tracks = this.el_.vjs_getProperty('audioTracks');
 
       if (!tracks) {
