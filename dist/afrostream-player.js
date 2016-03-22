@@ -2463,6 +2463,11 @@ var Dashas = (function (_Flash) {
       return this.el_.vjs_getProperty('currentVideoBandwidth');
     }
   }, {
+    key: 'audioTracks',
+    value: function audioTracks() {
+      _get(Object.getPrototypeOf(Dashas.prototype), 'audioTracks', this).call(this);
+    }
+  }, {
     key: 'getPlaybackStatistics',
     value: function getPlaybackStatistics() {
       var z = this.getBuffered();
@@ -2496,11 +2501,6 @@ var Dashas = (function (_Flash) {
     value: function buffered() {
       return this.el_.vjs_getProperty('buffered');
     }
-
-    //audioTracks() {
-    //  return this.el_.vjs_getProperty('audioTracks');
-    //}
-
   }]);
 
   return Dashas;

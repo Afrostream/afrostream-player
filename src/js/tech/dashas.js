@@ -178,6 +178,10 @@ class Dashas extends Flash {
     return this.el_.vjs_getProperty('currentVideoBandwidth');
   }
 
+  audioTracks() {
+    super.audioTracks();
+  }
+
   getPlaybackStatistics() {
     let z = this.getBuffered();
     let W = (this.getBufferLevel(), this.getDroppedFrames());
@@ -206,11 +210,6 @@ class Dashas extends Flash {
   buffered() {
     return this.el_.vjs_getProperty('buffered');
   }
-
-  //audioTracks() {
-  //  return this.el_.vjs_getProperty('audioTracks');
-  //}
-
 }
 
 Dashas.extractAssetId = (source)=> {
