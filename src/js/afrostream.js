@@ -9,6 +9,7 @@ import videojs from 'video.js';
 //import Player from './core/player';
 import MediaTechController from './tech/media';
 import Dash from './tech/dash';
+import Dashas from './tech/dashas';
 import {MediaPlayer} from 'dashjs';
 import CaptionTrackButton from './component/control-bar/track-controls/caption-track-button';
 import AudioTrackButton from './component/control-bar/track-controls/audio-track-button';

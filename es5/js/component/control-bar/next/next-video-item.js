@@ -1,5 +1,5 @@
 /**
- * @file off-video-track-menu-item.js
+ * @file next-video-item.js
  */
 'use strict';
 
@@ -21,70 +21,85 @@ var _videoJs = require('video.js');
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _videoTrackMenuItem = require('./video-track-menu-item');
-
-var _videoTrackMenuItem2 = _interopRequireDefault(_videoTrackMenuItem);
-
 var Component = _videoJs2['default'].getComponent('Component');
+var MenuItem = _videoJs2['default'].getComponent('MenuItem');
 
 /**
- * A special menu item for turning of a specific type of video track
+ * The base class for buttons that toggle next video
  *
  * @param {Player|Object} player
  * @param {Object=} options
- * @extends VideoTrackMenuItem
- * @class OffVideoTrackMenuItem
+ * @extends MenuItem
+ * @class NextVideoItem
  */
 
-var OffVideoTrackMenuItem = (function (_VideoTrackMenuItem) {
-  _inherits(OffVideoTrackMenuItem, _VideoTrackMenuItem);
+var NextVideoItem = (function (_MenuItem) {
+  _inherits(NextVideoItem, _MenuItem);
 
-  function OffVideoTrackMenuItem(player, options) {
-    _classCallCheck(this, OffVideoTrackMenuItem);
+  function NextVideoItem(player, options) {
+    _classCallCheck(this, NextVideoItem);
 
-    // Create pseudo track info
-    // Requires options['kind']
-    options['track'] = {
-      'kind': options['kind'],
-      'player': player,
-      'label': options['kind'],
-      'default': false,
-      'selected': false
-    };
-
-    // MenuItem is selectable
-    options['selectable'] = true;
-
-    _get(Object.getPrototypeOf(OffVideoTrackMenuItem.prototype), 'constructor', this).call(this, player, options);
+    _get(Object.getPrototypeOf(NextVideoItem.prototype), 'constructor', this).call(this, player, options);
+    this.setSrc(options.poster);
   }
 
   /**
-   * Handle text track change
+   * Create the component's DOM element
    *
-   * @param {Object} event Event object
-   * @method handleTracksChange
+   * @param {String=} type Desc
+   * @param {Object=} props Desc
+   * @return {Element}
+   * @method createEl
    */
 
-  _createClass(OffVideoTrackMenuItem, [{
-    key: 'handleTracksChange',
-    value: function handleTracksChange(event) {
-      var tracks = this.player().videoTracks();
-      var selected = true;
+  _createClass(NextVideoItem, [{
+    key: 'createEl',
+    value: function createEl(type, props, attrs) {
+      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, 'div', {
+        className: 'vjs-menu-item',
+        tabIndex: -1
+      }, attrs);
 
-      for (var i = 0, l = tracks.length; i < l; i++) {
-        var track = tracks[i];
-        if (track['kind'] === 'main' && track['selected']) {
-          selected = false;
-          break;
+      this.fallbackImg_ = _videoJs2['default'].createEl(_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
+        className: 'thumb-tile_thumb'
+      });
+
+      el.appendChild(this.fallbackImg_);
+
+      return el;
+    }
+  }, {
+    key: 'setSrc',
+    value: function setSrc(url) {
+      var backgroundImage = undefined;
+
+      if (!_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED) {
+        this.fallbackImg_.src = url;
+      } else {
+        backgroundImage = '';
+        if (url) {
+          backgroundImage = 'url("' + url + '")';
         }
+
+        this.fallbackImg_.style.backgroundImage = backgroundImage;
       }
-      this.selected(selected);
+    }
+
+    /**
+     * Handle click on mute
+     * @method handleClick
+     */
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      _get(Object.getPrototypeOf(NextVideoItem.prototype), 'handleClick', this).call(this);
+      this.player_.trigger('next');
     }
   }]);
 
-  return OffVideoTrackMenuItem;
-})(_videoTrackMenuItem2['default']);
+  return NextVideoItem;
+})(MenuItem);
 
-Component.registerComponent('OffVideoTrackMenuItem', OffVideoTrackMenuItem);
-exports['default'] = OffVideoTrackMenuItem;
+Component.registerComponent('NextVideoItem', NextVideoItem);
+exports['default'] = NextVideoItem;
 module.exports = exports['default'];

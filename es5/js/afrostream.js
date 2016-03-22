@@ -35,6 +35,10 @@ var _techDash = require('./tech/dash');
 
 var _techDash2 = _interopRequireDefault(_techDash);
 
+var _techDashas = require('./tech/dashas');
+
+var _techDashas2 = _interopRequireDefault(_techDashas);
+
 var _dashjs = require('dashjs');
 
 var _componentControlBarTrackControlsCaptionTrackButton = require('./component/control-bar/track-controls/caption-track-button');
@@ -48,6 +52,10 @@ var _componentControlBarTrackControlsAudioTrackButton2 = _interopRequireDefault(
 var _componentControlBarTrackControlsVideoTrackButton = require('./component/control-bar/track-controls/video-track-button');
 
 var _componentControlBarTrackControlsVideoTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsVideoTrackButton);
+
+var _componentControlBarNextNextVideoButton = require('./component/control-bar/next/next-video-button');
+
+var _componentControlBarNextNextVideoButton2 = _interopRequireDefault(_componentControlBarNextNextVideoButton);
 
 var _componentControlBarProgressControlLoadProgressSpinner = require('./component/control-bar/progress-control/load-progress-spinner');
 
@@ -74,7 +82,7 @@ var Afrostream = (function (_Component) {
     //player.setAudioTrack = ::this.setAudioTrack;
     //player.videoTracks = ::this.videoTracks;
     //player.setVideoTrack = ::this.setVideoTrack;
-    //player.getPlaybackStatistics = ::this.getPlaybackStatistics;
+    player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
     //player.getCribbedMetricsFor = ::this.getCribbedMetricsFor;
   }
 

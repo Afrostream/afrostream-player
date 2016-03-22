@@ -32,6 +32,7 @@ var _offAudioTrackMenuItem2 = _interopRequireDefault(_offAudioTrackMenuItem);
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var MenuButton = _videoJs2['default'].getComponent('MenuButton');
+var MenuItem = _videoJs2['default'].getComponent('MenuItem');
 
 /**
  * The base class for buttons that toggle specific audio track types (e.g. description)
@@ -51,10 +52,6 @@ var AudioTrackButton = (function (_MenuButton) {
     _get(Object.getPrototypeOf(AudioTrackButton.prototype), 'constructor', this).call(this, player, options);
 
     var tracks = this.player_.audioTracks();
-
-    if (this.items.length <= 1) {
-      this.hide();
-    }
 
     if (!tracks) {
       return;
@@ -89,14 +86,18 @@ var AudioTrackButton = (function (_MenuButton) {
     value: function createItems() {
       var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
-      // Add an OFF menu item to turn all tracks off
-      items.push(new _offAudioTrackMenuItem2['default'](this.player_, {
-        'kind': this.kind_
+      items.push(new MenuItem(this.player_, {
+        label: this.controlText_,
+        selectable: false
       }));
 
       var tracks = this.player_.audioTracks();
 
       if (!tracks) {
+        return items;
+      }
+
+      if (tracks.length < 2) {
         return items;
       }
 

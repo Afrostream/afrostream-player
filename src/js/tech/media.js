@@ -34,12 +34,6 @@ MediaTechController.prototype.metrics_ = {
 };
 
 
-MediaTechController.prototype.mediaPlayer = null;
-
-MediaTechController.prototype.mediaPlayer = function () {
-  return this.mediaPlayer_;
-};
-
 /**
  * Get default metrix statistics object
  * @returns {{video: {bandwidth: number}, audio: {bandwidth: number}}}

@@ -32,6 +32,7 @@ var _offVideoTrackMenuItem2 = _interopRequireDefault(_offVideoTrackMenuItem);
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var MenuButton = _videoJs2['default'].getComponent('MenuButton');
+var MenuItem = _videoJs2['default'].getComponent('MenuItem');
 
 /**
  * The base class for buttons that toggle specific video track types (e.g. commentary)
@@ -51,10 +52,6 @@ var VideoTrackButton = (function (_MenuButton) {
     _get(Object.getPrototypeOf(VideoTrackButton.prototype), 'constructor', this).call(this, player, options);
 
     var tracks = this.player_.videoTracks();
-
-    if (this.items.length <= 1) {
-      this.hide();
-    }
 
     if (!tracks) {
       return;
@@ -90,14 +87,23 @@ var VideoTrackButton = (function (_MenuButton) {
       var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
       // Add an OFF menu item to turn all tracks off
+      items.push(new MenuItem(this.player_, {
+        'label': 'Quality',
+        selectable: false
+      }));
+      // Add an OFF menu item to turn all tracks off
       items.push(new _offVideoTrackMenuItem2['default'](this.player_, {
-        'kind': 'ABR'
+        'kind': 'Auto'
       }));
 
       var tracks = this.player_.videoTracks();
 
       if (!tracks) {
         return items;
+      }
+
+      if (tracks.length < 2) {
+        this.hide();
       }
 
       for (var i = 0; i < tracks.length; i++) {
