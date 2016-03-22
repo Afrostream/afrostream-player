@@ -210,7 +210,8 @@ var Dash = (function (_Html5) {
         var bitrateList = track.bitrateList;
         for (var j = 0; j < bitrateList.length; j++) {
           var bitRateInfo = bitrateList[j] / 1000;
-          var bitRateTrack = this.addVideoTrack('main', bitRateInfo, bitRateInfo);
+          var label = Dash.qualityLabels[j];
+          var bitRateTrack = this.addVideoTrack('main', label, bitRateInfo);
           bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
         }
       }
@@ -647,6 +648,8 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
 
   return '';
 };
+
+Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD', 'auto'];
 
 /*
  * Pass the source to the flash object

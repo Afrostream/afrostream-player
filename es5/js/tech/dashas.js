@@ -59,8 +59,16 @@ var Dashas = (function (_Flash) {
     _globalWindow2['default'].videojs.Dashas.onError = Flash.onError;
 
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
-    player.on('loadedmetadata', this.onInitialized.bind(this));
-    player.on('firstplay', this.selectDefaultTrack.bind(this));
+    this.one('loadedmetadata', this.onInitialized.bind(this));
+
+    var tracks = this.audioTracks();
+
+    var changeHandler = this.handleAudioTracksChange.bind(this);
+
+    tracks.addEventListener('change', changeHandler);
+    this.on('dispose', function () {
+      tracks.removeEventListener('change', changeHandler);
+    });
   }
 
   /**
@@ -99,20 +107,48 @@ var Dashas = (function (_Flash) {
         return;
       }
       this.metrics_ = _videoJs2['default'].mergeOptions(this.metrics_, metrics);
+
+      this.addAudioTracks();
     }
   }, {
-    key: 'selectDefaultTrack',
-    value: function selectDefaultTrack() {
+    key: 'handleAudioTracksChange',
+    value: function handleAudioTracksChange() {
       var tracks = this.audioTracks();
-      var track = undefined;
-      debugger;
+
+      if (!tracks) {
+        return;
+      }
+
       for (var i = 0; i < tracks.length; i++) {
-        track = tracks[i];
-        if (typeof track === 'string') {
-          if (track === 'fra' || track === 'fr') {
-            this.setAudioTrack(track);
+        var track = tracks[i];
+        if (track['enabled']) {
+          try {
+            this.el_.vjs_setProperty('forcedAudioLang', i);
+          } catch (err) {
+            _videoJs2['default'].log(err);
           }
         }
+      }
+    }
+  }, {
+    key: 'addAudioTracks',
+    value: function addAudioTracks() {
+      var tracks = this.el_.vjs_getProperty('audioTracks');
+
+      if (!tracks) {
+        return;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (typeof track === 'string') {
+          track = {
+            label: track,
+            lang: track
+          };
+        }
+        var plTrack = this.addAudioTrack('main', track.label, track.lang);
+        plTrack.enabled = plTrack['language'] === 'fra' || plTrack['language'] === 'fr';
       }
     }
   }, {
@@ -145,9 +181,14 @@ var Dashas = (function (_Flash) {
       }
     }
   }, {
-    key: 'setAudioTrack',
-    value: function setAudioTrack(track) {
-      this.el_.vjs_setProperty('forcedAudioLang', track.index);
+    key: 'subtitleTracks',
+    value: function subtitleTracks() {
+      return this.textTracks();
+    }
+  }, {
+    key: 'setSubsTrack',
+    value: function setSubsTrack(track) {
+      this.setTextTrack(track);
     }
   }, {
     key: 'getDroppedFrames',
@@ -175,6 +216,16 @@ var Dashas = (function (_Flash) {
       return this.el_.vjs_getProperty('currentVideoBandwidth');
     }
   }, {
+    key: 'audioTracks',
+    value: function audioTracks() {
+      return Tech.prototype.audioTracks.call(this);
+    }
+  }, {
+    key: 'poster',
+    value: function poster() {
+      return '';
+    }
+  }, {
     key: 'getPlaybackStatistics',
     value: function getPlaybackStatistics() {
       var z = this.getBuffered();
@@ -182,21 +233,24 @@ var Dashas = (function (_Flash) {
       var Z = this.getCurrentVideoBandwidth();
       var K = this.getCurrentAudioBandwidth();
       var R = {
-        bandwidth: Z,
+        bandwidth: Z / 1000,
         bufferLength: z,
         droppedFrames: W
-      },
-          N = { bandwidth: K, bufferLength: z };
-      return { video: R, audio: N };
+      };
+      var N = {
+        bandwidth: K / 1000,
+        bufferLength: z
+      };
+      return _videoJs2['default'].mergeOptions(this.metrics_, { video: R, audio: N });
     }
   }, {
     key: 'src',
-    value: function src(source) {
+    value: function src(_src) {
       var options = this.options_;
       var autoPlay = this.player_.autoplay();
       var serverUrl = Dashas.buildMetadataUrl(options);
       var customData = Dashas.buildOptData(options);
-      this.el_.vjs_source(source.src, autoPlay, serverUrl, customData);
+      this.el_.vjs_source(_src, autoPlay, serverUrl, customData);
     }
   }, {
     key: 'currentTime',
@@ -207,11 +261,6 @@ var Dashas = (function (_Flash) {
     key: 'buffered',
     value: function buffered() {
       return this.el_.vjs_getProperty('buffered');
-    }
-  }, {
-    key: 'audioTracks',
-    value: function audioTracks() {
-      return this.el_.vjs_getProperty('audioTracks');
     }
   }]);
 
@@ -266,32 +315,10 @@ Dashas.buildOptData = function (options) {
 Dashas.prototype.options_ = {
   customData: {},
   protData: {
-    "com.widevine.alpha": {
-      "drmtoday": true,
-      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
-      "httpRequestHeaders": {
-        "dt-custom-data": ""
-      }
-    },
-    "com.microsoft.playready": {
-      "drmtoday": true,
-      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
-      "httpRequestHeaders": {
-        "http-header-CustomData": ""
-      }
-    },
-    "com.adobe.flashaccess": {
-      "drmtoday": true,
-      "serverURL": "https://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1",
-      "httpRequestHeaders": {
-        "customData": ""
-      }
-    },
-    "org.w3.clearkey": {
-      "clearkeys": {
-        "": ""
-      }
-    }
+    "com.widevine.alpha": {},
+    "com.microsoft.playready": {},
+    "com.adobe.flashaccess": {},
+    "org.w3.clearkey": {}
   }
 };
 

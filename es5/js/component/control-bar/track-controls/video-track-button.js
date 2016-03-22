@@ -104,6 +104,7 @@ var VideoTrackButton = (function (_MenuButton) {
 
       if (tracks.length < 2) {
         this.hide();
+        return items;
       }
 
       for (var i = 0; i < tracks.length; i++) {
@@ -127,7 +128,7 @@ var VideoTrackButton = (function (_MenuButton) {
 })(MenuButton);
 
 VideoTrackButton.prototype.kind_ = 'video';
-VideoTrackButton.prototype.controlText_ = 'Video Selection';
+VideoTrackButton.prototype.controlText_ = 'Quality Selection';
 
 //Replace videojs CaptionButton child with this one
 ControlBar.prototype.options_.children.splice(12, 0, 'videoTrackButton');

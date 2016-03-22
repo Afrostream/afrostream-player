@@ -1,214 +1,10 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (global){
-if (typeof window !== "undefined") {
-    module.exports = window;
-} else if (typeof global !== "undefined") {
-    module.exports = global;
-} else if (typeof self !== "undefined"){
-    module.exports = self;
-} else {
-    module.exports = {};
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],2:[function(require,module,exports){
-(function (global){
 /**
- * ! afrostrream-player - v2.0.0 - 2016-02-15
- * Copyright (c) 2015 benjipott
- * Licensed under the Apache-2.0 license.
- * @file videojs-metrics.js
- **/
-
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _videoJs2 = _interopRequireDefault(_videoJs);
-
-//import Player from './core/player';
-
-var _techMedia = require('./tech/media');
-
-var _techMedia2 = _interopRequireDefault(_techMedia);
-
-var _techDash = require('./tech/dash');
-
-var _techDash2 = _interopRequireDefault(_techDash);
-
-var _techDashas = require('./tech/dashas');
-
-var _techDashas2 = _interopRequireDefault(_techDashas);
-
-var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
-
-var _componentControlBarTrackControlsCaptionTrackButton = require('./component/control-bar/track-controls/caption-track-button');
-
-var _componentControlBarTrackControlsCaptionTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsCaptionTrackButton);
-
-var _componentControlBarTrackControlsAudioTrackButton = require('./component/control-bar/track-controls/audio-track-button');
-
-var _componentControlBarTrackControlsAudioTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsAudioTrackButton);
-
-var _componentControlBarTrackControlsVideoTrackButton = require('./component/control-bar/track-controls/video-track-button');
-
-var _componentControlBarTrackControlsVideoTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsVideoTrackButton);
-
-var _componentControlBarNextNextVideoButton = require('./component/control-bar/next/next-video-button');
-
-var _componentControlBarNextNextVideoButton2 = _interopRequireDefault(_componentControlBarNextNextVideoButton);
-
-var _componentControlBarProgressControlLoadProgressSpinner = require('./component/control-bar/progress-control/load-progress-spinner');
-
-var _componentControlBarProgressControlLoadProgressSpinner2 = _interopRequireDefault(_componentControlBarProgressControlLoadProgressSpinner);
-
-var Component = _videoJs2['default'].getComponent('Component');
-var ControlBar = _videoJs2['default'].getComponent('ControlBar');
-/**
- * Initialize the plugin.
- * @param options (optional) {object} configuration for the plugin
+ * afrostream-player
+ * @version 2.0.0
+ * @copyright 2016 Afrostream, Inc.
+ * @license Apache-2.0
  */
-
-var Afrostream = (function (_Component) {
-  _inherits(Afrostream, _Component);
-
-  function Afrostream(player, options, ready) {
-    _classCallCheck(this, Afrostream);
-
-    _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
-
-    player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
-
-    //player.audioTracks = ::this.audioTracks;
-    //player.setAudioTrack = ::this.setAudioTrack;
-    //player.videoTracks = ::this.videoTracks;
-    //player.setVideoTrack = ::this.setVideoTrack;
-    player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
-    //player.getCribbedMetricsFor = ::this.getCribbedMetricsFor;
-  }
-
-  _createClass(Afrostream, [{
-    key: 'onLoadStart',
-    value: function onLoadStart() {
-      this.addMediaPlayerHandlers();
-    }
-  }, {
-    key: 'addMediaPlayerHandlers',
-    value: function addMediaPlayerHandlers() {
-      this.player().on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
-      this.player().on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
-    }
-  }, {
-    key: 'onMetricChanged',
-    value: function onMetricChanged(e) {
-      // get current buffered ranges of video element and keep them up to date
-      if (e.stream !== 'video' && e.stream !== 'audio' && e.stream !== 'p2pweb') {
-        return;
-      }
-      var metrics = this.player().getCribbedMetricsFor(e.stream);
-      if (metrics) {
-        switch (e.stream) {
-          case 'video':
-            /*jshint sub:true*/
-            if (metrics.bandwidth !== this.oldBandwidth) {
-              this.tech_['featuresBitrate'] = metrics;
-              this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
-              this.oldBandwidth = metrics.bandwidth;
-            }
-            break;
-          case 'p2pweb':
-            /*jshint sub:true*/
-            if (metrics.chunksFromP2P !== this.oldChunksFromP2P) {
-              this.tech_['featuresBitrate'] = metrics;
-              this.player().trigger('chunksFromP2P');
-              this.oldChunksFromP2P = metrics.chunksFromP2P;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-    }
-  }, {
-    key: 'onInitialized',
-    value: function onInitialized(manifest, err) {
-      if (err) {
-        this.player().error(err);
-      }
-    }
-  }, {
-    key: 'audioTracks',
-    value: function audioTracks() {
-      return this.player().tech_ && this.player().techGet_('audioTracks');
-    }
-  }, {
-    key: 'setAudioTrack',
-    value: function setAudioTrack(track) {
-      return this.player().tech_ && this.player().techCall_('setAudioTrack', track);
-    }
-  }, {
-    key: 'videoTracks',
-    value: function videoTracks() {
-      return this.player().tech_ && this.player().techGet_('videoTracks');
-    }
-  }, {
-    key: 'setVideoTrack',
-    value: function setVideoTrack(track) {
-      return this.player().tech_ && this.player().tech_.setVideoTrack(track);
-    }
-  }, {
-    key: 'getPlaybackStatistics',
-    value: function getPlaybackStatistics() {
-      return this.player().tech_ && this.player().tech_.getPlaybackStatistics();
-    }
-  }, {
-    key: 'getCribbedMetricsFor',
-    value: function getCribbedMetricsFor(type) {
-      return this.player().tech_ && this.player().tech_.getCribbedMetricsFor(type);
-    }
-  }]);
-
-  return Afrostream;
-})(Component);
-
-Afrostream.prototype.options_ = {};
-
-Afrostream.prototype.oldBandwidth = 0;
-
-Afrostream.prototype.oldChunksFromP2P = 0;
-
-Afrostream.prototype.streamInfo = null;
-
-Afrostream.prototype.tech_ = null;
-
-/**
- * add afrostream to videojs childs
- * @type {{}}
- */
-_videoJs2['default'].options.children.push('afrostream');
-
-ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
-
-Component.registerComponent('Afrostream', Afrostream);
-exports['default'] = Afrostream;
-module.exports = exports['default'];
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/next/next-video-button":3,"./component/control-bar/progress-control/load-progress-spinner":5,"./component/control-bar/track-controls/audio-track-button":6,"./component/control-bar/track-controls/caption-track-button":8,"./component/control-bar/track-controls/video-track-button":13,"./tech/dash":15,"./tech/dashas":16,"./tech/media":17}],3:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.afrostreamPlayer = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-button.js
@@ -315,9 +111,8 @@ ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.chil
 Component.registerComponent('NextVideoButton', NextVideoButton);
 exports['default'] = NextVideoButton;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./next-video-item":4}],4:[function(require,module,exports){
+},{"./next-video-item":2}],2:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-item.js
@@ -424,9 +219,8 @@ var NextVideoItem = (function (_MenuItem) {
 Component.registerComponent('NextVideoItem', NextVideoItem);
 exports['default'] = NextVideoItem;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (global){
 /**
  * @file load-progress-spinner.js
@@ -569,9 +363,8 @@ _videoJs2['default'].options.children.splice(3, 1, 'loadProgressSpinner');
 
 exports['default'] = LoadProgressSpinner;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],6:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function (global){
 /**
  * @file audio-track-button.js
@@ -706,9 +499,8 @@ ControlBar.prototype.options_.children.splice(12, 0, 'audioTrackButton');
 Component.registerComponent('AudioTrackButton', AudioTrackButton);
 exports['default'] = AudioTrackButton;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":7,"./off-audio-track-menu-item":10}],7:[function(require,module,exports){
+},{"./audio-track-menu-item":5,"./off-audio-track-menu-item":8}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -804,9 +596,8 @@ var AudioTrackMenuItem = (function (_MenuItem) {
 Component.registerComponent('AudioTrackMenuItem', AudioTrackMenuItem);
 exports['default'] = AudioTrackMenuItem;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],8:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -905,9 +696,8 @@ ControlBar.prototype.options_.children.splice(12, 1, 'captionTrackButton');
 Component.registerComponent('CaptionTrackButton', CaptionTrackButton);
 exports['default'] = CaptionTrackButton;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":9,"./off-caption-track-menu-item":11}],9:[function(require,module,exports){
+},{"./caption-track-menu-item":7,"./off-caption-track-menu-item":9}],7:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1035,9 +825,8 @@ var CaptionTrackMenuItem = (function (_MenuItem) {
 Component.registerComponent('CaptionTrackMenuItem', CaptionTrackMenuItem);
 exports['default'] = CaptionTrackMenuItem;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 /**
  * @file off-audio-track-menu-item.js
@@ -1130,9 +919,8 @@ var OffAudioTrackMenuItem = (function (_AudioTrackMenuItem) {
 Component.registerComponent('OffAudioTrackMenuItem', OffAudioTrackMenuItem);
 exports['default'] = OffAudioTrackMenuItem;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":7}],11:[function(require,module,exports){
+},{"./audio-track-menu-item":5}],9:[function(require,module,exports){
 (function (global){
 /**
  * @file caption-track-button-off.js
@@ -1225,9 +1013,8 @@ var OffCaptionTrackMenuItem = (function (_CaptionTrackMenuItem) {
 Component.registerComponent('OffCaptionTrackMenuItem', OffCaptionTrackMenuItem);
 exports['default'] = OffCaptionTrackMenuItem;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":9}],12:[function(require,module,exports){
+},{"./caption-track-menu-item":7}],10:[function(require,module,exports){
 (function (global){
 /**
  * @file off-video-track-menu-item.js
@@ -1319,9 +1106,8 @@ var OffVideoTrackMenuItem = (function (_VideoTrackMenuItem) {
 Component.registerComponent('OffVideoTrackMenuItem', OffVideoTrackMenuItem);
 exports['default'] = OffVideoTrackMenuItem;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./video-track-menu-item":14}],13:[function(require,module,exports){
+},{"./video-track-menu-item":12}],11:[function(require,module,exports){
 (function (global){
 /**
  * @file video-track-button.js
@@ -1461,9 +1247,8 @@ ControlBar.prototype.options_.children.splice(12, 0, 'videoTrackButton');
 Component.registerComponent('VideoTrackButton', VideoTrackButton);
 exports['default'] = VideoTrackButton;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./off-video-track-menu-item":12,"./video-track-menu-item":14}],14:[function(require,module,exports){
+},{"./off-video-track-menu-item":10,"./video-track-menu-item":12}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1572,9 +1357,8 @@ var VideoTrackMenuItem = (function (_MenuItem) {
 Component.registerComponent('VideoTrackMenuItem', VideoTrackMenuItem);
 exports['default'] = VideoTrackMenuItem;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],15:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (global){
 /**
  * @file dash.js
@@ -2256,9 +2040,8 @@ Component.registerComponent('Dash', Dash);
 Tech.registerTech('Dash', Dash);
 exports['default'] = Dash;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":1}],16:[function(require,module,exports){
+},{"global/window":16}],14:[function(require,module,exports){
 (function (global){
 /**
  * @file dashas.js
@@ -2695,9 +2478,8 @@ HTMLObjectElement.prototype.vjs_src = function (src) {};
 
 exports['default'] = Dashas;
 module.exports = exports['default'];
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":1}],17:[function(require,module,exports){
+},{"global/window":16}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2756,6 +2538,215 @@ MediaTechController.prototype.getPlaybackStatistics = function () {
 MediaTechController.prototype.getCribbedMetricsFor = function (type) {
   return this.metrics_[type];
 };
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],16:[function(require,module,exports){
+(function (global){
+if (typeof window !== "undefined") {
+    module.exports = window;
+} else if (typeof global !== "undefined") {
+    module.exports = global;
+} else if (typeof self !== "undefined"){
+    module.exports = self;
+} else {
+    module.exports = {};
+}
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[2]);
+},{}],17:[function(require,module,exports){
+(function (global){
+/**
+ * ! afrostrream-player - v2.0.0 - 2016-02-15
+ * Copyright (c) 2015 benjipott
+ * Licensed under the Apache-2.0 license.
+ * @file videojs-metrics.js
+ **/
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+//import Player from './core/player';
+
+var _techMedia = require('./tech/media');
+
+var _techMedia2 = _interopRequireDefault(_techMedia);
+
+var _techDash = require('./tech/dash');
+
+var _techDash2 = _interopRequireDefault(_techDash);
+
+var _techDashas = require('./tech/dashas');
+
+var _techDashas2 = _interopRequireDefault(_techDashas);
+
+var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
+
+var _componentControlBarTrackControlsCaptionTrackButton = require('./component/control-bar/track-controls/caption-track-button');
+
+var _componentControlBarTrackControlsCaptionTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsCaptionTrackButton);
+
+var _componentControlBarTrackControlsAudioTrackButton = require('./component/control-bar/track-controls/audio-track-button');
+
+var _componentControlBarTrackControlsAudioTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsAudioTrackButton);
+
+var _componentControlBarTrackControlsVideoTrackButton = require('./component/control-bar/track-controls/video-track-button');
+
+var _componentControlBarTrackControlsVideoTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsVideoTrackButton);
+
+var _componentControlBarNextNextVideoButton = require('./component/control-bar/next/next-video-button');
+
+var _componentControlBarNextNextVideoButton2 = _interopRequireDefault(_componentControlBarNextNextVideoButton);
+
+var _componentControlBarProgressControlLoadProgressSpinner = require('./component/control-bar/progress-control/load-progress-spinner');
+
+var _componentControlBarProgressControlLoadProgressSpinner2 = _interopRequireDefault(_componentControlBarProgressControlLoadProgressSpinner);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var ControlBar = _videoJs2['default'].getComponent('ControlBar');
+/**
+ * Initialize the plugin.
+ * @param options (optional) {object} configuration for the plugin
+ */
+
+var Afrostream = (function (_Component) {
+  _inherits(Afrostream, _Component);
+
+  function Afrostream(player, options, ready) {
+    _classCallCheck(this, Afrostream);
+
+    _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
+
+    player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
+
+    //player.audioTracks = ::this.audioTracks;
+    //player.setAudioTrack = ::this.setAudioTrack;
+    //player.videoTracks = ::this.videoTracks;
+    //player.setVideoTrack = ::this.setVideoTrack;
+    player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
+    //player.getCribbedMetricsFor = ::this.getCribbedMetricsFor;
+  }
+
+  _createClass(Afrostream, [{
+    key: 'onLoadStart',
+    value: function onLoadStart() {
+      this.addMediaPlayerHandlers();
+    }
+  }, {
+    key: 'addMediaPlayerHandlers',
+    value: function addMediaPlayerHandlers() {
+      this.player().on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+      this.player().on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+    }
+  }, {
+    key: 'onMetricChanged',
+    value: function onMetricChanged(e) {
+      // get current buffered ranges of video element and keep them up to date
+      if (e.stream !== 'video' && e.stream !== 'audio' && e.stream !== 'p2pweb') {
+        return;
+      }
+      var metrics = this.player().getCribbedMetricsFor(e.stream);
+      if (metrics) {
+        switch (e.stream) {
+          case 'video':
+            /*jshint sub:true*/
+            if (metrics.bandwidth !== this.oldBandwidth) {
+              this.tech_['featuresBitrate'] = metrics;
+              this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
+              this.oldBandwidth = metrics.bandwidth;
+            }
+            break;
+          case 'p2pweb':
+            /*jshint sub:true*/
+            if (metrics.chunksFromP2P !== this.oldChunksFromP2P) {
+              this.tech_['featuresBitrate'] = metrics;
+              this.player().trigger('chunksFromP2P');
+              this.oldChunksFromP2P = metrics.chunksFromP2P;
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }, {
+    key: 'onInitialized',
+    value: function onInitialized(manifest, err) {
+      if (err) {
+        this.player().error(err);
+      }
+    }
+  }, {
+    key: 'audioTracks',
+    value: function audioTracks() {
+      return this.player().tech_ && this.player().techGet_('audioTracks');
+    }
+  }, {
+    key: 'setAudioTrack',
+    value: function setAudioTrack(track) {
+      return this.player().tech_ && this.player().techCall_('setAudioTrack', track);
+    }
+  }, {
+    key: 'videoTracks',
+    value: function videoTracks() {
+      return this.player().tech_ && this.player().techGet_('videoTracks');
+    }
+  }, {
+    key: 'setVideoTrack',
+    value: function setVideoTrack(track) {
+      return this.player().tech_ && this.player().tech_.setVideoTrack(track);
+    }
+  }, {
+    key: 'getPlaybackStatistics',
+    value: function getPlaybackStatistics() {
+      return this.player().tech_ && this.player().tech_.getPlaybackStatistics();
+    }
+  }, {
+    key: 'getCribbedMetricsFor',
+    value: function getCribbedMetricsFor(type) {
+      return this.player().tech_ && this.player().tech_.getCribbedMetricsFor(type);
+    }
+  }]);
+
+  return Afrostream;
+})(Component);
+
+Afrostream.prototype.options_ = {};
+
+Afrostream.prototype.oldBandwidth = 0;
+
+Afrostream.prototype.oldChunksFromP2P = 0;
+
+Afrostream.prototype.streamInfo = null;
+
+Afrostream.prototype.tech_ = null;
+
+/**
+ * add afrostream to videojs childs
+ * @type {{}}
+ */
+_videoJs2['default'].options.children.push('afrostream');
+
+ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
+
+Component.registerComponent('Afrostream', Afrostream);
+exports['default'] = Afrostream;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./component/control-bar/next/next-video-button":1,"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/dashas":14,"./tech/media":15}]},{},[17])(17)
+});
