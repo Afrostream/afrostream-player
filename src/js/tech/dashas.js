@@ -33,7 +33,6 @@ class Dashas extends Flash {
 
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
     this.one('loadedmetadata', ::this.onInitialized);
-    this.one('loadedmetadata', ::this.addAudioTracks);
 
   }
 
@@ -69,6 +68,8 @@ class Dashas extends Flash {
       return;
     }
     this.metrics_ = videojs.mergeOptions(this.metrics_, metrics);
+
+    this.addAudioTracks();
   }
 
   handleAudioTracksChange() {

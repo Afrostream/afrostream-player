@@ -2306,7 +2306,6 @@ var Dashas = (function (_Flash) {
 
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
     this.one('loadedmetadata', this.onInitialized.bind(this));
-    this.one('loadedmetadata', this.addAudioTracks.bind(this));
   }
 
   /**
@@ -2345,6 +2344,8 @@ var Dashas = (function (_Flash) {
         return;
       }
       this.metrics_ = _videoJs2['default'].mergeOptions(this.metrics_, metrics);
+
+      this.addAudioTracks();
     }
   }, {
     key: 'handleAudioTracksChange',
