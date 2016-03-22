@@ -8,6 +8,7 @@ import OffVideoTrackMenuItem from './off-video-track-menu-item';
 const Component = videojs.getComponent('Component');
 const ControlBar = videojs.getComponent('ControlBar');
 const MenuButton = videojs.getComponent('MenuButton');
+const MenuItem = videojs.getComponent('MenuItem');
 
 /**
  * The base class for buttons that toggle specific video track types (e.g. commentary)
@@ -23,10 +24,6 @@ class VideoTrackButton extends MenuButton {
     super(player, options);
 
     let tracks = this.player_.videoTracks();
-
-    if (this.items.length <= 1) {
-      this.hide();
-    }
 
     if (!tracks) {
       return;
@@ -55,14 +52,23 @@ class VideoTrackButton extends MenuButton {
   // Create a menu item for each text track
   createItems(items = []) {
     // Add an OFF menu item to turn all tracks off
+    items.push(new MenuItem(this.player_, {
+      'label': 'Quality',
+      selectable: false
+    }));
+    // Add an OFF menu item to turn all tracks off
     items.push(new OffVideoTrackMenuItem(this.player_, {
-      'kind': 'ABR'
+      'kind': 'Auto'
     }));
 
     let tracks = this.player_.videoTracks();
 
     if (!tracks) {
       return items;
+    }
+
+    if (tracks.length < 2) {
+      this.hide();
     }
 
     for (let i = 0; i < tracks.length; i++) {

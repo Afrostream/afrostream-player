@@ -29,7 +29,7 @@ class NextVideoButton extends MenuButton {
    */
   createItems(items = []) {
     items.push(new NextVideoItem(this.player_, {
-      label: 'Next',
+      label: 'next',
       selectable: false,
       poster: this.options_.poster
     }));

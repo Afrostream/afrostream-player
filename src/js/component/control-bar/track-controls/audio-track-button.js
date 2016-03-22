@@ -25,10 +25,6 @@ class AudioTrackButton extends MenuButton {
 
     let tracks = this.player_.audioTracks();
 
-    if (this.items.length <= 1) {
-      this.hide();
-    }
-
     if (!tracks) {
       return;
     }
