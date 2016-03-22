@@ -3332,7 +3332,7 @@ var Dashas = (function (_Flash) {
   }, {
     key: 'audioTracks',
     value: function audioTracks() {
-      _get(Object.getPrototypeOf(Dashas.prototype), 'audioTracks', this).call(this);
+      return _get(Object.getPrototypeOf(Dashas.prototype), 'audioTracks', this).call(this);
     }
   }, {
     key: 'poster',
