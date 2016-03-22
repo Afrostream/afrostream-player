@@ -2,11 +2,10 @@
  * ! afrostrream-player - v2.0.0 - 2016-02-15
  * Copyright (c) 2015 benjipott
  * Licensed under the Apache-2.0 license.
- * @file videojs-metrics.js
+ * @file afrostream.js
  **/
 
 import videojs from 'video.js';
-//import Player from './core/player';
 import MediaTechController from './tech/media';
 import Dash from './tech/dash';
 import Dashas from './tech/dashas';
@@ -29,15 +28,8 @@ class Afrostream extends Component {
   constructor(player, options, ready) {
 
     super(player, options, ready);
-
     player.one('loadstart', videojs.bind(this, this.onLoadStart));
-
-    //player.audioTracks = ::this.audioTracks;
-    //player.setAudioTrack = ::this.setAudioTrack;
-    //player.videoTracks = ::this.videoTracks;
-    //player.setVideoTrack = ::this.setVideoTrack;
     player.getPlaybackStatistics = ::this.getPlaybackStatistics;
-    //player.getCribbedMetricsFor = ::this.getCribbedMetricsFor;
   }
 
   onLoadStart() {

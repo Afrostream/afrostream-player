@@ -4233,7 +4233,7 @@ function extend() {
  * ! afrostrream-player - v2.0.0 - 2016-02-15
  * Copyright (c) 2015 benjipott
  * Licensed under the Apache-2.0 license.
- * @file videojs-metrics.js
+ * @file afrostream.js
  **/
 
 'use strict';
@@ -4255,8 +4255,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
-
-//import Player from './core/player';
 
 var _techMedia = require('./tech/media');
 
@@ -4314,15 +4312,8 @@ var Afrostream = (function (_Component) {
     _classCallCheck(this, Afrostream);
 
     _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
-
     player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
-
-    //player.audioTracks = ::this.audioTracks;
-    //player.setAudioTrack = ::this.setAudioTrack;
-    //player.videoTracks = ::this.videoTracks;
-    //player.setVideoTrack = ::this.setVideoTrack;
     player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
-    //player.getCribbedMetricsFor = ::this.getCribbedMetricsFor;
   }
 
   _createClass(Afrostream, [{

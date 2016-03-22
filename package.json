@@ -2,7 +2,7 @@
   "name": "afrostream-player",
   "version": "2.0.0",
   "description": "Player afrostream",
-  "main": "src/js/afrostream.js",
+  "main": "es5/js/afrostream.js",
   "scripts": {
     "prebuild": "npm run clean",
     "build": "npm-run-all -p build:*",

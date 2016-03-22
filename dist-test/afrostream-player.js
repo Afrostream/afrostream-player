@@ -1,4 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+
+},{}],2:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -17,7 +19,7 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":13}],2:[function(require,module,exports){
+},{"min-document":1}],3:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -30,11 +32,11 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 module.exports = require('./lib/extend');
 
 
-},{"./lib/extend":4}],4:[function(require,module,exports){
+},{"./lib/extend":5}],5:[function(require,module,exports){
 /*!
  * node.extend
  * Copyright 2011, John Resig
@@ -118,7 +120,7 @@ extend.version = '1.1.3';
 module.exports = extend;
 
 
-},{"is":5}],5:[function(require,module,exports){
+},{"is":6}],6:[function(require,module,exports){
 /* globals window, HTMLElement */
 /**!
  * is
@@ -881,7 +883,7 @@ is.symbol = function (value) {
   return typeof Symbol === 'function' && toStr.call(value) === '[object Symbol]' && typeof symbolValueOf.call(value) === 'symbol';
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast-button.js
@@ -1183,7 +1185,7 @@ Component.registerComponent('ChromeCastButton', ChromeCastButton);
 exports['default'] = ChromeCastButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1216,7 +1218,7 @@ _videoJs2['default'].plugin('chromecast', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./videojs-chromecast":9}],8:[function(require,module,exports){
+},{"./videojs-chromecast":10}],9:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast.js
@@ -1677,7 +1679,7 @@ Tech.registerTech('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-chromecast - v1.0.0 - 2016-02-15
@@ -1755,7 +1757,7 @@ Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/chromecast-button":6,"./tech/chromecast":8}],10:[function(require,module,exports){
+},{"./component/control-bar/chromecast-button":7,"./tech/chromecast":9}],11:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
@@ -2038,7 +2040,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":12,"global/document":1,"global/window":2,"xhr":14}],11:[function(require,module,exports){
+},{"./utils.js":13,"global/document":2,"global/window":3,"xhr":14}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2071,7 +2073,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":10}],12:[function(require,module,exports){
+},{"./metrics":11}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2159,9 +2161,7 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":1,"global/window":2}],13:[function(require,module,exports){
-
-},{}],14:[function(require,module,exports){
+},{"global/document":2,"global/window":3}],14:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -2382,7 +2382,7 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":2,"is-function":15,"once":16,"parse-headers":19,"xtend":20}],15:[function(require,module,exports){
+},{"global/window":3,"is-function":15,"once":16,"parse-headers":19,"xtend":20}],15:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -2543,7 +2543,7 @@ function extend() {
  * ! afrostrream-player - v2.0.0 - 2016-02-15
  * Copyright (c) 2015 benjipott
  * Licensed under the Apache-2.0 license.
- * @file videojs-metrics.js
+ * @file afrostream.js
  **/
 
 'use strict';
@@ -2565,8 +2565,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
-
-//import Player from './core/player';
 
 var _techMedia = require('./tech/media');
 
@@ -2624,15 +2622,8 @@ var Afrostream = (function (_Component) {
     _classCallCheck(this, Afrostream);
 
     _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
-
     player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
-
-    //player.audioTracks = ::this.audioTracks;
-    //player.setAudioTrack = ::this.setAudioTrack;
-    //player.videoTracks = ::this.videoTracks;
-    //player.setVideoTrack = ::this.setVideoTrack;
     player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
-    //player.getCribbedMetricsFor = ::this.getCribbedMetricsFor;
   }
 
   _createClass(Afrostream, [{
@@ -2742,7 +2733,7 @@ exports['default'] = Afrostream;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/next/next-video-button":22,"./component/control-bar/progress-control/load-progress-spinner":24,"./component/control-bar/track-controls/audio-track-button":25,"./component/control-bar/track-controls/caption-track-button":27,"./component/control-bar/track-controls/video-track-button":32,"./tech/dash":34,"./tech/dashas":35,"./tech/media":36,"videojs-chromecast":7,"videojs-metrics":11}],22:[function(require,module,exports){
+},{"./component/control-bar/next/next-video-button":22,"./component/control-bar/progress-control/load-progress-spinner":24,"./component/control-bar/track-controls/audio-track-button":25,"./component/control-bar/track-controls/caption-track-button":27,"./component/control-bar/track-controls/video-track-button":32,"./tech/dash":34,"./tech/dashas":35,"./tech/media":36,"videojs-chromecast":8,"videojs-metrics":12}],22:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-button.js
@@ -4792,7 +4783,7 @@ exports['default'] = Dash;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":2}],35:[function(require,module,exports){
+},{"global/window":3}],35:[function(require,module,exports){
 (function (global){
 /**
  * @file dashas.js
@@ -5231,7 +5222,7 @@ exports['default'] = Dashas;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":2}],36:[function(require,module,exports){
+},{"global/window":3}],36:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5333,7 +5324,7 @@ _qunit2['default'].test('afrostreamMaker takes a player and returns a metrics', 
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/js/afrostream":21,"./player-proxy":38,"global/window":2}],38:[function(require,module,exports){
+},{"../src/js/afrostream":21,"./player-proxy":38,"global/window":3}],38:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5375,7 +5366,7 @@ exports['default'] = proxy;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"node.extend":3}],39:[function(require,module,exports){
+},{"node.extend":4}],39:[function(require,module,exports){
 (function (global){
 'use strict';
 
