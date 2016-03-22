@@ -2468,6 +2468,11 @@ var Dashas = (function (_Flash) {
       _get(Object.getPrototypeOf(Dashas.prototype), 'audioTracks', this).call(this);
     }
   }, {
+    key: 'poster',
+    value: function poster() {
+      return '';
+    }
+  }, {
     key: 'getPlaybackStatistics',
     value: function getPlaybackStatistics() {
       var z = this.getBuffered();

@@ -182,6 +182,10 @@ class Dashas extends Flash {
     super.audioTracks();
   }
 
+  poster() {
+    return '';
+  }
+
   getPlaybackStatistics() {
     let z = this.getBuffered();
     let W = (this.getBufferLevel(), this.getDroppedFrames());
