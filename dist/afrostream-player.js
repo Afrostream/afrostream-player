@@ -2443,7 +2443,7 @@ var Dashas = (function (_Flash) {
         droppedFrames: W
       },
           N = { bandwidth: K, bufferLength: z };
-      return { video: R, audio: N };
+      return _videoJs2['default'].mergeOptions(this.metrics_, { video: R, audio: N });
     }
   }, {
     key: 'src',

@@ -115,15 +115,15 @@
 
     setInterval(function () {
       var statistics = player.getPlaybackStatistics();
-      var dlAudioBitrate = statistics.audio.bandwidth;//Math.round(statistics.audio.bandwidth / 10.24) / 100;
-      var dlVidBitrate = statistics.video.bandwidth// Math.round(statistics.video.bandwidth / 10.24) / 100;
-      var p2pRatio = Math.round(statistics.p2pweb.p2pRatio);
-      var chunksFromCDN = Math.round(statistics.p2pweb.chunksFromCDN);
-      var chunksFromP2P = Math.round(statistics.p2pweb.chunksFromP2P);
-      var chunksSent = Math.round(statistics.p2pweb.chunksSent);
-      var bufferLength = Math.round(statistics.p2pweb.bufferLength);
-      var swarmSize = Math.round(statistics.p2pweb.swarmSize);
-      var startupTime = Math.round(statistics.p2pweb.startupTime);
+      var dlAudioBitrate = statistics.audio.bandwidth;
+      var dlVidBitrate = statistics.video.bandwidth;
+      var p2pRatio = statistics.p2pweb.p2pRatio;
+      var chunksFromCDN = statistics.p2pweb.chunksFromCDN;
+      var chunksFromP2P = statistics.p2pweb.chunksFromP2P;
+      var chunksSent = statistics.p2pweb.chunksSent;
+      var bufferLength = statistics.p2pweb.bufferLength;
+      var swarmSize = statistics.p2pweb.swarmSize;
+      var startupTime = statistics.p2pweb.startupTime;
 //      document.getElementById('version').innerHTML = videojs.CDN_VERSION;
 //      document.getElementById('resolution').innerHTML = player.width() + ' x ' + player.height();
 //      document.getElementById('audioBuffer').innerHTML = statistics.audio.bufferLength;
