@@ -74,7 +74,6 @@ class Dashas extends Flash {
   selectDefaultTrack() {
     const tracks = this.audioTracks();
     let track;
-    debugger;
     for (let i = 0; i < tracks.length; i++) {
       track = tracks[i];
       if (typeof  track === 'string') {

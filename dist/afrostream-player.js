@@ -2351,7 +2351,6 @@ var Dashas = (function (_Flash) {
     value: function selectDefaultTrack() {
       var tracks = this.audioTracks();
       var track = undefined;
-      debugger;
       for (var i = 0; i < tracks.length; i++) {
         track = tracks[i];
         if (typeof track === 'string') {
