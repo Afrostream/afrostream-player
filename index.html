@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Afrostream player based on videojs Demo</title>
-  <link href="/dist/afrostream.css" rel="stylesheet">
+  <link href="/dist/afrostream-player.css" rel="stylesheet">
   <link href="/node_modules/videojs-chromecast/dist/videojs-chromecast.css" rel="stylesheet">
   <style>
 
@@ -52,8 +52,6 @@
 <script src="/lib/video.js"></script>
 <script> window.dashjs = {skipAutoCreate: true}; </script>
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
-<script src="/node_modules/videojs-chromecast/dist/videojs-chromecast.js"></script>
-<script src="/node_modules/videojs-metrics/dist/videojs-metrics.js"></script>
 <script src="/node_modules/smoothie/smoothie.js"></script>
 <script src="/dist/afrostream-player.js"></script>
 <!-- chromecast sdk -->
@@ -79,7 +77,7 @@
       swf: './dashas.swf'
     },
     chromecast: {},
-    techOrder: ["dashas", "dash", "html5"]
+    techOrder: ["dash", "html5", "dashas"]
   }).ready(function () {
     var player = this;
 

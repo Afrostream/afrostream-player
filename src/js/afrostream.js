@@ -16,6 +16,8 @@ import AudioTrackButton from './component/control-bar/track-controls/audio-track
 import VideoTrackButton from './component/control-bar/track-controls/video-track-button';
 import NextVideoButton from './component/control-bar/next/next-video-button';
 import LoadProgressSpinner from './component/control-bar/progress-control/load-progress-spinner';
+import Metrics from 'videojs-metrics';
+import Chromecast from 'videojs-chromecast';
 
 const Component = videojs.getComponent('Component');
 const ControlBar = videojs.getComponent('ControlBar');

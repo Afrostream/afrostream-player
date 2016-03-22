@@ -61,6 +61,14 @@ var _componentControlBarProgressControlLoadProgressSpinner = require('./componen
 
 var _componentControlBarProgressControlLoadProgressSpinner2 = _interopRequireDefault(_componentControlBarProgressControlLoadProgressSpinner);
 
+var _videojsMetrics = require('videojs-metrics');
+
+var _videojsMetrics2 = _interopRequireDefault(_videojsMetrics);
+
+var _videojsChromecast = require('videojs-chromecast');
+
+var _videojsChromecast2 = _interopRequireDefault(_videojsChromecast);
+
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 /**

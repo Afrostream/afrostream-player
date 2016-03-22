@@ -2041,7 +2041,7 @@ Tech.registerTech('Dash', Dash);
 exports['default'] = Dash;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":16}],14:[function(require,module,exports){
+},{"global/window":18}],14:[function(require,module,exports){
 (function (global){
 /**
  * @file dashas.js
@@ -2479,7 +2479,7 @@ HTMLObjectElement.prototype.vjs_src = function (src) {};
 exports['default'] = Dashas;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":16}],15:[function(require,module,exports){
+},{"global/window":18}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2540,6 +2540,27 @@ MediaTechController.prototype.getCribbedMetricsFor = function (type) {
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],16:[function(require,module,exports){
+
+},{}],17:[function(require,module,exports){
+(function (global){
+var topLevel = typeof global !== 'undefined' ? global :
+    typeof window !== 'undefined' ? window : {}
+var minDoc = require('min-document');
+
+if (typeof document !== 'undefined') {
+    module.exports = document;
+} else {
+    var doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'];
+
+    if (!doccy) {
+        doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'] = minDoc;
+    }
+
+    module.exports = doccy;
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"min-document":16}],18:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -2552,7 +2573,1661 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
+(function (global){
+/**
+ * @file chromecast-button.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var ControlBar = _videoJs2['default'].getComponent('ControlBar');
+var Button = _videoJs2['default'].getComponent('Button');
+
+/**
+ * The base class for buttons that toggle chromecast video
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends Button
+ * @class ChromeCastButton
+ */
+
+var ChromeCastButton = (function (_Button) {
+  _inherits(ChromeCastButton, _Button);
+
+  function ChromeCastButton(player, options) {
+    _classCallCheck(this, ChromeCastButton);
+
+    _get(Object.getPrototypeOf(ChromeCastButton.prototype), 'constructor', this).call(this, player, options);
+    this.hide();
+    this.initializeApi();
+    player.chromecast = this;
+  }
+
+  /**
+   * Init chromecast sdk api
+   *
+   * @method initializeApi
+   */
+
+  _createClass(ChromeCastButton, [{
+    key: 'initializeApi',
+    value: function initializeApi() {
+      var apiConfig = undefined;
+      var appId = undefined;
+      var sessionRequest = undefined;
+
+      if (!_videoJs2['default'].browser.IS_CHROME) {
+        return;
+      }
+      if (!chrome.cast || !chrome.cast.isAvailable) {
+        _videoJs2['default'].log('Cast APIs not available');
+        if (this.tryingReconnect < 10) {
+          this.setTimeout(this.initializeApi, 1000);
+          ++this.tryingReconnect;
+        }
+        _videoJs2['default'].log('Cast APIs not available. Max reconnect attempt');
+        return;
+      }
+      this.show();
+      _videoJs2['default'].log('Cast APIs are available');
+      appId = this.options_.appId || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID;
+      sessionRequest = new chrome.cast.SessionRequest(appId);
+      apiConfig = new chrome.cast.ApiConfig(sessionRequest, this.sessionJoinedListener.bind(this), this.receiverListener.bind(this));
+      return chrome.cast.initialize(apiConfig, this.onInitSuccess.bind(this), this.castError.bind(this));
+    }
+  }, {
+    key: 'castError',
+    value: function castError(_castError) {
+
+      var error = {
+        code: _castError.code,
+        message: _castError.description
+      };
+
+      switch (_castError.code) {
+        case chrome.cast.ErrorCode.API_NOT_INITIALIZED:
+        case chrome.cast.ErrorCode.EXTENSION_MISSING:
+        case chrome.cast.ErrorCode.EXTENSION_NOT_COMPATIBLE:
+        case chrome.cast.ErrorCode.INVALID_PARAMETER:
+        case chrome.cast.ErrorCode.LOAD_MEDIA_FAILED:
+        case chrome.cast.ErrorCode.RECEIVER_UNAVAILABLE:
+        case chrome.cast.ErrorCode.SESSION_ERROR:
+        case chrome.cast.ErrorCode.CHANNEL_ERROR:
+        case chrome.cast.ErrorCode.TIMEOUT:
+          this.addClass('error');
+          break;
+        case chrome.cast.ErrorCode.CANCEL:
+          break;
+        default:
+          this.player_.error(error);
+          break;
+      }
+      return _videoJs2['default'].log('Cast Error: ' + JSON.stringify(_castError));
+    }
+  }, {
+    key: 'onInitSuccess',
+    value: function onInitSuccess() {
+      return this.apiInitialized = true;
+    }
+  }, {
+    key: 'sessionJoinedListener',
+    value: function sessionJoinedListener(session) {
+      if (session.media.length) {
+        this.apiSession = session;
+        this.onMediaDiscovered(session.media[0]);
+      }
+      return console.log('Session joined');
+    }
+  }, {
+    key: 'receiverListener',
+    value: function receiverListener(availability) {
+      if (availability === 'available') {
+        return this.show();
+      }
+    }
+  }, {
+    key: 'doLaunch',
+    value: function doLaunch() {
+      _videoJs2['default'].log('Cast video: ' + this.player_.currentSrc());
+      if (this.apiInitialized) {
+        return chrome.cast.requestSession(this.onSessionSuccess.bind(this), this.castError.bind(this));
+      } else {
+        return _videoJs2['default'].log('Session not initialized');
+      }
+    }
+  }, {
+    key: 'onSessionSuccess',
+    value: function onSessionSuccess(session) {
+      var image = undefined;
+      var key = undefined;
+      var loadRequest = undefined;
+      var mediaInfo = undefined;
+      var ref = undefined;
+      var value = undefined;
+
+      _videoJs2['default'].log('Session initialized: ' + session.sessionId);
+
+      this.apiSession = session;
+      var source = this.player_.currentSrc();
+      var type = this.player_.currentType();
+
+      mediaInfo = new chrome.cast.media.MediaInfo(source, type);
+      mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+      if (this.options_.metadata) {
+        ref = this.options_.metadata;
+        for (key in ref) {
+          value = ref[key];
+          mediaInfo.metadata[key] = value;
+        }
+      }
+      //Add poster image on player
+      var poster = this.player().poster();
+      if (poster) {
+        image = new chrome.cast.Image(poster);
+        mediaInfo.metadata.images = [image];
+      }
+
+      // Load/Add caption tracks
+      var plTracks = this.player().textTracks();
+      var remotePlTracks = this.player().remoteTextTrackEls();
+      if (plTracks) {
+        var tracks = [];
+        for (var i = 0; i < plTracks.length; i++) {
+          var plTrack = plTracks.tracks_[i];
+          var remotePlTrack = remotePlTracks.trackElements_[i];
+          var id = i + 1;
+          var track = new chrome.cast.media.Track(id, chrome.cast.media.TrackType.TEXT);
+          track.trackContentId = plTrack.id || (remotePlTrack ? remotePlTrack.src : id);
+          track.trackContentType = plTrack.type;
+          track.subtype = chrome.cast.media.TextTrackType.CAPTIONS;
+          track.name = plTrack.label;
+          track.language = plTrack.language;
+          track.customData = null;
+          tracks.push(track);
+        }
+        mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
+        mediaInfo.textTrackStyle.foregroundColor = '#FFFFFF';
+        mediaInfo.textTrackStyle.backgroundColor = '#00000060';
+        mediaInfo.textTrackStyle.edgeType = chrome.cast.media.TextTrackEdgeType.DROP_SHADOW;
+        mediaInfo.textTrackStyle.windowType = chrome.cast.media.TextTrackWindowType.ROUNDED_CORNERS;
+        mediaInfo.tracks = tracks;
+      }
+
+      // Request load media source
+      loadRequest = new chrome.cast.media.LoadRequest(mediaInfo);
+
+      loadRequest.autoplay = true;
+      loadRequest.currentTime = this.player_.currentTime();
+
+      this.apiSession.loadMedia(loadRequest, this.onMediaDiscovered.bind(this), this.castError.bind(this));
+      this.apiSession.addUpdateListener(this.onSessionUpdate.bind(this));
+    }
+  }, {
+    key: 'onMediaDiscovered',
+    value: function onMediaDiscovered(media) {
+      this.player_.loadTech_('Chromecast', {
+        type: 'cast',
+        src: this.player_.currentSrc(),
+        apiMedia: media,
+        apiSession: this.apiSession
+      });
+
+      this.casting = true;
+      this.inactivityTimeout = this.player_.options_.inactivityTimeout;
+      this.player_.options_.inactivityTimeout = 0;
+      this.player_.userActive(true);
+      this.addClass('connected');
+      this.removeClass('error');
+    }
+  }, {
+    key: 'onSessionUpdate',
+    value: function onSessionUpdate(isAlive) {
+      if (!this.player_.apiMedia) {
+        return;
+      }
+      if (!isAlive) {
+        return this.onStopAppSuccess();
+      }
+    }
+  }, {
+    key: 'stopCasting',
+    value: function stopCasting() {
+      return this.apiSession.stop(this.onStopAppSuccess.bind(this), this.castError.bind(this));
+    }
+  }, {
+    key: 'onStopAppSuccess',
+    value: function onStopAppSuccess() {
+      this.casting = false;
+      var time = this.player_.currentTime();
+      this.removeClass('connected');
+      this.player_.src(this.player_.options_['sources']);
+      if (!this.player_.paused()) {
+        this.player_.one('seeked', function () {
+          return this.player_.play();
+        });
+      }
+      this.player_.currentTime(time);
+      this.player_.options_.inactivityTimeout = this.inactivityTimeout;
+      return this.apiSession = null;
+    }
+
+    /**
+     * Allow sub components to stack CSS class names
+     *
+     * @return {String} The constructed class name
+     * @method buildCSSClass
+     */
+  }, {
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-chromecast-button ' + _get(Object.getPrototypeOf(ChromeCastButton.prototype), 'buildCSSClass', this).call(this);
+    }
+
+    /**
+     * Handle click on mute
+     * @method handleClick
+     */
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      _get(Object.getPrototypeOf(ChromeCastButton.prototype), 'handleClick', this).call(this);
+      if (this.casting) {
+        return this.stopCasting();
+      } else {
+        return this.doLaunch();
+      }
+    }
+  }]);
+
+  return ChromeCastButton;
+})(Button);
+
+ChromeCastButton.prototype.tryingReconnect = 0;
+
+ChromeCastButton.prototype.inactivityTimeout = 2000;
+
+ChromeCastButton.prototype.controlText_ = 'Chromecast';
+
+//Replace videojs CaptionButton child with this one
+ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 1, 0, 'chromeCastButton');
+
+Component.registerComponent('ChromeCastButton', ChromeCastButton);
+exports['default'] = ChromeCastButton;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],20:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _videojsChromecast = require('./videojs-chromecast');
+
+var _videojsChromecast2 = _interopRequireDefault(_videojsChromecast);
+
+/**
+ * The video.js playlist plugin. Invokes the playlist-maker to create a
+ * playlist function on the specific player.
+ *
+ * @param {Array} list
+ */
+var plugin = function plugin(options) {
+  (0, _videojsChromecast2['default'])(this, options);
+};
+
+_videoJs2['default'].plugin('chromecast', plugin);
+
+exports['default'] = plugin;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./videojs-chromecast":22}],21:[function(require,module,exports){
+(function (global){
+/**
+ * @file chromecast.js
+ * Chromecast Media Controller - Wrapper for HTML5 Media API
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Tech = _videoJs2['default'].getComponent('Tech');
+
+/**
+ * Chromecast Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Tech
+ * @class Chromecast
+ */
+
+var Chromecast = (function (_Tech) {
+  _inherits(Chromecast, _Tech);
+
+  function Chromecast(options, ready) {
+    var _this = this;
+
+    _classCallCheck(this, Chromecast);
+
+    _get(Object.getPrototypeOf(Chromecast.prototype), 'constructor', this).call(this, options, ready);
+    this.apiMedia = this.options_.source.apiMedia;
+    this.apiSession = this.options_.source.apiSession;
+    this.receiver = this.apiSession.receiver.friendlyName;
+
+    this.apiMedia.addUpdateListener(this.onMediaStatusUpdate.bind(this));
+    this.apiSession.addUpdateListener(this.onSessionUpdate.bind(this));
+    var tracks = this.textTracks();
+    if (tracks) {
+      (function () {
+        var changeHandler = _this.handleTracksChange.bind(_this);
+
+        tracks.addEventListener('change', changeHandler);
+        _this.on('dispose', function () {
+          tracks.removeEventListener('change', changeHandler);
+        });
+
+        _this.handleTracksChange();
+      })();
+    }
+
+    this.update();
+    this.triggerReady();
+
+    this.trigger('loadstart');
+    this.trigger('loadedmetadata');
+    this.trigger('loadeddata');
+    this.trigger('canplay');
+    this.trigger('canplaythrough');
+    this.trigger('durationchange');
+  }
+
+  _createClass(Chromecast, [{
+    key: 'createEl',
+    value: function createEl() {
+      var el = _videoJs2['default'].createEl('div', {
+        id: this.options_.techId,
+        className: 'vjs-tech vjs-tech-chromecast'
+      });
+      return el;
+    }
+  }, {
+    key: 'update',
+    value: function update() {
+      this.el_.innerHTML = '<div class="casting-image" style="background-image: url(\'' + this.options_.poster + '\')"></div><div class="casting-overlay"><div class="casting-information"><div class="casting-icon"></div><div class="casting-description"><small>' + this.localize('CASTING TO') + '</small><br>' + this.receiver + '</div></div></div>';
+    }
+  }, {
+    key: 'onSessionUpdate',
+    value: function onSessionUpdate(isAlive) {
+      if (!this.apiMedia) {
+        return;
+      }
+      if (!isAlive) {
+        return this.onStopAppSuccess();
+      }
+    }
+  }, {
+    key: 'onStopAppSuccess',
+    value: function onStopAppSuccess() {
+      this.stopTrackingCurrentTime();
+      this.apiMedia = null;
+    }
+  }, {
+    key: 'onMediaStatusUpdate',
+    value: function onMediaStatusUpdate() {
+      if (!this.apiMedia) {
+        return;
+      }
+      switch (this.apiMedia.playerState) {
+        case chrome.cast.media.PlayerState.BUFFERING:
+          this.trigger('waiting');
+          break;
+        case chrome.cast.media.PlayerState.IDLE:
+          this.trigger('timeupdate');
+          break;
+        case chrome.cast.media.PlayerState.PAUSED:
+          this.trigger('pause');
+          this.paused_ = true;
+          break;
+        case chrome.cast.media.PlayerState.PLAYING:
+          this.trigger('playing');
+          this.trigger('play');
+          this.paused_ = false;
+          break;
+      }
+    }
+
+    /**
+     * Set video
+     *
+     * @param {Object=} src Source object
+     * @method setSrc
+     */
+  }, {
+    key: 'src',
+    value: function src(_src) {
+      //do nothing
+    }
+  }, {
+    key: 'handleTracksChange',
+    value: function handleTracksChange() {
+      var trackInfo = [];
+      var tracks = this.textTracks();
+
+      if (!tracks) {
+        return;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (track['mode'] === 'showing') {
+          trackInfo.push(i + 1);
+        }
+      }
+
+      if (this.apiMedia) {
+        this.tracksInfoRequest = new chrome.cast.media.EditTracksInfoRequest(trackInfo);
+        return this.apiMedia.editTracksInfo(this.tracksInfoRequest, this.onTrackSuccess.bind(this), this.onTrackError.bind(this));
+      }
+    }
+  }, {
+    key: 'onTrackSuccess',
+    value: function onTrackSuccess(e) {
+      return _videoJs2['default'].log('track added');
+    }
+  }, {
+    key: 'onTrackError',
+    value: function onTrackError(e) {
+      return _videoJs2['default'].log('Cast track Error: ' + JSON.stringify(e));
+    }
+  }, {
+    key: 'castError',
+    value: function castError(e) {
+      return _videoJs2['default'].log('Cast Error: ' + JSON.stringify(e));
+    }
+  }, {
+    key: 'play',
+    value: function play() {
+      if (!this.apiMedia) {
+        return;
+      }
+      if (this.paused_) {
+        this.apiMedia.play(null, this.mediaCommandSuccessCallback.bind(this, 'Playing: ' + this.apiMedia.sessionId), this.castError.bind(this));
+      }
+      return this.paused_ = false;
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      if (!this.apiMedia) {
+        return;
+      }
+      if (!this.paused_) {
+        this.apiMedia.pause(null, this.mediaCommandSuccessCallback.bind(this, 'Paused: ' + this.apiMedia.sessionId), this.castError.bind(this));
+        return this.paused_ = true;
+      }
+    }
+  }, {
+    key: 'paused',
+    value: function paused() {
+      return this.paused_;
+    }
+  }, {
+    key: 'currentTime',
+    value: function currentTime() {
+      if (!this.apiMedia) {
+        return 0;
+      }
+      return this.apiMedia.currentTime;
+    }
+  }, {
+    key: 'setCurrentTime',
+    value: function setCurrentTime(position) {
+
+      if (!this.apiMedia) {
+        return 0;
+      }
+      var request = undefined;
+      request = new chrome.cast.media.SeekRequest();
+      request.currentTime = position;
+      //if (this.player_.controlBar.progressControl.seekBar.videoWasPlaying) {
+      //  request.resumeState = chrome.cast.media.ResumeState.PLAYBACK_START;
+      //}
+      return this.apiMedia.seek(request, this.onSeekSuccess.bind(this, position), this.castError.bind(this));
+    }
+  }, {
+    key: 'onSeekSuccess',
+    value: function onSeekSuccess(position) {
+      _videoJs2['default'].log('seek success' + position);
+    }
+  }, {
+    key: 'volume',
+    value: function volume() {
+      return this.volume_;
+    }
+  }, {
+    key: 'duration',
+    value: function duration() {
+      if (!this.apiMedia) {
+        return 0;
+      }
+      return this.apiMedia.media.duration;
+    }
+  }, {
+    key: 'controls',
+    value: function controls() {
+      return false;
+    }
+  }, {
+    key: 'setVolume',
+    value: function setVolume(level) {
+      var mute = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+      var request = undefined;
+      var volume = undefined;
+      if (!this.apiMedia) {
+        return;
+      }
+      volume = new chrome.cast.Volume();
+      volume.level = level;
+      volume.muted = mute;
+      this.volume_ = volume.level;
+      this.muted_ = mute;
+      request = new chrome.cast.media.VolumeRequest();
+      request.volume = volume;
+      this.apiMedia.setVolume(request, this.mediaCommandSuccessCallback.bind(this, 'Volume changed'), this.castError.bind(this));
+      return this.trigger('volumechange');
+    }
+  }, {
+    key: 'mediaCommandSuccessCallback',
+    value: function mediaCommandSuccessCallback(information) {
+      _videoJs2['default'].log(information);
+    }
+  }, {
+    key: 'muted',
+    value: function muted() {
+      return this.muted_;
+    }
+  }, {
+    key: 'setMuted',
+    value: function setMuted(muted) {
+      return this.setVolume(this.volume_, muted);
+    }
+  }, {
+    key: 'supportsFullScreen',
+    value: function supportsFullScreen() {
+      return false;
+    }
+  }, {
+    key: 'resetSrc_',
+    value: function resetSrc_(callback) {
+      callback();
+    }
+  }, {
+    key: 'dispose',
+    value: function dispose() {
+      this.resetSrc_(Function.prototype);
+      _get(Object.getPrototypeOf(Chromecast.prototype), 'dispose', this).call(this, this);
+    }
+  }]);
+
+  return Chromecast;
+})(Tech);
+
+Chromecast.prototype.paused_ = false;
+
+Chromecast.prototype.options_ = {};
+
+Chromecast.prototype.timerStep = 1000;
+
+/* Chromecast Support Testing -------------------------------------------------------- */
+
+Chromecast.isSupported = function () {
+  return true;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Chromecast);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Chromecast.nativeSourceHandler = {};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Chromecast.nativeSourceHandler.canPlayType = function (source) {
+
+  var dashTypeRE = /^application\/(?:dash\+xml|(x-|vnd\.apple\.)mpegurl)/i;
+  var dashExtRE = /^video\/(mpd|mp4|webm|m3u8)/i;
+
+  if (dashTypeRE.test(source)) {
+    return 'probably';
+  } else if (dashExtRE.test(source)) {
+    return 'maybe';
+  } else {
+    return '';
+  }
+};
+
+/*
+ * Check Flash can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Chromecast.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Chromecast.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Chromecast.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+/*
+ * Pass the source to the flash object
+ * Adaptive source handlers will have more complicated workflows before passing
+ * video data to the video element
+ *
+ * @param  {Object} source    The source object
+ * @param  {Flash} tech   The instance of the Flash tech
+ */
+Chromecast.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Chromecast.nativeSourceHandler.dispose = function () {};
+
+// Register the native source handler
+Chromecast.registerSourceHandler(Chromecast.nativeSourceHandler);
+
+/*
+ * Set the tech's volume control support status
+ *
+ * @type {Boolean}
+ */
+Chromecast.prototype['featuresVolumeControl'] = true;
+
+/*
+ * Set the tech's playbackRate support status
+ *
+ * @type {Boolean}
+ */
+Chromecast.prototype['featuresPlaybackRate'] = false;
+
+/*
+ * Set the tech's status on moving the video element.
+ * In iOS, if you move a video element in the DOM, it breaks video playback.
+ *
+ * @type {Boolean}
+ */
+Chromecast.prototype['movingMediaElementInDOM'] = false;
+
+/*
+ * Set the the tech's fullscreen resize support status.
+ * HTML video is able to automatically resize when going to fullscreen.
+ * (No longer appears to be used. Can probably be removed.)
+ */
+Chromecast.prototype['featuresFullscreenResize'] = false;
+
+/*
+ * Set the tech's timeupdate event support status
+ * (this disables the manual timeupdate events of the Tech)
+ */
+Chromecast.prototype['featuresTimeupdateEvents'] = false;
+
+/*
+ * Set the tech's progress event support status
+ * (this disables the manual progress events of the Tech)
+ */
+Chromecast.prototype['featuresProgressEvents'] = false;
+
+/*
+ * Sets the tech's status on native text track support
+ *
+ * @type {Boolean}
+ */
+Chromecast.prototype['featuresNativeTextTracks'] = true;
+
+/*
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
+ */
+Chromecast.prototype['featuresNativeAudioTracks'] = true;
+
+/*
+ * Sets the tech's status on native video track support
+ *
+ * @type {Boolean}
+ */
+Chromecast.prototype['featuresNativeVideoTracks'] = false;
+
+_videoJs2['default'].options.chromecast = {};
+
+Component.registerComponent('Chromecast', Chromecast);
+Tech.registerTech('Chromecast', Chromecast);
+exports['default'] = Chromecast;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],22:[function(require,module,exports){
+(function (global){
+/**
+ * ! videojs-chromecast - v1.0.0 - 2016-02-15
+ * Copyright (c) 2015 benjipott
+ * Licensed under the Apache-2.0 license.
+ * @file videojs-chromecast.js
+ **/
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _componentControlBarChromecastButton = require('./component/control-bar/chromecast-button');
+
+var _componentControlBarChromecastButton2 = _interopRequireDefault(_componentControlBarChromecastButton);
+
+var _techChromecast = require('./tech/chromecast');
+
+var _techChromecast2 = _interopRequireDefault(_techChromecast);
+
+var Component = _videoJs2['default'].getComponent('Component');
+
+/**
+ * Initialize the plugin.
+ * @param options (optional) {object} configuration for the plugin
+ */
+
+var Chromecast = (function (_Component) {
+  _inherits(Chromecast, _Component);
+
+  function Chromecast(player, options) {
+    _classCallCheck(this, Chromecast);
+
+    _get(Object.getPrototypeOf(Chromecast.prototype), 'constructor', this).call(this, player, options);
+  }
+
+  return Chromecast;
+})(Component);
+
+Chromecast.prototype.options_ = {};
+
+// register the plugin
+_videoJs2['default'].options.children.chromecast = {};
+
+_videoJs2['default'].addLanguage('en', {
+  'CASTING TO': 'WIEDERGABE AUF'
+});
+
+_videoJs2['default'].addLanguage('de', {
+  'CASTING TO': 'WIEDERGABE AUF'
+});
+
+_videoJs2['default'].addLanguage('it', {
+  'CASTING TO': 'PLAYBACK SU'
+});
+
+_videoJs2['default'].addLanguage('fr', {
+  'CASTING TO': 'CAST EN COURS SUR'
+});
+
+Component.registerComponent('Chromecast', Chromecast);
+exports['default'] = Chromecast;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./component/control-bar/chromecast-button":19,"./tech/chromecast":21}],23:[function(require,module,exports){
+(function (global){
+/**
+ * ! videojs-metrics - v0.0.0 - 2016-02-15
+ * Copyright (c) 2015 benjipott
+ * Licensed under the Apache-2.0 license.
+ * @file videojs-metrics.js
+ **/
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _xhr = require('xhr');
+
+var _xhr2 = _interopRequireDefault(_xhr);
+
+var _globalWindow = require('global/window');
+
+var _globalWindow2 = _interopRequireDefault(_globalWindow);
+
+var _globalDocument = require('global/document');
+
+var _globalDocument2 = _interopRequireDefault(_globalDocument);
+
+var _utilsJs = require('./utils.js');
+
+var browser = _interopRequireWildcard(_utilsJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Flash = _videoJs2['default'].getComponent('Flash');
+
+/**
+ * Initialize the plugin.
+ * @param options (optional) {object} configuration for the plugin
+ */
+
+var Metrics = (function (_Component) {
+	_inherits(Metrics, _Component);
+
+	function Metrics(player, options) {
+		_classCallCheck(this, Metrics);
+
+		_get(Object.getPrototypeOf(Metrics.prototype), 'constructor', this).call(this, player, options);
+		var source = this.player().manifestUrl || this.player().currentSrc();
+
+		this.browserInfo = browser.getBrowser();
+		this.pathUrl = source.match(Metrics.URL_MATCH) || ['undefined', 'undefined'];
+		this.setupTriggers();
+	}
+
+	_createClass(Metrics, [{
+		key: 'dispose',
+		value: function dispose() {
+			this.clearInterval(this.intervalPing);
+			this.setupTriggers('off');
+		}
+	}, {
+		key: 'eventHandler',
+		value: function eventHandler(evt) {
+			var data = {
+				type: evt.type
+			};
+
+			var skipped = false;
+
+			switch (data.type) {
+				case 'error':
+					var error = this.player().error();
+
+					error = error || {
+						code: -1,
+						message: 'cant get error message'
+					};
+					data.number = error.code;
+					data.message = error.message;
+					break;
+				case 'dispose':
+				case 'ended':
+					if (data.type === this.oldType) {
+						skipped = true;
+					}
+					data.type = 'stop';
+					break;
+				case 'loadstart':
+					skipped = true;
+					break;
+				case 'firstplay':
+					data.type = 'start';
+					this.intervalPing = this.setInterval(this.onPing, Metrics.INTERVAL_PING);
+					break;
+				case 'waiting':
+					data.type = 'buffering';
+					break;
+				case 'bandwidthIncrease':
+				case 'bandwidthDecrease':
+					break;
+				default:
+					break;
+			}
+
+			this.oldType = data.type;
+
+			if (skipped) {
+				return;
+			}
+
+			this.notify(data);
+		}
+	}, {
+		key: 'onPing',
+		value: function onPing() {
+			this.player().trigger('ping');
+		}
+	}, {
+		key: 'setupTriggers',
+		value: function setupTriggers(off) {
+			var addOrRemove = off || 'on';
+
+			var events = this.options_.trackEvents;
+
+			var player = this.player();
+
+			var i = events.length - 1;
+
+			for (i; i >= 0; i--) {
+				// just call event start only one time
+				var firstCall = addOrRemove;
+
+				if (events[i] === 'firstplay' && addOrRemove === 'on') {
+					firstCall = 'one';
+				}
+				player[firstCall](events[i], _videoJs2['default'].bind(this, this.eventHandler));
+			}
+		}
+	}, {
+		key: 'pick',
+		value: function pick(obj, list, context) {
+			var result = {};
+
+			if (typeof list === 'string') {
+				list = [list];
+			}
+
+			Object.keys(obj).forEach(function (key) {
+				if (list.indexOf(key) > -1) {
+					result[key] = obj[key];
+				}
+			}, context);
+
+			return result;
+		}
+	}, {
+		key: 'getRequiredKeys',
+		value: function getRequiredKeys(type) {
+			return Metrics.BASE_KEYS.concat(Metrics.REQUIRED_KEY[type] || []);
+		}
+	}, {
+		key: 'notify',
+		value: function notify(evt) {
+			var player = this.player();
+
+			var width = _globalWindow2['default'].innerWidth || _globalDocument2['default'].documentElement.clientWidth || _globalDocument2['default'].body.clientWidth;
+
+			var height = _globalWindow2['default'].innerHeight || _globalDocument2['default'].documentElement.clientHeight || _globalDocument2['default'].body.clientHeight;
+
+			// Merge with default options
+			evt['user_id'] = this.options().user_id;
+			evt['fqdn'] = this.pathUrl[1];
+			evt['os'] = this.browserInfo.os;
+			evt['os_version'] = this.browserInfo.osVersion.toString();
+			evt['web_browser'] = this.browserInfo.browser.toString();
+			evt['web_browser_version'] = this.browserInfo.version ? this.browserInfo.version.toString() : '';
+			evt['resolution_size'] = width + 'x' + height;
+			evt['flash_version'] = Flash.version().join(',');
+			evt['html5_video'] = player.techName_ ? player.techName_ !== 'FLash' || player.techName_ !== 'DashAs' : 'undefined';
+			evt['relative_url'] = this.pathUrl[2];
+			evt['timeout'] = false;
+			evt['frames_dropped'] = 0;
+			try {
+				var metrics = player.techGet_('getPlaybackStatistics');
+
+				this.metrics_ = _videoJs2['default'].mergeOptions(this.metrics_, metrics);
+				evt['video_bitrate'] = this.metrics_.video.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.video.bandwidth / 1000)) : -1;
+				evt['audio_bitrate'] = this.metrics_.audio.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.audio.bandwidth / 1000)) : -1;
+				evt['chunks_from_cdn'] = this.metrics_.p2pweb.chunksFromCDN;
+				evt['chunks_from_p2p'] = this.metrics_.p2pweb.chunksFromP2P;
+				evt['startup_time'] = this.metrics_.p2pweb.startupTime;
+
+				var pickedData = this.pick(evt, this.getRequiredKeys(evt.type));
+
+				var data = {
+					json: pickedData,
+					uri: this.options_.url,
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				};
+
+				Metrics.xhr(data, function (err) {
+					if (err) {
+						throw new Error(err.message);
+					}
+				});
+			} catch (e) {
+				_videoJs2['default'].log(e);
+			}
+		}
+	}]);
+
+	return Metrics;
+})(Component);
+
+Metrics.REQUIRED_KEY = {
+	'bandwidthIncrease': ['video_bitrate', 'audio_bitrate'],
+	'bandwidthDecrease': ['video_bitrate', 'audio_bitrate'],
+	'ping': ['chunks_from_cdn', 'chunks_from_p2p'],
+	'buffering': [],
+	'error': ['number', 'message'],
+	'start': ['video_bitrate', 'audio_bitrate', 'os', 'os_version', 'web_browser', 'web_browser_version', 'resolution_size', 'flash_version', 'html5_video', 'relative_url'],
+	'stop': ['timeout', 'frames_dropped']
+};
+
+Metrics.URL_MATCH = /https?:\/\/(?:www\.)?([-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b)*(\/[\/\d\w\.-]*)*(?:[\?])*(.+)*/;
+
+Metrics.prototype.pathUrl = '';
+Metrics.prototype.oldType = null;
+Metrics.prototype.intervalPing = 0;
+Metrics.prototype.browserInfo = {};
+
+Metrics.prototype.options_ = {
+	'option': true,
+	'user_id': 666,
+	'method': 'POST',
+	'responseType': 'json',
+	'timeout': 1000,
+	'url': '//stats.afrostream.tv/api/v1/events',
+	'trackEvents': ['loadstart', 'ping', 'firstplay', 'ended', 'dispose', 'waiting', 'error', 'bandwidthIncrease', 'bandwidthDecrease']
+};
+
+Metrics.INTERVAL_PING = 60000;
+
+Metrics.BASE_KEYS = ['user_id', 'type', 'fqdn'];
+
+Metrics.METRICS_DATA = {
+	bandwidth: -1,
+	bitrateIndex: 0,
+	pendingIndex: '',
+	numBitrates: 0,
+	bufferLength: 0,
+	droppedFrames: 0,
+	movingLatency: 0,
+	movingDownload: 0,
+	movingRatio: 0,
+	requestsQueue: 0
+};
+
+Metrics.prototype.metrics_ = {
+	video: _videoJs2['default'].mergeOptions({}, Metrics.METRICS_DATA),
+	audio: _videoJs2['default'].mergeOptions({}, Metrics.METRICS_DATA)
+};
+
+Metrics.xhr = _xhr2['default'];
+
+Component.registerComponent('Metrics', Metrics);
+
+// register the plugin
+_videoJs2['default'].options.children.metrics = {};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./utils.js":25,"global/document":17,"global/window":18,"xhr":26}],24:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _metrics = require('./metrics');
+
+var _metrics2 = _interopRequireDefault(_metrics);
+
+/**
+ * The video.js playlist plugin. Invokes the playlist-maker to create a
+ * playlist function on the specific player.
+ *
+ * @param {Array} list
+ */
+var plugin = function plugin(options) {
+  (0, _metrics2['default'])(this, options);
+};
+
+_videoJs2['default'].plugin('metrics', plugin);
+
+exports['default'] = plugin;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./metrics":23}],25:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+exports.getBrowser = getBrowser;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _globalDocument = require('global/document');
+
+var _globalDocument2 = _interopRequireDefault(_globalDocument);
+
+var _globalWindow = require('global/window');
+
+var _globalWindow2 = _interopRequireDefault(_globalWindow);
+
+function getBrowser() {
+	var data = {};
+
+	var browser = '';
+
+	var version = '';
+
+	var os = '';
+
+	var osVersion = '';
+
+	var parseUserAgent = undefined;
+
+	var prepareData = undefined;
+
+	var renameOsx = undefined;
+
+	var cutSafariVersion = undefined;
+
+	parseUserAgent = function () {
+		var userAgent = navigator.userAgent.toLowerCase();
+
+		var browserParts = /(ie|firefox|chrome|safari|opera)(?:.*version)?(?:[ \/])?([\w.]+)/.exec(userAgent);
+
+		var osParts = /(mac|win|linux|freebsd|mobile|iphone|ipod|ipad|android|blackberry|j2me|webtv)/.exec(userAgent);
+
+		if (!userAgent.match(/trident\/7\./)) {
+			browser = 'ie';
+			version = 11;
+		} else if (browserParts && browserParts.length > 2) {
+			browser = browserParts[1];
+			version = browserParts[2];
+		}
+
+		if (osParts && osParts.length > 1) {
+			os = osParts[1];
+		}
+
+		osVersion = navigator.oscpu || navigator.appName;
+	};
+
+	prepareData = function () {
+		data.browser = browser;
+		data.version = parseInt(version, 10) || '';
+		data.os = os;
+		data.osVersion = osVersion;
+	};
+
+	renameOsx = function () {
+		if (os === 'mac') {
+			os = 'osx';
+		}
+	};
+
+	cutSafariVersion = function () {
+		if (os === 'safari') {
+			version = version.substring(0, 1);
+		}
+	};
+
+	parseUserAgent();
+
+	// exception rules
+	renameOsx();
+	cutSafariVersion();
+
+	prepareData();
+
+	return data;
+}
+},{"global/document":17,"global/window":18}],26:[function(require,module,exports){
+"use strict";
+var window = require("global/window")
+var once = require("once")
+var isFunction = require("is-function")
+var parseHeaders = require("parse-headers")
+var xtend = require("xtend")
+
+module.exports = createXHR
+createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
+createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
+
+forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method) {
+    createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
+        options = initParams(uri, options, callback)
+        options.method = method.toUpperCase()
+        return _createXHR(options)
+    }
+})
+
+function forEachArray(array, iterator) {
+    for (var i = 0; i < array.length; i++) {
+        iterator(array[i])
+    }
+}
+
+function isEmpty(obj){
+    for(var i in obj){
+        if(obj.hasOwnProperty(i)) return false
+    }
+    return true
+}
+
+function initParams(uri, options, callback) {
+    var params = uri
+
+    if (isFunction(options)) {
+        callback = options
+        if (typeof uri === "string") {
+            params = {uri:uri}
+        }
+    } else {
+        params = xtend(options, {uri: uri})
+    }
+
+    params.callback = callback
+    return params
+}
+
+function createXHR(uri, options, callback) {
+    options = initParams(uri, options, callback)
+    return _createXHR(options)
+}
+
+function _createXHR(options) {
+    var callback = options.callback
+    if(typeof callback === "undefined"){
+        throw new Error("callback argument missing")
+    }
+    callback = once(callback)
+
+    function readystatechange() {
+        if (xhr.readyState === 4) {
+            loadFunc()
+        }
+    }
+
+    function getBody() {
+        // Chrome with requestType=blob throws errors arround when even testing access to responseText
+        var body = undefined
+
+        if (xhr.response) {
+            body = xhr.response
+        } else if (xhr.responseType === "text" || !xhr.responseType) {
+            body = xhr.responseText || xhr.responseXML
+        }
+
+        if (isJson) {
+            try {
+                body = JSON.parse(body)
+            } catch (e) {}
+        }
+
+        return body
+    }
+
+    var failureResponse = {
+                body: undefined,
+                headers: {},
+                statusCode: 0,
+                method: method,
+                url: uri,
+                rawRequest: xhr
+            }
+
+    function errorFunc(evt) {
+        clearTimeout(timeoutTimer)
+        if(!(evt instanceof Error)){
+            evt = new Error("" + (evt || "Unknown XMLHttpRequest Error") )
+        }
+        evt.statusCode = 0
+        callback(evt, failureResponse)
+    }
+
+    // will load the data & process the response in a special response object
+    function loadFunc() {
+        if (aborted) return
+        var status
+        clearTimeout(timeoutTimer)
+        if(options.useXDR && xhr.status===undefined) {
+            //IE8 CORS GET successful response doesn't have a status field, but body is fine
+            status = 200
+        } else {
+            status = (xhr.status === 1223 ? 204 : xhr.status)
+        }
+        var response = failureResponse
+        var err = null
+
+        if (status !== 0){
+            response = {
+                body: getBody(),
+                statusCode: status,
+                method: method,
+                headers: {},
+                url: uri,
+                rawRequest: xhr
+            }
+            if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
+                response.headers = parseHeaders(xhr.getAllResponseHeaders())
+            }
+        } else {
+            err = new Error("Internal XMLHttpRequest Error")
+        }
+        callback(err, response, response.body)
+
+    }
+
+    var xhr = options.xhr || null
+
+    if (!xhr) {
+        if (options.cors || options.useXDR) {
+            xhr = new createXHR.XDomainRequest()
+        }else{
+            xhr = new createXHR.XMLHttpRequest()
+        }
+    }
+
+    var key
+    var aborted
+    var uri = xhr.url = options.uri || options.url
+    var method = xhr.method = options.method || "GET"
+    var body = options.body || options.data || null
+    var headers = xhr.headers = options.headers || {}
+    var sync = !!options.sync
+    var isJson = false
+    var timeoutTimer
+
+    if ("json" in options) {
+        isJson = true
+        headers["accept"] || headers["Accept"] || (headers["Accept"] = "application/json") //Don't override existing accept header declared by user
+        if (method !== "GET" && method !== "HEAD") {
+            headers["content-type"] || headers["Content-Type"] || (headers["Content-Type"] = "application/json") //Don't override existing accept header declared by user
+            body = JSON.stringify(options.json)
+        }
+    }
+
+    xhr.onreadystatechange = readystatechange
+    xhr.onload = loadFunc
+    xhr.onerror = errorFunc
+    // IE9 must have onprogress be set to a unique function.
+    xhr.onprogress = function () {
+        // IE must die
+    }
+    xhr.ontimeout = errorFunc
+    xhr.open(method, uri, !sync, options.username, options.password)
+    //has to be after open
+    if(!sync) {
+        xhr.withCredentials = !!options.withCredentials
+    }
+    // Cannot set timeout with sync request
+    // not setting timeout on the xhr object, because of old webkits etc. not handling that correctly
+    // both npm's request and jquery 1.x use this kind of timeout, so this is being consistent
+    if (!sync && options.timeout > 0 ) {
+        timeoutTimer = setTimeout(function(){
+            aborted=true//IE9 may still call readystatechange
+            xhr.abort("timeout")
+            var e = new Error("XMLHttpRequest timeout")
+            e.code = "ETIMEDOUT"
+            errorFunc(e)
+        }, options.timeout )
+    }
+
+    if (xhr.setRequestHeader) {
+        for(key in headers){
+            if(headers.hasOwnProperty(key)){
+                xhr.setRequestHeader(key, headers[key])
+            }
+        }
+    } else if (options.headers && !isEmpty(options.headers)) {
+        throw new Error("Headers cannot be set on an XDomainRequest object")
+    }
+
+    if ("responseType" in options) {
+        xhr.responseType = options.responseType
+    }
+
+    if ("beforeSend" in options &&
+        typeof options.beforeSend === "function"
+    ) {
+        options.beforeSend(xhr)
+    }
+
+    xhr.send(body)
+
+    return xhr
+
+
+}
+
+function noop() {}
+
+},{"global/window":18,"is-function":27,"once":28,"parse-headers":31,"xtend":32}],27:[function(require,module,exports){
+module.exports = isFunction
+
+var toString = Object.prototype.toString
+
+function isFunction (fn) {
+  var string = toString.call(fn)
+  return string === '[object Function]' ||
+    (typeof fn === 'function' && string !== '[object RegExp]') ||
+    (typeof window !== 'undefined' &&
+     // IE8 and below
+     (fn === window.setTimeout ||
+      fn === window.alert ||
+      fn === window.confirm ||
+      fn === window.prompt))
+};
+
+},{}],28:[function(require,module,exports){
+module.exports = once
+
+once.proto = once(function () {
+  Object.defineProperty(Function.prototype, 'once', {
+    value: function () {
+      return once(this)
+    },
+    configurable: true
+  })
+})
+
+function once (fn) {
+  var called = false
+  return function () {
+    if (called) return
+    called = true
+    return fn.apply(this, arguments)
+  }
+}
+
+},{}],29:[function(require,module,exports){
+var isFunction = require('is-function')
+
+module.exports = forEach
+
+var toString = Object.prototype.toString
+var hasOwnProperty = Object.prototype.hasOwnProperty
+
+function forEach(list, iterator, context) {
+    if (!isFunction(iterator)) {
+        throw new TypeError('iterator must be a function')
+    }
+
+    if (arguments.length < 3) {
+        context = this
+    }
+    
+    if (toString.call(list) === '[object Array]')
+        forEachArray(list, iterator, context)
+    else if (typeof list === 'string')
+        forEachString(list, iterator, context)
+    else
+        forEachObject(list, iterator, context)
+}
+
+function forEachArray(array, iterator, context) {
+    for (var i = 0, len = array.length; i < len; i++) {
+        if (hasOwnProperty.call(array, i)) {
+            iterator.call(context, array[i], i, array)
+        }
+    }
+}
+
+function forEachString(string, iterator, context) {
+    for (var i = 0, len = string.length; i < len; i++) {
+        // no such thing as a sparse string.
+        iterator.call(context, string.charAt(i), i, string)
+    }
+}
+
+function forEachObject(object, iterator, context) {
+    for (var k in object) {
+        if (hasOwnProperty.call(object, k)) {
+            iterator.call(context, object[k], k, object)
+        }
+    }
+}
+
+},{"is-function":27}],30:[function(require,module,exports){
+
+exports = module.exports = trim;
+
+function trim(str){
+  return str.replace(/^\s*|\s*$/g, '');
+}
+
+exports.left = function(str){
+  return str.replace(/^\s*/, '');
+};
+
+exports.right = function(str){
+  return str.replace(/\s*$/, '');
+};
+
+},{}],31:[function(require,module,exports){
+var trim = require('trim')
+  , forEach = require('for-each')
+  , isArray = function(arg) {
+      return Object.prototype.toString.call(arg) === '[object Array]';
+    }
+
+module.exports = function (headers) {
+  if (!headers)
+    return {}
+
+  var result = {}
+
+  forEach(
+      trim(headers).split('\n')
+    , function (row) {
+        var index = row.indexOf(':')
+          , key = trim(row.slice(0, index)).toLowerCase()
+          , value = trim(row.slice(index + 1))
+
+        if (typeof(result[key]) === 'undefined') {
+          result[key] = value
+        } else if (isArray(result[key])) {
+          result[key].push(value)
+        } else {
+          result[key] = [ result[key], value ]
+        }
+      }
+  )
+
+  return result
+}
+},{"for-each":29,"trim":30}],32:[function(require,module,exports){
+module.exports = extend
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        for (var key in source) {
+            if (hasOwnProperty.call(source, key)) {
+                target[key] = source[key]
+            }
+        }
+    }
+
+    return target
+}
+
+},{}],33:[function(require,module,exports){
 (function (global){
 /**
  * ! afrostrream-player - v2.0.0 - 2016-02-15
@@ -2616,6 +4291,14 @@ var _componentControlBarNextNextVideoButton2 = _interopRequireDefault(_component
 var _componentControlBarProgressControlLoadProgressSpinner = require('./component/control-bar/progress-control/load-progress-spinner');
 
 var _componentControlBarProgressControlLoadProgressSpinner2 = _interopRequireDefault(_componentControlBarProgressControlLoadProgressSpinner);
+
+var _videojsMetrics = require('videojs-metrics');
+
+var _videojsMetrics2 = _interopRequireDefault(_videojsMetrics);
+
+var _videojsChromecast = require('videojs-chromecast');
+
+var _videojsChromecast2 = _interopRequireDefault(_videojsChromecast);
 
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
@@ -2748,5 +4431,5 @@ Component.registerComponent('Afrostream', Afrostream);
 exports['default'] = Afrostream;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/next/next-video-button":1,"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/dashas":14,"./tech/media":15}]},{},[17])(17)
+},{"./component/control-bar/next/next-video-button":1,"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/dashas":14,"./tech/media":15,"videojs-chromecast":20,"videojs-metrics":24}]},{},[33])(33)
 });
