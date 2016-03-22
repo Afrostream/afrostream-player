@@ -3,9 +3,15 @@
   border-radius: $progress-radius;
 }
 
-.video-js .vjs-slider-bar.vjs-mouse-display:after,
-.video-js .vjs-slider-bar.vjs-play-progress:after {
+.video-js .vjs-mouse-display:after,
+.video-js .vjs-play-progress:after {
   font-family: $text-font-family;
+  font-size: 0.4em;
+}
+
+.video-js .vjs-mouse-display:after,
+.video-js .vjs-slider-bar.vjs-play-progress:after {
+  font-size: 0.4em;
 }
 
 .video-js .vjs-slider-bar.vjs-play-progress {
