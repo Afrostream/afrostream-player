@@ -31,6 +31,11 @@
   <source
     src="https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd"
     type="application/dash+xml"/>
+  <track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="fr"
+         label="Francais" default/>
+  <!--Tracks need an ending tag thanks to IE9-->
+  <track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="en"
+         label="English"/>
   <!--<source-->
   <!--src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"-->
   <!--type="application/x-mpegURL"/>-->
