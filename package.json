@@ -57,6 +57,7 @@
     "dist-test/",
     "dist/",
     "docs/",
+    "libs/",
     "es5/",
     "index.html",
     "scripts/",
