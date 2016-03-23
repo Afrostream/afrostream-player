@@ -5,7 +5,6 @@
  * @file afrostream.js
  **/
 
-import window from 'global/window';
 import videojs from 'video.js';
 import MediaTechController from './tech/media';
 import Dash from './tech/dash';

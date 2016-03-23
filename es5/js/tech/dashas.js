@@ -24,10 +24,6 @@ var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _dashjs = require('dashjs');
 
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
 var Component = _videoJs2['default'].getComponent('Component');
 var Tech = _videoJs2['default'].getComponent('Tech');
 var Flash = _videoJs2['default'].getComponent('Flash');
@@ -52,11 +48,11 @@ var Dashas = (function (_Flash) {
     // A 4.x workflow we weren't able to solve for in 5.0
     // because of the need to hard code these functions
     // into the swf for security reasons
-    _globalWindow2['default'].videojs = _globalWindow2['default'].videojs || {};
-    _globalWindow2['default'].videojs.Dashas = _globalWindow2['default'].videojs.Dashas || {};
-    _globalWindow2['default'].videojs.Dashas.onReady = Flash.onReady;
-    _globalWindow2['default'].videojs.Dashas.onEvent = Flash.onEvent;
-    _globalWindow2['default'].videojs.Dashas.onError = Flash.onError;
+    window.videojs = window.videojs || {};
+    window.videojs.Dashas = window.videojs.Dashas || {};
+    window.videojs.Dashas.onReady = Flash.onReady;
+    window.videojs.Dashas.onEvent = Flash.onEvent;
+    window.videojs.Dashas.onError = Flash.onError;
 
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
     this.one('loadedmetadata', this.onInitialized.bind(this));

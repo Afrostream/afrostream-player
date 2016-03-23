@@ -1386,10 +1386,6 @@ var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
 
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
 var Component = _videoJs2['default'].getComponent('Component');
 var Tech = _videoJs2['default'].getComponent('Tech');
 var Html5 = _videoJs2['default'].getComponent('Html5');
@@ -1959,7 +1955,7 @@ Dash.prototype.options_ = {
 /* Dash Support Testing -------------------------------------------------------- */
 
 Dash.isSupported = function () {
-  return Html5.isSupported() && !!_globalWindow2['default'].MediaSource;
+  return Html5.isSupported() && !!window.MediaSource;
 };
 
 // Add Source Handler pattern functions to this tech
@@ -2041,7 +2037,7 @@ Tech.registerTech('Dash', Dash);
 exports['default'] = Dash;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":18}],14:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (global){
 /**
  * @file dashas.js
@@ -2069,10 +2065,6 @@ var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
 
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
 var Component = _videoJs2['default'].getComponent('Component');
 var Tech = _videoJs2['default'].getComponent('Tech');
 var Flash = _videoJs2['default'].getComponent('Flash');
@@ -2097,11 +2089,11 @@ var Dashas = (function (_Flash) {
     // A 4.x workflow we weren't able to solve for in 5.0
     // because of the need to hard code these functions
     // into the swf for security reasons
-    _globalWindow2['default'].videojs = _globalWindow2['default'].videojs || {};
-    _globalWindow2['default'].videojs.Dashas = _globalWindow2['default'].videojs.Dashas || {};
-    _globalWindow2['default'].videojs.Dashas.onReady = Flash.onReady;
-    _globalWindow2['default'].videojs.Dashas.onEvent = Flash.onEvent;
-    _globalWindow2['default'].videojs.Dashas.onError = Flash.onError;
+    window.videojs = window.videojs || {};
+    window.videojs.Dashas = window.videojs.Dashas || {};
+    window.videojs.Dashas.onReady = Flash.onReady;
+    window.videojs.Dashas.onEvent = Flash.onEvent;
+    window.videojs.Dashas.onError = Flash.onError;
 
     this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
     this.one('loadedmetadata', this.onInitialized.bind(this));
@@ -2479,7 +2471,7 @@ HTMLObjectElement.prototype.vjs_src = function (src) {};
 exports['default'] = Dashas;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"global/window":18}],15:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4252,10 +4244,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
 var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
@@ -4427,5 +4415,5 @@ Component.registerComponent('Afrostream', Afrostream);
 exports['default'] = Afrostream;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/next/next-video-button":1,"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/dashas":14,"./tech/media":15,"global/window":18,"videojs-chromecast":20,"videojs-metrics":24}]},{},[33])(33)
+},{"./component/control-bar/next/next-video-button":1,"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/dashas":14,"./tech/media":15,"videojs-chromecast":20,"videojs-metrics":24}]},{},[33])(33)
 });

@@ -24,10 +24,6 @@ var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _dashjs = require('dashjs');
 
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
 var Component = _videoJs2['default'].getComponent('Component');
 var Tech = _videoJs2['default'].getComponent('Tech');
 var Html5 = _videoJs2['default'].getComponent('Html5');
@@ -597,7 +593,7 @@ Dash.prototype.options_ = {
 /* Dash Support Testing -------------------------------------------------------- */
 
 Dash.isSupported = function () {
-  return Html5.isSupported() && !!_globalWindow2['default'].MediaSource;
+  return Html5.isSupported() && !!window.MediaSource;
 };
 
 // Add Source Handler pattern functions to this tech
