@@ -95,7 +95,7 @@
   },
   "dependencies": {
     "babel": "^5.8.0",
-    "babelify": "^6.0.0",
+    "babelify": "https://registry.npmjs.org/babelify/-/babelify-6.4.0.tgz",
     "bannerize": "^1.0.0",
     "browserify": "^11.0.0",
     "browserify-shim": "^3.0.0",

@@ -4252,6 +4252,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var _globalWindow = require('global/window');
+
+var _globalWindow2 = _interopRequireDefault(_globalWindow);
+
 var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
@@ -4300,6 +4304,7 @@ var _videojsChromecast2 = _interopRequireDefault(_videojsChromecast);
 
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
+
 /**
  * Initialize the plugin.
  * @param options (optional) {object} configuration for the plugin
@@ -4422,5 +4427,5 @@ Component.registerComponent('Afrostream', Afrostream);
 exports['default'] = Afrostream;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/next/next-video-button":1,"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/dashas":14,"./tech/media":15,"videojs-chromecast":20,"videojs-metrics":24}]},{},[33])(33)
+},{"./component/control-bar/next/next-video-button":1,"./component/control-bar/progress-control/load-progress-spinner":3,"./component/control-bar/track-controls/audio-track-button":4,"./component/control-bar/track-controls/caption-track-button":6,"./component/control-bar/track-controls/video-track-button":11,"./tech/dash":13,"./tech/dashas":14,"./tech/media":15,"global/window":18,"videojs-chromecast":20,"videojs-metrics":24}]},{},[33])(33)
 });

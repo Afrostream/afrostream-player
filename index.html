@@ -31,9 +31,9 @@
   <!--type="application/dash+xml"/>-->
   <!--<source src="https://hw.cdn.afrostream.net/live/bet.isml/bet.mpd"-->
   <!--type="application/dash+xml"/>-->
-  <source
-    src="http://dash.edgesuite.net/digitalprimates/fraunhofer/480p_video/mps_5_1_with_video/Sintel/sintel_480p_mps5_1.mpd"
-    type="application/dash+xml"/>
+  <!--<source-->
+  <!--src="http://dash.edgesuite.net/digitalprimates/fraunhofer/480p_video/mps_5_1_with_video/Sintel/sintel_480p_mps5_1.mpd"-->
+  <!--type="application/dash+xml"/>-->
   <!--<source-->
   <!--src="https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd"-->
   <!--type="application/dash+xml"/>-->
@@ -64,6 +64,12 @@
 
   var player = videojs(document.querySelector('video'), {
     autoplay: true,
+    sources: [
+      {
+        src: "https://hw.cdn.afrostream.net/vod/tylerperry_fbow_s01ep01/45f6eb0ff24ab110.ism/45f6eb0ff24ab110.mpd",
+        type: "application/dash+xml"
+      }
+    ],
 //    aspectRatio: "640:167",
     controlBar: {
       volumeMenuButton: {

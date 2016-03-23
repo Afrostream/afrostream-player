@@ -5,6 +5,7 @@
  * @file afrostream.js
  **/
 
+import window from 'global/window';
 import videojs from 'video.js';
 import MediaTechController from './tech/media';
 import Dash from './tech/dash';
@@ -20,6 +21,7 @@ import Chromecast from 'videojs-chromecast';
 
 const Component = videojs.getComponent('Component');
 const ControlBar = videojs.getComponent('ControlBar');
+
 /**
  * Initialize the plugin.
  * @param options (optional) {object} configuration for the plugin
