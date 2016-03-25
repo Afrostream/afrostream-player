@@ -60,6 +60,10 @@ var NextVideoButton = (function (_MenuButton) {
     value: function createItems() {
       var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
+      if (!this.options_.poster) {
+        this.hide();
+        return items;
+      }
       items.push(new _nextVideoItem2['default'](this.player_, {
         label: 'next',
         selectable: false,
