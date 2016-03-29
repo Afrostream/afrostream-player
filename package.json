@@ -126,7 +126,7 @@
     "sinon": "1.14.1",
     "smoothie": "^1.27.0",
     "uglify-js": "^2.5.0",
-    "video.js": "^5.0.0",
+    "video.js": "https://registry.npmjs.org/video.js/-/video.js-5.7.1.tgz",
     "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#master",
     "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#es6",
     "videojs-standard": "^4.0.0",
