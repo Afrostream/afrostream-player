@@ -44,11 +44,10 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
   update(newTime, position) {
     super.update(newTime, position);
-    const timeInterval = 10;
-    const spritesPerSheet = 25;
+    const timeInterval = 30;
     const spriteSize = {
-      w: 600,
-      h: 330
+      w: 450,
+      h: 250
     };
     const spritesPerRow = 5;
     const spritesPerCol = 5;
@@ -56,7 +55,8 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     const sheetWidth = spriteSize.w / spritesPerRow;
     const sheetHeight = spriteSize.h / spritesPerCol;
 
-    const secondsPerSheet = timeInterval * spritesPerRow;
+    const spritesPerSheet = spritesPerRow * spritesPerCol;
+    const secondsPerSheet = timeInterval * spritesPerSheet;
 
     let index = Math.max(1, Math.ceil(newTime / secondsPerSheet));
     let stripedTime = newTime - ((index - 1) * secondsPerSheet);
@@ -64,7 +64,6 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     let x = Math.floor((sheetIndex % 5) * sheetWidth);
     let y = Math.floor(sheetIndex / spritesPerCol) * sheetHeight;
 
-    // console.log('timeline : ', newTime, index, secondsPerSheet, this.player_.duration(), stripedTime, percentPos, sheetIndex, x, y);
     if (this.itemIndex !== index) {
       this.itemIndex = index;
       let url = `http://origin.afrostream.tv/vod/24hourlovebis/frames/map-${this.itemIndex}.jpg`;

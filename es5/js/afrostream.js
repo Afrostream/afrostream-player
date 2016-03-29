@@ -39,25 +39,9 @@ var _techDashas2 = _interopRequireDefault(_techDashas);
 
 var _dashjs = require('dashjs');
 
-var _componentControlBarTrackControlsCaptionTrackButton = require('./component/control-bar/track-controls/caption-track-button');
+var _componentControlBar = require('./component/control-bar/');
 
-var _componentControlBarTrackControlsCaptionTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsCaptionTrackButton);
-
-var _componentControlBarTrackControlsAudioTrackButton = require('./component/control-bar/track-controls/audio-track-button');
-
-var _componentControlBarTrackControlsAudioTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsAudioTrackButton);
-
-var _componentControlBarTrackControlsVideoTrackButton = require('./component/control-bar/track-controls/video-track-button');
-
-var _componentControlBarTrackControlsVideoTrackButton2 = _interopRequireDefault(_componentControlBarTrackControlsVideoTrackButton);
-
-var _componentControlBarNextNextVideoButton = require('./component/control-bar/next/next-video-button');
-
-var _componentControlBarNextNextVideoButton2 = _interopRequireDefault(_componentControlBarNextNextVideoButton);
-
-var _componentControlBarProgressControlLoadProgressSpinner = require('./component/control-bar/progress-control/load-progress-spinner');
-
-var _componentControlBarProgressControlLoadProgressSpinner2 = _interopRequireDefault(_componentControlBarProgressControlLoadProgressSpinner);
+var _componentControlBar2 = _interopRequireDefault(_componentControlBar);
 
 var _videojsMetrics = require('videojs-metrics');
 

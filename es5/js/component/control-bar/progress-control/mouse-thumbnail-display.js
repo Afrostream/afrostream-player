@@ -56,34 +56,57 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
   _createClass(MouseThumbnailDisplay, [{
     key: 'createEl',
     value: function createEl() {
-      return _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'createEl', this).call(this, 'div', {
-        className: 'vjs-mouse-display'
+      var el = _videoJs2['default'].createEl('div', {
+        className: 'vjs-thumbnail-display'
       });
+
+      this.fallbackImg_ = _videoJs2['default'].createEl('div', {
+        className: 'vjs-thumbnail-display_thumb'
+      });
+
+      el.appendChild(this.fallbackImg_);
+
+      return el;
     }
   }, {
     key: 'update',
     value: function update(newTime, position) {
-      var time = formatTime(newTime, this.player_.duration());
+      _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'update', this).call(this, newTime, position);
+      var timeInterval = 30;
+      var spriteSize = {
+        w: 450,
+        h: 250
+      };
+      var spritesPerRow = 5;
+      var spritesPerCol = 5;
 
-      this.el().style.left = position + 'px';
-      this.el().setAttribute('data-current-time', time);
+      var sheetWidth = spriteSize.w / spritesPerRow;
+      var sheetHeight = spriteSize.h / spritesPerCol;
 
-      if (this.keepTooltipsInside) {
-        var clampedPosition = this.clampPosition_(position);
-        var difference = position - clampedPosition + 1;
-        var tooltipWidth = parseFloat(window.getComputedStyle(this.tooltip).width);
-        var tooltipWidthHalf = tooltipWidth / 2;
+      var spritesPerSheet = spritesPerRow * spritesPerCol;
+      var secondsPerSheet = timeInterval * spritesPerSheet;
 
-        this.tooltip.innerHTML = time;
-        this.tooltip.style.right = '-' + (tooltipWidthHalf - difference) + 'px';
+      var index = Math.max(1, Math.ceil(newTime / secondsPerSheet));
+      var stripedTime = newTime - (index - 1) * secondsPerSheet;
+      var sheetIndex = Math.ceil(stripedTime / 2);
+      var x = Math.floor(sheetIndex % 5 * sheetWidth);
+      var y = Math.floor(sheetIndex / spritesPerCol) * sheetHeight;
+
+      if (this.itemIndex !== index) {
+        this.itemIndex = index;
+        var url = 'http://origin.afrostream.tv/vod/24hourlovebis/frames/map-' + this.itemIndex + '.jpg';
+        var backgroundImage = 'url("' + url + '")';
+        this.fallbackImg_.style.backgroundImage = backgroundImage;
       }
+      this.fallbackImg_.style.backgroundPositionX = -x + 'px';
+      this.fallbackImg_.style.backgroundPositionY = -y + 'px';
     }
   }]);
 
   return MouseThumbnailDisplay;
 })(MouseTimeDisplay);
 
-SeekBar.prototype.options_.children.push('audioTrackButton');
+SeekBar.prototype.options_.children.push('mouseThumbnailDisplay');
 
 Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
 exports['default'] = MouseThumbnailDisplay;
