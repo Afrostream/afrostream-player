@@ -10,11 +10,7 @@ import MediaTechController from './tech/media';
 import Dash from './tech/dash';
 import Dashas from './tech/dashas';
 import {MediaPlayer} from 'dashjs';
-import CaptionTrackButton from './component/control-bar/track-controls/caption-track-button';
-import AudioTrackButton from './component/control-bar/track-controls/audio-track-button';
-import VideoTrackButton from './component/control-bar/track-controls/video-track-button';
-import NextVideoButton from './component/control-bar/next/next-video-button';
-import LoadProgressSpinner from './component/control-bar/progress-control/load-progress-spinner';
+import ControlBarChilds from './component/control-bar/';
 import Metrics from 'videojs-metrics';
 import Chromecast from 'videojs-chromecast';
 

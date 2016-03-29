@@ -70,3 +70,20 @@
 .vjs-afrostream-skin .vjs-play-progress:before {
   content: ''; //Remove Circle from Progress Bar
 }
+
+//Thumbnails seek
+
+.video-js .vjs-progress-control .vjs-thumbnail-display {
+  @extend .vjs-mouse-display;
+
+  .vjs-thumbnail-display_thumb {
+    position: absolute;
+    bottom: 20px;
+    left: -60px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: 120px;
+    height: 66px;
+  }
+}
