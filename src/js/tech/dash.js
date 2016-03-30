@@ -22,6 +22,18 @@ class Dash extends Html5 {
     super(options, ready);
 
     let tracks;
+
+    tracks = this.textTracks();
+    if (tracks) {
+      let changeHandler = ::this.handleTracksChange;
+
+      tracks.addEventListener('change', changeHandler);
+      this.on('dispose', function () {
+        tracks.removeEventListener('change', changeHandler);
+      });
+
+    }
+
     tracks = this.audioTracks();
     if (tracks) {
       let changeHandler = ::this.handleAudioTracksChange;
@@ -122,7 +134,6 @@ class Dash extends Html5 {
       // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
       // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
       //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
-      this.player_.on('texttrackchange', ::this.textTracksChange);
 
       this.player_.trigger('loadstart');
       // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
@@ -411,10 +422,10 @@ class Dash extends Html5 {
    *
    * @method updateDisplay
    */
-  textTracksChange() {
+  handleTracksChange() {
     const tracks = this.textTracks();
 
-    if (!tracks) {
+    if (!tracks || !this.playbackInitialized) {
       return;
     }
 

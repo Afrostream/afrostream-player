@@ -37,11 +37,11 @@
   <!--<source-->
   <!--src="https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd"-->
   <!--type="application/dash+xml"/>-->
-  <track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="fr"
-         label="Francais" default/>
-  <!--Tracks need an ending tag thanks to IE9-->
-  <track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="en"
-         label="English"/>
+  <!--<track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="fr"-->
+  <!--label="Francais" default/>-->
+  <!--&lt;!&ndash;Tracks need an ending tag thanks to IE9&ndash;&gt;-->
+  <!--<track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="en"-->
+  <!--label="English"/>-->
   <!--<source-->
   <!--src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"-->
   <!--type="application/x-mpegURL"/>-->
@@ -65,16 +65,16 @@
   var player = videojs(document.querySelector('video'), {
     autoplay: true,
     sources: [
+//      {
+//        src: "https://origin.cdn.afrostream.net/vod/HANCOCK_240_25_ProRes422_FRA_ENG_HD_STEREO/b10bbcc21f1b8988.ism/b10bbcc21f1b8988.mpd",
+//        type: "application/dash+xml"
+//      },
+//      {
+//        src: "https://origin.cdn.afrostream.net/vod/HANCOCK_240_25_ProRes422_FRA_ENG_HD_STEREO/b10bbcc21f1b8988.ism/master.m3u8",
+//        type: "application/vnd.apple.mpegurl"
+//      },
       {
-        src: "https://origin.cdn.afrostream.net/vod/HANCOCK_240_25_ProRes422_FRA_ENG_HD_STEREO/b10bbcc21f1b8988.ism/b10bbcc21f1b8988.mpd",
-        type: "application/dash+xml"
-      },
-      {
-        src: "https://origin.cdn.afrostream.net/vod/HANCOCK_240_25_ProRes422_FRA_ENG_HD_STEREO/b10bbcc21f1b8988.ism/master.m3u8",
-        type: "application/vnd.apple.mpegurl"
-      },
-      {
-        src: "https://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/d4eed726882a4be3.mpd",
+        src: "https://hw.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/d4eed726882a4be3.mpd",
         type: "application/dash+xml"
       },
       {

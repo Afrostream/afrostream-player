@@ -4342,6 +4342,19 @@ var Dash = (function (_Html5) {
     _get(Object.getPrototypeOf(Dash.prototype), 'constructor', this).call(this, options, ready);
 
     var tracks = undefined;
+
+    tracks = this.textTracks();
+    if (tracks) {
+      (function () {
+        var changeHandler = _this.handleTracksChange.bind(_this);
+
+        tracks.addEventListener('change', changeHandler);
+        _this.on('dispose', function () {
+          tracks.removeEventListener('change', changeHandler);
+        });
+      })();
+    }
+
     tracks = this.audioTracks();
     if (tracks) {
       (function () {
@@ -4453,7 +4466,6 @@ var Dash = (function (_Html5) {
         // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
         // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
         //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
-        this.player_.on('texttrackchange', this.textTracksChange.bind(this));
 
         this.player_.trigger('loadstart');
         // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
@@ -4744,11 +4756,11 @@ var Dash = (function (_Html5) {
      * @method updateDisplay
      */
   }, {
-    key: 'textTracksChange',
-    value: function textTracksChange() {
+    key: 'handleTracksChange',
+    value: function handleTracksChange() {
       var tracks = this.textTracks();
 
-      if (!tracks) {
+      if (!tracks || !this.playbackInitialized) {
         return;
       }
 
