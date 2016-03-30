@@ -8,7 +8,7 @@
      Now that font size is set, the following em values will be a multiple of the
      new font size. If the font-size is 3em (30px), then setting any of
      the following values to 3em would equal 30px. 3 * font-size. */
-  $big-play-width: 3em;
+  $big-play-width: 1.5em;
   /* 1.5em = 45px default */
   $big-play-height: 1.5em;
 
@@ -16,10 +16,14 @@
   height: $big-play-height;
   width: $big-play-width;
 
+  // Need a slightly gray bg so it can be seen on black backgrounds
+  //background-color: $color-purple;
+  //background-color: rgba($color-purple, 0.3);
+
   /* 0.06666em = 2px default */
   border: 0;
   /* 0.3em = 9px default */
-  border-radius: 0.3em;
+  border-radius: 50%;
 
   @if $center-big-play-button {
     /* Align center */
@@ -34,6 +38,8 @@
   }
 }
 
-.vjs-sublime-skin:hover .vjs-big-play-button {
-  background-color: transparent;
+.vjs-afrostream-skin:hover .vjs-big-play-button {
+  @include transition(all 0s);
+  background-color: $color-purple;
+  background-color: rgba($color-purple, 0.3);
 }
