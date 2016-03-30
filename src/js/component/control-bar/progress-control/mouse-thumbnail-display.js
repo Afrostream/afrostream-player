@@ -39,6 +39,9 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
   handleError() {
     const url = this.destroyLoader();
     videojs.log('thumbnails : next error ' + url);
+    if (this.itemIndex = 1) {
+      this.dispose();
+    }
   }
 
   destroyLoader() {
@@ -62,6 +65,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     if (this.itemIndex < max) {
       this.createLoader(next);
     }
+
     return current;
   }
 
@@ -107,7 +111,6 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     if (duration) {
       maxItem = Math.ceil(this.player_.duration() / secondsPerSheet);
     }
-    console.log('thumbnails :', maxItem)
     let stripedTime = newTime - ((index - 1) * secondsPerSheet);
     let sheetIndex = Math.floor(stripedTime / timeInterval);
     let x = Math.floor((sheetIndex % 5) * sheetWidth);
@@ -115,7 +118,6 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     if (this.itemIndex !== index) {
       this.itemIndex = index;
       let url = this.extractAssetUri(maxItem);
-      console.log('thumbnails :', url)
       let backgroundImage = `url("${url}")`;
       this.fallbackImg_.style.backgroundImage = backgroundImage;
     }

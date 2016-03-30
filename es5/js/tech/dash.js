@@ -639,13 +639,17 @@ Dash.prototype['featuresNativeVideoTracks'] = false;
  * @param  {String} type    The mimetype to check
  * @return {String}         'probably', 'maybe', or '' (empty string)
  */
-Dash.nativeSourceHandler.canPlayType = function (source) {
+Dash.nativeSourceHandler.canPlayType = function (type) {
 
   var dashTypeRE = /^application\/dash\+xml/i;
   var dashExtRE = /\.mpd/i;
 
-  if (dashTypeRE.test(source)) {
+  if (dashTypeRE.test(type)) {
     return 'probably';
+  } else if (dashExtRE.test(type)) {
+    return 'maybe';
+  } else {
+    return '';
   }
 
   return '';

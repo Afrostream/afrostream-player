@@ -465,6 +465,9 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
     value: function handleError() {
       var url = this.destroyLoader();
       _videoJs2['default'].log('thumbnails : next error ' + url);
+      if (this.itemIndex = 1) {
+        this.dispose();
+      }
     }
   }, {
     key: 'destroyLoader',
@@ -492,6 +495,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       if (this.itemIndex < max) {
         this.createLoader(next);
       }
+
       return current;
     }
 
@@ -540,7 +544,6 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       if (duration) {
         maxItem = Math.ceil(this.player_.duration() / secondsPerSheet);
       }
-      console.log('thumbnails :', maxItem);
       var stripedTime = newTime - (index - 1) * secondsPerSheet;
       var sheetIndex = Math.floor(stripedTime / timeInterval);
       var x = Math.floor(sheetIndex % 5 * sheetWidth);
@@ -548,7 +551,6 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       if (this.itemIndex !== index) {
         this.itemIndex = index;
         var url = this.extractAssetUri(maxItem);
-        console.log('thumbnails :', url);
         var backgroundImage = 'url("' + url + '")';
         this.fallbackImg_.style.backgroundImage = backgroundImage;
       }
@@ -2205,13 +2207,17 @@ Dash.prototype['featuresNativeVideoTracks'] = false;
  * @param  {String} type    The mimetype to check
  * @return {String}         'probably', 'maybe', or '' (empty string)
  */
-Dash.nativeSourceHandler.canPlayType = function (source) {
+Dash.nativeSourceHandler.canPlayType = function (type) {
 
   var dashTypeRE = /^application\/dash\+xml/i;
   var dashExtRE = /\.mpd/i;
 
-  if (dashTypeRE.test(source)) {
+  if (dashTypeRE.test(type)) {
     return 'probably';
+  } else if (dashExtRE.test(type)) {
+    return 'maybe';
+  } else {
+    return '';
   }
 
   return '';
