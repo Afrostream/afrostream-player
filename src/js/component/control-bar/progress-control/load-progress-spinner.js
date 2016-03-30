@@ -72,14 +72,19 @@ class LoadProgressSpinner extends LoadProgressBar {
     };
 
     // update the width of the progress bar
-    let svg = this.el_.firstChild;
-    if (svg.firstChild) {
+    let svg = this.getFirstChild(this.el_);
+    if (svg) {
       let i = buffered.length - 1;
       let start = buffered.start(i);
       let end = buffered.end(i);
       let percent = percentify(end - start, 30);
-      console.log('dash :', percent);
-      svg.firstChild.nextElementSibling.style.strokeDasharray = [percent, 125];
+      let firstSvgChild = this.getFirstChild(svg);
+      if (firstSvgChild) {
+        let stroke = this.getFirstChild(firstSvgChild);
+        if (stroke) {
+          stroke.style.strokeDasharray = [percent, 125];
+        }
+      }
     }
 
     //for (let i = 0; i < buffered.length; i++) {
@@ -95,6 +100,14 @@ class LoadProgressSpinner extends LoadProgressBar {
     //for (let i = children.length; i > buffered.length; i--) {
     //  this.el_.removeChild(children[i - 1]);
     //}
+  }
+
+  getFirstChild(el) {
+    let firstChild = el.firstChild;
+    while (firstChild != null && firstChild.nodeType == 3) { // skip TextNodes
+      firstChild = firstChild.nextSibling;
+    }
+    return firstChild;
   }
 
 }

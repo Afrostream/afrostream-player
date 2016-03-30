@@ -355,14 +355,19 @@ var LoadProgressSpinner = (function (_LoadProgressBar) {
       };
 
       // update the width of the progress bar
-      var svg = this.el_.firstChild;
-      if (svg.firstChild) {
+      var svg = this.getFirstChild(this.el_);
+      if (svg) {
         var i = buffered.length - 1;
         var start = buffered.start(i);
         var end = buffered.end(i);
         var percent = percentify(end - start, 30);
-        console.log('dash :', percent);
-        svg.firstChild.nextElementSibling.style.strokeDasharray = [percent, 125];
+        var firstSvgChild = this.getFirstChild(svg);
+        if (firstSvgChild) {
+          var stroke = this.getFirstChild(firstSvgChild);
+          if (stroke) {
+            stroke.style.strokeDasharray = [percent, 125];
+          }
+        }
       }
 
       //for (let i = 0; i < buffered.length; i++) {
@@ -378,6 +383,16 @@ var LoadProgressSpinner = (function (_LoadProgressBar) {
       //for (let i = children.length; i > buffered.length; i--) {
       //  this.el_.removeChild(children[i - 1]);
       //}
+    }
+  }, {
+    key: 'getFirstChild',
+    value: function getFirstChild(el) {
+      var firstChild = el.firstChild;
+      while (firstChild != null && firstChild.nodeType == 3) {
+        // skip TextNodes
+        firstChild = firstChild.nextSibling;
+      }
+      return firstChild;
     }
   }]);
 
