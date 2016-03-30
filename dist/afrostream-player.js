@@ -2430,8 +2430,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
 
 MouseThumbnailDisplay.prototype.itemIndex = 1;
 //Push videojs SeekBar child with this one
-SeekBar.prototype.options_.children.push('mouseThumbnailDisplay');
-
+SeekBar.prototype.options_.children.splice(1, 1, 'mouseThumbnailDisplay');
 Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
 exports['default'] = MouseThumbnailDisplay;
 module.exports = exports['default'];
@@ -2878,7 +2877,7 @@ var CaptionTrackMenuItem = (function (_MenuItem) {
         if (track === this.track) {
           track['mode'] = 'showing';
         } else {
-          track['mode'] = this.player_.techName_ === 'Dash' ? 'hidden' : 'disabled';
+          track['mode'] = 'hidden';
         }
       }
     }
@@ -4064,11 +4063,9 @@ Dash.nativeSourceHandler.canPlayType = function (source) {
 
   if (dashTypeRE.test(source)) {
     return 'probably';
-  } else if (dashExtRE.test(source)) {
-    return 'maybe';
-  } else {
-    return '';
   }
+
+  return '';
 };
 
 /*

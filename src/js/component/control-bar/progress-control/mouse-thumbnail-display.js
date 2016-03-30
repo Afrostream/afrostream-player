@@ -127,7 +127,6 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
 MouseThumbnailDisplay.prototype.itemIndex = 1;
 //Push videojs SeekBar child with this one
-SeekBar.prototype.options_.children.push('mouseThumbnailDisplay');
-
+SeekBar.prototype.options_.children.splice(1, 1, 'mouseThumbnailDisplay');
 Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
 export default MouseThumbnailDisplay;

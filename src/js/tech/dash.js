@@ -570,11 +570,9 @@ Dash.nativeSourceHandler.canPlayType = function (source) {
 
   if (dashTypeRE.test(source)) {
     return 'probably';
-  } else if (dashExtRE.test(source)) {
-    return 'maybe';
-  } else {
-    return '';
   }
+  
+  return '';
 
 };
 
