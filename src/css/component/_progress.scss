@@ -3,15 +3,15 @@
   border-radius: $progress-radius;
 }
 
-.video-js .vjs-mouse-display:after,
-.video-js .vjs-play-progress:after {
+.video-js .vjs-mouse-display,
+.video-js .vjs-play-progress {
   font-family: $text-font-family;
-  font-size: 0.4em;
 }
 
-.video-js .vjs-mouse-display:after,
-.video-js .vjs-slider-bar.vjs-play-progress:after {
-  font-size: 0.4em;
+.video-js .vjs-progress-control .vjs-play-progress,
+.video-js .vjs-progress-control .vjs-thumbnail-display,
+.video-js .vjs-progress-control .vjs-mouse-display {
+  font-size: 0.8em;
 }
 
 .video-js .vjs-slider-bar.vjs-play-progress {
@@ -22,9 +22,9 @@
 /* The main progress bar also has a bar that shows how much has been loaded. */
 .video-js .vjs-load-progress {
   /* For IE8 we'll lighten the color */
-  //background: ligthen($slider-load-bg-color, 45%);
+  background: ligthen($slider-load-bg-color, 45%);
   /* Otherwise we'll rely on stacked opacities */
-  //background: rgba($slider-load-bg-color, 0.5);
+  background: rgba($slider-load-bg-color, 0.5);
 }
 
 /* The load progress bar also has internal divs that represent
@@ -52,13 +52,13 @@
 .vjs-afrostream-skin .vjs-progress-control {
 }
 
-.vjs-afrostream-skin .vjs-progress-control .vjs-progress-holder:after {
-  border-radius: 2px;
+.vjs-afrostream-skin .vjs-progress-control .vjs-progress-holder::after {
+  border-radius: $progress-radius;
   display: block;
 }
 
 .vjs-afrostream-skin .vjs-progress-control .vjs-load-progres, .vjs-afrostream-skin .vjs-progress-control .vjs-play-progress {
-  border-radius: 2px;
+  border-radius: $progress-radius;
 }
 
 .vjs-afrostream-skin .vjs-playback-rate {
@@ -75,15 +75,15 @@
 
 .video-js .vjs-progress-control .vjs-thumbnail-display {
   @extend .vjs-mouse-display;
-
   .vjs-thumbnail-display_thumb {
     position: absolute;
-    bottom: 60px;
-    left: -60px;
+    bottom: 20px;
+    left: -40px;
     display: inline-block;
     background-repeat: no-repeat;
     background-position: 0 0;
     width: 90px;
     height: 50px;
+    border: 1px solid $secondary-background-color;
   }
 }
