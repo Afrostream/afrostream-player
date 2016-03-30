@@ -55,7 +55,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
   extractAssetUri(max = 1) {
     let currentSrc = this.player_.currentSrc();
     let urlInfo = videojs.parseUrl(currentSrc);
-    let pathname = urlInfo.pathname.replace(/\/([a-z0-9\/\._-]{16}\.[is]sml?)+\/([a-z0-9\/\._-]{16}\.(mpd|m3u8)?)$/gi, '');
+    let pathname = urlInfo.pathname.replace(/\/([a-z0-9\/\._-]{16}\.[is]sml?)+\/([a-z0-9\/\._-]*\.(mpd|m3u8)?)$/gi, '');
     let fullPah = `${urlInfo.protocol}//${urlInfo.host}${pathname}/frames/map-{index}.jpg`;
     let current = fullPah.replace('{index}', this.itemIndex);
     let next = fullPah.replace('{index}', this.itemIndex + 1);
