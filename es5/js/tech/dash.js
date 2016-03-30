@@ -608,6 +608,20 @@ Tech.withSourceHandlers(Dash);
  */
 Dash.nativeSourceHandler = {};
 
+/*
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
+ */
+Dash.prototype['featuresNativeAudioTracks'] = false;
+
+/*
+ * Sets the tech's status on native video track support
+ *
+ * @type {Boolean}
+ */
+Dash.prototype['featuresNativeVideoTracks'] = false;
+
 /**
  * Check if Flash can play the given videotype
  * @param  {String} type    The mimetype to check
@@ -620,11 +634,9 @@ Dash.nativeSourceHandler.canPlayType = function (source) {
 
   if (dashTypeRE.test(source)) {
     return 'probably';
-  } else if (dashExtRE.test(source)) {
-    return 'maybe';
-  } else {
-    return '';
   }
+
+  return '';
 };
 
 /*

@@ -101,7 +101,7 @@ var CaptionTrackMenuItem = (function (_MenuItem) {
         if (track === this.track) {
           track['mode'] = 'showing';
         } else {
-          track['mode'] = this.player_.techName_ === 'Dash' ? 'hidden' : 'disabled';
+          track['mode'] = 'hidden';
         }
       }
     }
