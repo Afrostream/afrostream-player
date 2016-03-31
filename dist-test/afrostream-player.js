@@ -3192,6 +3192,9 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
     value: function handleComplete() {
       var url = this.destroyLoader();
       _videoJs2['default'].log('thumbnails : next complete ' + url);
+      if (_videoJs2['default'].hasClass(this.fallbackImg_, 'vjs-hidden')) {
+        _videoJs2['default'].removeClass(this.fallbackImg_, 'vjs-hidden');
+      }
     }
   }, {
     key: 'handleError',
@@ -3246,7 +3249,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       });
 
       this.fallbackImg_ = _videoJs2['default'].createEl('div', {
-        className: 'vjs-thumbnail-display_thumb'
+        className: 'vjs-thumbnail-display_thumb vjs-hidden'
       });
 
       el.appendChild(this.fallbackImg_);

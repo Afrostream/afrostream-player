@@ -12,7 +12,6 @@
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
         integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-  <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.5/css/bootstrap-slider.css" rel="stylesheet">
   <style>
     .table > tbody > tr > td {
       padding: 0;
@@ -24,6 +23,7 @@
   <script async src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
   <!-- external libs -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.5/bootstrap-slider.js"></script>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.5/css/bootstrap-slider.css" rel="stylesheet">
 </head>
 <body>
 <div class="table-responsive">
@@ -244,95 +244,100 @@
     [
       //LIVE BET
       {
-        src: "https://origin.cdn.afrostream.net/live/betdev.isml/bet.mpd",
+        src: "https://hw.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/d4eed726882a4be3.mpd",
         type: "application/dash+xml"
       }
-      //EXTERNAL SIMPLE
-      //{
-      //  "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
-      //  "type": "application/dash+xml"
-      //}
-      //{
-      //  "src": "http://playertest.longtailvideo.com/adaptive/eleph-audio/playlist.m3u8",
-      //  "type": "application/vnd.apple.mpegurl"
-      //}
-      //DIGIBOS/AFRO
-      //{
-      //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/master.m3u8",
-      //  "type": "application/vnd.apple.mpegurl"
-      //},
-      //{
-      //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
-      //  "type": "application/dash+xml"
-      //}
-      //DIGIBOS SIMPLE
-      //      {
-      //        "src": "https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
-      //        "type": "application/dash+xml"
-      //}
-      //DIGIBOS LIVE
-      //{
-      //  "src": "https://origin.cdn.afrostream.net/live/bet.isml/bet.mpd",
-      //  "type": "application/dash+xml"
-      //}
-      //MULTI-AUDIO
-      //{
-      //  "src": "https://hw.cdn.afrostream.net/vod/XXXTHESTATEOFTHEUNION_240_25_ProRes422_FRA_ENG_HD_STEREO/fc1ada9fa3339b3e.ism/fc1ada9fa3339b3e.mpd",
-      //  "type": "application/dash+xml"
-      //}
-      //DRM
-      //{
-      //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
-      //  "type": "application/dash+xml",
-      //  "drm":true
-      //}
-      //DRM CASTLAB
+      //LIVE BET
+//      {
+//        src: "https://origin.cdn.afrostream.net/live/betdev.isml/bet.mpd",
+//        type: "application/dash+xml"
+//      }
+    //EXTERNAL SIMPLE
+    //{
+    //  "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
+    //  "type": "application/dash+xml"
+    //}
+    //{
+    //  "src": "http://playertest.longtailvideo.com/adaptive/eleph-audio/playlist.m3u8",
+    //  "type": "application/vnd.apple.mpegurl"
+    //}
+    //DIGIBOS/AFRO
+    //{
+    //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/master.m3u8",
+    //  "type": "application/vnd.apple.mpegurl"
+    //},
+    //{
+    //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
+    //  "type": "application/dash+xml"
+    //}
+    //DIGIBOS SIMPLE
+    //      {
+    //        "src": "https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+    //        "type": "application/dash+xml"
+    //}
+    //DIGIBOS LIVE
+    //{
+    //  "src": "https://origin.cdn.afrostream.net/live/bet.isml/bet.mpd",
+    //  "type": "application/dash+xml"
+    //}
+    //MULTI-AUDIO
+    //{
+    //  "src": "https://hw.cdn.afrostream.net/vod/XXXTHESTATEOFTHEUNION_240_25_ProRes422_FRA_ENG_HD_STEREO/fc1ada9fa3339b3e.ism/fc1ada9fa3339b3e.mpd",
+    //  "type": "application/dash+xml"
+    //}
+    //DRM
+    //{
+    //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
+    //  "type": "application/dash+xml",
+    //  "drm":true
+    //}
+    //DRM CASTLAB
 
-      //{
-      //  //"src": "http://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism/Manifest",
-      //  "src": "http://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/Manifest",
-      //  "type": "application/dash+xml"
-      //}
-      //{
-      //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.f4m",
-      //  "type": "application/adobe-f4m"
-      //}
-      //{
-      //  "src": "http://html5.cablelabs.com:8100/cenc/wvck/dash_initdata.mpd",
-      //  "type": "application/dash+xml",
-      //  "protData": {
-      //    "com.widevine.alpha": {
-      //      "serverURL": "https://html5.cablelabs.com:8025"
-      //    },
-      //    "org.w3.clearkey": {
-      //      "clearkeys": {
-      //        "H3JbV93QV3mPNBKQON2UtQ": "ClKhDPHMtCouEx1vLGsJsA"
-      //      }
-      //    }
-      //  }
-      //},
-      //DRM DASHJS sources https://github.com/Dash-Industry-Forum/dash.js/blob/60059134ba946f9cf79e1b2f3609dd537fa54e8c/samples/dash-if-reference-player/app/sources.json#L283
-      //{
-      //  "src": "http://html5.cablelabs.com:8100/cenc/prwv/dash_init.mpd",
-      //  "type": "application/dash+xml",
-      //  "protData": {
-      //    "com.widevine.alpha": {
-      //      "drmtoday": true,
-      //      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
-      //      "httpRequestHeaders": {
-      //        "dt-custom-data": "eyJ1c2VySWQiOiIxMjM0NSIsInNlc3Npb25JZCI6ImV3b2dJQ0p3Y205bWFXeGxJaUE2SUhzS0lDQWdJQ0p3ZFhKamFHRnpaU0lnT2lCN0lIMEtJQ0I5TEFvZ0lDSnZkWFJ3ZFhSUWNtOTBaV04wYVc5dUlpQTZJSHNLSUNBZ0lDSmthV2RwZEdGc0lpQTZJR1poYkhObExBb2dJQ0FnSW1GdVlXeHZaM1ZsSWlBNklHWmhiSE5sTEFvZ0lDQWdJbVZ1Wm05eVkyVWlJRG9nWm1Gc2MyVUtJQ0I5TEFvZ0lDSnpkRzl5WlV4cFkyVnVjMlVpSURvZ1ptRnNjMlVLZlFvSyIsIm1lcmNoYW50IjoiY2FibGVsYWJzIn0K"
-      //      }
-      //    },
-      //    "com.microsoft.playready": {
-      //      "drmtoday": true,
-      //      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
-      //      "httpRequestHeaders": {
-      //        "http-header-CustomData": "eyJ1c2VySWQiOiIxMjM0NSIsInNlc3Npb25JZCI6ImV3b2dJQ0p3Y205bWFXeGxJaUE2SUhzS0lDQWdJQ0p3ZFhKamFHRnpaU0lnT2lCN0lIMEtJQ0I5TEFvZ0lDSnZkWFJ3ZFhSUWNtOTBaV04wYVc5dUlpQTZJSHNLSUNBZ0lDSmthV2RwZEdGc0lpQTZJR1poYkhObExBb2dJQ0FnSW1GdVlXeHZaM1ZsSWlBNklHWmhiSE5sTEFvZ0lDQWdJbVZ1Wm05eVkyVWlJRG9nWm1Gc2MyVUtJQ0I5TEFvZ0lDSnpkRzl5WlV4cFkyVnVjMlVpSURvZ1ptRnNjMlVLZlFvSyIsIm1lcmNoYW50IjoiY2FibGVsYWJzIn0K"
-      //      }
-      //    }
-      //  }
-      //}
-    ];
+    //{
+    //  //"src": "http://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism/Manifest",
+    //  "src": "http://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/Manifest",
+    //  "type": "application/dash+xml"
+    //}
+    //{
+    //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.f4m",
+    //  "type": "application/adobe-f4m"
+    //}
+    //{
+    //  "src": "http://html5.cablelabs.com:8100/cenc/wvck/dash_initdata.mpd",
+    //  "type": "application/dash+xml",
+    //  "protData": {
+    //    "com.widevine.alpha": {
+    //      "serverURL": "https://html5.cablelabs.com:8025"
+    //    },
+    //    "org.w3.clearkey": {
+    //      "clearkeys": {
+    //        "H3JbV93QV3mPNBKQON2UtQ": "ClKhDPHMtCouEx1vLGsJsA"
+    //      }
+    //    }
+    //  }
+    //},
+    //DRM DASHJS sources https://github.com/Dash-Industry-Forum/dash.js/blob/60059134ba946f9cf79e1b2f3609dd537fa54e8c/samples/dash-if-reference-player/app/sources.json#L283
+    //{
+    //  "src": "http://html5.cablelabs.com:8100/cenc/prwv/dash_init.mpd",
+    //  "type": "application/dash+xml",
+    //  "protData": {
+    //    "com.widevine.alpha": {
+    //      "drmtoday": true,
+    //      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
+    //      "httpRequestHeaders": {
+    //        "dt-custom-data": "eyJ1c2VySWQiOiIxMjM0NSIsInNlc3Npb25JZCI6ImV3b2dJQ0p3Y205bWFXeGxJaUE2SUhzS0lDQWdJQ0p3ZFhKamFHRnpaU0lnT2lCN0lIMEtJQ0I5TEFvZ0lDSnZkWFJ3ZFhSUWNtOTBaV04wYVc5dUlpQTZJSHNLSUNBZ0lDSmthV2RwZEdGc0lpQTZJR1poYkhObExBb2dJQ0FnSW1GdVlXeHZaM1ZsSWlBNklHWmhiSE5sTEFvZ0lDQWdJbVZ1Wm05eVkyVWlJRG9nWm1Gc2MyVUtJQ0I5TEFvZ0lDSnpkRzl5WlV4cFkyVnVjMlVpSURvZ1ptRnNjMlVLZlFvSyIsIm1lcmNoYW50IjoiY2FibGVsYWJzIn0K"
+    //      }
+    //    },
+    //    "com.microsoft.playready": {
+    //      "drmtoday": true,
+    //      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
+    //      "httpRequestHeaders": {
+    //        "http-header-CustomData": "eyJ1c2VySWQiOiIxMjM0NSIsInNlc3Npb25JZCI6ImV3b2dJQ0p3Y205bWFXeGxJaUE2SUhzS0lDQWdJQ0p3ZFhKamFHRnpaU0lnT2lCN0lIMEtJQ0I5TEFvZ0lDSnZkWFJ3ZFhSUWNtOTBaV04wYVc5dUlpQTZJSHNLSUNBZ0lDSmthV2RwZEdGc0lpQTZJR1poYkhObExBb2dJQ0FnSW1GdVlXeHZaM1ZsSWlBNklHWmhiSE5sTEFvZ0lDQWdJbVZ1Wm05eVkyVWlJRG9nWm1Gc2MyVUtJQ0I5TEFvZ0lDSnpkRzl5WlV4cFkyVnVjMlVpSURvZ1ptRnNjMlVLZlFvSyIsIm1lcmNoYW50IjoiY2FibGVsYWJzIn0K"
+    //      }
+    //    }
+    //  }
+    //}
+  ];
 
   var techOrder = qs.tech ? qs.tech.split(',') : ['easyBroadcast', 'dash', 'dashas', 'osmf', 'html5', 'hls', 'flash'];
   var muted = qs.muted ? qs.muted : false;
@@ -387,7 +392,6 @@
     millisPerPixel: 20,
     interpolation: 'bezier',
     grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
-    maxValue: 5000,
     minValue: -50
   });
 
@@ -395,7 +399,6 @@
     millisPerPixel: 20,
     interpolation: 'bezier',
     grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
-    maxValue: 20,
     minValue: -5
   });
 

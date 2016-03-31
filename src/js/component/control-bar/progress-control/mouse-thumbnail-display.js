@@ -33,7 +33,10 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
   handleComplete() {
     const url = this.destroyLoader();
-    videojs.log('thumbnails : next complete ' + url)
+    videojs.log('thumbnails : next complete ' + url);
+    if (videojs.hasClass(this.fallbackImg_, 'vjs-hidden')) {
+      videojs.removeClass(this.fallbackImg_, 'vjs-hidden');
+    }
   }
 
   handleError() {
@@ -81,7 +84,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     });
 
     this.fallbackImg_ = videojs.createEl('div', {
-      className: 'vjs-thumbnail-display_thumb'
+      className: 'vjs-thumbnail-display_thumb vjs-hidden'
     });
 
     el.appendChild(this.fallbackImg_);
