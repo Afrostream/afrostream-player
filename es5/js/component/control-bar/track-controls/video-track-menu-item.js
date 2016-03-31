@@ -24,18 +24,11 @@ var MenuItem = _videoJs2['default'].getComponent('MenuItem');
 var VideoTrackMenuItem = (function (_MenuItem) {
   _inherits(VideoTrackMenuItem, _MenuItem);
 
-  _createClass(VideoTrackMenuItem, null, [{
-    key: 'LABELS',
-
-    /**
-     * LABELS
-     *
-     * @static
-     */
-
-    value: ['bas', 'moyen', 'normal', 'HD', 'auto'],
-    enumerable: true
-  }]);
+  /**
+   * LABELS
+   *
+   * @static
+   */
 
   function VideoTrackMenuItem(player, options) {
     var _this = this;

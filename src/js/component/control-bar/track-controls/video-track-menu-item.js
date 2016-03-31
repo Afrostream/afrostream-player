@@ -11,8 +11,6 @@ class VideoTrackMenuItem extends MenuItem {
    * @static
    */
 
-  static LABELS = ['bas', 'moyen', 'normal', 'HD', 'auto'];
-
   constructor(player, options) {
     let track = options['track'];
     let tracks = player.videoTracks();

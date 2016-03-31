@@ -103,8 +103,7 @@ var VideoTrackButton = (function (_MenuButton) {
       }
 
       if (tracks.length < 2) {
-        this.hide();
-        return items;
+        return [];
       }
 
       for (var i = 0; i < tracks.length; i++) {

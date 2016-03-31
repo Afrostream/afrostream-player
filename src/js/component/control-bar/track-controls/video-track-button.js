@@ -68,8 +68,7 @@ class VideoTrackButton extends MenuButton {
     }
 
     if (tracks.length < 2) {
-      this.hide();
-      return items;
+      return [];
     }
 
     for (let i = 0; i < tracks.length; i++) {

@@ -4161,8 +4161,7 @@ var VideoTrackButton = (function (_MenuButton) {
       }
 
       if (tracks.length < 2) {
-        this.hide();
-        return items;
+        return [];
       }
 
       for (var i = 0; i < tracks.length; i++) {
@@ -4224,18 +4223,11 @@ var MenuItem = _videoJs2['default'].getComponent('MenuItem');
 var VideoTrackMenuItem = (function (_MenuItem) {
   _inherits(VideoTrackMenuItem, _MenuItem);
 
-  _createClass(VideoTrackMenuItem, null, [{
-    key: 'LABELS',
-
-    /**
-     * LABELS
-     *
-     * @static
-     */
-
-    value: ['bas', 'moyen', 'normal', 'HD', 'auto'],
-    enumerable: true
-  }]);
+  /**
+   * LABELS
+   *
+   * @static
+   */
 
   function VideoTrackMenuItem(player, options) {
     var _this = this;
@@ -4529,7 +4521,7 @@ var Dash = (function (_Html5) {
         var bitrateList = track.bitrateList;
         for (var j = 0; j < bitrateList.length; j++) {
           var bitRateInfo = bitrateList[j] / 1000;
-          var label = Dash.qualityLabels[j];
+          var label = Dash.qualityLabels[j] || bitRateInfo;
           var bitRateTrack = this.addVideoTrack('main', label, bitRateInfo);
           bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
         }
@@ -4984,7 +4976,7 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
   return '';
 };
 
-Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD', 'auto'];
+Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];
 
 /*
  * Pass the source to the flash object
