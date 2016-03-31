@@ -339,7 +339,7 @@
     //}
   ];
 
-  var techOrder = qs.tech ? qs.tech.split(',') : ['easyBroadcast', 'dash', 'dashas', 'osmf', 'html5', 'hls', 'flash'];
+  var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'dashas', 'osmf', 'html5', 'easyBroadcast', 'hls', 'flash'];
   var muted = qs.muted ? qs.muted : false;
   var drm = qs.drm ? qs.drm : false;
   var url = qs.url ? qs.url : false;
@@ -379,7 +379,7 @@
 //      nativeTextTracks: false
 //    },
     chromecast: {},
-    techOrder: ["dash", "html5", "dashas"]
+    techOrder: techOrder
   };
 
   var player = initPlayer();
