@@ -5,147 +5,199 @@
   <title>Afrostream player based on videojs Demo</title>
   <link href="/dist/afrostream-player.css" rel="stylesheet">
   <link href="/node_modules/videojs-chromecast/dist/videojs-chromecast.css" rel="stylesheet">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+        integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.5/css/bootstrap-slider.css" rel="stylesheet">
   <style>
 
-    button {
-      margin: 1em;
-      width: 10em;
-    }
 
-    .autoadvance-group {
-      margin: 1em;
-    }
-
-    .autoadvance-group label {
-      margin: 10px;
-    }
   </style>
   <!-- chromecast sdk -->
   <script async src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+  <!-- external libs -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.5/bootstrap-slider.js"></script>
 </head>
 <body>
-<video class="video-js vjs-afrostream-skin" controls width="640px" height="360px" crossorigin="true"
-       poster="http://content.bitsontherun.com/thumbs/3XnJSIm4-480.jpg">
-  <!--<source-->
-  <!--src="http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd"-->
-  <!--type="application/dash+xml"/>-->
-  <!--<source src="https://hw.cdn.afrostream.net/live/bet.isml/bet.mpd"-->
-  <!--type="application/dash+xml"/>-->
-  <!--<source-->
-  <!--src="http://dash.edgesuite.net/digitalprimates/fraunhofer/480p_video/mps_5_1_with_video/Sintel/sintel_480p_mps5_1.mpd"-->
-  <!--type="application/dash+xml"/>-->
-  <!--<source-->
-  <!--src="https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd"-->
-  <!--type="application/dash+xml"/>-->
-  <!--<track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="fr"-->
-  <!--label="Francais" default/>-->
-  <!--Tracks need an ending tag thanks to IE9-->
-  <!--<track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="en"-->
-  <!--label="English"/>-->
-  <!--<source-->
-  <!--src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"-->
-  <!--type="application/x-mpegURL"/>-->
-</video>
-<div id="graphWrapper" class="row">
-  <h2>Video Bitrate Graph</h2>
-  <canvas id="_chart" width="640" height="360"></canvas>
-</div>
-<ul>
-  <li><a href="/test/">Run unit tests in browser.</a></li>
-</ul>
+<table>
+  <tr>
+    <td id="video-container">
+      <!--<video class="video-js vjs-afrostream-skin" controls crossorigin="true"-->
+      <!--poster="http://content.bitsontherun.com/thumbs/3XnJSIm4-480.jpg">-->
+      <!--<source-->
+      <!--src="http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd"-->
+      <!--type="application/dash+xml"/>-->
+      <!--<source src="https://hw.cdn.afrostream.net/live/bet.isml/bet.mpd"-->
+      <!--type="application/dash+xml"/>-->
+      <!--<source-->
+      <!--src="http://dash.edgesuite.net/digitalprimates/fraunhofer/480p_video/mps_5_1_with_video/Sintel/sintel_480p_mps5_1.mpd"-->
+      <!--type="application/dash+xml"/>-->
+      <!--<source-->
+      <!--src="https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd"-->
+      <!--type="application/dash+xml"/>-->
+      <!--<track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="fr"-->
+      <!--label="Francais" default/>-->
+      <!--Tracks need an ending tag thanks to IE9-->
+      <!--<track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="en"-->
+      <!--label="English"/>-->
+      <!--<source-->
+      <!--src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"-->
+      <!--type="application/x-mpegURL"/>-->
+      <!--</video>-->
+    </td>
+    <td>
+      <div id="graphWrapper" class="row">
+        <canvas id="_chartBitrate" width="640" height="160"></canvas>
+        <canvas id="_chartBuffer" width="640" height="160"></canvas>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td id="slider-container">
+    </td>
+    <td>
+      Seconds behind live: <span id="video_delay"></span><br/>
+      Buffer length: <span id="video_buffer"></span><br/>
+      Wall clock time
+      <div class="clock">
+        <span id="min"> </span>:<span id="sec"></span>
+      </div>
+      <ul>
+        <li><a href="/test/">Run unit tests in browser.</a></li>
+      </ul>
+    </td>
+  </tr>
+</table>
 <!--<script src="/node_modules/video.js/dist/video.js"></script>-->
 <script src="/libs/video.js"></script>
 <script> window.dashjs = {skipAutoCreate: true}; </script>
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
 <script src="/node_modules/smoothie/smoothie.js"></script>
 <script src="/dist/afrostream-player.js"></script>
-<script src="//code.jquery.com/jquery-2.1.4.js"></script>
 <script>
+  var qs = (function (a) {
+    if (a == '') return {};
+    var b = {};
+    for (var i = 0; i < a.length; ++i) {
+      var p = a[i].split('=', 2);
+      if (p.length == 1)
+        b[p[0]] = '';
+      else
+        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, ' '));
+    }
+    return b;
+  })(window.location.search.substr(1).split('&'));
 
-  var player = videojs(document.querySelector('video'), {
-    autoplay: false,
-    sources: [
-//      {
-//        src: "https://origin.cdn.afrostream.net/vod/HANCOCK_240_25_ProRes422_FRA_ENG_HD_STEREO/b10bbcc21f1b8988.ism/b10bbcc21f1b8988.mpd",
-//        type: "application/dash+xml"
-//      },
-//      {
-//        src: "https://origin.cdn.afrostream.net/vod/HANCOCK_240_25_ProRes422_FRA_ENG_HD_STEREO/b10bbcc21f1b8988.ism/master.m3u8",
-//        type: "application/vnd.apple.mpegurl"
-//      },
-      {
-        src: "https://hw.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/d4eed726882a4be3.mpd",
-        type: "application/dash+xml"
-      },
-      {
-        src: "https://origin.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/master.m3u8",
-        type: "application/vnd.apple.mpegurl"
-      }
-    ],
-//    aspectRatio: "640:167",
-    controlBar: {
-      volumeMenuButton: {
-        inline: false
-      },
-      nextVideoButton: {
-        title: 'Dummy episode 2',
-        poster: 'http://fakeimg.pl/150'
-      }
-    },
-    metrics: {
-      "user_id": 34
-    },
-    dashas: {
-      swf: './dashas.swf'
-    },
-    html5: {
-      nativeCaptions: false,
-      nativeTextTracks: false
-    },
-    chromecast: {},
-    techOrder: ["dash", "html5", "dashas"]
-  }).ready(function () {
-    var player = this;
+  var extractMime = function (filename) {
+    var reg = /(\/[^?]+).*/;
+    var filePath = filename.match(reg);
 
-    var smoothie = new SmoothieChart({
-      millisPerPixel: 20,
-      interpolation: 'bezier',
-      grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
-      maxValue: 5000,
-      minValue: -50
+    var parts = filePath[1].split('.');
+    var type = (parts.length > 1) ? parts.pop() : 'mp4';
+    return type;
+  };
+
+  var replaceType = function (filename, replacement) {
+    var type = extractMime(filename);
+    var newFile = filename.replace(type, replacement);
+    return newFile;
+  };
+
+  var extractType = function (filename) {
+    var type = extractMime(filename);
+    var rtType = {};
+    switch (type) {
+      case 'm3u8':
+        rtType.type = 'application/x-mpegURL';
+        rtType.format = 'hls';
+        break;
+      case 'mpd':
+        rtType.type = 'application/dash+xml';
+        rtType.format = 'mpd';
+        break;
+      case 'f4m':
+        rtType.type = 'application/adobe-f4m';
+        rtType.format = 'hds';
+        break;
+      default:
+        rtType.type = 'video/' + type;
+        rtType.format = 'progressive';
+        break;
+    }
+    return rtType;
+  };
+
+  var createSlider = function (key) {
+    var container = document.getElementById('slider-container');
+
+    var content = document.createElement('div');
+    content.innerHTML = '<br /><label>' + key + '</label><br />';
+    var sliderEl = document.createElement('input');
+    sliderEl.id = 'slider-' + key;
+    content.appendChild(sliderEl);
+    container.appendChild(content);
+    // Instantiate a slider
+    var value = player.tech_.options_.buffer[key];
+    var step = value < 1 ? 0.1 : 1
+    var max = value < 1 ? 1 : value * 2;
+    var slider = new Slider('#' + sliderEl.id, {
+      value: value,
+      tooltip: 'show',
+      step: step,
+      name: key,
+      min: 0,
+      max: max
     });
 
-    var audioSerie = new TimeSeries();
-    var videoSerie = new TimeSeries();
-    var p2pSerie = new TimeSeries();
+    slider.on('change', function (data) {
+      var val = data.newValue;
+      var nOpts = {
+        dash: {
+          buffer: {}
+        }
+      };
 
-    smoothie.addTimeSeries(audioSerie, {
-      strokeStyle: 'rgb(100,255,255)',
-      lineWidth: 1
+      nOpts.dash.buffer[key] = val;
+      player.dispose();
+      player = initPlayer(nOpts);
     });
+  };
 
-    smoothie.addTimeSeries(videoSerie, {
-      strokeStyle: '#00ff00',
-      lineWidth: 1
-    })
+  var initSliders = function (opts) {
+    var keys = Object.keys(player.tech_.options_.buffer);
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+      createSlider(key);
+    }
 
-    smoothie.addTimeSeries(p2pSerie, {
-      strokeStyle: '#0000FF',
-      lineWidth: 1
+  };
+
+  var initPlayer = function (opts) {
+    var container = document.getElementById('video-container');
+    var video = document.createElement('video');
+    video.id = 'player';
+    video.className = 'video-js vjs-afrostream-skin';
+    container.appendChild(video);
+
+    opts = videojs.mergeOptions(options || {}, opts || {});
+
+    return videojs('player', opts).ready(function () {
+      initMetrics();
     });
+  };
 
-    var chart = $('#_chart')[0];
-
-    player.on('loadedmetadata', function () {
-      chart.width = player.width();
-    });
-
-    smoothie.streamTo(chart, 1000);
-
-    setInterval(function () {
+  var initMetrics = function () {
+    clearInterval(this.metricsIntervall);
+    this.metricsIntervall = setInterval(function () {
       var statistics = player.getPlaybackStatistics();
       var dlAudioBitrate = statistics.audio.bandwidth;
       var dlVidBitrate = statistics.video.bandwidth;
+      var buffVid = statistics.video.bufferLength;
+
       var p2pRatio = statistics.p2pweb.p2pRatio;
       var chunksFromCDN = statistics.p2pweb.chunksFromCDN;
       var chunksFromP2P = statistics.p2pweb.chunksFromP2P;
@@ -171,14 +223,217 @@
       audioSerie.append(now, dlAudioBitrate);
       videoSerie.append(now, dlVidBitrate);
       p2pSerie.append(now, p2pRatio);
+      videoBufferSerie.append(now, buffVid);
+
+      var d = new Date();
+      var seconds = d.getSeconds();
+      document.querySelector('#sec').innerHTML = ( seconds < 10 ? '0' : '' ) + seconds;
+      var minutes = d.getMinutes();
+      document.querySelector('#min').innerHTML = ( minutes < 10 ? '0' : '' ) + minutes;
+
+      document.querySelector('#video_delay').innerHTML = Math.round((d.getTime() / 1000) - Number(startupTime));
+      document.querySelector('#video_buffer').innerHTML = buffVid + 's';
+
     }, 500);
+  };
+
+  var sources =
+    [
+      //LIVE BET
+      {
+        src: "https://origin.cdn.afrostream.net/live/bet.isml/bet.mpd",
+        type: "application/dash+xml"
+      }
+      //EXTERNAL SIMPLE
+      //{
+      //  "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
+      //  "type": "application/dash+xml"
+      //}
+      //{
+      //  "src": "http://playertest.longtailvideo.com/adaptive/eleph-audio/playlist.m3u8",
+      //  "type": "application/vnd.apple.mpegurl"
+      //}
+      //DIGIBOS/AFRO
+      //{
+      //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/master.m3u8",
+      //  "type": "application/vnd.apple.mpegurl"
+      //},
+      //{
+      //  "src": "https://origin.cdn.afrostream.net/vod/ARAISININTHESUN_178_25_ProRes422_FRA_ENG_HD_STEREO/0341bc2bdadd2e79.ism/0341bc2bdadd2e79.mpd",
+      //  "type": "application/dash+xml"
+      //}
+      //DIGIBOS SIMPLE
+      //      {
+      //        "src": "https://hw.cdn.afrostream.net/vod/BWNG_Ep1_bis/44ea1a1f7bd1722b.ism/44ea1a1f7bd1722b.mpd",
+      //        "type": "application/dash+xml"
+      //}
+      //DIGIBOS LIVE
+      //{
+      //  "src": "https://origin.cdn.afrostream.net/live/bet.isml/bet.mpd",
+      //  "type": "application/dash+xml"
+      //}
+      //MULTI-AUDIO
+      //{
+      //  "src": "https://hw.cdn.afrostream.net/vod/XXXTHESTATEOFTHEUNION_240_25_ProRes422_FRA_ENG_HD_STEREO/fc1ada9fa3339b3e.ism/fc1ada9fa3339b3e.mpd",
+      //  "type": "application/dash+xml"
+      //}
+      //DRM
+      //{
+      //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.mpd",
+      //  "type": "application/dash+xml",
+      //  "drm":true
+      //}
+      //DRM CASTLAB
+
+      //{
+      //  //"src": "http://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism/Manifest",
+      //  "src": "http://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/Manifest",
+      //  "type": "application/dash+xml"
+      //}
+      //{
+      //  "src": "https://origin.cdn.afrostream.net/vod/big_buck_bunny_480p_surround-fix/b829352c949f8bfc.ism/b829352c949f8bfc.f4m",
+      //  "type": "application/adobe-f4m"
+      //}
+      //{
+      //  "src": "http://html5.cablelabs.com:8100/cenc/wvck/dash_initdata.mpd",
+      //  "type": "application/dash+xml",
+      //  "protData": {
+      //    "com.widevine.alpha": {
+      //      "serverURL": "https://html5.cablelabs.com:8025"
+      //    },
+      //    "org.w3.clearkey": {
+      //      "clearkeys": {
+      //        "H3JbV93QV3mPNBKQON2UtQ": "ClKhDPHMtCouEx1vLGsJsA"
+      //      }
+      //    }
+      //  }
+      //},
+      //DRM DASHJS sources https://github.com/Dash-Industry-Forum/dash.js/blob/60059134ba946f9cf79e1b2f3609dd537fa54e8c/samples/dash-if-reference-player/app/sources.json#L283
+      //{
+      //  "src": "http://html5.cablelabs.com:8100/cenc/prwv/dash_init.mpd",
+      //  "type": "application/dash+xml",
+      //  "protData": {
+      //    "com.widevine.alpha": {
+      //      "drmtoday": true,
+      //      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/",
+      //      "httpRequestHeaders": {
+      //        "dt-custom-data": "eyJ1c2VySWQiOiIxMjM0NSIsInNlc3Npb25JZCI6ImV3b2dJQ0p3Y205bWFXeGxJaUE2SUhzS0lDQWdJQ0p3ZFhKamFHRnpaU0lnT2lCN0lIMEtJQ0I5TEFvZ0lDSnZkWFJ3ZFhSUWNtOTBaV04wYVc5dUlpQTZJSHNLSUNBZ0lDSmthV2RwZEdGc0lpQTZJR1poYkhObExBb2dJQ0FnSW1GdVlXeHZaM1ZsSWlBNklHWmhiSE5sTEFvZ0lDQWdJbVZ1Wm05eVkyVWlJRG9nWm1Gc2MyVUtJQ0I5TEFvZ0lDSnpkRzl5WlV4cFkyVnVjMlVpSURvZ1ptRnNjMlVLZlFvSyIsIm1lcmNoYW50IjoiY2FibGVsYWJzIn0K"
+      //      }
+      //    },
+      //    "com.microsoft.playready": {
+      //      "drmtoday": true,
+      //      "serverURL": "https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx",
+      //      "httpRequestHeaders": {
+      //        "http-header-CustomData": "eyJ1c2VySWQiOiIxMjM0NSIsInNlc3Npb25JZCI6ImV3b2dJQ0p3Y205bWFXeGxJaUE2SUhzS0lDQWdJQ0p3ZFhKamFHRnpaU0lnT2lCN0lIMEtJQ0I5TEFvZ0lDSnZkWFJ3ZFhSUWNtOTBaV04wYVc5dUlpQTZJSHNLSUNBZ0lDSmthV2RwZEdGc0lpQTZJR1poYkhObExBb2dJQ0FnSW1GdVlXeHZaM1ZsSWlBNklHWmhiSE5sTEFvZ0lDQWdJbVZ1Wm05eVkyVWlJRG9nWm1Gc2MyVUtJQ0I5TEFvZ0lDSnpkRzl5WlV4cFkyVnVjMlVpSURvZ1ptRnNjMlVLZlFvSyIsIm1lcmNoYW50IjoiY2FibGVsYWJzIn0K"
+      //      }
+      //    }
+      //  }
+      //}
+    ];
+
+  var techOrder = qs.tech ? qs.tech.split(',') : ['easyBroadcast', 'dash', 'dashas', 'osmf', 'html5', 'hls', 'flash'];
+  var muted = qs.muted ? qs.muted : false;
+  var drm = qs.drm ? qs.drm : false;
+  var url = qs.url ? qs.url : false;
+
+  if (url) {
+    sources = [
+      {
+        src: url,
+        type: extractType(url).type
+      }
+    ]
+  }
+
+  var options = {
+    controls: true,
+    autoplay: true,
+    width: 600,
+    height: 300,
+    sources: sources,
+    controlBar: {
+      volumeMenuButton: {
+        inline: false
+      },
+      nextVideoButton: {
+        title: 'Dummy episode 2',
+        poster: 'http://fakeimg.pl/150'
+      }
+    },
+    metrics: {
+      "user_id": 34
+    },
+    dashas: {
+      swf: './dashas.swf'
+    },
+    dash: {
+      nativeCaptions: true,
+      nativeTextTracks: false
+    },
+    html5: {
+      nativeCaptions: false,
+      nativeTextTracks: false
+    },
+    chromecast: {},
+    techOrder: ["dash", "html5", "dashas"]
+  };
+
+  var player = initPlayer();
+  initSliders();
+  var smoothieBitrate = new SmoothieChart({
+    millisPerPixel: 20,
+    interpolation: 'bezier',
+    grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
+    maxValue: 5000,
+    minValue: -50
   });
 
-  try {
-    // try on ios
-    player.volume(0);
-  } catch (e) {
-  }
+  var smoothieBuffer = new SmoothieChart({
+    millisPerPixel: 20,
+    interpolation: 'bezier',
+    grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
+    maxValue: 20,
+    minValue: -5
+  });
+
+  var audioSerie = new TimeSeries();
+  var videoSerie = new TimeSeries();
+  var p2pSerie = new TimeSeries();
+  var videoBufferSerie = new TimeSeries();
+
+  smoothieBitrate.addTimeSeries(audioSerie, {
+    strokeStyle: '#DB0A5B',
+    lineWidth: 1
+  });
+
+  smoothieBitrate.addTimeSeries(videoSerie, {
+    strokeStyle: '#F62459',
+    lineWidth: 1
+  });
+
+  smoothieBitrate.addTimeSeries(p2pSerie, {
+    strokeStyle: '#0000FF',
+    lineWidth: 1
+  });
+
+  smoothieBuffer.addTimeSeries(videoBufferSerie, {
+    strokeStyle: '#81CFE0',
+    lineWidth: 1
+  });
+
+  var _chartBitrate = document.getElementById('_chartBitrate');
+  var _chartBuffer = document.getElementById('_chartBuffer');
+
+  player.on('loadedmetadata', function () {
+    _chartBitrate.width = player.width();
+    _chartBitrate.height = player.height() * 0.5;
+    _chartBuffer.width = player.width();
+    _chartBuffer.height = player.height() * 0.5;
+  });
+
+  smoothieBitrate.streamTo(_chartBitrate, 1000);
+  smoothieBuffer.streamTo(_chartBuffer, 1000);
+
 
 </script>
 </body>
