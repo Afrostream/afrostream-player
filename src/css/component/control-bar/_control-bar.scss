@@ -1,0 +1,29 @@
+@import "track-controls/captions";
+@import "track-controls/audio";
+@import "track-controls/video";
+@import "play-pause";
+@import "fullscreen";
+@import "next-video-button";
+
+.video-js .vjs-control-bar {
+  margin-bottom: $controls-margin;
+  background-color: transparent;
+}
+
+/* The default color of control backgrounds is mostly black but with a little
+   bit of blue so it can still be seen on all-black video frames, which are common. */
+.video-js .vjs-control,
+.video-js .vjs-big-play-button,
+.video-js .vjs-menu-button .vjs-menu-content {
+  /* IE8 - has no alpha support */
+  background-color: $primary-background-color;
+  /* Opacity: 1.0 = 100%, 0.0 = 0% */
+  background-color: rgba($primary-background-color, 0.3);
+}
+
+/* The slider bar color is used for the progress bar and the volume bar
+   (the first two can be removed after a fix that's coming) */
+.video-js .vjs-volume-level,
+.video-js .vjs-slider-bar {
+  background: $primary-foreground-color;
+}

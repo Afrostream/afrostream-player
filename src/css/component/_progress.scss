@@ -1,0 +1,106 @@
+.video-js .vjs-load-progress,
+.video-js .vjs-play-progress {
+  border-radius: $progress-radius;
+}
+
+.video-js .vjs-mouse-display,
+.video-js .vjs-thumbnail-display,
+.video-js .vjs-play-progress {
+  font-family: $text-font-family;
+}
+
+.video-js .vjs-progress-control .vjs-play-progress:after,
+.video-js .vjs-progress-control .vjs-thumbnail-display,
+.video-js .vjs-progress-control .vjs-mouse-display {
+  font-size: 0.5em;
+  border-radius: 0;
+}
+
+.video-js .vjs-progress-control .vjs-play-progress:after {
+  display: none !important;
+}
+
+.video-js .vjs-slider-bar.vjs-play-progress {
+  background-color: $secondary-foreground-color;
+  color: $secondary-foreground-color;
+}
+
+/* The main progress bar also has a bar that shows how much has been loaded. */
+.video-js .vjs-load-progress {
+  /* For IE8 we'll lighten the color */
+  background: ligthen($slider-load-bg-color, 20%);
+  /* Otherwise we'll rely on stacked opacities */
+  background: rgba($slider-load-bg-color, 0.2);
+}
+
+/* The load progress bar also has internal divs that represent
+   smaller disconnected loaded time ranges */
+.video-js .vjs-load-progress div {
+  /* For IE8 we'll lighten the color */
+  background: ligthen($slider-load-bg-color, 10%);
+  /* Otherwise we'll rely on stacked opacities */
+  background: rgba($slider-load-bg-color, 0.10);
+  &:last-child {
+    border-top-right-radius: $progress-radius $progress-radius;
+    border-bottom-right-radius: $progress-radius $progress-radius;
+  }
+
+}
+
+// We need an increased hit area on hover
+.video-js .vjs-progress-control .vjs-progress-holder,
+.video-js .vjs-progress-control:hover .vjs-progress-holder {
+  font-size: $progress-radius;
+}
+
+.vjs-afrostream-skin .vjs-progress-holder {
+  margin: 0;
+}
+
+.vjs-afrostream-skin .vjs-progress-control {
+}
+
+//.vjs-afrostream-skin .vjs-progress-control .vjs-progress-holder:after {
+//  border-radius: $progress-radius;
+//  display: block;
+//}
+//
+//.vjs-afrostream-skin .vjs-progress-control .vjs-load-progres, .vjs-afrostream-skin .vjs-progress-control .vjs-play-progress {
+//  border-radius: $progress-radius;
+//}
+
+.vjs-afrostream-skin .vjs-playback-rate {
+  display: none; //Remove Playback Rate
+}
+
+.vjs-afrostream-skin .vjs-slider-horizontal .vjs-volume-level:before,
+.vjs-afrostream-skin .vjs-mouse-display:before,
+.vjs-afrostream-skin .vjs-play-progress:before {
+  content: ''; //Remove Circle from Progress Bar
+}
+
+//Thumbnails seek
+
+.video-js .vjs-progress-control .vjs-thumbnail-display {
+  @extend .vjs-mouse-display;
+
+  &:after {
+    background-color: $primary-background-color;
+    background-color: rgba($primary-background-color, 0.4);
+    border-radius: 0;
+    top: -4.0em;
+    right: -1em;
+  }
+
+  .vjs-thumbnail-display_thumb {
+    position: absolute;
+    top: -3.8em;
+    left: -2.4em;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: 90px;
+    height: 50px;
+    border: 1px solid $secondary-background-color;
+  }
+}
