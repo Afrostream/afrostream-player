@@ -94,13 +94,22 @@
 
   .vjs-thumbnail-display_thumb {
     position: absolute;
-    top: -3.8em;
+    top: -4.8em;
     left: -2.4em;
     display: inline-block;
     background-repeat: no-repeat;
     background-position: 0 0;
-    width: 90px;
-    height: 50px;
+    width: 120px;
+    height: 66px;
     border: 1px solid $secondary-background-color;
+  }
+}
+
+.video-js.vjs-fullscreen .vjs-progress-control .vjs-thumbnail-display {
+  .vjs-thumbnail-display_thumb {
+    width: 200px;
+    height: 112px;
+    background-size: calc(200px * 5) calc(112px * 5);
+    top: -7.3em;
   }
 }

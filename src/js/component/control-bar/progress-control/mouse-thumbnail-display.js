@@ -33,7 +33,6 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
   handleComplete() {
     const url = this.destroyLoader();
-    videojs.log('thumbnails : next complete ' + url);
     if (videojs.hasClass(this.fallbackImg_, 'vjs-hidden')) {
       videojs.removeClass(this.fallbackImg_, 'vjs-hidden');
     }
@@ -94,16 +93,21 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
   update(newTime, position) {
     super.update(newTime, position);
-    const timeInterval = 30;
+    const timeInterval = 60;
     const spriteSize = {
-      w: 450,
-      h: 250
+      w: 600,
+      h: 330
     };
     const spritesPerRow = 5;
     const spritesPerCol = 5;
 
-    const sheetWidth = spriteSize.w / spritesPerRow;
-    const sheetHeight = spriteSize.h / spritesPerCol;
+    let sheetWidth = spriteSize.w / spritesPerRow;
+    let sheetHeight = spriteSize.h / spritesPerCol;
+
+    if (this.player_.isFullscreen()) {
+      sheetWidth = 200;
+      sheetHeight = 112;
+    }
 
     const spritesPerSheet = spritesPerRow * spritesPerCol;
     const secondsPerSheet = timeInterval * spritesPerSheet;

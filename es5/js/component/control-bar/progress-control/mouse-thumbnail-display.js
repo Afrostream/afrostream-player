@@ -58,7 +58,6 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
     key: 'handleComplete',
     value: function handleComplete() {
       var url = this.destroyLoader();
-      _videoJs2['default'].log('thumbnails : next complete ' + url);
       if (_videoJs2['default'].hasClass(this.fallbackImg_, 'vjs-hidden')) {
         _videoJs2['default'].removeClass(this.fallbackImg_, 'vjs-hidden');
       }
@@ -127,16 +126,21 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
     key: 'update',
     value: function update(newTime, position) {
       _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'update', this).call(this, newTime, position);
-      var timeInterval = 30;
+      var timeInterval = 60;
       var spriteSize = {
-        w: 450,
-        h: 250
+        w: 600,
+        h: 330
       };
       var spritesPerRow = 5;
       var spritesPerCol = 5;
 
       var sheetWidth = spriteSize.w / spritesPerRow;
       var sheetHeight = spriteSize.h / spritesPerCol;
+
+      if (this.player_.isFullscreen()) {
+        sheetWidth = 200;
+        sheetHeight = 112;
+      }
 
       var spritesPerSheet = spritesPerRow * spritesPerCol;
       var secondsPerSheet = timeInterval * spritesPerSheet;
