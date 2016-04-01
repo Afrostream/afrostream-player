@@ -65,7 +65,7 @@ var NextVideoButton = (function (_MenuButton) {
         return items;
       }
       items.push(new _nextVideoItem2['default'](this.player_, {
-        label: 'next',
+        label: 'Next',
         selectable: false,
         poster: this.options_.poster
       }));

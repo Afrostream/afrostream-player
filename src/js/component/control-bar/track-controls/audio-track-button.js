@@ -50,8 +50,8 @@ class AudioTrackButton extends MenuButton {
   }
 
   // Create a menu item for each text track
-  createItems(items = []) {
-
+  createItems() {
+    let items = [];
     items.push(new MenuItem(this.player_, {
       label: this.controlText_,
       selectable: false

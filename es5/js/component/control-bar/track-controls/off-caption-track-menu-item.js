@@ -55,7 +55,6 @@ var OffCaptionTrackMenuItem = (function (_CaptionTrackMenuItem) {
     options['selectable'] = true;
 
     _get(Object.getPrototypeOf(OffCaptionTrackMenuItem.prototype), 'constructor', this).call(this, player, options);
-    this.selected(true);
   }
 
   /**

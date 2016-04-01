@@ -30,7 +30,6 @@ class OffCaptionTrackMenuItem extends CaptionTrackMenuItem {
     options['selectable'] = true;
 
     super(player, options);
-    this.selected(true);
   }
 
   /**

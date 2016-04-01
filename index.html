@@ -6,12 +6,9 @@
   <link href="/dist/afrostream-player.css" rel="stylesheet">
   <link href="/node_modules/videojs-chromecast/dist/videojs-chromecast.css" rel="stylesheet">
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"-->
+  <!--integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
 
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-        integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
   <style>
     .table > tbody > tr > td {
       padding: 0;
@@ -184,12 +181,59 @@
     var video = document.createElement('video');
     video.id = 'player';
     video.className = 'video-js vjs-afrostream-skin';
+    video.crossOrigin = true;
+    video.setAttribute('crossorigin', true);
+    var captions = [{
+      _id: "84fe17d5-6ce8-4627-9ea3-00fd2a99f7e7",
+      src: "https://s3-eu-west-1.amazonaws.com/tracks.afrostream.tv/production/caption/2015/09/6f287a7f284ea2f4c9c7-vimeocom138655523.fr.vtt",
+      kind: "captions",
+      lang: {
+        label: "Français",
+        lang: "fr"
+      }
+    },
+      {
+        _id: "aace21ac-20ba-4ea0-b4cb-6ca3d235950c",
+        src: "https://s3-eu-west-1.amazonaws.com/tracks.afrostream.tv/production/caption/2015/09/6bae0f56828f350758b6-vimeocom138655523.en.vtt",
+        kind: "captions",
+        lang: {
+          label: "Anglais",
+          lang: "en"
+        }
+      }];
+
+    if (!videojs.browser.IS_CHROME || videojs.browser.IS_EDGE) {
+
+      for (var i = 0; i < captions.length; i++) {
+        var caption = captions[i];
+        var track = document.createElement('track');
+        track.setAttribute('kind', caption.kind);
+        track.setAttribute('src', caption.src);
+        track.setAttribute('srclang', caption.lang.lang);
+        track.setAttribute('label', caption.lang.label);
+        var isDefault = caption.lang.lang === 'fr';
+        if (isDefault) {
+          track.setAttribute('default', isDefault);
+        }
+        track.setAttribute('mode', isDefault ? 'showing' : 'hidden');
+
+        video.appendChild(track);
+      }
+    }
+
     container.appendChild(video);
 
     opts = videojs.mergeOptions(options || {}, opts || {});
 
     return videojs('player', opts).ready(function () {
       initMetrics();
+      var allTracks = player.textTracks() || []; // get list of tracks
+      for (var i = 0; i < allTracks.length; i++) {
+        var track = allTracks[i];
+        let lang = track.language || track.language_;
+        track.mode = (lang === 'fr' || lang === 'fra') ? 'showing' : 'hidden'; // show this track
+//        allTracks.trigger('change');
+      }
     });
   };
 

@@ -5,6 +5,7 @@ import OffCaptionTrackMenuItem from './off-caption-track-menu-item';
 const Component = videojs.getComponent('Component');
 const ControlBar = videojs.getComponent('ControlBar');
 const CaptionsButton = videojs.getComponent('CaptionsButton');
+const TextTrackMenuItem = videojs.getComponent('TextTrackMenuItem');
 
 class CaptionTrackButton extends CaptionsButton {
   constructor(options, ready) {
@@ -12,7 +13,8 @@ class CaptionTrackButton extends CaptionsButton {
   }
 
   // Create a menu item for each text track
-  createItems(items = []) {
+  createItems() {
+    let items = [];
     // Add an OFF menu item to turn all tracks off
     items.push(new OffCaptionTrackMenuItem(this.player_, {'kind': this.kind_, 'mode': 'hidden'}));
 

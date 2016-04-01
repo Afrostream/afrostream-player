@@ -46,10 +46,10 @@ var Dash = (function (_Html5) {
     _classCallCheck(this, Dash);
 
     _get(Object.getPrototypeOf(Dash.prototype), 'constructor', this).call(this, options, ready);
-
     var tracks = undefined;
 
     tracks = this.textTracks();
+
     if (tracks) {
       (function () {
         var changeHandler = _this.handleTracksChange.bind(_this);
@@ -62,6 +62,7 @@ var Dash = (function (_Html5) {
     }
 
     tracks = this.audioTracks();
+
     if (tracks) {
       (function () {
         var changeHandler = _this.handleAudioTracksChange.bind(_this);
@@ -72,7 +73,9 @@ var Dash = (function (_Html5) {
         });
       })();
     }
+
     tracks = this.videoTracks();
+
     if (tracks) {
       (function () {
         var changeHandler = _this.handleVideoTracksChange.bind(_this);
@@ -95,6 +98,9 @@ var Dash = (function (_Html5) {
     key: 'isDynamic',
     value: function isDynamic() {
       var isDynamic = false;
+      if (!this.playbackInitialized) {
+        return isDynamic;
+      }
       try {
         isDynamic = this.mediaPlayer_.time();
       } catch (e) {
@@ -143,6 +149,7 @@ var Dash = (function (_Html5) {
         // element to bind to.
         this.mediaPlayer_.initialize();
         this.mediaPlayer_.attachView(this.el());
+
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
@@ -438,6 +445,21 @@ var Dash = (function (_Html5) {
   }, {
     key: 'onTextTracksAdded',
     value: function onTextTracksAdded(e) {
+      // const tracks = e.tracks;
+      //
+      // if (tracks) {
+      //   const plTracks = this.textTracks();
+      //   var l = tracks.length, track, plTrack;
+      //   for (var i = 0; i < l; i++) {
+      //     track = tracks[i];
+      //     let trackLabel = track.label || Dash.captionsLangLabels[track.lang];
+      //     plTrack = plTracks[i];// || this.addTextTrack(track.kind, trackLabel, track.lang);
+      //     if (track.defaultTrack) {
+      //       plTrack.mode = 'showing';
+      //     }
+      //   }
+      // }
+
       var tracks = e.tracks;
       if (tracks) {
         var l = tracks.length,
@@ -469,12 +491,17 @@ var Dash = (function (_Html5) {
       if (!tracks || !this.playbackInitialized) {
         return;
       }
+      var selected = undefined;
 
       for (var i = 0; i < tracks.length; i++) {
         var track = tracks[i];
         if (track['mode'] === 'showing') {
+          selected = true;
           this.mediaPlayer_.setTextTrack(i);
         }
+      }
+      if (!selected) {
+        this.mediaPlayer_.setTextTrack(-1);
       }
     }
   }, {
@@ -671,6 +698,11 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
   }
 
   return '';
+};
+
+Dash.captionsLangLabels = {
+  fra: 'Français',
+  eng: 'Anglais'
 };
 
 Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];

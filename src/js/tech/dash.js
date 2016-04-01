@@ -20,10 +20,10 @@ const Html5 = videojs.getComponent('Html5');
 class Dash extends Html5 {
   constructor(options, ready) {
     super(options, ready);
-
     let tracks;
 
     tracks = this.textTracks();
+
     if (tracks) {
       let changeHandler = ::this.handleTracksChange;
 
@@ -31,10 +31,10 @@ class Dash extends Html5 {
       this.on('dispose', function () {
         tracks.removeEventListener('change', changeHandler);
       });
-
     }
 
     tracks = this.audioTracks();
+
     if (tracks) {
       let changeHandler = ::this.handleAudioTracksChange;
 
@@ -43,7 +43,9 @@ class Dash extends Html5 {
         tracks.removeEventListener('change', changeHandler);
       });
     }
+
     tracks = this.videoTracks();
+
     if (tracks) {
       let changeHandler = ::this.handleVideoTracksChange;
 
@@ -62,6 +64,9 @@ class Dash extends Html5 {
    */
   isDynamic() {
     let isDynamic = false;
+    if (!this.playbackInitialized) {
+      return isDynamic;
+    }
     try {
       isDynamic = this.mediaPlayer_.time();
     } catch (e) {
@@ -105,6 +110,7 @@ class Dash extends Html5 {
       // element to bind to.
       this.mediaPlayer_.initialize();
       this.mediaPlayer_.attachView(this.el());
+
       this.mediaPlayer_.on(MediaPlayer.events.STREAM_INITIALIZED, ::this.onInitialized);
       this.mediaPlayer_.on(MediaPlayer.events.TEXT_TRACKS_ADDED, ::this.onTextTracksAdded);
       this.mediaPlayer_.on(MediaPlayer.events.METRIC_CHANGED, ::this.onMetricChanged);
@@ -399,6 +405,21 @@ class Dash extends Html5 {
   }
 
   onTextTracksAdded(e) {
+    // const tracks = e.tracks;
+    //
+    // if (tracks) {
+    //   const plTracks = this.textTracks();
+    //   var l = tracks.length, track, plTrack;
+    //   for (var i = 0; i < l; i++) {
+    //     track = tracks[i];
+    //     let trackLabel = track.label || Dash.captionsLangLabels[track.lang];
+    //     plTrack = plTracks[i];// || this.addTextTrack(track.kind, trackLabel, track.lang);
+    //     if (track.defaultTrack) {
+    //       plTrack.mode = 'showing';
+    //     }
+    //   }
+    // }
+
     const tracks = e.tracks;
     if (tracks) {
       var l = tracks.length, track;
@@ -428,12 +449,17 @@ class Dash extends Html5 {
     if (!tracks || !this.playbackInitialized) {
       return;
     }
+    let selected;
 
     for (let i = 0; i < tracks.length; i++) {
       let track = tracks[i];
       if (track['mode'] === 'showing') {
+        selected = true;
         this.mediaPlayer_.setTextTrack(i);
       }
+    }
+    if (!selected) {
+      this.mediaPlayer_.setTextTrack(-1);
     }
   }
 
@@ -569,7 +595,6 @@ Tech.withSourceHandlers(Dash);
  */
 Dash.nativeSourceHandler = {};
 
-
 /*
  * Sets the tech's status on native audio track support
  *
@@ -623,6 +648,11 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
   }
 
   return '';
+};
+
+Dash.captionsLangLabels = {
+  fra: 'Français',
+  eng: 'Anglais'
 };
 
 Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];

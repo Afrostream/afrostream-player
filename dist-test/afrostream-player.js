@@ -946,7 +946,7 @@ var ChromeCastButton = (function (_Button) {
       var appId = undefined;
       var sessionRequest = undefined;
 
-      if (!_videoJs2['default'].browser.IS_CHROME) {
+      if (!_videoJs2['default'].browser.IS_CHROME || _videoJs2['default'].browser.IS_EDGE) {
         return;
       }
       if (!chrome.cast || !chrome.cast.isAvailable) {
@@ -1752,6 +1752,10 @@ _videoJs2['default'].addLanguage('it', {
 _videoJs2['default'].addLanguage('fr', {
   'CASTING TO': 'CAST EN COURS SUR'
 });
+
+var USER_AGENT = window.navigator.userAgent;
+
+_videoJs2['default'].browser.IS_EDGE = /Edge/i.test(USER_AGENT);
 
 Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
@@ -2816,7 +2820,7 @@ var NextVideoButton = (function (_MenuButton) {
         return items;
       }
       items.push(new _nextVideoItem2['default'](this.player_, {
-        label: 'next',
+        label: 'Next',
         selectable: false,
         poster: this.options_.poster
       }));
@@ -3320,7 +3324,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -3395,8 +3399,7 @@ var AudioTrackButton = (function (_MenuButton) {
   }, {
     key: 'createItems',
     value: function createItems() {
-      var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-
+      var items = [];
       items.push(new MenuItem(this.player_, {
         label: this.controlText_,
         selectable: false
@@ -3552,7 +3555,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -3575,6 +3578,7 @@ var _offCaptionTrackMenuItem2 = _interopRequireDefault(_offCaptionTrackMenuItem)
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var CaptionsButton = _videoJs2['default'].getComponent('CaptionsButton');
+var TextTrackMenuItem = _videoJs2['default'].getComponent('TextTrackMenuItem');
 
 var CaptionTrackButton = (function (_CaptionsButton) {
   _inherits(CaptionTrackButton, _CaptionsButton);
@@ -3590,8 +3594,7 @@ var CaptionTrackButton = (function (_CaptionsButton) {
   _createClass(CaptionTrackButton, [{
     key: 'createItems',
     value: function createItems() {
-      var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-
+      var items = [];
       // Add an OFF menu item to turn all tracks off
       items.push(new _offCaptionTrackMenuItem2['default'](this.player_, { 'kind': this.kind_, 'mode': 'hidden' }));
 
@@ -3927,7 +3930,6 @@ var OffCaptionTrackMenuItem = (function (_CaptionTrackMenuItem) {
     options['selectable'] = true;
 
     _get(Object.getPrototypeOf(OffCaptionTrackMenuItem.prototype), 'constructor', this).call(this, player, options);
-    this.selected(true);
   }
 
   /**
@@ -4070,7 +4072,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -4145,8 +4147,7 @@ var VideoTrackButton = (function (_MenuButton) {
   }, {
     key: 'createItems',
     value: function createItems() {
-      var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-
+      var items = [];
       // Add an OFF menu item to turn all tracks off
       items.push(new MenuItem(this.player_, {
         'label': 'Quality',
@@ -4352,10 +4353,10 @@ var Dash = (function (_Html5) {
     _classCallCheck(this, Dash);
 
     _get(Object.getPrototypeOf(Dash.prototype), 'constructor', this).call(this, options, ready);
-
     var tracks = undefined;
 
     tracks = this.textTracks();
+
     if (tracks) {
       (function () {
         var changeHandler = _this.handleTracksChange.bind(_this);
@@ -4368,6 +4369,7 @@ var Dash = (function (_Html5) {
     }
 
     tracks = this.audioTracks();
+
     if (tracks) {
       (function () {
         var changeHandler = _this.handleAudioTracksChange.bind(_this);
@@ -4378,7 +4380,9 @@ var Dash = (function (_Html5) {
         });
       })();
     }
+
     tracks = this.videoTracks();
+
     if (tracks) {
       (function () {
         var changeHandler = _this.handleVideoTracksChange.bind(_this);
@@ -4401,6 +4405,9 @@ var Dash = (function (_Html5) {
     key: 'isDynamic',
     value: function isDynamic() {
       var isDynamic = false;
+      if (!this.playbackInitialized) {
+        return isDynamic;
+      }
       try {
         isDynamic = this.mediaPlayer_.time();
       } catch (e) {
@@ -4449,6 +4456,7 @@ var Dash = (function (_Html5) {
         // element to bind to.
         this.mediaPlayer_.initialize();
         this.mediaPlayer_.attachView(this.el());
+
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
         this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
@@ -4744,6 +4752,21 @@ var Dash = (function (_Html5) {
   }, {
     key: 'onTextTracksAdded',
     value: function onTextTracksAdded(e) {
+      // const tracks = e.tracks;
+      //
+      // if (tracks) {
+      //   const plTracks = this.textTracks();
+      //   var l = tracks.length, track, plTrack;
+      //   for (var i = 0; i < l; i++) {
+      //     track = tracks[i];
+      //     let trackLabel = track.label || Dash.captionsLangLabels[track.lang];
+      //     plTrack = plTracks[i];// || this.addTextTrack(track.kind, trackLabel, track.lang);
+      //     if (track.defaultTrack) {
+      //       plTrack.mode = 'showing';
+      //     }
+      //   }
+      // }
+
       var tracks = e.tracks;
       if (tracks) {
         var l = tracks.length,
@@ -4775,12 +4798,17 @@ var Dash = (function (_Html5) {
       if (!tracks || !this.playbackInitialized) {
         return;
       }
+      var selected = undefined;
 
       for (var i = 0; i < tracks.length; i++) {
         var track = tracks[i];
         if (track['mode'] === 'showing') {
+          selected = true;
           this.mediaPlayer_.setTextTrack(i);
         }
+      }
+      if (!selected) {
+        this.mediaPlayer_.setTextTrack(-1);
       }
     }
   }, {
@@ -4977,6 +5005,11 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
   }
 
   return '';
+};
+
+Dash.captionsLangLabels = {
+  fra: 'Français',
+  eng: 'Anglais'
 };
 
 Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];
