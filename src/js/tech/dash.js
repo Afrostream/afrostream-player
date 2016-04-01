@@ -54,6 +54,7 @@ class Dash extends Html5 {
         tracks.removeEventListener('change', changeHandler);
       });
     }
+
   }
 
 
@@ -99,8 +100,10 @@ class Dash extends Html5 {
     if (src === undefined) {
       return this.el_.src;
     } else {
-      this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
 
+      this.isReady_ = false;
+      this.featuresNativeTextTracks = Html5.supportsNativeTracks('text');
+      this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
       // Save the context after the first initialization for subsequent instances
       this.context_ = this.context_ || {};
       // But make a fresh MediaPlayer each time the sourceHandler is used
@@ -159,7 +162,6 @@ class Dash extends Html5 {
       this.player_.error(err);
     }
 
-    this.triggerReady();
 
     this.trigger(MediaPlayer.events.STREAM_INITIALIZED);
 
@@ -190,6 +192,7 @@ class Dash extends Html5 {
         bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
       }
     }
+
   }
 
   onProgress(e) {
@@ -405,35 +408,21 @@ class Dash extends Html5 {
   }
 
   onTextTracksAdded(e) {
-    // const tracks = e.tracks;
-    //
-    // if (tracks) {
-    //   const plTracks = this.textTracks();
-    //   var l = tracks.length, track, plTrack;
-    //   for (var i = 0; i < l; i++) {
-    //     track = tracks[i];
-    //     let trackLabel = track.label || Dash.captionsLangLabels[track.lang];
-    //     plTrack = plTracks[i];// || this.addTextTrack(track.kind, trackLabel, track.lang);
-    //     if (track.defaultTrack) {
-    //       plTrack.mode = 'showing';
-    //     }
-    //   }
-    // }
-
     const tracks = e.tracks;
+
     if (tracks) {
-      var l = tracks.length, track;
+      const plTracks = this.textTracks();
+      var l = tracks.length, track, plTrack;
       for (var i = 0; i < l; i++) {
         track = tracks[i];
-
-        if (track.kind !== 'captions') {
-          break;
-        }
-        if (track.lang === 'fra') {
-          track.defaultTrack = true;
+        track.label = track.label || Dash.captionsLangLabels[track.lang];
+        plTrack = plTracks[i];
+        if (track.defaultTrack) {
           this.mediaPlayer_.setTextTrack(i);
+          if (plTrack) {
+            plTrack.mode = 'showing';
+          }
         }
-
       }
     }
   }
@@ -595,6 +584,7 @@ Tech.withSourceHandlers(Dash);
  */
 Dash.nativeSourceHandler = {};
 
+Dash.prototype['featuresNativeTextTracks'] = false;
 /*
  * Sets the tech's status on native audio track support
  *
