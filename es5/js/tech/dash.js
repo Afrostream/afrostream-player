@@ -161,8 +161,8 @@ var Dash = (function (_Html5) {
           this.mediaPlayer_.setAutoPlay(false);
         }
 
-        this.mediaPlayer_.setInitialMediaSettingsFor('audio', { lang: this.options_.lang });
-        this.mediaPlayer_.setInitialMediaSettingsFor('video', { lang: this.options_.lang });
+        this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
+        this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
         this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace'); //alwaysReplace
         this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace'); //alwaysReplace
 
@@ -170,6 +170,8 @@ var Dash = (function (_Html5) {
         this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
         this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
 
+        this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
+        this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
         this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
         this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
         this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
@@ -178,6 +180,9 @@ var Dash = (function (_Html5) {
         this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
         this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
         this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
+        this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
+        this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
+        this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
         // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
         // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
         //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
@@ -539,7 +544,8 @@ var Dash = (function (_Html5) {
       this.showErrors();
 
       // Attach the source with any protection data
-      this.mediaPlayer_.attachSource(manifest, null, this.keySystemOptions_, 'fr');
+      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
+      this.mediaPlayer_.attachSource(manifest);
 
       this.triggerReady();
     }
@@ -587,13 +593,19 @@ var Dash = (function (_Html5) {
 })(Html5);
 
 Dash.prototype.options_ = {
-  lang: 'fr',
+  inititalMediaSettings: {
+    lang: 'fr'
+  },
   //Set to false to switch off adaptive bitrate switching.
   autoSwitch: true,
   //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
   bolaEnabled: true,
   //Set to true if you would like dash.js to keep downloading fragments in the background
   scheduleWhilePaused: false,
+  //A value of the initial bitrate, kbps
+  initialBitrate: 400,
+  //Represents how many segment durations to delay the live stream.
+  liveFragmentCount: 4,
   //This value influences the buffer pruning logic.
   //https://github.com/Dash-Industry-Forum/dash.js/blob/master/src/streaming/MediaPlayer.js
   buffer: {
@@ -612,7 +624,13 @@ Dash.prototype.options_ = {
     //This will directly affect the buffer targets when playing back at the top quality.
     longFormContentDurationThreshold: 600,
     //A threshold, in seconds, of when dashjs abr becomes less conservative since we have a larger "rich" buffer
-    richBufferThreshold: 20
+    richBufferThreshold: 20,
+    //A timeout value in seconds, which during the ABRController will block switch-up events.
+    abandonLoadTimeout: 10,
+    //Total number of retry attempts that will occur on a fragment load before it fails.
+    fragmentLoaderRetryAttempts: 3,
+    //Time in milliseconds of which to reload a failed fragment load attempt.
+    fragmentLoaderRetryInterval: 1000
   },
   protData: {}
 };

@@ -6,71 +6,50 @@
   <link href="/dist/afrostream-player.css" rel="stylesheet">
   <link href="/node_modules/videojs-chromecast/dist/videojs-chromecast.css" rel="stylesheet">
   <!-- Latest compiled and minified CSS -->
-  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"-->
-  <!--integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <style>
-    .table > tbody > tr > td {
+    .nopadding {
       padding: 0;
-      line-height: 1;
-      border: none;
+      margin: 0;
+    }
+
+    canvas {
+      display: block;
     }
   </style>
   <!-- chromecast sdk -->
   <script async src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
   <!-- external libs -->
+  <script src="//code.jquery.com/jquery-2.1.4.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.5/bootstrap-slider.js"></script>
   <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.5/css/bootstrap-slider.css" rel="stylesheet">
+  <script src="//www.bootstrap-switch.org/dist/js/bootstrap-switch.js"></script>
+  <link href="//www.bootstrap-switch.org/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
 </head>
 <body>
-<div class="table-responsive">
-  <table class="table">
-    <tr>
-      <td id="video-container">
-        <!--<video class="video-js vjs-afrostream-skin" controls crossorigin="true"-->
-        <!--poster="http://content.bitsontherun.com/thumbs/3XnJSIm4-480.jpg">-->
-        <!--<source-->
-        <!--src="http://dash.edgesuite.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd"-->
-        <!--type="application/dash+xml"/>-->
-        <!--<source src="https://hw.cdn.afrostream.net/live/bet.isml/bet.mpd"-->
-        <!--type="application/dash+xml"/>-->
-        <!--<source-->
-        <!--src="http://dash.edgesuite.net/digitalprimates/fraunhofer/480p_video/mps_5_1_with_video/Sintel/sintel_480p_mps5_1.mpd"-->
-        <!--type="application/dash+xml"/>-->
-        <!--<source-->
-        <!--src="https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd"-->
-        <!--type="application/dash+xml"/>-->
-        <!--<track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="fr"-->
-        <!--label="Francais" default/>-->
-        <!--Tracks need an ending tag thanks to IE9-->
-        <!--<track kind="captions" src="./node_modules/video.js/dist/examples/shared/example-captions.vtt" srclang="en"-->
-        <!--label="English"/>-->
-        <!--<source-->
-        <!--src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"-->
-        <!--type="application/x-mpegURL"/>-->
-        <!--</video>-->
-      </td>
-      <td>
-        <canvas id="_chartBitrate"></canvas>
-        <canvas id="_chartBuffer"></canvas>
-      </td>
-    </tr>
-    <tr>
-      <td id="slider-container">
-      </td>
-      <td>
-        Seconds behind live: <span id="video_delay"></span><br/>
-        Buffer length: <span id="video_buffer"></span><br/>
-        Wall clock time
-        <div class="clock">
-          <span id="min"> </span>:<span id="sec"></span>
-        </div>
-        <ul>
-          <li><a href="/test/">Run unit tests in browser.</a></li>
-        </ul>
-      </td>
-    </tr>
-  </table>
+<div class="row">
+  <div id="video-container" class="col-md-6">
+  </div>
+  <div class="col-md-6">
+    <canvas id="_chartBitrate"></canvas>
+    <canvas id="_chartBuffer"></canvas>
+  </div>
+  </tr>
+</div>
+<div class="container">
+  <div class="row" id="slider-container"></div>
+  Seconds behind live: <span id="video_delay"></span><br/>
+  Buffer length: <span id="video_buffer"></span><br/>
+  Wall clock time
+  <div class="clock">
+    <span id="min"> </span>:<span id="sec"></span>
+  </div>
+  <ul>
+    <li><a href="/test/">Run unit tests in browser.</a></li>
+  </ul>
+  </td>
+</div>
 </div>
 <!--<script src="/node_modules/video.js/dist/video.js"></script>-->
 <script src="/libs/video.js"></script>
@@ -131,18 +110,54 @@
     return rtType;
   };
 
-  var createSlider = function (key) {
+  var createInputEl = function (key, type, value) {
     var container = document.getElementById('slider-container');
-
     var content = document.createElement('div');
-    content.innerHTML = '<br /><label>' + key + '</label><br />';
-    var sliderEl = document.createElement('input');
-    sliderEl.id = 'slider-' + key;
-    content.appendChild(sliderEl);
+    content.className = 'form-group col-md-4';
+    content.innerHTML = '<label>' + key + '</label><br />';
+    var el = document.createElement('input');
+    el.id = key;
+    el.type = type || 'text';
+    el.className = 'form-control';
+    content.appendChild(el);
     container.appendChild(content);
+    return el;
+  };
+
+  var createInputs = function (key, value) {
+    switch (typeof value) {
+      case 'boolean':
+        createCheck(key, value);
+        break;
+      case 'number':
+        createSlider(key, value);
+        break;
+      case 'string':
+        break;
+    }
+  };
+
+  var createCheck = function (key, value) {
+    var checkboxEl = createInputEl(key, 'checkbox', value);
+    $('#' + checkboxEl.id).bootstrapSwitch({
+      state: value
+    }).on('switchChange.bootstrapSwitch', function (e, data) {
+      var val = data;
+      var key = e.target.id;
+      var nOpts = {
+        dash: {}
+      };
+
+      nOpts.dash[key] = val;
+      player.dispose();
+      player = initPlayer(nOpts);
+    }.bind(this));
+  };
+
+  var createSlider = function (key, value) {
+    var sliderEl = createInputEl(key, 'text', value);
     // Instantiate a slider
-    var value = player.tech_.options_.buffer[key];
-    var step = value < 1 ? 0.1 : 1
+    var step = value < 1 ? 0.1 : 1;
     var max = value < 1 ? 1 : value * 2;
     var slider = new Slider('#' + sliderEl.id, {
       value: value,
@@ -164,14 +179,19 @@
       nOpts.dash.buffer[key] = val;
       player.dispose();
       player = initPlayer(nOpts);
-    });
+    }.bind(slider));
   };
 
-  var initSliders = function (opts) {
-    var keys = Object.keys(player.tech_.options_.buffer);
+  var initInputs = function (opts) {
+    var values = opts || player.tech_.options_;
+    var keys = Object.keys(values);
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
-      createSlider(key);
+      var value = values[key];
+      if (typeof value === 'object') {
+        initInputs(value);
+      }
+      createInputs(key, value);
     }
 
   };
@@ -232,10 +252,18 @@
         var track = allTracks[i];
         let lang = track.language || track.language_;
         track.mode = (lang === 'fr' || lang === 'fra') ? 'showing' : 'hidden'; // show this track
-//        allTracks.trigger('change');
       }
     });
   };
+
+  var resizePlayer = function () {
+    var w = player.el_.clientWidth;
+    var h = player.el_.clientHeight * 0.5;
+    _chartBitrate.width = w;
+    _chartBitrate.height = h;
+    _chartBuffer.width = w;
+    _chartBuffer.height = h;
+  }
 
   var initMetrics = function () {
     clearInterval(this.metricsIntervall);
@@ -396,13 +424,11 @@
       }
     ]
   }
-
   var options = {
     controls: true,
     autoplay: true,
-    width: window.innerWidth * 0.5,
-    height: 300,
     sources: sources,
+    aspectRatio: '16:9',
     controlBar: {
       volumeMenuButton: {
         inline: false
@@ -427,7 +453,7 @@
   };
 
   var player = initPlayer();
-  initSliders();
+  initInputs();
   var smoothieBitrate = new SmoothieChart({
     millisPerPixel: 20,
     interpolation: 'bezier',
@@ -470,12 +496,8 @@
   var _chartBitrate = document.getElementById('_chartBitrate');
   var _chartBuffer = document.getElementById('_chartBuffer');
 
-  player.on('loadedmetadata', function () {
-    _chartBitrate.width = player.width();
-    _chartBitrate.height = player.height() * 0.5;
-    _chartBuffer.width = player.width();
-    _chartBuffer.height = player.height() * 0.5;
-  });
+  player.on('loadedmetadata', resizePlayer);
+  $(window).resize(resizePlayer);
 
   smoothieBitrate.streamTo(_chartBitrate, 1000);
   smoothieBuffer.streamTo(_chartBuffer, 1000);

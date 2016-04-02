@@ -1,6 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-
-},{}],2:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -19,7 +17,7 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":1}],3:[function(require,module,exports){
+},{"min-document":13}],2:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -32,11 +30,11 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 module.exports = require('./lib/extend');
 
 
-},{"./lib/extend":5}],5:[function(require,module,exports){
+},{"./lib/extend":4}],4:[function(require,module,exports){
 /*!
  * node.extend
  * Copyright 2011, John Resig
@@ -120,7 +118,7 @@ extend.version = '1.1.3';
 module.exports = extend;
 
 
-},{"is":6}],6:[function(require,module,exports){
+},{"is":5}],5:[function(require,module,exports){
 /* globals window, HTMLElement */
 /**!
  * is
@@ -883,7 +881,7 @@ is.symbol = function (value) {
   return typeof Symbol === 'function' && toStr.call(value) === '[object Symbol]' && typeof symbolValueOf.call(value) === 'symbol';
 };
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast-button.js
@@ -1185,7 +1183,7 @@ Component.registerComponent('ChromeCastButton', ChromeCastButton);
 exports['default'] = ChromeCastButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1218,7 +1216,7 @@ _videoJs2['default'].plugin('chromecast', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./videojs-chromecast":10}],9:[function(require,module,exports){
+},{"./videojs-chromecast":9}],8:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast.js
@@ -1679,7 +1677,7 @@ Tech.registerTech('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-chromecast - v1.0.0 - 2016-02-15
@@ -1761,7 +1759,7 @@ Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/chromecast-button":7,"./tech/chromecast":9}],11:[function(require,module,exports){
+},{"./component/control-bar/chromecast-button":6,"./tech/chromecast":8}],10:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
@@ -2044,7 +2042,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":13,"global/document":2,"global/window":3,"xhr":14}],12:[function(require,module,exports){
+},{"./utils.js":12,"global/document":1,"global/window":2,"xhr":14}],11:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2077,7 +2075,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":11}],13:[function(require,module,exports){
+},{"./metrics":10}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2165,7 +2163,9 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":2,"global/window":3}],14:[function(require,module,exports){
+},{"global/document":1,"global/window":2}],13:[function(require,module,exports){
+
+},{}],14:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -2386,7 +2386,7 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":3,"is-function":15,"once":16,"parse-headers":19,"xtend":20}],15:[function(require,module,exports){
+},{"global/window":2,"is-function":15,"once":16,"parse-headers":19,"xtend":20}],15:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -2722,7 +2722,7 @@ exports['default'] = Afrostream;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":22,"./tech/dash":36,"./tech/dashas":37,"./tech/media":38,"videojs-chromecast":8,"videojs-metrics":12}],22:[function(require,module,exports){
+},{"./component/control-bar/":22,"./tech/dash":36,"./tech/dashas":37,"./tech/media":38,"videojs-chromecast":7,"videojs-metrics":11}],22:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -4472,8 +4472,8 @@ var Dash = (function (_Html5) {
           this.mediaPlayer_.setAutoPlay(false);
         }
 
-        this.mediaPlayer_.setInitialMediaSettingsFor('audio', { lang: this.options_.lang });
-        this.mediaPlayer_.setInitialMediaSettingsFor('video', { lang: this.options_.lang });
+        this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
+        this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
         this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace'); //alwaysReplace
         this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace'); //alwaysReplace
 
@@ -4481,6 +4481,8 @@ var Dash = (function (_Html5) {
         this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
         this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
 
+        this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
+        this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
         this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
         this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
         this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
@@ -4489,6 +4491,9 @@ var Dash = (function (_Html5) {
         this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
         this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
         this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
+        this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
+        this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
+        this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
         // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
         // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
         //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
@@ -4834,11 +4839,10 @@ var Dash = (function (_Html5) {
     value: function handleVideoTracksChange() {
       var tracks = this.videoTracks();
 
-      if (!tracks || !this.playbackInitialized) {
+      if (!tracks || !this.playbackInitialized || !this.options_.autoSwitch) {
         return;
       }
       var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && tracks.selectedIndex % 1 === 0;
-
       this.mediaPlayer_.setAutoSwitchQuality(!isInt);
       if (isInt) {
         this.mediaPlayer_.setQualityFor('video', tracks.selectedIndex);
@@ -4850,7 +4854,8 @@ var Dash = (function (_Html5) {
       this.showErrors();
 
       // Attach the source with any protection data
-      this.mediaPlayer_.attachSource(manifest, null, this.keySystemOptions_, 'fr');
+      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
+      this.mediaPlayer_.attachSource(manifest);
 
       this.triggerReady();
     }
@@ -4898,13 +4903,19 @@ var Dash = (function (_Html5) {
 })(Html5);
 
 Dash.prototype.options_ = {
-  lang: 'fr',
+  inititalMediaSettings: {
+    lang: 'fr'
+  },
   //Set to false to switch off adaptive bitrate switching.
   autoSwitch: true,
   //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
   bolaEnabled: true,
   //Set to true if you would like dash.js to keep downloading fragments in the background
   scheduleWhilePaused: false,
+  //A value of the initial bitrate, kbps
+  initialBitrate: 400,
+  //Represents how many segment durations to delay the live stream.
+  liveFragmentCount: 4,
   //This value influences the buffer pruning logic.
   //https://github.com/Dash-Industry-Forum/dash.js/blob/master/src/streaming/MediaPlayer.js
   buffer: {
@@ -4923,7 +4934,13 @@ Dash.prototype.options_ = {
     //This will directly affect the buffer targets when playing back at the top quality.
     longFormContentDurationThreshold: 600,
     //A threshold, in seconds, of when dashjs abr becomes less conservative since we have a larger "rich" buffer
-    richBufferThreshold: 20
+    richBufferThreshold: 20,
+    //A timeout value in seconds, which during the ABRController will block switch-up events.
+    abandonLoadTimeout: 10,
+    //Total number of retry attempts that will occur on a fragment load before it fails.
+    fragmentLoaderRetryAttempts: 3,
+    //Time in milliseconds of which to reload a failed fragment load attempt.
+    fragmentLoaderRetryInterval: 1000
   },
   protData: {}
 };
@@ -5573,7 +5590,7 @@ _qunit2['default'].test('afrostreamMaker takes a player and returns a metrics', 
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/js/afrostream":21,"./player-proxy":40,"global/window":3}],40:[function(require,module,exports){
+},{"../src/js/afrostream":21,"./player-proxy":40,"global/window":2}],40:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5615,7 +5632,7 @@ exports['default'] = proxy;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"node.extend":4}],41:[function(require,module,exports){
+},{"node.extend":3}],41:[function(require,module,exports){
 (function (global){
 'use strict';
 
