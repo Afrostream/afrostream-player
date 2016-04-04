@@ -74,7 +74,7 @@ var Afrostream = (function (_Component) {
   _createClass(Afrostream, [{
     key: 'getPrefix',
     value: function getPrefix() {
-      return 'orientation' in screen;
+      return (screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation) && 'orientation' in screen;
     }
   }, {
     key: 'onFullScreenChange',

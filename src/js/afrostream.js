@@ -31,7 +31,7 @@ class Afrostream extends Component {
   }
 
   getPrefix() {
-    return 'orientation' in screen;
+    return (screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation) && 'orientation' in screen;
   }
 
   onFullScreenChange() {

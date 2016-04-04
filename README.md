@@ -1,8 +1,7 @@
 [![Build Status](https://travis-ci.org/Afrostream/afrostream-player.svg?branch=master)](https://travis-ci.org/Afrostream/afrostream-player)
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Afrostream Player](#afrostream-player)
   - [Getting Started](#getting-started)
