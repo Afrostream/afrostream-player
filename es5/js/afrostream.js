@@ -68,9 +68,34 @@ var Afrostream = (function (_Component) {
     _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
     player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
     player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
+    player.one('fullscreenchange', _videoJs2['default'].bind(this, this.onFullScreenChange));
   }
 
   _createClass(Afrostream, [{
+    key: 'getPrefix',
+    value: function getPrefix() {
+      return 'orientation' in screen;
+    }
+  }, {
+    key: 'onFullScreenChange',
+    value: function onFullScreenChange() {
+      var prefix = this.getPrefix();
+
+      if (!prefix) {
+        return;
+      }
+      try {
+
+        if (this.player_.isFullscreen()) {
+          screen.orientation.lock('landscape-primary');
+        } else {
+          screen.orientation.unlock();
+        }
+      } catch (e) {
+        _videoJs2['default'].log(e);
+      }
+    }
+  }, {
     key: 'onLoadStart',
     value: function onLoadStart() {
       this.addMediaPlayerHandlers();

@@ -27,6 +27,29 @@ class Afrostream extends Component {
     super(player, options, ready);
     player.one('loadstart', videojs.bind(this, this.onLoadStart));
     player.getPlaybackStatistics = ::this.getPlaybackStatistics;
+    player.one('fullscreenchange', videojs.bind(this, this.onFullScreenChange));
+  }
+
+  getPrefix() {
+    return 'orientation' in screen;
+  }
+
+  onFullScreenChange() {
+    let prefix = this.getPrefix();
+
+    if (!prefix) {
+      return;
+    }
+    try {
+
+      if (this.player_.isFullscreen()) {
+        screen.orientation.lock('landscape');
+      } else {
+        screen.orientation.unlock();
+      }
+    } catch (e) {
+      videojs.log(e);
+    }
   }
 
   onLoadStart() {

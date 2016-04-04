@@ -102,7 +102,7 @@ var NextVideoButton = (function (_MenuButton) {
 NextVideoButton.prototype.controlText_ = 'Next video';
 
 //Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 2, 0, 'nextVideoButton');
+ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 1, 0, 'nextVideoButton');
 
 Component.registerComponent('NextVideoButton', NextVideoButton);
 exports['default'] = NextVideoButton;
