@@ -233,6 +233,7 @@
       track.setAttribute('label', caption.lang.label);
       var isDefault = caption.lang.lang === 'fr';
       if (isDefault) {
+        track.default = true;
         track.setAttribute('default', isDefault);
       }
       track.setAttribute('mode', isDefault ? 'showing' : 'hidden');
