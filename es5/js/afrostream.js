@@ -87,7 +87,7 @@ var Afrostream = (function (_Component) {
       try {
 
         if (this.player_.isFullscreen()) {
-          screen.orientation.lock('landscape-primary');
+          screen.orientation.lock('landscape');
         } else {
           screen.orientation.unlock();
         }

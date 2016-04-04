@@ -223,23 +223,21 @@
         }
       }];
 
-    if (!videojs.browser.IS_CHROME || videojs.browser.IS_EDGE) {
 
-      for (var i = 0; i < captions.length; i++) {
-        var caption = captions[i];
-        var track = document.createElement('track');
-        track.setAttribute('kind', caption.kind);
-        track.setAttribute('src', caption.src);
-        track.setAttribute('srclang', caption.lang.lang);
-        track.setAttribute('label', caption.lang.label);
-        var isDefault = caption.lang.lang === 'fr';
-        if (isDefault) {
-          track.setAttribute('default', isDefault);
-        }
-        track.setAttribute('mode', isDefault ? 'showing' : 'hidden');
-
-        video.appendChild(track);
+    for (var i = 0; i < captions.length; i++) {
+      var caption = captions[i];
+      var track = document.createElement('track');
+      track.setAttribute('kind', caption.kind);
+      track.setAttribute('src', caption.src);
+      track.setAttribute('srclang', caption.lang.lang);
+      track.setAttribute('label', caption.lang.label);
+      var isDefault = caption.lang.lang === 'fr';
+      if (isDefault) {
+        track.setAttribute('default', isDefault);
       }
+      track.setAttribute('mode', isDefault ? 'showing' : 'hidden');
+
+      video.appendChild(track);
     }
 
     container.appendChild(video);
@@ -315,12 +313,24 @@
 
   var sources =
     [
-      //WWWEST
       {
-        src: "https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd",
-        type: "application/dash+xml"
+        "src": "https://hw.cdn.afrostream.net/vod/tylerperry_fbow_s01ep01/45f6eb0ff24ab110.ism/master.m3u8",
+        "type": "application/vnd.apple.mpegurl"
+      },
+      {
+        "src": "https://hw.cdn.afrostream.net/vod/tylerperry_fbow_s01ep01/45f6eb0ff24ab110.ism/45f6eb0ff24ab110.mpd",
+        "type": "application/dash+xml"
+      },
+      {
+        "src": "https://hw.cdn.afrostream.net/vod/tylerperry_fbow_s01ep01/45f6eb0ff24ab110.ism/MANIFEST",
+        "type": "application/vnd.ms-sstr+xml"
       }
-      //24HOURLOVE
+      //WWWEST
+//      {
+//        src: "https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd",
+//        type: "application/dash+xml"
+//      }
+    //24HOURLOVE
 //    {
 //      src: "https://hw.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/d4eed726882a4be3.mpd",
 //      type: "application/dash+xml"
