@@ -4595,6 +4595,7 @@ var Dash = (function (_Html5) {
 
       this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
       this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
+      // this.mediaPlayer_.setSelectionModeForInitialTrack(this.options_.initialSelectionMode);
       this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
       this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
       this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
@@ -4883,6 +4884,7 @@ var Dash = (function (_Html5) {
           track = tracks[i];
           track.label = track.label || Dash.captionsLangLabels[track.lang];
           plTrack = plTracks[i];
+          track.defaultTrack = track.lang === 'fra' || track.lang === 'fr';
           if (track.defaultTrack) {
             this.mediaPlayer_.setTextTrack(i);
             if (plTrack) {
@@ -5025,6 +5027,8 @@ Dash.prototype.options_ = {
   scheduleWhilePaused: false,
   //A value of the initial bitrate, kbps
   initialBitrate: 400,
+  //This method sets the selection mode for the initial track. This mode defines how the initial track will be selected
+  // initialSelectionMode: 'highestBitrate',//widestRange,highestBitrate
   //Represents how many segment durations to delay the live stream.
   liveFragmentCount: 4,
   //This value influences the buffer pruning logic.
