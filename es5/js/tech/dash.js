@@ -135,64 +135,63 @@ var Dash = (function (_Html5) {
     value: function src(_src) {
       var _this2 = this;
 
-      if (_src === undefined) {
+      if (!_src) {
         return this.el_.src;
-      } else {
-
-        this.isReady_ = false;
-        this.featuresNativeTextTracks = Html5.supportsNativeTracks('text');
-        this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
-        // Save the context after the first initialization for subsequent instances
-        this.context_ = this.context_ || {};
-        // But make a fresh MediaPlayer each time the sourceHandler is used
-        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-
-        // Must run controller before these two lines or else there is no
-        // element to bind to.
-        this.mediaPlayer_.initialize();
-        this.mediaPlayer_.attachView(this.el());
-
-        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
-        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
-        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
-        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.PLAYBACK_PROGRESS, this.onProgress.bind(this));
-        // Dash.js autoplays by default
-        if (!this.player_.options().autoplay) {
-          this.mediaPlayer_.setAutoPlay(false);
-        }
-
-        this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
-        this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
-        this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace'); //alwaysReplace
-        this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace'); //alwaysReplace
-
-        this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
-        this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
-        this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
-
-        this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
-        this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
-        this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
-        this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
-        this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
-        this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
-        this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm);
-        this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
-        this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
-        this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
-        this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
-        this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
-        this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
-        // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
-        // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
-        //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
-
-        this.player_.trigger('loadstart');
-        // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
-        this.ready(function () {
-          _this2.mediaPlayer_.retrieveManifest(_src, _this2.initializeDashJS.bind(_this2));
-        });
       }
+
+      this.isReady_ = false;
+      this.featuresNativeTextTracks = Html5.supportsNativeTracks('text');
+      this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
+      // Save the context after the first initialization for subsequent instances
+      this.context_ = this.context_ || {};
+      // But make a fresh MediaPlayer each time the sourceHandler is used
+      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+
+      // Must run controller before these two lines or else there is no
+      // element to bind to.
+      this.mediaPlayer_.initialize();
+      this.mediaPlayer_.attachView(this.el());
+
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.PLAYBACK_PROGRESS, this.onProgress.bind(this));
+      // Dash.js autoplays by default
+      if (!this.player_.options().autoplay) {
+        this.mediaPlayer_.setAutoPlay(false);
+      }
+
+      this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
+      this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
+      this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace'); //alwaysReplace
+      this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace'); //alwaysReplace
+
+      this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
+      this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
+      this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+
+      this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
+      this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
+      this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
+      this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
+      this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
+      this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
+      this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm);
+      this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
+      this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
+      this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
+      this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
+      this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
+      this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
+      // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
+      // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
+      //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
+
+      this.player_.trigger('loadstart');
+      // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
+      this.ready(function () {
+        _this2.mediaPlayer_.retrieveManifest(_src, _this2.initializeDashJS.bind(_this2));
+      });
     }
   }, {
     key: 'onInitialized',

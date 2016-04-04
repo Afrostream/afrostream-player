@@ -129,7 +129,7 @@
     "smoothie": "^1.27.0",
     "uglify-js": "^2.5.0",
     "video.js": "https://registry.npmjs.org/video.js/-/video.js-5.7.1.tgz",
-    "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.1",
+    "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.3",
     "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#2.0.0",
     "videojs-standard": "^4.0.0",
     "watchify": "^3.6.0",

@@ -202,6 +202,9 @@ class Dashas extends Flash {
   }
 
   src(src) {
+    if (!src) {
+      return this.currentSrc();
+    }
     var options = this.options_;
     var autoPlay = this.player_.autoplay();
     var serverUrl = Dashas.buildMetadataUrl(options);

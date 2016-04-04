@@ -1018,7 +1018,7 @@ var ChromeCastButton = (function (_Button) {
   }, {
     key: 'doLaunch',
     value: function doLaunch() {
-      _videoJs2['default'].log('Cast video: ' + this.player_.currentSrc());
+      _videoJs2['default'].log('Cast video: ' + this.player_.cache_.src);
       if (this.apiInitialized) {
         return chrome.cast.requestSession(this.onSessionSuccess.bind(this), this.castError.bind(this));
       } else {
@@ -1035,11 +1035,11 @@ var ChromeCastButton = (function (_Button) {
       var ref = undefined;
       var value = undefined;
 
-      _videoJs2['default'].log('Session initialized: ' + session.sessionId);
-
       this.apiSession = session;
-      var source = this.player_.currentSrc();
+      var source = this.player_.cache_.src;
       var type = this.player_.currentType();
+
+      _videoJs2['default'].log('Session initialized: ' + session.sessionId + ' source : ' + source + ' type : ' + type);
 
       mediaInfo = new chrome.cast.media.MediaInfo(source, type);
       mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
@@ -1060,15 +1060,21 @@ var ChromeCastButton = (function (_Button) {
       // Load/Add caption tracks
       var plTracks = this.player().textTracks();
       var remotePlTracks = this.player().remoteTextTrackEls();
+      var tracks = [];
+      var i = 0;
+      var remotePlTrack = undefined;
+      var plTrack = undefined;
+      var trackId = 0;
+      var track = undefined;
       if (plTracks) {
-        var tracks = [];
-        for (var i = 0; i < plTracks.length; i++) {
-          var plTrack = plTracks.tracks_[i];
-          var remotePlTrack = remotePlTracks.trackElements_[i];
-          var id = i + 1;
-          var track = new chrome.cast.media.Track(id, chrome.cast.media.TrackType.TEXT);
-          track.trackContentId = plTrack.id || (remotePlTrack ? remotePlTrack.src : id);
-          track.trackContentType = plTrack.type;
+        for (i = 0; i < plTracks.length; i++) {
+          plTrack = plTracks.tracks_[i];
+          remotePlTrack = remotePlTracks.trackElements_[i];
+          trackId++;
+          track = new chrome.cast.media.Track(trackId, chrome.cast.media.TrackType.TEXT);
+          if (remotePlTrack) {
+            track.trackContentId = remotePlTrack.src;
+          }
           track.subtype = chrome.cast.media.TextTrackType.CAPTIONS;
           track.name = plTrack.label;
           track.language = plTrack.language;
@@ -1080,6 +1086,28 @@ var ChromeCastButton = (function (_Button) {
         mediaInfo.textTrackStyle.backgroundColor = '#00000060';
         mediaInfo.textTrackStyle.edgeType = chrome.cast.media.TextTrackEdgeType.DROP_SHADOW;
         mediaInfo.textTrackStyle.windowType = chrome.cast.media.TextTrackWindowType.ROUNDED_CORNERS;
+      }
+      // Load/Add audio tracks
+
+      try {
+        plTracks = this.player().audioTracks();
+        if (plTracks) {
+          for (i = 0; i < plTracks.length; i++) {
+            plTrack = plTracks.tracks_[i];
+            trackId++;
+            track = new chrome.cast.media.Track(trackId, chrome.cast.media.TrackType.AUDIO);
+            track.subtype = null;
+            track.name = plTrack.label;
+            track.language = plTrack.language;
+            track.customData = null;
+            tracks.push(track);
+          }
+        }
+      } catch (e) {
+        _videoJs2['default'].log('get player audioTracks fail' + e);
+      }
+
+      if (tracks.length) {
         mediaInfo.tracks = tracks;
       }
 
@@ -1097,7 +1125,6 @@ var ChromeCastButton = (function (_Button) {
     value: function onMediaDiscovered(media) {
       this.player_.loadTech_('Chromecast', {
         type: 'cast',
-        src: this.player_.currentSrc(),
         apiMedia: media,
         apiSession: this.apiSession
       });
@@ -1274,26 +1301,51 @@ var Chromecast = (function (_Tech) {
     var tracks = this.textTracks();
     if (tracks) {
       (function () {
-        var changeHandler = _this.handleTracksChange.bind(_this);
+        var changeHandler = _this.handleTextTracksChange.bind(_this);
 
         tracks.addEventListener('change', changeHandler);
         _this.on('dispose', function () {
           tracks.removeEventListener('change', changeHandler);
         });
 
-        _this.handleTracksChange();
+        _this.handleTextTracksChange();
       })();
+    }
+
+    try {
+      tracks = this.audioTracks();
+      if (tracks) {
+        (function () {
+          var changeHandler = _this.handleAudioTracksChange.bind(_this);
+
+          tracks.addEventListener('change', changeHandler);
+          _this.on('dispose', function () {
+            tracks.removeEventListener('change', changeHandler);
+          });
+        })();
+      }
+    } catch (e) {
+      _videoJs2['default'].log('get player audioTracks fail' + e);
+    }
+
+    try {
+      tracks = this.videoTracks();
+      if (tracks) {
+        (function () {
+          var changeHandler = _this.handleVideoTracksChange.bind(_this);
+
+          tracks.addEventListener('change', changeHandler);
+          _this.on('dispose', function () {
+            tracks.removeEventListener('change', changeHandler);
+          });
+        })();
+      }
+    } catch (e) {
+      _videoJs2['default'].log('get player videoTracks fail' + e);
     }
 
     this.update();
     this.triggerReady();
-
-    this.trigger('loadstart');
-    this.trigger('loadedmetadata');
-    this.trigger('loadeddata');
-    this.trigger('canplay');
-    this.trigger('canplaythrough');
-    this.trigger('durationchange');
   }
 
   _createClass(Chromecast, [{
@@ -1363,8 +1415,43 @@ var Chromecast = (function (_Tech) {
       //do nothing
     }
   }, {
-    key: 'handleTracksChange',
-    value: function handleTracksChange() {
+    key: 'currentSrc',
+    value: function currentSrc() {
+      if (!this.apiMedia) {
+        return;
+      }
+      return this.apiMedia.media.contentId;
+    }
+  }, {
+    key: 'handleAudioTracksChange',
+    value: function handleAudioTracksChange() {
+      var trackInfo = [];
+      var tTracks = this.textTracks();
+      var tracks = this.audioTracks();
+
+      if (!tracks) {
+        return;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (track['enabled']) {
+          //set id of cuurentTrack audio
+          trackInfo.push(i + 1 + tTracks.length);
+        }
+      }
+
+      if (this.apiMedia && trackInfo.length) {
+        this.tracksInfoRequest = new chrome.cast.media.EditTracksInfoRequest(trackInfo);
+        return this.apiMedia.editTracksInfo(this.tracksInfoRequest, this.onTrackSuccess.bind(this), this.onTrackError.bind(this));
+      }
+    }
+  }, {
+    key: 'handleVideoTracksChange',
+    value: function handleVideoTracksChange() {}
+  }, {
+    key: 'handleTextTracksChange',
+    value: function handleTextTracksChange() {
       var trackInfo = [];
       var tracks = this.textTracks();
 
@@ -1379,7 +1466,7 @@ var Chromecast = (function (_Tech) {
         }
       }
 
-      if (this.apiMedia) {
+      if (this.apiMedia && trackInfo.length) {
         this.tracksInfoRequest = new chrome.cast.media.EditTracksInfoRequest(trackInfo);
         return this.apiMedia.editTracksInfo(this.tracksInfoRequest, this.onTrackSuccess.bind(this), this.onTrackError.bind(this));
       }
@@ -1387,7 +1474,7 @@ var Chromecast = (function (_Tech) {
   }, {
     key: 'onTrackSuccess',
     value: function onTrackSuccess(e) {
-      return _videoJs2['default'].log('track added');
+      return _videoJs2['default'].log('track added' + JSON.stringify(e));
     }
   }, {
     key: 'onTrackError',
@@ -1432,7 +1519,7 @@ var Chromecast = (function (_Tech) {
       if (!this.apiMedia) {
         return 0;
       }
-      return this.apiMedia.currentTime;
+      return this.apiMedia.getEstimatedTime();
     }
   }, {
     key: 'setCurrentTime',
@@ -1465,7 +1552,7 @@ var Chromecast = (function (_Tech) {
       if (!this.apiMedia) {
         return 0;
       }
-      return this.apiMedia.media.duration;
+      return this.apiMedia.media.duration || Infinity;
     }
   }, {
     key: 'controls',
@@ -4446,64 +4533,63 @@ var Dash = (function (_Html5) {
     value: function src(_src) {
       var _this2 = this;
 
-      if (_src === undefined) {
+      if (!_src) {
         return this.el_.src;
-      } else {
-
-        this.isReady_ = false;
-        this.featuresNativeTextTracks = Html5.supportsNativeTracks('text');
-        this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
-        // Save the context after the first initialization for subsequent instances
-        this.context_ = this.context_ || {};
-        // But make a fresh MediaPlayer each time the sourceHandler is used
-        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-
-        // Must run controller before these two lines or else there is no
-        // element to bind to.
-        this.mediaPlayer_.initialize();
-        this.mediaPlayer_.attachView(this.el());
-
-        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
-        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
-        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
-        this.mediaPlayer_.on(_dashjs.MediaPlayer.events.PLAYBACK_PROGRESS, this.onProgress.bind(this));
-        // Dash.js autoplays by default
-        if (!this.player_.options().autoplay) {
-          this.mediaPlayer_.setAutoPlay(false);
-        }
-
-        this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
-        this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
-        this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace'); //alwaysReplace
-        this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace'); //alwaysReplace
-
-        this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
-        this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
-        this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
-
-        this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
-        this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
-        this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
-        this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
-        this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
-        this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
-        this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm);
-        this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
-        this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
-        this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
-        this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
-        this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
-        this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
-        // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
-        // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
-        //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
-
-        this.player_.trigger('loadstart');
-        // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
-        this.ready(function () {
-          _this2.mediaPlayer_.retrieveManifest(_src, _this2.initializeDashJS.bind(_this2));
-        });
       }
+
+      this.isReady_ = false;
+      this.featuresNativeTextTracks = Html5.supportsNativeTracks('text');
+      this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
+      // Save the context after the first initialization for subsequent instances
+      this.context_ = this.context_ || {};
+      // But make a fresh MediaPlayer each time the sourceHandler is used
+      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+
+      // Must run controller before these two lines or else there is no
+      // element to bind to.
+      this.mediaPlayer_.initialize();
+      this.mediaPlayer_.attachView(this.el());
+
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.PLAYBACK_PROGRESS, this.onProgress.bind(this));
+      // Dash.js autoplays by default
+      if (!this.player_.options().autoplay) {
+        this.mediaPlayer_.setAutoPlay(false);
+      }
+
+      this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
+      this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
+      this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace'); //alwaysReplace
+      this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace'); //alwaysReplace
+
+      this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
+      this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
+      this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+
+      this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
+      this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
+      this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
+      this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
+      this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
+      this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
+      this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm);
+      this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
+      this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
+      this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
+      this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
+      this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
+      this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
+      // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
+      // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
+      //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
+
+      this.player_.trigger('loadstart');
+      // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
+      this.ready(function () {
+        _this2.mediaPlayer_.retrieveManifest(_src, _this2.initializeDashJS.bind(_this2));
+      });
     }
   }, {
     key: 'onInitialized',
@@ -5299,6 +5385,9 @@ var Dashas = (function (_Flash) {
   }, {
     key: 'src',
     value: function src(_src) {
+      if (!_src) {
+        return this.currentSrc();
+      }
       var options = this.options_;
       var autoPlay = this.player_.autoplay();
       var serverUrl = Dashas.buildMetadataUrl(options);

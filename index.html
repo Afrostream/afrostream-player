@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Afrostream player based on videojs Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <link href="/dist/afrostream-player.css" rel="stylesheet">
   <link href="/node_modules/videojs-chromecast/dist/videojs-chromecast.css" rel="stylesheet">
   <!-- Latest compiled and minified CSS -->
@@ -110,7 +111,7 @@
     return rtType;
   };
 
-  var createInputEl = function (key, type, value) {
+  var createInputEl = function (key, type) {
     var container = document.getElementById('slider-container');
     var content = document.createElement('div');
     content.className = 'form-group col-md-4';
@@ -138,7 +139,7 @@
   };
 
   var createCheck = function (key, value) {
-    var checkboxEl = createInputEl(key, 'checkbox', value);
+    var checkboxEl = createInputEl(key, 'checkbox');
     $('#' + checkboxEl.id).bootstrapSwitch({
       state: value
     }).on('switchChange.bootstrapSwitch', function (e, data) {
@@ -155,7 +156,7 @@
   };
 
   var createSlider = function (key, value) {
-    var sliderEl = createInputEl(key, 'text', value);
+    var sliderEl = createInputEl(key, 'text');
     // Instantiate a slider
     var step = value < 1 ? 0.1 : 1;
     var max = value < 1 ? 1 : value * 2;
@@ -314,21 +315,26 @@
 
   var sources =
     [
-      //LIVE BET
+      //WWWEST
       {
-        src: "https://hw.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/d4eed726882a4be3.mpd",
+        src: "https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd",
         type: "application/dash+xml"
       }
-      //LIVE BET
-//      {
-//        src: "https://origin.cdn.afrostream.net/live/betdev.isml/bet.mpd",
-//        type: "application/dash+xml"
-//      }
+      //24HOURLOVE
+//    {
+//      src: "https://hw.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/d4eed726882a4be3.mpd",
+//      type: "application/dash+xml"
+//    }
+    //LIVE BET
+//    {
+//      src: "https://origin.cdn.afrostream.net/live/betdev.isml/bet.mpd",
+//      type: "application/dash+xml"
+//    }
     //EXTERNAL SIMPLE
-    //{
-    //  "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
-    //  "type": "application/dash+xml"
-    //}
+//    {
+//      "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
+//      "type": "application/dash+xml"
+//    }
     //{
     //  "src": "http://playertest.longtailvideo.com/adaptive/eleph-audio/playlist.m3u8",
     //  "type": "application/vnd.apple.mpegurl"
@@ -501,7 +507,6 @@
 
   smoothieBitrate.streamTo(_chartBitrate, 1000);
   smoothieBuffer.streamTo(_chartBuffer, 1000);
-
 
 </script>
 </body>

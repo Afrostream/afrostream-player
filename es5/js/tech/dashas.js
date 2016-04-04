@@ -242,6 +242,9 @@ var Dashas = (function (_Flash) {
   }, {
     key: 'src',
     value: function src(_src) {
+      if (!_src) {
+        return this.currentSrc();
+      }
       var options = this.options_;
       var autoPlay = this.player_.autoplay();
       var serverUrl = Dashas.buildMetadataUrl(options);
