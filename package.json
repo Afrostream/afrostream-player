@@ -141,6 +141,6 @@
   "peerDependencies": {},
   "private": true,
   "engines": {
-    "node": "4.2.1"
+    "node": "4.2.4"
   }
 }
