@@ -170,7 +170,7 @@ var Dashas = (function (_Flash) {
       if (metricsChangeType) {
         var metricsChangeEvent = {
           type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
-          data: metricsChangeType
+          mediaType: metricsChangeType
         };
 
         this.trigger(metricsChangeEvent);

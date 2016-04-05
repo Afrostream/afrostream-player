@@ -12,4 +12,61 @@
   .vjs-menu li {
     text-transform: capitalize;
   }
+
+}
+
+.video-js .vjs-next-video-big-button {
+  @extend .vjs-icon-next;
+  margin-right: $controls-margin;
+  &:before {
+    line-height: 2;
+    font-size: 3em;
+  }
+  .vjs-control-text {
+    font-family: $text-font-family;
+    margin: 2em;
+    position: relative;
+    float: left;
+    max-width: 40px;
+    clip: inherit;
+    height: auto;
+    width: auto;
+    overflow: inherit;
+  }
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center top;
+  position: absolute;
+  top: 50%;
+  margin-top: -100px;
+  right: 0;
+  background-color: $primary-background-color;
+  background-color: rgba($primary-background-color, $secondary-background-transparency);
+  color: $primary-foreground-color;
+  text-transform: capitalize;
+}
+
+// Video has started playing
+.vjs-has-started .vjs-next-video-big-button {
+  visibility: visible;
+  opacity: 1;
+
+  $trans: visibility 0.1s, opacity 0.1s; // Var needed because of comma
+  @include transition($trans);
+}
+
+// Video has started playing AND user is inactive
+.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-next-video-big-button {
+  visibility: hidden;
+  opacity: 0;
+
+  $trans: visibility 1.0s, opacity 1.0s;
+  @include transition($trans);
+}
+
+.vjs-controls-disabled .vjs-next-video-big-button,
+.vjs-using-native-controls .vjs-next-video-big-button,
+.vjs-error .vjs-next-video-big-button {
+  // !important is ok in this context.
+  display: none !important;
 }

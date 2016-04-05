@@ -2042,8 +2042,8 @@ var Metrics = (function (_Component) {
 				var metrics = player.techGet_('getPlaybackStatistics');
 
 				this.metrics_ = _videoJs2['default'].mergeOptions(this.metrics_, metrics);
-				evt['video_bitrate'] = this.metrics_.video.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.video.bandwidth / 1000)) : -1;
-				evt['audio_bitrate'] = this.metrics_.audio.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.audio.bandwidth / 1000)) : -1;
+				evt['video_bitrate'] = this.metrics_.video.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.video.bandwidth)) : -1;
+				evt['audio_bitrate'] = this.metrics_.audio.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.audio.bandwidth)) : -1;
 				evt['chunks_from_cdn'] = this.metrics_.p2pweb.chunksFromCDN;
 				evt['chunks_from_p2p'] = this.metrics_.p2pweb.chunksFromP2P;
 				evt['startup_time'] = this.metrics_.p2pweb.startupTime;
@@ -2696,9 +2696,9 @@ var Afrostream = (function (_Component) {
     _classCallCheck(this, Afrostream);
 
     _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
-    player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
+    player.one('loadstart', this.onLoadStart.bind(this));
     player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
-    player.one('fullscreenchange', _videoJs2['default'].bind(this, this.onFullScreenChange));
+    player.one('fullscreenchange', this.onFullScreenChange.bind(this));
   }
 
   _createClass(Afrostream, [{
@@ -2733,32 +2733,30 @@ var Afrostream = (function (_Component) {
   }, {
     key: 'addMediaPlayerHandlers',
     value: function addMediaPlayerHandlers() {
-      this.player().on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
-      this.player().on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+      this.player_.tech_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+      this.player_.tech_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
     }
   }, {
     key: 'onMetricChanged',
     value: function onMetricChanged(e) {
       // get current buffered ranges of video element and keep them up to date
-      if (e.stream !== 'video' && e.stream !== 'audio' && e.stream !== 'p2pweb') {
+      if (e.mediaType !== 'video' && e.mediaType !== 'audio' && e.mediaType !== 'p2pweb') {
         return;
       }
-      var metrics = this.player().getCribbedMetricsFor(e.stream);
+      var metrics = this.getCribbedMetricsFor(e.mediaType);
       if (metrics) {
-        switch (e.stream) {
+        switch (e.mediaType) {
           case 'video':
             /*jshint sub:true*/
             if (metrics.bandwidth !== this.oldBandwidth) {
-              this.tech_['featuresBitrate'] = metrics;
-              this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
+              this.player_.trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
               this.oldBandwidth = metrics.bandwidth;
             }
             break;
           case 'p2pweb':
             /*jshint sub:true*/
             if (metrics.chunksFromP2P !== this.oldChunksFromP2P) {
-              this.tech_['featuresBitrate'] = metrics;
-              this.player().trigger('chunksFromP2P');
+              this.player_.trigger('chunksfromp2p');
               this.oldChunksFromP2P = metrics.chunksFromP2P;
             }
             break;
@@ -2771,38 +2769,38 @@ var Afrostream = (function (_Component) {
     key: 'onInitialized',
     value: function onInitialized(manifest, err) {
       if (err) {
-        this.player().error(err);
+        this.player_.error(err);
       }
     }
   }, {
     key: 'audioTracks',
     value: function audioTracks() {
-      return this.player().tech_ && this.player().techGet_('audioTracks');
+      return this.player_.tech_ && this.player_.techGet_('audioTracks');
     }
   }, {
     key: 'setAudioTrack',
     value: function setAudioTrack(track) {
-      return this.player().tech_ && this.player().techCall_('setAudioTrack', track);
+      return this.player_.tech_ && this.player_.techCall_('setAudioTrack', track);
     }
   }, {
     key: 'videoTracks',
     value: function videoTracks() {
-      return this.player().tech_ && this.player().techGet_('videoTracks');
+      return this.player_.tech_ && this.player_.techGet_('videoTracks');
     }
   }, {
     key: 'setVideoTrack',
     value: function setVideoTrack(track) {
-      return this.player().tech_ && this.player().tech_.setVideoTrack(track);
+      return this.player_.tech_ && this.player_.tech_.setVideoTrack(track);
     }
   }, {
     key: 'getPlaybackStatistics',
     value: function getPlaybackStatistics() {
-      return this.player().tech_ && this.player().tech_.getPlaybackStatistics();
+      return this.player_.tech_ && this.player_.tech_.getPlaybackStatistics();
     }
   }, {
     key: 'getCribbedMetricsFor',
     value: function getCribbedMetricsFor(type) {
-      return this.player().tech_ && this.player().tech_.getCribbedMetricsFor(type);
+      return this.player_.tech_ && this.player_.tech_.getCribbedMetricsFor(type);
     }
   }]);
 
@@ -2832,7 +2830,7 @@ exports['default'] = Afrostream;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":22,"./tech/dash":36,"./tech/dashas":37,"./tech/media":38,"videojs-chromecast":8,"videojs-metrics":12}],22:[function(require,module,exports){
+},{"./component/control-bar/":22,"./tech/dash":37,"./tech/dashas":38,"./tech/media":39,"videojs-chromecast":8,"videojs-metrics":12}],22:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -2861,7 +2859,117 @@ var _progressControlMouseThumbnailDisplay = require('./progress-control/mouse-th
 
 var _progressControlMouseThumbnailDisplay2 = _interopRequireDefault(_progressControlMouseThumbnailDisplay);
 
-},{"./next/next-video-button":23,"./progress-control/load-progress-spinner":25,"./progress-control/mouse-thumbnail-display":26,"./track-controls/audio-track-button":27,"./track-controls/caption-track-button":29,"./track-controls/video-track-button":34}],23:[function(require,module,exports){
+},{"./next/next-video-button":24,"./progress-control/load-progress-spinner":26,"./progress-control/mouse-thumbnail-display":27,"./track-controls/audio-track-button":28,"./track-controls/caption-track-button":30,"./track-controls/video-track-button":35}],23:[function(require,module,exports){
+(function (global){
+/**
+ * @file next-video-big-button.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var ClickableComponent = _videoJs2['default'].getComponent('ClickableComponent');
+
+/**
+ * The base class for buttons that toggle next video
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends NextVideoItem
+ * @class NextVideoBigButton
+ */
+
+var NextVideoBigButton = (function (_ClickableComponent) {
+  _inherits(NextVideoBigButton, _ClickableComponent);
+
+  function NextVideoBigButton(player, options) {
+    _classCallCheck(this, NextVideoBigButton);
+
+    options = _videoJs2['default'].mergeOptions(options, player.options_.controlBar.nextVideoButton || {});
+    _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'constructor', this).call(this, player, options);
+    if (!this.options_.poster) {
+      this.hide();
+    }
+  }
+
+  /**
+   * Create the component's DOM element
+   *
+   * @param {String=} type Desc
+   * @param {Object=} props Desc
+   * @return {Element}
+   * @method createEl
+   */
+
+  _createClass(NextVideoBigButton, [{
+    key: 'createEl',
+    value: function createEl(type, props, attrs) {
+      var el = _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'createEl', this).call(this, 'div', {
+        className: 'vjs-next-video-big-button',
+        tabIndex: -1
+      }, attrs);
+
+      var backgroundImage = '';
+      if (this.options_.poster) {
+        backgroundImage = 'url("' + this.options_.poster + '")';
+      }
+
+      el.style.backgroundImage = backgroundImage;
+
+      return el;
+    }
+
+    /**
+     * Handle click on mute
+     * @method handleClick
+     */
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'handleClick', this).call(this);
+      this.player_.trigger('next');
+    }
+  }]);
+
+  return NextVideoBigButton;
+})(ClickableComponent);
+
+NextVideoBigButton.prototype.options_ = {
+  selectable: false
+};
+
+NextVideoBigButton.prototype.controlText_ = 'Next';
+
+Component.registerComponent('NextVideoBigButton', NextVideoBigButton);
+
+/**
+ * Inject Next button in core player
+ * @type {{}}
+ */
+_videoJs2['default'].options.children.push('nextVideoBigButton');
+
+exports['default'] = NextVideoBigButton;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],24:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-button.js
@@ -2890,10 +2998,13 @@ var _nextVideoItem = require('./next-video-item');
 
 var _nextVideoItem2 = _interopRequireDefault(_nextVideoItem);
 
+var _nextVideoBigButton = require('./next-video-big-button');
+
+var _nextVideoBigButton2 = _interopRequireDefault(_nextVideoBigButton);
+
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var MenuButton = _videoJs2['default'].getComponent('MenuButton');
-
 /**
  * The base class for buttons that toggle next video
  *
@@ -2929,11 +3040,14 @@ var NextVideoButton = (function (_MenuButton) {
         this.hide();
         return items;
       }
-      items.push(new _nextVideoItem2['default'](this.player_, {
+
+      var item = new _nextVideoItem2['default'](this.player_, {
         label: 'Next',
         selectable: false,
         poster: this.options_.poster
-      }));
+      });
+      items.push(item);
+
       return items;
     }
 
@@ -2974,7 +3088,7 @@ exports['default'] = NextVideoButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./next-video-item":24}],24:[function(require,module,exports){
+},{"./next-video-big-button":23,"./next-video-item":25}],25:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-item.js
@@ -3033,10 +3147,7 @@ var NextVideoItem = (function (_MenuItem) {
   _createClass(NextVideoItem, [{
     key: 'createEl',
     value: function createEl(type, props, attrs) {
-      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, 'div', {
-        className: 'vjs-menu-item',
-        tabIndex: -1
-      }, attrs);
+      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, type, props, attrs);
 
       this.fallbackImg_ = _videoJs2['default'].createEl(_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
         className: 'thumb-tile_thumb'
@@ -3083,7 +3194,7 @@ exports['default'] = NextVideoItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (global){
 /**
  * @file load-progress-spinner.js
@@ -3243,7 +3354,7 @@ exports['default'] = LoadProgressSpinner;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (global){
 /**
  * @file mouse-thumbnail-display.js
@@ -3425,7 +3536,7 @@ exports['default'] = MouseThumbnailDisplay;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (global){
 /**
  * @file audio-track-button.js
@@ -3561,7 +3672,7 @@ exports['default'] = AudioTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":28,"./off-audio-track-menu-item":31}],28:[function(require,module,exports){
+},{"./audio-track-menu-item":29,"./off-audio-track-menu-item":32}],29:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3659,7 +3770,7 @@ exports['default'] = AudioTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3760,7 +3871,7 @@ exports['default'] = CaptionTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":30,"./off-caption-track-menu-item":32}],30:[function(require,module,exports){
+},{"./caption-track-menu-item":31,"./off-caption-track-menu-item":33}],31:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3890,7 +4001,7 @@ exports['default'] = CaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 (function (global){
 /**
  * @file off-audio-track-menu-item.js
@@ -3985,7 +4096,7 @@ exports['default'] = OffAudioTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":28}],32:[function(require,module,exports){
+},{"./audio-track-menu-item":29}],33:[function(require,module,exports){
 (function (global){
 /**
  * @file caption-track-button-off.js
@@ -4079,7 +4190,7 @@ exports['default'] = OffCaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":30}],33:[function(require,module,exports){
+},{"./caption-track-menu-item":31}],34:[function(require,module,exports){
 (function (global){
 /**
  * @file off-video-track-menu-item.js
@@ -4173,7 +4284,7 @@ exports['default'] = OffVideoTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./video-track-menu-item":35}],34:[function(require,module,exports){
+},{"./video-track-menu-item":36}],35:[function(require,module,exports){
 (function (global){
 /**
  * @file video-track-button.js
@@ -4313,7 +4424,7 @@ exports['default'] = VideoTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./off-video-track-menu-item":33,"./video-track-menu-item":35}],35:[function(require,module,exports){
+},{"./off-video-track-menu-item":34,"./video-track-menu-item":36}],36:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4417,7 +4528,7 @@ exports['default'] = VideoTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function (global){
 /**
  * @file dash.js
@@ -4674,9 +4785,9 @@ var Dash = (function (_Html5) {
         //this.trigger(videojs.obj.copy(e));
         var metricsChangeEvent = {
           type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
-          data: e.data
+          mediaType: e.mediaType
         };
-        this.trigger(metricsChangeEvent);
+        this.trigger(e);
       }
     }
   }, {
@@ -5165,7 +5276,7 @@ exports['default'] = Dash;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 (function (global){
 /**
  * @file dashas.js
@@ -5339,7 +5450,7 @@ var Dashas = (function (_Flash) {
       if (metricsChangeType) {
         var metricsChangeEvent = {
           type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
-          data: metricsChangeType
+          mediaType: metricsChangeType
         };
 
         this.trigger(metricsChangeEvent);
@@ -5603,7 +5714,7 @@ exports['default'] = Dashas;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5664,7 +5775,7 @@ MediaTechController.prototype.getCribbedMetricsFor = function (type) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5705,7 +5816,7 @@ _qunit2['default'].test('afrostreamMaker takes a player and returns a metrics', 
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/js/afrostream":21,"./player-proxy":40,"global/window":3}],40:[function(require,module,exports){
+},{"../src/js/afrostream":21,"./player-proxy":41,"global/window":3}],41:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5747,7 +5858,7 @@ exports['default'] = proxy;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"node.extend":4}],41:[function(require,module,exports){
+},{"node.extend":4}],42:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5782,4 +5893,4 @@ _qunit2['default'].test('registers itself with video.js', function (assert) {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/js/afrostream":21}]},{},[39,41]);
+},{"../src/js/afrostream":21}]},{},[40,42]);

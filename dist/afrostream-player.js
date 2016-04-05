@@ -32,7 +32,116 @@ var _progressControlLoadProgressSpinner2 = _interopRequireDefault(_progressContr
 var _progressControlMouseThumbnailDisplay = require('./progress-control/mouse-thumbnail-display');
 
 var _progressControlMouseThumbnailDisplay2 = _interopRequireDefault(_progressControlMouseThumbnailDisplay);
-},{"./next/next-video-button":2,"./progress-control/load-progress-spinner":4,"./progress-control/mouse-thumbnail-display":5,"./track-controls/audio-track-button":6,"./track-controls/caption-track-button":8,"./track-controls/video-track-button":13}],2:[function(require,module,exports){
+},{"./next/next-video-button":3,"./progress-control/load-progress-spinner":5,"./progress-control/mouse-thumbnail-display":6,"./track-controls/audio-track-button":7,"./track-controls/caption-track-button":9,"./track-controls/video-track-button":14}],2:[function(require,module,exports){
+(function (global){
+/**
+ * @file next-video-big-button.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var ClickableComponent = _videoJs2['default'].getComponent('ClickableComponent');
+
+/**
+ * The base class for buttons that toggle next video
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends NextVideoItem
+ * @class NextVideoBigButton
+ */
+
+var NextVideoBigButton = (function (_ClickableComponent) {
+  _inherits(NextVideoBigButton, _ClickableComponent);
+
+  function NextVideoBigButton(player, options) {
+    _classCallCheck(this, NextVideoBigButton);
+
+    options = _videoJs2['default'].mergeOptions(options, player.options_.controlBar.nextVideoButton || {});
+    _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'constructor', this).call(this, player, options);
+    if (!this.options_.poster) {
+      this.hide();
+    }
+  }
+
+  /**
+   * Create the component's DOM element
+   *
+   * @param {String=} type Desc
+   * @param {Object=} props Desc
+   * @return {Element}
+   * @method createEl
+   */
+
+  _createClass(NextVideoBigButton, [{
+    key: 'createEl',
+    value: function createEl(type, props, attrs) {
+      var el = _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'createEl', this).call(this, 'div', {
+        className: 'vjs-next-video-big-button',
+        tabIndex: -1
+      }, attrs);
+
+      var backgroundImage = '';
+      if (this.options_.poster) {
+        backgroundImage = 'url("' + this.options_.poster + '")';
+      }
+
+      el.style.backgroundImage = backgroundImage;
+
+      return el;
+    }
+
+    /**
+     * Handle click on mute
+     * @method handleClick
+     */
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'handleClick', this).call(this);
+      this.player_.trigger('next');
+    }
+  }]);
+
+  return NextVideoBigButton;
+})(ClickableComponent);
+
+NextVideoBigButton.prototype.options_ = {
+  selectable: false
+};
+
+NextVideoBigButton.prototype.controlText_ = 'Next';
+
+Component.registerComponent('NextVideoBigButton', NextVideoBigButton);
+
+/**
+ * Inject Next button in core player
+ * @type {{}}
+ */
+_videoJs2['default'].options.children.push('nextVideoBigButton');
+
+exports['default'] = NextVideoBigButton;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-button.js
@@ -61,10 +170,13 @@ var _nextVideoItem = require('./next-video-item');
 
 var _nextVideoItem2 = _interopRequireDefault(_nextVideoItem);
 
+var _nextVideoBigButton = require('./next-video-big-button');
+
+var _nextVideoBigButton2 = _interopRequireDefault(_nextVideoBigButton);
+
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var MenuButton = _videoJs2['default'].getComponent('MenuButton');
-
 /**
  * The base class for buttons that toggle next video
  *
@@ -100,11 +212,14 @@ var NextVideoButton = (function (_MenuButton) {
         this.hide();
         return items;
       }
-      items.push(new _nextVideoItem2['default'](this.player_, {
+
+      var item = new _nextVideoItem2['default'](this.player_, {
         label: 'Next',
         selectable: false,
         poster: this.options_.poster
-      }));
+      });
+      items.push(item);
+
       return items;
     }
 
@@ -144,7 +259,7 @@ Component.registerComponent('NextVideoButton', NextVideoButton);
 exports['default'] = NextVideoButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./next-video-item":3}],3:[function(require,module,exports){
+},{"./next-video-big-button":2,"./next-video-item":4}],4:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-item.js
@@ -203,10 +318,7 @@ var NextVideoItem = (function (_MenuItem) {
   _createClass(NextVideoItem, [{
     key: 'createEl',
     value: function createEl(type, props, attrs) {
-      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, 'div', {
-        className: 'vjs-menu-item',
-        tabIndex: -1
-      }, attrs);
+      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, type, props, attrs);
 
       this.fallbackImg_ = _videoJs2['default'].createEl(_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
         className: 'thumb-tile_thumb'
@@ -252,7 +364,7 @@ Component.registerComponent('NextVideoItem', NextVideoItem);
 exports['default'] = NextVideoItem;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 /**
  * @file load-progress-spinner.js
@@ -411,7 +523,7 @@ _videoJs2['default'].options.children.splice(3, 1, 'loadProgressSpinner');
 exports['default'] = LoadProgressSpinner;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (global){
 /**
  * @file mouse-thumbnail-display.js
@@ -592,7 +704,7 @@ Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
 exports['default'] = MouseThumbnailDisplay;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 /**
  * @file audio-track-button.js
@@ -727,7 +839,7 @@ Component.registerComponent('AudioTrackButton', AudioTrackButton);
 exports['default'] = AudioTrackButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":7,"./off-audio-track-menu-item":10}],7:[function(require,module,exports){
+},{"./audio-track-menu-item":8,"./off-audio-track-menu-item":11}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -824,7 +936,7 @@ Component.registerComponent('AudioTrackMenuItem', AudioTrackMenuItem);
 exports['default'] = AudioTrackMenuItem;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -924,7 +1036,7 @@ Component.registerComponent('CaptionTrackButton', CaptionTrackButton);
 exports['default'] = CaptionTrackButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":9,"./off-caption-track-menu-item":11}],9:[function(require,module,exports){
+},{"./caption-track-menu-item":10,"./off-caption-track-menu-item":12}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1053,7 +1165,7 @@ Component.registerComponent('CaptionTrackMenuItem', CaptionTrackMenuItem);
 exports['default'] = CaptionTrackMenuItem;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (global){
 /**
  * @file off-audio-track-menu-item.js
@@ -1147,7 +1259,7 @@ Component.registerComponent('OffAudioTrackMenuItem', OffAudioTrackMenuItem);
 exports['default'] = OffAudioTrackMenuItem;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":7}],11:[function(require,module,exports){
+},{"./audio-track-menu-item":8}],12:[function(require,module,exports){
 (function (global){
 /**
  * @file caption-track-button-off.js
@@ -1240,7 +1352,7 @@ Component.registerComponent('OffCaptionTrackMenuItem', OffCaptionTrackMenuItem);
 exports['default'] = OffCaptionTrackMenuItem;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":9}],12:[function(require,module,exports){
+},{"./caption-track-menu-item":10}],13:[function(require,module,exports){
 (function (global){
 /**
  * @file off-video-track-menu-item.js
@@ -1333,7 +1445,7 @@ Component.registerComponent('OffVideoTrackMenuItem', OffVideoTrackMenuItem);
 exports['default'] = OffVideoTrackMenuItem;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./video-track-menu-item":14}],13:[function(require,module,exports){
+},{"./video-track-menu-item":15}],14:[function(require,module,exports){
 (function (global){
 /**
  * @file video-track-button.js
@@ -1472,7 +1584,7 @@ Component.registerComponent('VideoTrackButton', VideoTrackButton);
 exports['default'] = VideoTrackButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./off-video-track-menu-item":12,"./video-track-menu-item":14}],14:[function(require,module,exports){
+},{"./off-video-track-menu-item":13,"./video-track-menu-item":15}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1575,7 +1687,7 @@ Component.registerComponent('VideoTrackMenuItem', VideoTrackMenuItem);
 exports['default'] = VideoTrackMenuItem;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (global){
 /**
  * @file dash.js
@@ -1832,9 +1944,9 @@ var Dash = (function (_Html5) {
         //this.trigger(videojs.obj.copy(e));
         var metricsChangeEvent = {
           type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
-          data: e.data
+          mediaType: e.mediaType
         };
-        this.trigger(metricsChangeEvent);
+        this.trigger(e);
       }
     }
   }, {
@@ -2322,7 +2434,7 @@ Tech.registerTech('Dash', Dash);
 exports['default'] = Dash;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 /**
  * @file dashas.js
@@ -2496,7 +2608,7 @@ var Dashas = (function (_Flash) {
       if (metricsChangeType) {
         var metricsChangeEvent = {
           type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
-          data: metricsChangeType
+          mediaType: metricsChangeType
         };
 
         this.trigger(metricsChangeEvent);
@@ -2759,7 +2871,7 @@ HTMLObjectElement.prototype.vjs_src = function (src) {};
 exports['default'] = Dashas;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2819,9 +2931,9 @@ MediaTechController.prototype.getCribbedMetricsFor = function (type) {
   return this.metrics_[type];
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],18:[function(require,module,exports){
-
 },{}],19:[function(require,module,exports){
+
+},{}],20:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -2840,7 +2952,7 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":18}],20:[function(require,module,exports){
+},{"min-document":19}],21:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -2853,7 +2965,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast-button.js
@@ -3180,7 +3292,7 @@ Component.registerComponent('ChromeCastButton', ChromeCastButton);
 exports['default'] = ChromeCastButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3213,7 +3325,7 @@ _videoJs2['default'].plugin('chromecast', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./videojs-chromecast":24}],23:[function(require,module,exports){
+},{"./videojs-chromecast":25}],24:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast.js
@@ -3734,7 +3846,7 @@ Tech.registerTech('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-chromecast - v1.0.0 - 2016-02-15
@@ -3816,7 +3928,7 @@ Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/chromecast-button":21,"./tech/chromecast":23}],25:[function(require,module,exports){
+},{"./component/control-bar/chromecast-button":22,"./tech/chromecast":24}],26:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
@@ -4012,8 +4124,8 @@ var Metrics = (function (_Component) {
 				var metrics = player.techGet_('getPlaybackStatistics');
 
 				this.metrics_ = _videoJs2['default'].mergeOptions(this.metrics_, metrics);
-				evt['video_bitrate'] = this.metrics_.video.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.video.bandwidth / 1000)) : -1;
-				evt['audio_bitrate'] = this.metrics_.audio.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.audio.bandwidth / 1000)) : -1;
+				evt['video_bitrate'] = this.metrics_.video.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.video.bandwidth)) : -1;
+				evt['audio_bitrate'] = this.metrics_.audio.bandwidth > 0 ? Math.max(-1, Math.round(this.metrics_.audio.bandwidth)) : -1;
 				evt['chunks_from_cdn'] = this.metrics_.p2pweb.chunksFromCDN;
 				evt['chunks_from_p2p'] = this.metrics_.p2pweb.chunksFromP2P;
 				evt['startup_time'] = this.metrics_.p2pweb.startupTime;
@@ -4099,7 +4211,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":27,"global/document":19,"global/window":20,"xhr":28}],26:[function(require,module,exports){
+},{"./utils.js":28,"global/document":20,"global/window":21,"xhr":29}],27:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4132,7 +4244,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":25}],27:[function(require,module,exports){
+},{"./metrics":26}],28:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -4220,7 +4332,7 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":19,"global/window":20}],28:[function(require,module,exports){
+},{"global/document":20,"global/window":21}],29:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -4441,7 +4553,7 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":20,"is-function":29,"once":30,"parse-headers":33,"xtend":34}],29:[function(require,module,exports){
+},{"global/window":21,"is-function":30,"once":31,"parse-headers":34,"xtend":35}],30:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -4458,7 +4570,7 @@ function isFunction (fn) {
       fn === window.prompt))
 };
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -4479,7 +4591,7 @@ function once (fn) {
   }
 }
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var isFunction = require('is-function')
 
 module.exports = forEach
@@ -4527,7 +4639,7 @@ function forEachObject(object, iterator, context) {
     }
 }
 
-},{"is-function":29}],32:[function(require,module,exports){
+},{"is-function":30}],33:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -4543,7 +4655,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -4575,7 +4687,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":31,"trim":32}],34:[function(require,module,exports){
+},{"for-each":32,"trim":33}],35:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -4596,7 +4708,7 @@ function extend() {
     return target
 }
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (global){
 /**
  * ! afrostrream-player - v2.0.0 - 2016-02-15
@@ -4666,9 +4778,9 @@ var Afrostream = (function (_Component) {
     _classCallCheck(this, Afrostream);
 
     _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
-    player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
+    player.one('loadstart', this.onLoadStart.bind(this));
     player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
-    player.one('fullscreenchange', _videoJs2['default'].bind(this, this.onFullScreenChange));
+    player.one('fullscreenchange', this.onFullScreenChange.bind(this));
   }
 
   _createClass(Afrostream, [{
@@ -4703,32 +4815,30 @@ var Afrostream = (function (_Component) {
   }, {
     key: 'addMediaPlayerHandlers',
     value: function addMediaPlayerHandlers() {
-      this.player().on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
-      this.player().on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+      this.player_.tech_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+      this.player_.tech_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
     }
   }, {
     key: 'onMetricChanged',
     value: function onMetricChanged(e) {
       // get current buffered ranges of video element and keep them up to date
-      if (e.stream !== 'video' && e.stream !== 'audio' && e.stream !== 'p2pweb') {
+      if (e.mediaType !== 'video' && e.mediaType !== 'audio' && e.mediaType !== 'p2pweb') {
         return;
       }
-      var metrics = this.player().getCribbedMetricsFor(e.stream);
+      var metrics = this.getCribbedMetricsFor(e.mediaType);
       if (metrics) {
-        switch (e.stream) {
+        switch (e.mediaType) {
           case 'video':
             /*jshint sub:true*/
             if (metrics.bandwidth !== this.oldBandwidth) {
-              this.tech_['featuresBitrate'] = metrics;
-              this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
+              this.player_.trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
               this.oldBandwidth = metrics.bandwidth;
             }
             break;
           case 'p2pweb':
             /*jshint sub:true*/
             if (metrics.chunksFromP2P !== this.oldChunksFromP2P) {
-              this.tech_['featuresBitrate'] = metrics;
-              this.player().trigger('chunksFromP2P');
+              this.player_.trigger('chunksfromp2p');
               this.oldChunksFromP2P = metrics.chunksFromP2P;
             }
             break;
@@ -4741,38 +4851,38 @@ var Afrostream = (function (_Component) {
     key: 'onInitialized',
     value: function onInitialized(manifest, err) {
       if (err) {
-        this.player().error(err);
+        this.player_.error(err);
       }
     }
   }, {
     key: 'audioTracks',
     value: function audioTracks() {
-      return this.player().tech_ && this.player().techGet_('audioTracks');
+      return this.player_.tech_ && this.player_.techGet_('audioTracks');
     }
   }, {
     key: 'setAudioTrack',
     value: function setAudioTrack(track) {
-      return this.player().tech_ && this.player().techCall_('setAudioTrack', track);
+      return this.player_.tech_ && this.player_.techCall_('setAudioTrack', track);
     }
   }, {
     key: 'videoTracks',
     value: function videoTracks() {
-      return this.player().tech_ && this.player().techGet_('videoTracks');
+      return this.player_.tech_ && this.player_.techGet_('videoTracks');
     }
   }, {
     key: 'setVideoTrack',
     value: function setVideoTrack(track) {
-      return this.player().tech_ && this.player().tech_.setVideoTrack(track);
+      return this.player_.tech_ && this.player_.tech_.setVideoTrack(track);
     }
   }, {
     key: 'getPlaybackStatistics',
     value: function getPlaybackStatistics() {
-      return this.player().tech_ && this.player().tech_.getPlaybackStatistics();
+      return this.player_.tech_ && this.player_.tech_.getPlaybackStatistics();
     }
   }, {
     key: 'getCribbedMetricsFor',
     value: function getCribbedMetricsFor(type) {
-      return this.player().tech_ && this.player().tech_.getCribbedMetricsFor(type);
+      return this.player_.tech_ && this.player_.tech_.getCribbedMetricsFor(type);
     }
   }]);
 
@@ -4801,5 +4911,5 @@ Component.registerComponent('Afrostream', Afrostream);
 exports['default'] = Afrostream;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":1,"./tech/dash":15,"./tech/dashas":16,"./tech/media":17,"videojs-chromecast":22,"videojs-metrics":26}]},{},[35])(35)
+},{"./component/control-bar/":1,"./tech/dash":16,"./tech/dashas":17,"./tech/media":18,"videojs-chromecast":23,"videojs-metrics":27}]},{},[36])(36)
 });

@@ -9,7 +9,7 @@ import videojs from 'video.js';
 import MediaTechController from './tech/media';
 import Dash from './tech/dash';
 import Dashas from './tech/dashas';
-import {MediaPlayer} from 'dashjs';
+import { MediaPlayer } from 'dashjs';
 import ControlBarChilds from './component/control-bar/';
 import Metrics from 'videojs-metrics';
 import Chromecast from 'videojs-chromecast';
@@ -22,19 +22,19 @@ const ControlBar = videojs.getComponent('ControlBar');
  * @param options (optional) {object} configuration for the plugin
  */
 class Afrostream extends Component {
-  constructor(player, options, ready) {
+  constructor (player, options, ready) {
 
     super(player, options, ready);
-    player.one('loadstart', videojs.bind(this, this.onLoadStart));
+    player.one('loadstart', ::this.onLoadStart);
     player.getPlaybackStatistics = ::this.getPlaybackStatistics;
-    player.one('fullscreenchange', videojs.bind(this, this.onFullScreenChange));
+    player.one('fullscreenchange', ::this.onFullScreenChange);
   }
 
-  getPrefix() {
+  getPrefix () {
     return (screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation) && 'orientation' in screen;
   }
 
-  onFullScreenChange() {
+  onFullScreenChange () {
     let prefix = this.getPrefix();
 
     if (!prefix) {
@@ -52,40 +52,37 @@ class Afrostream extends Component {
     }
   }
 
-  onLoadStart() {
+  onLoadStart () {
     this.addMediaPlayerHandlers();
   }
 
 
-  addMediaPlayerHandlers() {
-    this.player().on(MediaPlayer.events.STREAM_INITIALIZED,
+  addMediaPlayerHandlers () {
+    this.player_.tech_.on(MediaPlayer.events.STREAM_INITIALIZED,
       ::this.onInitialized);
-    this.player().on(MediaPlayer.events.METRIC_CHANGED,
+    this.player_.tech_.on(MediaPlayer.events.METRIC_CHANGED,
       ::this.onMetricChanged);
-
   }
 
-  onMetricChanged(e) {
+  onMetricChanged (e) {
     // get current buffered ranges of video element and keep them up to date
-    if (e.stream !== 'video' && e.stream !== 'audio' && e.stream !== 'p2pweb') {
+    if (e.mediaType !== 'video' && e.mediaType !== 'audio' && e.mediaType !== 'p2pweb') {
       return;
     }
-    var metrics = this.player().getCribbedMetricsFor(e.stream);
+    var metrics = this.getCribbedMetricsFor(e.mediaType);
     if (metrics) {
-      switch (e.stream) {
+      switch (e.mediaType) {
         case 'video':
           /*jshint sub:true*/
           if (metrics.bandwidth !== this.oldBandwidth) {
-            this.tech_['featuresBitrate'] = metrics;
-            this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
+            this.player_.trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
             this.oldBandwidth = metrics.bandwidth;
           }
           break;
         case 'p2pweb':
           /*jshint sub:true*/
           if (metrics.chunksFromP2P !== this.oldChunksFromP2P) {
-            this.tech_['featuresBitrate'] = metrics;
-            this.player().trigger('chunksFromP2P');
+            this.player_.trigger('chunksfromp2p');
             this.oldChunksFromP2P = metrics.chunksFromP2P;
           }
           break;
@@ -95,34 +92,34 @@ class Afrostream extends Component {
     }
   }
 
-  onInitialized(manifest, err) {
+  onInitialized (manifest, err) {
     if (err) {
-      this.player().error(err);
+      this.player_.error(err);
     }
   }
 
-  audioTracks() {
-    return this.player().tech_ && this.player().techGet_('audioTracks');
+  audioTracks () {
+    return this.player_.tech_ && this.player_.techGet_('audioTracks');
   }
 
-  setAudioTrack(track) {
-    return this.player().tech_ && this.player().techCall_('setAudioTrack', track);
+  setAudioTrack (track) {
+    return this.player_.tech_ && this.player_.techCall_('setAudioTrack', track);
   }
 
-  videoTracks() {
-    return this.player().tech_ && this.player().techGet_('videoTracks');
+  videoTracks () {
+    return this.player_.tech_ && this.player_.techGet_('videoTracks');
   }
 
-  setVideoTrack(track) {
-    return this.player().tech_ && this.player().tech_.setVideoTrack(track);
+  setVideoTrack (track) {
+    return this.player_.tech_ && this.player_.tech_.setVideoTrack(track);
   }
 
-  getPlaybackStatistics() {
-    return this.player().tech_ && this.player().tech_.getPlaybackStatistics();
+  getPlaybackStatistics () {
+    return this.player_.tech_ && this.player_.tech_.getPlaybackStatistics();
   }
 
-  getCribbedMetricsFor(type) {
-    return this.player().tech_ && this.player().tech_.getCribbedMetricsFor(type);
+  getCribbedMetricsFor (type) {
+    return this.player_.tech_ && this.player_.tech_.getCribbedMetricsFor(type);
   }
 }
 

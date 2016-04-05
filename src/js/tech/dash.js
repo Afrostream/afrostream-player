@@ -215,9 +215,9 @@ class Dash extends Html5 {
       //this.trigger(videojs.obj.copy(e));
       var metricsChangeEvent = {
         type: MediaPlayer.events.METRIC_CHANGED,
-        data: e.data
+        mediaType: e.mediaType
       };
-      this.trigger(metricsChangeEvent);
+      this.trigger(e);
     }
   }
 

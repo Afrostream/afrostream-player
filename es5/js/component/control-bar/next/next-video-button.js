@@ -25,10 +25,13 @@ var _nextVideoItem = require('./next-video-item');
 
 var _nextVideoItem2 = _interopRequireDefault(_nextVideoItem);
 
+var _nextVideoBigButton = require('./next-video-big-button');
+
+var _nextVideoBigButton2 = _interopRequireDefault(_nextVideoBigButton);
+
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var MenuButton = _videoJs2['default'].getComponent('MenuButton');
-
 /**
  * The base class for buttons that toggle next video
  *
@@ -64,11 +67,14 @@ var NextVideoButton = (function (_MenuButton) {
         this.hide();
         return items;
       }
-      items.push(new _nextVideoItem2['default'](this.player_, {
+
+      var item = new _nextVideoItem2['default'](this.player_, {
         label: 'Next',
         selectable: false,
         poster: this.options_.poster
-      }));
+      });
+      items.push(item);
+
       return items;
     }
 

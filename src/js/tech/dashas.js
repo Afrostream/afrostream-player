@@ -141,7 +141,7 @@ class Dashas extends Flash {
     if (metricsChangeType) {
       var metricsChangeEvent = {
         type: MediaPlayer.events.METRIC_CHANGED,
-        data: metricsChangeType
+        mediaType: metricsChangeType
       };
 
       this.trigger(metricsChangeEvent);

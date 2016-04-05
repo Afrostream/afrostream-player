@@ -66,9 +66,9 @@ var Afrostream = (function (_Component) {
     _classCallCheck(this, Afrostream);
 
     _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
-    player.one('loadstart', _videoJs2['default'].bind(this, this.onLoadStart));
+    player.one('loadstart', this.onLoadStart.bind(this));
     player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
-    player.one('fullscreenchange', _videoJs2['default'].bind(this, this.onFullScreenChange));
+    player.one('fullscreenchange', this.onFullScreenChange.bind(this));
   }
 
   _createClass(Afrostream, [{
@@ -103,32 +103,30 @@ var Afrostream = (function (_Component) {
   }, {
     key: 'addMediaPlayerHandlers',
     value: function addMediaPlayerHandlers() {
-      this.player().on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
-      this.player().on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+      this.player_.tech_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+      this.player_.tech_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
     }
   }, {
     key: 'onMetricChanged',
     value: function onMetricChanged(e) {
       // get current buffered ranges of video element and keep them up to date
-      if (e.stream !== 'video' && e.stream !== 'audio' && e.stream !== 'p2pweb') {
+      if (e.mediaType !== 'video' && e.mediaType !== 'audio' && e.mediaType !== 'p2pweb') {
         return;
       }
-      var metrics = this.player().getCribbedMetricsFor(e.stream);
+      var metrics = this.getCribbedMetricsFor(e.mediaType);
       if (metrics) {
-        switch (e.stream) {
+        switch (e.mediaType) {
           case 'video':
             /*jshint sub:true*/
             if (metrics.bandwidth !== this.oldBandwidth) {
-              this.tech_['featuresBitrate'] = metrics;
-              this.player().trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
+              this.player_.trigger(metrics.bandwidth > this.oldBandwidth ? 'bandwidthIncrease' : 'bandwidthDecrease');
               this.oldBandwidth = metrics.bandwidth;
             }
             break;
           case 'p2pweb':
             /*jshint sub:true*/
             if (metrics.chunksFromP2P !== this.oldChunksFromP2P) {
-              this.tech_['featuresBitrate'] = metrics;
-              this.player().trigger('chunksFromP2P');
+              this.player_.trigger('chunksfromp2p');
               this.oldChunksFromP2P = metrics.chunksFromP2P;
             }
             break;
@@ -141,38 +139,38 @@ var Afrostream = (function (_Component) {
     key: 'onInitialized',
     value: function onInitialized(manifest, err) {
       if (err) {
-        this.player().error(err);
+        this.player_.error(err);
       }
     }
   }, {
     key: 'audioTracks',
     value: function audioTracks() {
-      return this.player().tech_ && this.player().techGet_('audioTracks');
+      return this.player_.tech_ && this.player_.techGet_('audioTracks');
     }
   }, {
     key: 'setAudioTrack',
     value: function setAudioTrack(track) {
-      return this.player().tech_ && this.player().techCall_('setAudioTrack', track);
+      return this.player_.tech_ && this.player_.techCall_('setAudioTrack', track);
     }
   }, {
     key: 'videoTracks',
     value: function videoTracks() {
-      return this.player().tech_ && this.player().techGet_('videoTracks');
+      return this.player_.tech_ && this.player_.techGet_('videoTracks');
     }
   }, {
     key: 'setVideoTrack',
     value: function setVideoTrack(track) {
-      return this.player().tech_ && this.player().tech_.setVideoTrack(track);
+      return this.player_.tech_ && this.player_.tech_.setVideoTrack(track);
     }
   }, {
     key: 'getPlaybackStatistics',
     value: function getPlaybackStatistics() {
-      return this.player().tech_ && this.player().tech_.getPlaybackStatistics();
+      return this.player_.tech_ && this.player_.tech_.getPlaybackStatistics();
     }
   }, {
     key: 'getCribbedMetricsFor',
     value: function getCribbedMetricsFor(type) {
-      return this.player().tech_ && this.player().tech_.getCribbedMetricsFor(type);
+      return this.player_.tech_ && this.player_.tech_.getCribbedMetricsFor(type);
     }
   }]);
 

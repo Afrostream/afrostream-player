@@ -16,7 +16,7 @@ const MenuItem = videojs.getComponent('MenuItem');
  */
 class NextVideoItem extends MenuItem {
 
-  constructor(player, options) {
+  constructor (player, options) {
     super(player, options);
     this.setSrc(options.poster)
   }
@@ -29,12 +29,8 @@ class NextVideoItem extends MenuItem {
    * @return {Element}
    * @method createEl
    */
-  createEl(type, props, attrs) {
-    const el = super.createEl('div', {
-      className: 'vjs-menu-item',
-      tabIndex: -1
-    }, attrs);
-
+  createEl (type, props, attrs) {
+    const el = super.createEl(type, props, attrs);
 
     this.fallbackImg_ = videojs.createEl(videojs.browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
       className: 'thumb-tile_thumb'
@@ -45,7 +41,7 @@ class NextVideoItem extends MenuItem {
     return el;
   }
 
-  setSrc(url) {
+  setSrc (url) {
     let backgroundImage;
 
     if (!videojs.browser.BACKGROUND_SIZE_SUPPORTED) {
@@ -64,7 +60,7 @@ class NextVideoItem extends MenuItem {
    * Handle click on mute
    * @method handleClick
    */
-  handleClick() {
+  handleClick () {
     super.handleClick();
     this.player_.trigger('next');
   }
