@@ -1,5 +1,5 @@
 /**
- * @file next-video-item.js
+ * @file next-video-big-button.js
  */
 'use strict';
 
@@ -22,25 +22,28 @@ var _videoJs = require('video.js');
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var Component = _videoJs2['default'].getComponent('Component');
-var MenuItem = _videoJs2['default'].getComponent('MenuItem');
+var ClickableComponent = _videoJs2['default'].getComponent('ClickableComponent');
 
 /**
  * The base class for buttons that toggle next video
  *
  * @param {Player|Object} player
  * @param {Object=} options
- * @extends MenuItem
- * @class NextVideoItem
+ * @extends NextVideoItem
+ * @class NextVideoBigButton
  */
 
-var NextVideoItem = (function (_MenuItem) {
-  _inherits(NextVideoItem, _MenuItem);
+var NextVideoBigButton = (function (_ClickableComponent) {
+  _inherits(NextVideoBigButton, _ClickableComponent);
 
-  function NextVideoItem(player, options) {
-    _classCallCheck(this, NextVideoItem);
+  function NextVideoBigButton(player, options) {
+    _classCallCheck(this, NextVideoBigButton);
 
-    _get(Object.getPrototypeOf(NextVideoItem.prototype), 'constructor', this).call(this, player, options);
-    this.setSrc(options.poster);
+    options = _videoJs2['default'].mergeOptions(options, player.options_.controlBar.nextVideoButton || {});
+    _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'constructor', this).call(this, player, options);
+    if (!this.options_.poster) {
+      this.hide();
+    }
   }
 
   /**
@@ -52,34 +55,22 @@ var NextVideoItem = (function (_MenuItem) {
    * @method createEl
    */
 
-  _createClass(NextVideoItem, [{
+  _createClass(NextVideoBigButton, [{
     key: 'createEl',
     value: function createEl(type, props, attrs) {
-      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, type, props, attrs);
+      var el = _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'createEl', this).call(this, 'div', {
+        className: 'vjs-next-video-big-button',
+        tabIndex: -1
+      }, attrs);
 
-      this.fallbackImg_ = _videoJs2['default'].createEl(_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
-        className: 'thumb-tile_thumb'
-      });
+      var backgroundImage = '';
+      if (this.options_.poster) {
+        backgroundImage = 'url("' + this.options_.poster + '")';
+      }
 
-      el.appendChild(this.fallbackImg_);
+      el.style.backgroundImage = backgroundImage;
 
       return el;
-    }
-  }, {
-    key: 'setSrc',
-    value: function setSrc(url) {
-      var backgroundImage = undefined;
-
-      if (!_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED) {
-        this.fallbackImg_.src = url;
-      } else {
-        backgroundImage = '';
-        if (url) {
-          backgroundImage = 'url("' + url + '")';
-        }
-
-        this.fallbackImg_.style.backgroundImage = backgroundImage;
-      }
     }
 
     /**
@@ -89,14 +80,27 @@ var NextVideoItem = (function (_MenuItem) {
   }, {
     key: 'handleClick',
     value: function handleClick() {
-      _get(Object.getPrototypeOf(NextVideoItem.prototype), 'handleClick', this).call(this);
+      _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'handleClick', this).call(this);
       this.player_.trigger('next');
     }
   }]);
 
-  return NextVideoItem;
-})(MenuItem);
+  return NextVideoBigButton;
+})(ClickableComponent);
 
-Component.registerComponent('NextVideoItem', NextVideoItem);
-exports['default'] = NextVideoItem;
+NextVideoBigButton.prototype.options_ = {
+  selectable: false
+};
+
+NextVideoBigButton.prototype.controlText_ = 'Next';
+
+Component.registerComponent('NextVideoBigButton', NextVideoBigButton);
+
+/**
+ * Inject Next button in core player
+ * @type {{}}
+ */
+_videoJs2['default'].options.children.push('nextVideoBigButton');
+
+exports['default'] = NextVideoBigButton;
 module.exports = exports['default'];

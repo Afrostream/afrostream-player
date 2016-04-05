@@ -3,11 +3,11 @@
  */
 import videojs from 'video.js';
 import NextVideoItem from './next-video-item';
+import NextVideoBigButton from './next-video-big-button';
 
 const Component = videojs.getComponent('Component');
 const ControlBar = videojs.getComponent('ControlBar');
 const MenuButton = videojs.getComponent('MenuButton');
-
 /**
  * The base class for buttons that toggle next video
  *
@@ -18,7 +18,7 @@ const MenuButton = videojs.getComponent('MenuButton');
  */
 class NextVideoButton extends MenuButton {
 
-  constructor(player, options = {}) {
+  constructor (player, options = {}) {
     super(player, options);
   }
 
@@ -27,16 +27,19 @@ class NextVideoButton extends MenuButton {
    *
    * @method createItems
    */
-  createItems(items = []) {
+  createItems (items = []) {
     if (!this.options_.poster) {
       this.hide();
       return items;
     }
-    items.push(new NextVideoItem(this.player_, {
+
+    const item = new NextVideoItem(this.player_, {
       label: 'Next',
       selectable: false,
       poster: this.options_.poster
-    }));
+    });
+    items.push(item);
+
     return items;
   }
 
@@ -46,7 +49,7 @@ class NextVideoButton extends MenuButton {
    * @return {String} The constructed class name
    * @method buildCSSClass
    */
-  buildCSSClass() {
+  buildCSSClass () {
     return `vjs-next-video-button ${super.buildCSSClass()}`;
   }
 
@@ -54,7 +57,7 @@ class NextVideoButton extends MenuButton {
    * Handle click on mute
    * @method handleClick
    */
-  handleClick() {
+  handleClick () {
     super.handleClick();
     this.player_.trigger('next');
   }
