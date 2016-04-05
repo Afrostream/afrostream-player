@@ -46,43 +46,42 @@ var Dash = (function (_Html5) {
     _classCallCheck(this, Dash);
 
     _get(Object.getPrototypeOf(Dash.prototype), 'constructor', this).call(this, options, ready);
-    var tracks = undefined;
 
-    tracks = this.textTracks();
+    var tTracks = this.textTracks();
 
-    if (tracks) {
+    if (tTracks) {
       (function () {
-        var changeHandler = _this.handleTracksChange.bind(_this);
+        var tTracksChangeHandler = _this.handleTracksChange.bind(_this);
 
-        tracks.addEventListener('change', changeHandler);
+        tTracks.addEventListener('change', tTracksChangeHandler);
         _this.on('dispose', function () {
-          tracks.removeEventListener('change', changeHandler);
+          tTracks.removeEventListener('change', tTracksChangeHandler);
         });
       })();
     }
 
-    tracks = this.audioTracks();
+    var aTracks = this.audioTracks();
 
-    if (tracks) {
+    if (aTracks) {
       (function () {
-        var changeHandler = _this.handleAudioTracksChange.bind(_this);
+        var aTracksChangeHandler = _this.handleAudioTracksChange.bind(_this);
 
-        tracks.addEventListener('change', changeHandler);
+        aTracks.addEventListener('change', aTracksChangeHandler);
         _this.on('dispose', function () {
-          tracks.removeEventListener('change', changeHandler);
+          aTracks.removeEventListener('change', aTracksChangeHandler);
         });
       })();
     }
 
-    tracks = this.videoTracks();
+    var vTracks = this.videoTracks();
 
-    if (tracks) {
+    if (vTracks) {
       (function () {
-        var changeHandler = _this.handleVideoTracksChange.bind(_this);
+        var vTracksChangeHandler = _this.handleVideoTracksChange.bind(_this);
 
-        tracks.addEventListener('change', changeHandler);
+        vTracks.addEventListener('change', vTracksChangeHandler);
         _this.on('dispose', function () {
-          tracks.removeEventListener('change', changeHandler);
+          vTracks.removeEventListener('change', vTracksChangeHandler);
         });
       })();
     }

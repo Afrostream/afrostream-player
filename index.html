@@ -233,7 +233,6 @@
       track.setAttribute('label', caption.lang.label);
       var isDefault = caption.lang.lang === 'fr';
       if (isDefault) {
-        track.default = true;
         track.setAttribute('default', isDefault);
       }
       track.setAttribute('mode', isDefault ? 'showing' : 'hidden');
@@ -247,12 +246,12 @@
 
     return videojs('player', opts).ready(function () {
       initMetrics();
-      var allTracks = player.textTracks() || []; // get list of tracks
-      for (var i = 0; i < allTracks.length; i++) {
-        var track = allTracks[i];
-        let lang = track.language || track.language_;
-        track.mode = (lang === 'fr' || lang === 'fra') ? 'showing' : 'hidden'; // show this track
-      }
+//      var allTracks = player.textTracks() || []; // get list of tracks
+//      for (var i = 0; i < allTracks.length; i++) {
+//        var track = allTracks[i];
+//        var lang = track.language;
+//        track.mode = (lang === 'fr' || lang === 'fra') ? 'showing' : 'hidden'; // show this track
+//      }
     });
   };
 

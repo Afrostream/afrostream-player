@@ -3,7 +3,7 @@
  * DASH Media Controller - Wrapper for HTML5 Media API
  */
 import videojs from 'video.js';
-import {MediaPlayer} from 'dashjs';
+import { MediaPlayer } from 'dashjs';
 
 const Component = videojs.getComponent('Component');
 const Tech = videojs.getComponent('Tech');
@@ -18,40 +18,40 @@ const Html5 = videojs.getComponent('Html5');
  * @class Dash
  */
 class Dash extends Html5 {
-  constructor(options, ready) {
+  constructor (options, ready) {
     super(options, ready);
-    let tracks;
 
-    tracks = this.textTracks();
+    let tTracks = this.textTracks();
 
-    if (tracks) {
-      let changeHandler = ::this.handleTracksChange;
+    if (tTracks) {
+      let tTracksChangeHandler = ::this.handleTracksChange;
 
-      tracks.addEventListener('change', changeHandler);
-      this.on('dispose', function () {
-        tracks.removeEventListener('change', changeHandler);
+      tTracks.addEventListener('change', tTracksChangeHandler);
+      this.on('dispose', () => {
+        tTracks.removeEventListener('change', tTracksChangeHandler);
       });
     }
 
-    tracks = this.audioTracks();
 
-    if (tracks) {
-      let changeHandler = ::this.handleAudioTracksChange;
+    let aTracks = this.audioTracks();
 
-      tracks.addEventListener('change', changeHandler);
-      this.on('dispose', function () {
-        tracks.removeEventListener('change', changeHandler);
+    if (aTracks) {
+      let aTracksChangeHandler = ::this.handleAudioTracksChange;
+
+      aTracks.addEventListener('change', aTracksChangeHandler);
+      this.on('dispose', ()=> {
+        aTracks.removeEventListener('change', aTracksChangeHandler);
       });
     }
 
-    tracks = this.videoTracks();
+    let vTracks = this.videoTracks();
 
-    if (tracks) {
-      let changeHandler = ::this.handleVideoTracksChange;
+    if (vTracks) {
+      let vTracksChangeHandler = ::this.handleVideoTracksChange;
 
-      tracks.addEventListener('change', changeHandler);
+      vTracks.addEventListener('change', vTracksChangeHandler);
       this.on('dispose', function () {
-        tracks.removeEventListener('change', changeHandler);
+        vTracks.removeEventListener('change', vTracksChangeHandler);
       });
     }
 
@@ -63,7 +63,7 @@ class Dash extends Html5 {
    * TODO detect with other method based on duration Infinity
    * @returns {boolean}
    */
-  isDynamic() {
+  isDynamic () {
     let isDynamic = false;
     if (!this.playbackInitialized) {
       return isDynamic;
@@ -76,7 +76,7 @@ class Dash extends Html5 {
     return isDynamic;
   };
 
-  duration() {
+  duration () {
     let duration = super.duration();
     //FIXME WTF for detect live we should get duration to Infinity
     return this.isDynamic() ? Infinity : duration;
@@ -96,7 +96,7 @@ class Dash extends Html5 {
    * @param {Object=} src Source object
    * @method setSrc
    */
-  src(src) {
+  src (src) {
     if (!src) {
       return this.el_.src;
     }
@@ -157,7 +157,7 @@ class Dash extends Html5 {
     });
   }
 
-  onInitialized(manifest, err) {
+  onInitialized (manifest, err) {
     if (this.playbackInitialized) {
       return;
     }
@@ -200,11 +200,11 @@ class Dash extends Html5 {
 
   }
 
-  onProgress(e) {
+  onProgress (e) {
     this.trigger('progress');
   }
 
-  onMetricChanged(e) {
+  onMetricChanged (e) {
     // get current buffered ranges of video element and keep them up to date
     if (e.mediaType !== 'video' && e.mediaType !== 'audio' && e.mediaType !== 'p2pweb') {
       return;
@@ -221,7 +221,7 @@ class Dash extends Html5 {
     }
   }
 
-  getCribbedMetricsFor(type) {
+  getCribbedMetricsFor (type) {
     let metrics = this.mediaPlayer_.getMetricsFor(type),
       dashMetrics = this.mediaPlayer_.getDashMetrics(),
       repSwitch,
@@ -370,7 +370,7 @@ class Dash extends Html5 {
     }
   }
 
-  buildDashJSProtData(keySystemOptions) {
+  buildDashJSProtData (keySystemOptions) {
     var output = {};
 
     if (!keySystemOptions) {
@@ -387,7 +387,7 @@ class Dash extends Html5 {
     return keySystemOptions;
   }
 
-  initializeDashJS(manifest, err) {
+  initializeDashJS (manifest, err) {
     let manifestProtectionData = {};
 
     if (err) {
@@ -412,7 +412,7 @@ class Dash extends Html5 {
     });
   }
 
-  onTextTracksAdded(e) {
+  onTextTracksAdded (e) {
     const tracks = e.tracks;
 
     if (tracks) {
@@ -438,7 +438,7 @@ class Dash extends Html5 {
    *
    * @method updateDisplay
    */
-  handleTracksChange() {
+  handleTracksChange () {
     const tracks = this.textTracks();
 
     if (!tracks || !this.playbackInitialized) {
@@ -458,7 +458,7 @@ class Dash extends Html5 {
     }
   }
 
-  handleAudioTracksChange() {
+  handleAudioTracksChange () {
     const tracks = this.audioTracks();
 
     if (!tracks || !this.playbackInitialized) {
@@ -483,7 +483,7 @@ class Dash extends Html5 {
     }
   }
 
-  handleVideoTracksChange() {
+  handleVideoTracksChange () {
     const tracks = this.videoTracks();
 
     if (!tracks || !this.playbackInitialized || !this.options_.autoSwitch) {
@@ -496,7 +496,7 @@ class Dash extends Html5 {
     }
   }
 
-  afterMediaKeysReset(manifest) {
+  afterMediaKeysReset (manifest) {
     this.showErrors();
 
     // Attach the source with any protection data
@@ -506,7 +506,7 @@ class Dash extends Html5 {
     this.triggerReady();
   }
 
-  showErrors() {
+  showErrors () {
     // The video element's src is set asynchronously so we have to wait a while
     // before we unhide any errors
     // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
@@ -516,7 +516,7 @@ class Dash extends Html5 {
     }, 250);
   }
 
-  resetSrc_(callback) {
+  resetSrc_ (callback) {
     // In Chrome, MediaKeys can NOT be changed when a src is loaded in the video element
     // Dash.js has a bug where it doesn't correctly reset the data so we do it manually
     // The order of these two lines is important. The video element's src must be reset
@@ -531,7 +531,7 @@ class Dash extends Html5 {
     }
   }
 
-  dispose() {
+  dispose () {
     if (this.mediaPlayer_) {
       this.mediaPlayer_.reset();
     }

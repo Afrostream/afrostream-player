@@ -8,6 +8,9 @@
 .video-js .vjs-control-bar {
   margin-bottom: $controls-margin;
   background-color: transparent;
+  .vjs-subtitles-button {
+    display: none;
+  }
 }
 
 /* The default color of control backgrounds is mostly black but with a little
