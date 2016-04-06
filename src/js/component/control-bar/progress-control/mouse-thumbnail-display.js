@@ -18,11 +18,11 @@ const SeekBar = videojs.getComponent('SeekBar');
  */
 class MouseThumbnailDisplay extends MouseTimeDisplay {
 
-  constructor(player, options) {
+  constructor (player, options) {
     super(player, options);
   }
 
-  createLoader(src) {
+  createLoader (src) {
     this.destroyLoader();
 
     this.img = new Image();
@@ -31,14 +31,14 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     this.img.src = src;
   }
 
-  handleComplete() {
+  handleComplete () {
     const url = this.destroyLoader();
     if (videojs.hasClass(this.fallbackImg_, 'vjs-hidden')) {
       videojs.removeClass(this.fallbackImg_, 'vjs-hidden');
     }
   }
 
-  handleError() {
+  handleError () {
     const url = this.destroyLoader();
     videojs.log('thumbnails : next error ' + url);
     if (this.itemIndex = 1) {
@@ -46,7 +46,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     }
   }
 
-  destroyLoader() {
+  destroyLoader () {
     let imgSrouce = '';
     if (this.img) {
       imgSrouce = this.img.src;
@@ -57,11 +57,12 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     return imgSrouce;
   }
 
-  extractAssetUri(max = 1) {
+  extractAssetUri (max = 1) {
     let currentSrc = this.player_.currentSrc();
     let urlInfo = videojs.parseUrl(currentSrc);
     let pathname = urlInfo.pathname.replace(/\/([a-z0-9\/\._-]{16}\.[is]sml?)+\/([a-z0-9\/\._-]*\.(mpd|m3u8)?)$/gi, '');
-    let fullPah = `${urlInfo.protocol}//${urlInfo.host}${pathname}/frames/map-{index}.jpg`;
+    let host = this.options_.host || urlInfo.host;
+    let fullPah = `${urlInfo.protocol}//${host}${pathname}/frames/map-{index}.jpg`;
     let current = fullPah.replace('{index}', this.itemIndex);
     let next = fullPah.replace('{index}', this.itemIndex + 1);
     if (this.itemIndex < max) {
@@ -77,7 +78,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
    * @return {Element}
    * @method createEl
    */
-  createEl() {
+  createEl () {
     let el = videojs.createEl('div', {
       className: 'vjs-thumbnail-display'
     });
@@ -91,7 +92,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     return el;
   }
 
-  update(newTime, position) {
+  update (newTime, position) {
     super.update(newTime, position);
     const timeInterval = 60;
     const spriteSize = {
@@ -135,6 +136,9 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 }
 
 MouseThumbnailDisplay.prototype.itemIndex = 1;
+MouseThumbnailDisplay.prototype.options_ = {
+  host: null
+};
 //Push videojs SeekBar child with this one
 SeekBar.prototype.options_.children.splice(1, 1, 'mouseThumbnailDisplay');
 Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
