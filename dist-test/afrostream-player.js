@@ -3465,7 +3465,8 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       var currentSrc = this.player_.currentSrc();
       var urlInfo = _videoJs2['default'].parseUrl(currentSrc);
       var pathname = urlInfo.pathname.replace(/\/([a-z0-9\/\._-]{16}\.[is]sml?)+\/([a-z0-9\/\._-]*\.(mpd|m3u8)?)$/gi, '');
-      var fullPah = urlInfo.protocol + '//' + urlInfo.host + pathname + '/frames/map-{index}.jpg';
+      var host = this.options_.host || urlInfo.host;
+      var fullPah = urlInfo.protocol + '//' + host + pathname + '/frames/map-{index}.jpg';
       var current = fullPah.replace('{index}', this.itemIndex);
       var next = fullPah.replace('{index}', this.itemIndex + 1);
       if (this.itemIndex < max) {
@@ -3545,6 +3546,9 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
 })(MouseTimeDisplay);
 
 MouseThumbnailDisplay.prototype.itemIndex = 1;
+MouseThumbnailDisplay.prototype.options_ = {
+  host: null
+};
 //Push videojs SeekBar child with this one
 SeekBar.prototype.options_.children.splice(1, 1, 'mouseThumbnailDisplay');
 Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
