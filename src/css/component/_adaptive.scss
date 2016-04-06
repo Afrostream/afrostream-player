@@ -31,7 +31,7 @@ $breakpoints: (phone: 320px, tablet: 768px, desktop: 1024px);
     .vjs-current-time, .vjs-time-divider, .vjs-duration, .vjs-remaining-time,
     .vjs-playback-rate,
     .vjs-mute-control, .vjs-volume-control, .vjs-volume-menu-button,
-    .vjs-chapters-button, .vjs-video-button, .vjs-subtitles-button {
+    .vjs-chapters-button, .vjs-video-button, .vjs-subtitles-button, .vjs-next-video-big-button {
       display: none;
     }
   }
@@ -48,7 +48,7 @@ $breakpoints: (phone: 320px, tablet: 768px, desktop: 1024px);
     .vjs-current-time, .vjs-time-divider, .vjs-duration, .vjs-remaining-time,
     .vjs-playback-rate,
     .vjs-mute-control, .vjs-volume-control,
-    .vjs-chapters-button, .vjs-video-button, .vjs-subtitles-button {
+    .vjs-chapters-button, .vjs-video-button, .vjs-subtitles-button, .vjs-next-video-big-button {
       display: none;
     }
   }

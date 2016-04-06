@@ -41,7 +41,8 @@ var NextVideoBigButton = (function (_ClickableComponent) {
 
     options = _videoJs2['default'].mergeOptions(options, player.options_.controlBar.nextVideoButton || {});
     _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'constructor', this).call(this, player, options);
-    if (!this.options_.poster) {
+    this.setSrc(options.poster);
+    if (!options.poster) {
       this.hide();
     }
   }
@@ -63,14 +64,29 @@ var NextVideoBigButton = (function (_ClickableComponent) {
         tabIndex: -1
       }, attrs);
 
-      var backgroundImage = '';
-      if (this.options_.poster) {
-        backgroundImage = 'url("' + this.options_.poster + '")';
-      }
+      this.fallbackImg_ = _videoJs2['default'].createEl(_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
+        className: 'thumb-tile_thumb'
+      });
 
-      el.style.backgroundImage = backgroundImage;
+      el.appendChild(this.fallbackImg_);
 
       return el;
+    }
+  }, {
+    key: 'setSrc',
+    value: function setSrc(url) {
+      var backgroundImage = undefined;
+
+      if (!_videoJs2['default'].browser.BACKGROUND_SIZE_SUPPORTED) {
+        this.fallbackImg_.src = url;
+      } else {
+        backgroundImage = '';
+        if (url) {
+          backgroundImage = 'url("' + url + '")';
+        }
+
+        this.fallbackImg_.style.backgroundImage = backgroundImage;
+      }
     }
 
     /**
