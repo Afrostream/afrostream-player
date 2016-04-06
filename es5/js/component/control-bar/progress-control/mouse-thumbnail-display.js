@@ -42,7 +42,6 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
     _classCallCheck(this, MouseThumbnailDisplay);
 
     _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'constructor', this).call(this, player, options);
-    this.createLoader(1);
   }
 
   _createClass(MouseThumbnailDisplay, [{
@@ -96,6 +95,9 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       var fullPah = urlInfo.protocol + '//' + host + pathname + '/frames/map-{index}.jpg';
       var current = fullPah.replace('{index}', this.itemIndex);
       var next = fullPah.replace('{index}', this.itemIndex + 1);
+      if (this.itemIndex === 1) {
+        this.createLoader(current);
+      }
       if (this.itemIndex < max) {
         this.createLoader(next);
       }
@@ -151,7 +153,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       var duration = this.player_.duration();
       var maxItem = 1;
       if (duration) {
-        maxItem = Math.ceil(this.player_.duration() / secondsPerSheet);
+        maxItem = Math.ceil(duration / secondsPerSheet);
       }
       var stripedTime = newTime - (index - 1) * secondsPerSheet;
       var sheetIndex = Math.floor(stripedTime / timeInterval);
@@ -172,7 +174,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
   return MouseThumbnailDisplay;
 })(MouseTimeDisplay);
 
-MouseThumbnailDisplay.prototype.itemIndex = 1;
+MouseThumbnailDisplay.prototype.itemIndex = 0;
 MouseThumbnailDisplay.prototype.options_ = {
   host: null
 };

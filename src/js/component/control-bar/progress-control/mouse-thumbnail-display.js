@@ -20,7 +20,6 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
   constructor (player, options) {
     super(player, options);
-    this.createLoader(1);
   }
 
   createLoader (src) {
@@ -66,6 +65,9 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     let fullPah = `${urlInfo.protocol}//${host}${pathname}/frames/map-{index}.jpg`;
     let current = fullPah.replace('{index}', this.itemIndex);
     let next = fullPah.replace('{index}', this.itemIndex + 1);
+    if (this.itemIndex === 1) {
+      this.createLoader(current);
+    }
     if (this.itemIndex < max) {
       this.createLoader(next);
     }
@@ -118,7 +120,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     let duration = this.player_.duration();
     let maxItem = 1;
     if (duration) {
-      maxItem = Math.ceil(this.player_.duration() / secondsPerSheet);
+      maxItem = Math.ceil(duration / secondsPerSheet);
     }
     let stripedTime = newTime - ((index - 1) * secondsPerSheet);
     let sheetIndex = Math.floor(stripedTime / timeInterval);
@@ -136,7 +138,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
   }
 }
 
-MouseThumbnailDisplay.prototype.itemIndex = 1;
+MouseThumbnailDisplay.prototype.itemIndex = 0;
 MouseThumbnailDisplay.prototype.options_ = {
   host: null
 };
