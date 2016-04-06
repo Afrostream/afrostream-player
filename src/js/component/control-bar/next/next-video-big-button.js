@@ -19,7 +19,6 @@ class NextVideoBigButton extends ClickableComponent {
   constructor (player, options) {
     options = videojs.mergeOptions(options, player.options_.controlBar.nextVideoButton || {});
     super(player, options);
-    this.setSrc(options.poster)
     if (!options.poster) {
       this.hide();
     }
@@ -39,28 +38,7 @@ class NextVideoBigButton extends ClickableComponent {
       tabIndex: -1,
     }, attrs);
 
-    this.fallbackImg_ = videojs.createEl(videojs.browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
-      className: 'thumb-tile_thumb'
-    });
-
-    el.appendChild(this.fallbackImg_);
-
     return el;
-  }
-
-  setSrc (url) {
-    let backgroundImage;
-
-    if (!videojs.browser.BACKGROUND_SIZE_SUPPORTED) {
-      this.fallbackImg_.src = url;
-    } else {
-      backgroundImage = '';
-      if (url) {
-        backgroundImage = 'url("' + url + '")';
-      }
-
-      this.fallbackImg_.style.backgroundImage = backgroundImage;
-    }
   }
 
   /**

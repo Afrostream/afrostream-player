@@ -17,10 +17,10 @@ $icon-font-path: 'fonts' !default;
   font-style: normal;
 
 }
-
+$icon-next: '\e900';
 // http://sass-lang.com/documentation/file.SASS_REFERENCE.html#maps
 $icons: (
-  next: '\e900',
+  next: $icon-next,
   audio: '\e901',
   chromecast: '\e902',
   play: '\f101',
