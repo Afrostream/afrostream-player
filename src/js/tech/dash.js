@@ -183,8 +183,11 @@ class Dash extends Html5 {
 
     for (i = 0; i < audioDashTracks.length; i++) {
       let track = audioDashTracks[i];
+      track.label = track.label || track.lang;
       let plTrack = this.addAudioTrack('main', track.label, track.lang);
-      plTrack.enabled = plTrack['language'] === defaultAudio.lang;
+      if (defaultAudio) {
+        plTrack.enabled = plTrack['language'] === defaultAudio.lang;
+      }
     }
 
     for (i = 0; i < videoDashTracks.length; i++) {
@@ -420,7 +423,7 @@ class Dash extends Html5 {
       var l = tracks.length, track, plTrack;
       for (var i = 0; i < l; i++) {
         track = tracks[i];
-        track.label = track.label || Dash.captionsLangLabels[track.lang];
+        track.label = track.label || track.lang;
         plTrack = plTracks[i];
         track.defaultTrack = track.lang === 'fra' || track.lang === 'fr';
         if (track.defaultTrack) {
@@ -658,11 +661,6 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
   }
 
   return '';
-};
-
-Dash.captionsLangLabels = {
-  fra: 'Français',
-  eng: 'Anglais'
 };
 
 Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];
