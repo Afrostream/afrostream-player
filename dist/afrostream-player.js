@@ -1910,9 +1910,7 @@ var Dash = (function (_Html5) {
         var track = audioDashTracks[i];
         track.label = track.label || track.lang;
         var plTrack = this.addAudioTrack('main', track.label, track.lang);
-        if (defaultAudio) {
-          plTrack.enabled = plTrack['language'] === defaultAudio.lang;
-        }
+        plTrack.enabled = plTrack['language'] === (defaultAudio && this.options_.inititalMediaSettings.lang === defaultAudio.lang && defaultAudio.lang || this.options_.inititalMediaSettings.lang);
       }
 
       for (i = 0; i < videoDashTracks.length; i++) {

@@ -185,9 +185,7 @@ class Dash extends Html5 {
       let track = audioDashTracks[i];
       track.label = track.label || track.lang;
       let plTrack = this.addAudioTrack('main', track.label, track.lang);
-      if (defaultAudio) {
-        plTrack.enabled = plTrack['language'] === defaultAudio.lang;
-      }
+      plTrack.enabled = plTrack['language'] === ((defaultAudio && this.options_.inititalMediaSettings.lang === defaultAudio.lang && defaultAudio.lang) || this.options_.inititalMediaSettings.lang);
     }
 
     for (i = 0; i < videoDashTracks.length; i++) {
