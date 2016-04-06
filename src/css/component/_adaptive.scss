@@ -1,26 +1,6 @@
 @import "../../../node_modules/include-media/dist/include-media";
 
 $breakpoints: (phone: 320px, tablet: 768px, desktop: 1024px);
-// When the player is absurdly tiny, display nothing but:
-// - Play button
-// - Fullscreen Button
-@include media(">tablet", "<desktop") {
-  .video-js:not(.vjs-fullscreen) {
-    .vjs-custom-control-spacer {
-      @include flex(auto);
-    }
-    &.vjs-no-flex .vjs-custom-control-spacer {
-      width: auto;
-    }
-
-    .vjs-current-time, .vjs-time-divider, .vjs-duration, .vjs-remaining-time,
-    .vjs-playback-rate, .vjs-progress-control,
-    .vjs-mute-control, .vjs-volume-control, .vjs-volume-menu-button,
-    .vjs-chapters-button, .vjs-video-button, .vjs-subtitles-button {
-      display: none;
-    }
-  }
-}
 
 // When the player is x-small, display nothing but:
 // - Play button
