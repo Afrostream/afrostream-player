@@ -20,6 +20,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
   constructor (player, options) {
     super(player, options);
+    this.createLoader(1);
   }
 
   createLoader (src) {

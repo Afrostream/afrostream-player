@@ -42,6 +42,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
     _classCallCheck(this, MouseThumbnailDisplay);
 
     _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'constructor', this).call(this, player, options);
+    this.createLoader(1);
   }
 
   _createClass(MouseThumbnailDisplay, [{
