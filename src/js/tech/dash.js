@@ -82,13 +82,17 @@ class Dash extends Html5 {
     return this.isDynamic() ? Infinity : duration;
   }
 
-  //play() {
-  //  let isDynamic = this.isDynamic();
-  //  if (isDynamic) {
-  //    this.mediaPlayer_.retrieveManifest(this.options_.source.src, ::this.initializeDashJS);
-  //  }
-  //  super.play();
-  //}
+  setCurrentTime (seconds) {
+    if (!this.playbackInitialized) {
+      return;
+    }
+    // this.mediaPlayer_.enableBufferOccupancyABR(false);
+    this.mediaPlayer_.setQualityFor('video', 0);
+    // this.one('seeked', ()=> {
+    //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+    // });
+    super.setCurrentTime(seconds);
+  }
 
   /**
    * Set video

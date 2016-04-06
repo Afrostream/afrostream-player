@@ -4643,14 +4643,19 @@ var Dash = (function (_Html5) {
       //FIXME WTF for detect live we should get duration to Infinity
       return this.isDynamic() ? Infinity : duration;
     }
-
-    //play() {
-    //  let isDynamic = this.isDynamic();
-    //  if (isDynamic) {
-    //    this.mediaPlayer_.retrieveManifest(this.options_.source.src, ::this.initializeDashJS);
-    //  }
-    //  super.play();
-    //}
+  }, {
+    key: 'setCurrentTime',
+    value: function setCurrentTime(seconds) {
+      if (!this.playbackInitialized) {
+        return;
+      }
+      // this.mediaPlayer_.enableBufferOccupancyABR(false);
+      this.mediaPlayer_.setQualityFor('video', 0);
+      // this.one('seeked', ()=> {
+      //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+      // });
+      _get(Object.getPrototypeOf(Dash.prototype), 'setCurrentTime', this).call(this, seconds);
+    }
 
     /**
      * Set video
