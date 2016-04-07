@@ -59,6 +59,9 @@
 <script src="/node_modules/smoothie/smoothie.js"></script>
 <script src="/dist/afrostream-player.js"></script>
 <script>
+
+  var player = null;
+
   var qs = (function (a) {
     if (a == '') return {};
     var b = {};
@@ -150,8 +153,7 @@
       };
 
       nOpts.dash[key] = val;
-      player.dispose();
-      player = initPlayer(nOpts);
+      initPlayer(nOpts);
     }.bind(this));
   };
 
@@ -178,8 +180,7 @@
       };
 
       nOpts.dash.buffer[key] = val;
-      player.dispose();
-      player = initPlayer(nOpts);
+      initPlayer(nOpts);
     }.bind(slider));
   };
 
@@ -197,7 +198,7 @@
 
   };
 
-  var initPlayer = function (opts) {
+  var generateDomPlayer = function (opts) {
     var container = document.getElementById('video-container');
     var video = document.createElement('video');
     video.id = 'player';
@@ -242,20 +243,25 @@
 
     container.appendChild(video);
 
-    opts = videojs.mergeOptions(options || {}, opts || {});
+    var mergedOpts = videojs.mergeOptions(options || {}, opts || {});
 
-    return videojs('player', opts).ready(function () {
+    player = videojs('player', mergedOpts).ready(function () {
       initMetrics();
-//      var allTracks = player.textTracks() || []; // get list of tracks
-//      for (var i = 0; i < allTracks.length; i++) {
-//        var track = allTracks[i];
-//        var lang = track.language;
-//        track.mode = (lang === 'fr' || lang === 'fra') ? 'showing' : 'hidden'; // show this track
-//      }
     });
+
+    player.on('loadedmetadata', resizePlayer);
+    return player;
+  };
+
+  var initPlayer = function (opts) {
+    if (player) {
+      player.dispose();
+    }
+    generateDomPlayer(opts);
   };
 
   var resizePlayer = function () {
+    if (!player) return;
     var w = player.el_.clientWidth;
     var h = player.el_.clientHeight * 0.5;
     _chartBitrate.width = w;
@@ -267,10 +273,14 @@
   var initMetrics = function () {
     clearInterval(this.metricsIntervall);
     this.metricsIntervall = setInterval(function () {
+      if (!player || !player.tech_) {
+        return;
+      }
       var statistics = player.getPlaybackStatistics();
       var dlAudioBitrate = statistics.audio.bandwidth;
       var dlVidBitrate = statistics.video.bandwidth;
       var buffVid = statistics.video.bufferLength;
+      var droppedFrVideo = statistics.video.droppedFrames;
 
       var p2pRatio = statistics.p2pweb.p2pRatio;
       var chunksFromCDN = statistics.p2pweb.chunksFromCDN;
@@ -298,6 +308,7 @@
       videoSerie.append(now, dlVidBitrate);
       p2pSerie.append(now, p2pRatio);
       videoBufferSerie.append(now, buffVid);
+      videoDrFrSerie.append(now, droppedFrVideo);
 
       var d = new Date();
       var seconds = d.getSeconds();
@@ -427,7 +438,7 @@
     //}
   ];
 
-  var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'dashas', 'osmf', 'html5', 'easyBroadcast', 'hls', 'flash'];
+  var techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas'];
   var muted = qs.muted ? qs.muted : false;
   var drm = qs.drm ? qs.drm : false;
   var url = qs.url ? qs.url : false;
@@ -444,15 +455,16 @@
     controls: true,
     autoplay: true,
     sources: sources,
+    muted: muted,
     aspectRatio: '16:9',
     controlBar: {
       volumeMenuButton: {
         inline: false
       },
-      nextVideoButton: {
-        title: 'Dummy episode 2',
-        poster: 'http://fakeimg.pl/150'
-      },
+//      nextVideoButton: {
+//        title: 'Dummy episode 2',
+//        poster: 'http://fakeimg.pl/150'
+//      },
       "progressControl": {
         "seekBar": {
           "mouseThumbnailDisplay": {
@@ -462,64 +474,95 @@
       }
     },
     metrics: {
-      "user_id": 34
+      "user_id": 666
     },
     dashas: {
       swf: './dashas.swf'
     },
     dash: {
       nativeCaptions: false,
-      nativeTextTracks: false
+      nativeTextTracks: false,
+      autoSwitch: true,
+      bolaEnabled: false,
+      scheduleWhilePaused: true,
+      initialBitrate: 400,
+      liveFragmentCount: 4,
+      buffer: {
+        bufferToKeep: 60,
+        minBufferTime: 16,
+        bufferPruningInterval: 30,
+        bandwidthSafetyFactor: 0.9,
+        bufferTimeAtTopQuality: 30,
+        bufferTimeAtTopQualityLongForm: 60,
+        longFormContentDurationThreshold: 600,
+        richBufferThreshold: 20,
+        abandonLoadTimeout: 4,
+        fragmentLoaderRetryAttempts: 3,
+        fragmentLoaderRetryInterval: 1000
+      }
     },
     chromecast: {},
     techOrder: techOrder
   };
 
-  var player = initPlayer();
-  initInputs();
-  var smoothieBitrate = new SmoothieChart({
-    millisPerPixel: 20,
-    interpolation: 'bezier',
-    grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
-    minValue: -50
-  });
 
-  var smoothieBuffer = new SmoothieChart({
-    millisPerPixel: 20,
+  initPlayer();
+  initInputs();
+
+  var smoothieConfig = {
+    maxValueScale: 1.28,
     interpolation: 'bezier',
-    grid: {strokeStyle: 'rgba(119,119,119,0.02)'},
-    minValue: -5
-  });
+    millisPerPixel: 20,
+    horizontalLines: [
+      {color: '#002f2f', lineWidth: 1, value: 0},
+      {color: '#002f2f', lineWidth: 1, value: 98},
+      {color: '#002f2f', lineWidth: 1, value: 393},
+      {color: '#002f2f', lineWidth: 1, value: 750},
+      {color: '#002f2f', lineWidth: 1, value: 1567},
+      {color: '#002f2f', lineWidth: 1, value: 5000}]
+  };
+  var smoothieBitrate = new SmoothieChart(videojs.mergeOptions(
+    smoothieConfig,
+    {
+      grid: {strokeStyle: '#20002f2f'},
+      minValue: -50
+    }));
+
+  var smoothieBuffer = new SmoothieChart(videojs.mergeOptions(
+    smoothieConfig,
+    {
+      grid: {strokeStyle: '#20002f2f'},
+      minValue: -5
+    }));
 
   var audioSerie = new TimeSeries();
   var videoSerie = new TimeSeries();
   var p2pSerie = new TimeSeries();
   var videoBufferSerie = new TimeSeries();
+  var videoDrFrSerie = new TimeSeries();
 
   smoothieBitrate.addTimeSeries(audioSerie, {
-    strokeStyle: '#DB0A5B',
-    lineWidth: 1
+    strokeStyle: '#35AEBC'
   });
 
   smoothieBitrate.addTimeSeries(videoSerie, {
-    strokeStyle: '#0d8ea9',
-    lineWidth: 1
+    strokeStyle: '#006b6d'
   });
 
   smoothieBitrate.addTimeSeries(p2pSerie, {
-    strokeStyle: '#d612c4',
-    lineWidth: 1
+    strokeStyle: '#074e67'
   });
 
   smoothieBuffer.addTimeSeries(videoBufferSerie, {
-    strokeStyle: '#81CFE0',
-    lineWidth: 1
+    strokeStyle: '#4cb2b4'
+  });
+  smoothieBuffer.addTimeSeries(videoDrFrSerie, {
+    strokeStyle: '#074e67'
   });
 
   var _chartBitrate = document.getElementById('_chartBitrate');
   var _chartBuffer = document.getElementById('_chartBuffer');
 
-  player.on('loadedmetadata', resizePlayer);
   $(window).resize(resizePlayer);
 
   smoothieBitrate.streamTo(_chartBitrate, 1000);

@@ -1868,7 +1868,7 @@ var Dash = (function (_Html5) {
       this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
       this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
       // this.mediaPlayer_.setSelectionModeForInitialTrack(this.options_.initialSelectionMode);
-      this.mediaPlayer_.setBufferToKeep(this.options_.buffer.minBufferTime);
+      this.mediaPlayer_.setBufferToKeep(this.options_.buffer.bufferToKeep);
       this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
       this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
       this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
@@ -2322,7 +2322,7 @@ Dash.prototype.options_ = {
     //This will directly affect the buffer targets when playing back at the top quality.
     longFormContentDurationThreshold: 600,
     //A threshold, in seconds, of when dashjs abr becomes less conservative since we have a larger "rich" buffer
-    richBufferThreshold: 20,
+    richBufferThreshold: 80,
     //A timeout value in seconds, which during the ABRController will block switch-up events.
     abandonLoadTimeout: 10,
     //Total number of retry attempts that will occur on a fragment load before it fails.
