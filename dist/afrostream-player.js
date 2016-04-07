@@ -1808,14 +1808,13 @@ var Dash = (function (_Html5) {
   }, {
     key: 'setCurrentTime',
     value: function setCurrentTime(seconds) {
-      if (!this.playbackInitialized) {
-        return;
+      if (this.playbackInitialized && this.mediaPlayer_) {
+        // this.mediaPlayer_.enableBufferOccupancyABR(false);
+        this.mediaPlayer_.setQualityFor('video', 0);
+        // this.one('seeked', ()=> {
+        //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+        // });
       }
-      // this.mediaPlayer_.enableBufferOccupancyABR(false);
-      this.mediaPlayer_.setQualityFor('video', 0);
-      // this.one('seeked', ()=> {
-      //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
-      // });
       _get(Object.getPrototypeOf(Dash.prototype), 'setCurrentTime', this).call(this, seconds);
     }
 

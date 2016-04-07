@@ -83,14 +83,13 @@ class Dash extends Html5 {
   }
 
   setCurrentTime (seconds) {
-    if (!this.playbackInitialized) {
-      return;
+    if (this.playbackInitialized && this.mediaPlayer_) {
+      // this.mediaPlayer_.enableBufferOccupancyABR(false);
+      this.mediaPlayer_.setQualityFor('video', 0);
+      // this.one('seeked', ()=> {
+      //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+      // });
     }
-    // this.mediaPlayer_.enableBufferOccupancyABR(false);
-    this.mediaPlayer_.setQualityFor('video', 0);
-    // this.one('seeked', ()=> {
-    //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
-    // });
     super.setCurrentTime(seconds);
   }
 
