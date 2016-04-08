@@ -15129,9 +15129,6 @@ Html5.supportsNativeTracks = function () {
   if (supportsTracks && Html5.TEST_VID[typeTrack].length > 0) {
     supportsTracks = typeof Html5.TEST_VID[typeTrack][0]['mode'] !== 'number';
   }
-  if (supportsTracks && browser.IS_FIREFOX) {
-    supportsTracks = false;
-  }
   if (supportsTracks && !('onremovetrack' in Html5.TEST_VID[typeTrack])) {
     supportsTracks = false;
   }
