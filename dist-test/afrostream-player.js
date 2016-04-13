@@ -4676,6 +4676,8 @@ var Dash = (function (_Html5) {
 
       this.isReady_ = false;
       this.featuresNativeTextTracks = Html5.supportsNativeTracks('text');
+      this.featuresNativeAudioTracks = Html5.supportsNativeTracks('audio');
+      this.featuresNativeVideoTracks = Html5.supportsNativeTracks('video');
       this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
       // Save the context after the first initialization for subsequent instances
       this.context_ = this.context_ || {};
