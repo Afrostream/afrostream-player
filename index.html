@@ -27,6 +27,16 @@
   <link href="/node_modules/bootstrap-slider/dist/css/bootstrap-slider.css" rel="stylesheet">
   <script src="/node_modules/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
   <link href="/node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
+  <!-- streamroot p2p module -->
+  <script src="//lib.streamroot.io/3/p2p.js"></script>
+  <!-- p2p graphics and peer stats -->
+  <script src="http://cdn.streamroot.io/2/scripts/p2pGraph.js"></script>
+  <script src="http://cdn.streamroot.io/2/scripts/peerStat.js"></script>
+  <!-- graphics dependencies -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.4.6/rickshaw.min.js"> </script>
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.4.6/rickshaw.min.css">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.9/d3.min.js"> </script>
+
 </head>
 <body>
 <div class="row">
@@ -55,7 +65,8 @@
 <!--<script src="/node_modules/video.js/dist/video.js"></script>-->
 <script src="/libs/video.js"></script>
 <script> window.dashjs = {skipAutoCreate: true}; </script>
-<script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
+<!--<script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>-->
+<script src="http://dashif.org/reference/players/javascript/nightly/dash.js/dist/dash.all.debug.js"></script>
 <script src="/node_modules/smoothie/smoothie.js"></script>
 <script src="/dist/afrostream-player.js"></script>
 <script>
@@ -495,6 +506,12 @@
       swf: './dashas.swf'
     },
     dash: {
+      streamroot: {
+        p2pConfig: {
+          streamrootKey: 'ry-0gzuhlor',
+          debug: true
+        }
+      },
       nativeCaptions: false,
       nativeTextTracks: false,
       autoSwitch: true,

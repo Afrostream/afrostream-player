@@ -4,6 +4,7 @@
  */
 import videojs from 'video.js';
 import { MediaPlayer } from 'dashjs';
+import DashjsWrapper from 'streamroot-dash';
 
 const Component = videojs.getComponent('Component');
 const Tech = videojs.getComponent('Tech');
@@ -113,6 +114,17 @@ class Dash extends Html5 {
     this.context_ = this.context_ || {};
     // But make a fresh MediaPlayer each time the sourceHandler is used
     this.mediaPlayer_ = MediaPlayer(this.context_).create();
+
+    // initializing streamroot-dash wrapper here
+    // p2p configuration object must be passed to it
+    if (this.options_.streamroot && this.options_.streamroot.p2pConfig) {
+      this.dashjsWrapper = new DashjsWrapper(
+        this.mediaPlayer_,
+        this._el,
+        this.options_.streamroot.p2pConfig,
+        this.options_.streamroot.liveDelay || 30
+      );
+    }
 
     // Must run controller before these two lines or else there is no
     // element to bind to.
