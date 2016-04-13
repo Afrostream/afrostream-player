@@ -130,6 +130,7 @@
     "serve-static": "^1.10.0",
     "sinon": "1.14.1",
     "smoothie": "^1.27.0",
+    "streamroot-dash": "git+https://github.com/streamroot/streamroot-dash.git#master",
     "uglify-js": "^2.5.0",
     "video.js": "https://registry.npmjs.org/video.js/-/video.js-5.7.1.tgz",
     "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.5",

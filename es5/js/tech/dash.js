@@ -24,6 +24,10 @@ var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _dashjs = require('dashjs');
 
+var _streamrootDash = require('streamroot-dash');
+
+var _streamrootDash2 = _interopRequireDefault(_streamrootDash);
+
 var Component = _videoJs2['default'].getComponent('Component');
 var Tech = _videoJs2['default'].getComponent('Tech');
 var Html5 = _videoJs2['default'].getComponent('Html5');
@@ -151,6 +155,12 @@ var Dash = (function (_Html5) {
       this.context_ = this.context_ || {};
       // But make a fresh MediaPlayer each time the sourceHandler is used
       this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+
+      // initializing streamroot-dash wrapper here
+      // p2p configuration object must be passed to it
+      if (this.options_.streamroot && this.options_.streamroot.p2pConfig) {
+        this.dashjsWrapper = new _streamrootDash2['default'](this.mediaPlayer_, this._el, this.options_.streamroot.p2pConfig, this.options_.streamroot.liveDelay || 30);
+      }
 
       // Must run controller before these two lines or else there is no
       // element to bind to.
