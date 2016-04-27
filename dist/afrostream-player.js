@@ -3392,7 +3392,7 @@ var OffVideoTrackMenuItem = (function (_VideoTrackMenuItem) {
       'player': player,
       'label': options['kind'],
       'default': false,
-      'selected': false
+      'selected': true
     };
 
     // MenuItem is selectable
@@ -4954,7 +4954,7 @@ MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
   }
   options.tech = self;
 
-  var track = new VideoTrack(options);
+  var track = new AudioTrack(options);
   tracks.addTrack_(track);
 
   return track;

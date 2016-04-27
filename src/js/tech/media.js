@@ -80,7 +80,7 @@ MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
   }
   options.tech = self;
 
-  let track = new VideoTrack(options);
+  let track = new AudioTrack(options);
   tracks.addTrack_(track);
 
   return track;
