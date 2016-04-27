@@ -23,7 +23,7 @@ class OffVideoTrackMenuItem extends VideoTrackMenuItem {
       'player': player,
       'label': options['kind'],
       'default': false,
-      'selected': false
+      'selected': true
     };
 
     // MenuItem is selectable

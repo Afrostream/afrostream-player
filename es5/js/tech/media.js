@@ -7,6 +7,8 @@ var _videoJs = require('video.js');
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var MediaTechController = _videoJs2['default'].getComponent('MediaTechController');
+var AudioTrack = _videoJs2['default'].getComponent('AudioTrack');
+var VideoTrack = _videoJs2['default'].getComponent('VideoTrack');
 
 MediaTechController.METRICS_DATA = {
   bandwidth: -1,
@@ -54,4 +56,60 @@ MediaTechController.prototype.getPlaybackStatistics = function () {
  */
 MediaTechController.prototype.getCribbedMetricsFor = function (type) {
   return this.metrics_[type];
+};
+
+/**
+ * Creates and returns a remote text track object
+ *
+ * @param {String} kind Text track kind (subtitles, captions, descriptions
+ *                                       chapters and metadata)
+ * @param {String=} label Label to identify the text track
+ * @param {String=} language Two letter language abbreviation
+ * @return {TextTrackObject}
+ * @method addTextTrack
+ */
+MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
+  if (!kind) {
+    throw new Error('AudioTrack kind is required but was not provided');
+  }
+
+  var tracks = this.audioTracks();
+
+  options.kind = kind;
+
+  if (label) {
+    options.label = label;
+  }
+  if (language) {
+    options.language = language;
+  }
+  options.tech = self;
+
+  var track = new AudioTrack(options);
+  tracks.addTrack_(track);
+
+  return track;
+};
+
+MediaTechController.prototype.addVideoTrack = function (kind, label, language) {
+  if (!kind) {
+    throw new Error('VideoTrack kind is required but was not provided');
+  }
+
+  var tracks = this.videoTracks();
+
+  options.kind = kind;
+
+  if (label) {
+    options.label = label;
+  }
+  if (language) {
+    options.language = language;
+  }
+  options.tech = self;
+
+  var track = new VideoTrack(options);
+  tracks.addTrack_(track);
+
+  return track;
 };

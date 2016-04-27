@@ -1030,7 +1030,7 @@ CaptionTrackButton.prototype.kind_ = 'captions';
 CaptionTrackButton.prototype.controlText_ = 'Captions';
 
 //Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(12, 1, 'captionTrackButton');
+ControlBar.prototype.options_.children.splice(13, 1, 'captionTrackButton');
 
 Component.registerComponent('CaptionTrackButton', CaptionTrackButton);
 exports['default'] = CaptionTrackButton;
@@ -1405,7 +1405,7 @@ var OffVideoTrackMenuItem = (function (_VideoTrackMenuItem) {
       'player': player,
       'label': options['kind'],
       'default': false,
-      'selected': false
+      'selected': true
     };
 
     // MenuItem is selectable
@@ -1834,9 +1834,9 @@ var Dash = (function (_Html5) {
       }
 
       this.isReady_ = false;
-      this.featuresNativeTextTracks = Html5.supportsNativeTracks('text');
-      this.featuresNativeAudioTracks = Html5.supportsNativeTracks('audio');
-      this.featuresNativeVideoTracks = Html5.supportsNativeTracks('video');
+      this.featuresNativeTextTracks = Html5.supportsNativeTextTracks();
+      this.featuresNativeAudioTracks = Html5.supportsNativeAudioTracks();
+      this.featuresNativeVideoTracks = Html5.supportsNativeVideoTracks();
       this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
       // Save the context after the first initialization for subsequent instances
       this.context_ = this.context_ || {};
@@ -2884,6 +2884,8 @@ var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof globa
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var MediaTechController = _videoJs2['default'].getComponent('MediaTechController');
+var AudioTrack = _videoJs2['default'].getComponent('AudioTrack');
+var VideoTrack = _videoJs2['default'].getComponent('VideoTrack');
 
 MediaTechController.METRICS_DATA = {
   bandwidth: -1,
@@ -2931,6 +2933,62 @@ MediaTechController.prototype.getPlaybackStatistics = function () {
  */
 MediaTechController.prototype.getCribbedMetricsFor = function (type) {
   return this.metrics_[type];
+};
+
+/**
+ * Creates and returns a remote text track object
+ *
+ * @param {String} kind Text track kind (subtitles, captions, descriptions
+ *                                       chapters and metadata)
+ * @param {String=} label Label to identify the text track
+ * @param {String=} language Two letter language abbreviation
+ * @return {TextTrackObject}
+ * @method addTextTrack
+ */
+MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
+  if (!kind) {
+    throw new Error('AudioTrack kind is required but was not provided');
+  }
+
+  var tracks = this.audioTracks();
+
+  options.kind = kind;
+
+  if (label) {
+    options.label = label;
+  }
+  if (language) {
+    options.language = language;
+  }
+  options.tech = self;
+
+  var track = new AudioTrack(options);
+  tracks.addTrack_(track);
+
+  return track;
+};
+
+MediaTechController.prototype.addVideoTrack = function (kind, label, language) {
+  if (!kind) {
+    throw new Error('VideoTrack kind is required but was not provided');
+  }
+
+  var tracks = this.videoTracks();
+
+  options.kind = kind;
+
+  if (label) {
+    options.label = label;
+  }
+  if (language) {
+    options.language = language;
+  }
+  options.tech = self;
+
+  var track = new VideoTrack(options);
+  tracks.addTrack_(track);
+
+  return track;
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],19:[function(require,module,exports){
