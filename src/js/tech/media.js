@@ -63,7 +63,7 @@ MediaTechController.prototype.getCribbedMetricsFor = function (type) {
  * @return {TextTrackObject}
  * @method addTextTrack
  */
-MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
+MediaTechController.prototype.addAudioTrack = function (kind, label, language, options = {}) {
   if (!kind) {
     throw new Error('AudioTrack kind is required but was not provided');
   }
@@ -86,7 +86,7 @@ MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
   return track;
 }
 
-MediaTechController.prototype.addVideoTrack = function (kind, label, language) {
+MediaTechController.prototype.addVideoTrack = function (kind, label, language, options = {}) {
   if (!kind) {
     throw new Error('VideoTrack kind is required but was not provided');
   }

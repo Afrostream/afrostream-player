@@ -69,6 +69,8 @@ MediaTechController.prototype.getCribbedMetricsFor = function (type) {
  * @method addTextTrack
  */
 MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
+  var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
   if (!kind) {
     throw new Error('AudioTrack kind is required but was not provided');
   }
@@ -92,6 +94,8 @@ MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
 };
 
 MediaTechController.prototype.addVideoTrack = function (kind, label, language) {
+  var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
   if (!kind) {
     throw new Error('VideoTrack kind is required but was not provided');
   }
