@@ -8,12 +8,12 @@ const CaptionsButton = videojs.getComponent('CaptionsButton');
 const TextTrackMenuItem = videojs.getComponent('TextTrackMenuItem');
 
 class CaptionTrackButton extends CaptionsButton {
-  constructor(options, ready) {
+  constructor (options, ready) {
     super(options, ready);
   }
 
   // Create a menu item for each text track
-  createItems() {
+  createItems () {
     let items = [];
     // Add an OFF menu item to turn all tracks off
     items.push(new OffCaptionTrackMenuItem(this.player_, {'kind': this.kind_, 'mode': 'hidden'}));
@@ -45,7 +45,7 @@ class CaptionTrackButton extends CaptionsButton {
    * @return {String} The constructed class name
    * @method buildCSSClass
    */
-  buildCSSClass() {
+  buildCSSClass () {
     return `vjs-captions-extended-button ${super.buildCSSClass()}`;
   }
 
@@ -56,7 +56,7 @@ CaptionTrackButton.prototype.kind_ = 'captions';
 CaptionTrackButton.prototype.controlText_ = 'Captions';
 
 //Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(12, 1, 'captionTrackButton');
+ControlBar.prototype.options_.children.splice(13, 1, 'captionTrackButton');
 
 Component.registerComponent('CaptionTrackButton', CaptionTrackButton);
 export default CaptionTrackButton;

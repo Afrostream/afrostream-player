@@ -90,7 +90,7 @@ CaptionTrackButton.prototype.kind_ = 'captions';
 CaptionTrackButton.prototype.controlText_ = 'Captions';
 
 //Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(12, 1, 'captionTrackButton');
+ControlBar.prototype.options_.children.splice(13, 1, 'captionTrackButton');
 
 Component.registerComponent('CaptionTrackButton', CaptionTrackButton);
 exports['default'] = CaptionTrackButton;
