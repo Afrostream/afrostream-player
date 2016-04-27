@@ -65,6 +65,7 @@
   var muted;
   var drm;
   var url;
+  var bola;
   var captions;
 
   var qs = (function (a) {
@@ -345,7 +346,7 @@
         "src": "https://hw.cdn.afrostream.net/vod/6207276-JOSEPHINEBAKER-PART1-4X3-133-25-EN_RID1663875_PN178503-cut/5df9fae9becaeb60.ism/MANIFEST",
         "type": "application/vnd.ms-sstr+xml"
       }
-    //BLACK ACTRESS
+      //BLACK ACTRESS
 //    {
 //      src: "https://hw.cdn.afrostream.net/vod/BlackActress_ep101/3eb142bad921d01d.ism/3eb142bad921d01d.mpd",
 //      type: "application/dash+xml"
@@ -457,6 +458,7 @@
   drm = qs.drm ? qs.drm : false;
   url = qs.url ? qs.url : false;
   captions = qs.captions ? qs.captions : false;
+  bola = qs.bola ? qs.bola : false;
 
   if (url) {
     sources = [
@@ -498,7 +500,7 @@
       nativeCaptions: false,
       nativeTextTracks: false,
       autoSwitch: true,
-      bolaEnabled: false,
+      bolaEnabled: bola,
       scheduleWhilePaused: true,
       initialBitrate: 400,
       liveFragmentCount: 4,
