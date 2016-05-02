@@ -98,6 +98,9 @@ class Dash extends Html5 {
     }
 
     this.isReady_ = false;
+    this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
+    this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks();
+    this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks();
     this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
     // Save the context after the first initialization for subsequent instances
     this.context_ = this.context_ || {};
@@ -602,11 +605,24 @@ Tech.withSourceHandlers(Dash);
 Dash.nativeSourceHandler = {};
 
 Dash.prototype['featuresNativeTextTracks'] = false;
+/*
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
+ */
+Dash.prototype['featuresNativeAudioTracks'] = false;
 
 /*
- * Check to see if native text tracks are supported by this browser/device
+ * Sets the tech's status on native video track support
  *
- * @return {Boolean}
+ * @type {Boolean}
+ */
+Dash.prototype['featuresNativeVideoTracks'] = false;
+
+/*
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
  */
 Dash.supportsNativeTextTracks = function () {
   var supportsTextTracks;

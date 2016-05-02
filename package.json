@@ -23,7 +23,7 @@
     "mkdirs": "mkdir -p dist dist-test es5",
     "prepublish": "npm run build",
     "prestart": "npm-run-all -p docs build",
-    "dev": "npm-run-all -p start watch",
+    "dev": "echo 'requiring node v6.0.0' && . ~/.nvm/nvm.sh && nvm use 6.0.0 && npm-run-all -p start watch",
     "start": "npm-run-all -p start:serve",
     "start:serve": "babel-node --optional es7.functionBind,es7.classProperties,es7.decorators  scripts/server.js",
     "pretest": "npm-run-all build:test",
@@ -142,6 +142,6 @@
   "peerDependencies": {},
   "private": true,
   "engines": {
-    "node": "4.2.4"
+    "node": "6.0.0"
   }
 }
