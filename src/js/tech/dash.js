@@ -60,20 +60,13 @@ class Dash extends Html5 {
 
   /**
    * Detect if source is Live
-   * TODO detect with other method based on duration Infinity
    * @returns {boolean}
    */
-  isDynamic () {
-    let isDynamic = false;
-    if (!this.playbackInitialized) {
-      return isDynamic;
+  isDynamic (dynamic) {
+    if (dynamic !== undefined) {
+      return this.isDynamic_ = dynamic;
     }
-    try {
-      isDynamic = this.mediaPlayer_.time();
-    } catch (e) {
-      videojs.log(e);
-    }
-    return isDynamic;
+    return this.isDynamic_;
   };
 
   duration () {
@@ -159,7 +152,7 @@ class Dash extends Html5 {
     });
   }
 
-  onInitialized (manifest, err) {
+  onInitialized ({streamInfo :{manifestInfo:{isDynamic = false}}}, err) {
     if (this.playbackInitialized) {
       return;
     }
@@ -168,10 +161,9 @@ class Dash extends Html5 {
     if (err) {
       this.player_.error(err);
     }
-
-
+    // this.streamInfo = streamInfo;
+    this.isDynamic(isDynamic);
     this.trigger(MediaPlayer.events.STREAM_INITIALIZED);
-
     let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
     let audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
     let videoDashTracks = this.mediaPlayer_.getTracksFor('video');
@@ -544,6 +536,8 @@ class Dash extends Html5 {
 
 }
 
+Dash.prototype.isDynamic_ = false;
+
 Dash.prototype.options_ = {
   inititalMediaSettings: {
     lang: 'fr'
@@ -614,7 +608,7 @@ Dash.prototype['featuresNativeTextTracks'] = false;
  *
  * @return {Boolean}
  */
-Dash.supportsNativeTextTracks = function() {
+Dash.supportsNativeTextTracks = function () {
   var supportsTextTracks;
   supportsTextTracks = !!Html5.TEST_VID.textTracks;
   if (supportsTextTracks && Html5.TEST_VID.textTracks.length > 0) {
@@ -631,7 +625,7 @@ Dash.supportsNativeTextTracks = function() {
  *
  * @return {Boolean}
  */
-Dash.supportsNativeVideoTracks = function() {
+Dash.supportsNativeVideoTracks = function () {
   let supportsVideoTracks = !!Html5.TEST_VID.videoTracks;
   return supportsVideoTracks;
 };
@@ -641,7 +635,7 @@ Dash.supportsNativeVideoTracks = function() {
  *
  * @return {Boolean}
  */
-Dash.supportsNativeAudioTracks = function() {
+Dash.supportsNativeAudioTracks = function () {
   let supportsAudioTracks = !!Html5.TEST_VID.audioTracks;
   return supportsAudioTracks;
 };

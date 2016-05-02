@@ -1780,23 +1780,16 @@ var Dash = (function (_Html5) {
 
   /**
    * Detect if source is Live
-   * TODO detect with other method based on duration Infinity
    * @returns {boolean}
    */
 
   _createClass(Dash, [{
     key: 'isDynamic',
-    value: function isDynamic() {
-      var isDynamic = false;
-      if (!this.playbackInitialized) {
-        return isDynamic;
+    value: function isDynamic(dynamic) {
+      if (dynamic !== undefined) {
+        return this.isDynamic_ = dynamic;
       }
-      try {
-        isDynamic = this.mediaPlayer_.time();
-      } catch (e) {
-        _videoJs2['default'].log(e);
-      }
-      return isDynamic;
+      return this.isDynamic_;
     }
   }, {
     key: 'duration',
@@ -1889,7 +1882,10 @@ var Dash = (function (_Html5) {
     }
   }, {
     key: 'onInitialized',
-    value: function onInitialized(manifest, err) {
+    value: function onInitialized(_ref, err) {
+      var _ref$streamInfo$manifestInfo$isDynamic = _ref.streamInfo.manifestInfo.isDynamic;
+      var isDynamic = _ref$streamInfo$manifestInfo$isDynamic === undefined ? false : _ref$streamInfo$manifestInfo$isDynamic;
+
       if (this.playbackInitialized) {
         return;
       }
@@ -1898,9 +1894,9 @@ var Dash = (function (_Html5) {
       if (err) {
         this.player_.error(err);
       }
-
+      // this.streamInfo = streamInfo;
+      this.isDynamic(isDynamic);
       this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
-
       var bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
       var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
       var videoDashTracks = this.mediaPlayer_.getTracksFor('video');
@@ -2285,6 +2281,8 @@ var Dash = (function (_Html5) {
 
   return Dash;
 })(Html5);
+
+Dash.prototype.isDynamic_ = false;
 
 Dash.prototype.options_ = {
   inititalMediaSettings: {
