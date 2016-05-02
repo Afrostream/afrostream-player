@@ -105,9 +105,6 @@ class Dash extends Html5 {
     }
 
     this.isReady_ = false;
-    this.featuresNativeTextTracks = Html5.supportsNativeTextTracks();
-    this.featuresNativeAudioTracks = Html5.supportsNativeAudioTracks();
-    this.featuresNativeVideoTracks = Html5.supportsNativeVideoTracks();
     this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
     // Save the context after the first initialization for subsequent instances
     this.context_ = this.context_ || {};
@@ -611,20 +608,43 @@ Tech.withSourceHandlers(Dash);
 Dash.nativeSourceHandler = {};
 
 Dash.prototype['featuresNativeTextTracks'] = false;
-/*
- * Sets the tech's status on native audio track support
- *
- * @type {Boolean}
- */
-Dash.prototype['featuresNativeAudioTracks'] = false;
-
 
 /*
- * Sets the tech's status on native video track support
+ * Check to see if native text tracks are supported by this browser/device
  *
- * @type {Boolean}
+ * @return {Boolean}
  */
-Dash.prototype['featuresNativeVideoTracks'] = false;
+Dash.supportsNativeTextTracks = function() {
+  var supportsTextTracks;
+  supportsTextTracks = !!Html5.TEST_VID.textTracks;
+  if (supportsTextTracks && Html5.TEST_VID.textTracks.length > 0) {
+    supportsTextTracks = typeof Html5.TEST_VID.textTracks[0]['mode'] !== 'number';
+  }
+  if (supportsTextTracks && !('onremovetrack' in Html5.TEST_VID.textTracks)) {
+    supportsTextTracks = false;
+  }
+  return supportsTextTracks;
+};
+
+/*
+ * Check to see if native video tracks are supported by this browser/device
+ *
+ * @return {Boolean}
+ */
+Dash.supportsNativeVideoTracks = function() {
+  let supportsVideoTracks = !!Html5.TEST_VID.videoTracks;
+  return supportsVideoTracks;
+};
+
+/*
+ * Check to see if native audio tracks are supported by this browser/device
+ *
+ * @return {Boolean}
+ */
+Dash.supportsNativeAudioTracks = function() {
+  let supportsAudioTracks = !!Html5.TEST_VID.audioTracks;
+  return supportsAudioTracks;
+};
 
 /**
  * Check if Flash can play the given videotype
