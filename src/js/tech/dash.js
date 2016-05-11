@@ -2,12 +2,12 @@
  * @file dash.js
  * DASH Media Controller - Wrapper for HTML5 Media API
  */
-import videojs from 'video.js';
-import { MediaPlayer } from 'dashjs';
+import videojs from 'video.js'
+import { MediaPlayer } from 'dashjs'
 
-const Component = videojs.getComponent('Component');
-const Tech = videojs.getComponent('Tech');
-const Html5 = videojs.getComponent('Html5');
+const Component = videojs.getComponent('Component')
+const Tech = videojs.getComponent('Tech')
+const Html5 = videojs.getComponent('Html5')
 
 /**
  * Dash Media Controller - Wrapper for HTML5 Media API
@@ -19,40 +19,40 @@ const Html5 = videojs.getComponent('Html5');
  */
 class Dash extends Html5 {
   constructor (options, ready) {
-    super(options, ready);
+    super(options, ready)
 
-    let tTracks = this.textTracks();
+    let tTracks = this.textTracks()
 
     if (tTracks) {
-      let tTracksChangeHandler = ::this.handleTracksChange;
+      let tTracksChangeHandler = ::this.handleTracksChange
 
-      tTracks.addEventListener('change', tTracksChangeHandler);
+      tTracks.addEventListener('change', tTracksChangeHandler)
       this.on('dispose', () => {
-        tTracks.removeEventListener('change', tTracksChangeHandler);
-      });
+        tTracks.removeEventListener('change', tTracksChangeHandler)
+      })
     }
 
 
-    let aTracks = this.audioTracks();
+    let aTracks = this.audioTracks()
 
     if (aTracks) {
-      let aTracksChangeHandler = ::this.handleAudioTracksChange;
+      let aTracksChangeHandler = ::this.handleAudioTracksChange
 
-      aTracks.addEventListener('change', aTracksChangeHandler);
+      aTracks.addEventListener('change', aTracksChangeHandler)
       this.on('dispose', ()=> {
-        aTracks.removeEventListener('change', aTracksChangeHandler);
-      });
+        aTracks.removeEventListener('change', aTracksChangeHandler)
+      })
     }
 
-    let vTracks = this.videoTracks();
+    let vTracks = this.videoTracks()
 
     if (vTracks) {
-      let vTracksChangeHandler = ::this.handleVideoTracksChange;
+      let vTracksChangeHandler = ::this.handleVideoTracksChange
 
-      vTracks.addEventListener('change', vTracksChangeHandler);
+      vTracks.addEventListener('change', vTracksChangeHandler)
       this.on('dispose', function () {
-        vTracks.removeEventListener('change', vTracksChangeHandler);
-      });
+        vTracks.removeEventListener('change', vTracksChangeHandler)
+      })
     }
 
   }
@@ -64,26 +64,26 @@ class Dash extends Html5 {
    */
   isDynamic (dynamic) {
     if (dynamic !== undefined) {
-      return this.isDynamic_ = dynamic;
+      return this.isDynamic_ = dynamic
     }
-    return this.isDynamic_;
-  };
+    return this.isDynamic_
+  }
 
   duration () {
-    let duration = super.duration();
+    let duration = super.duration()
     //FIXME WTF for detect live we should get duration to Infinity
-    return this.isDynamic() ? Infinity : duration;
+    return this.isDynamic() ? Infinity : duration
   }
 
   setCurrentTime (seconds) {
     if (this.playbackInitialized && this.mediaPlayer_) {
-      // this.mediaPlayer_.enableBufferOccupancyABR(false);
-      this.mediaPlayer_.setQualityFor('video', 0);
+      // this.mediaPlayer_.enableBufferOccupancyABR(false)
+      this.mediaPlayer_.setQualityFor('video', 0)
       // this.one('seeked', ()=> {
-      //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
-      // });
+      //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled)
+      // })
     }
-    super.setCurrentTime(seconds);
+    super.setCurrentTime(seconds)
   }
 
   /**
@@ -94,128 +94,131 @@ class Dash extends Html5 {
    */
   src (src) {
     if (!src) {
-      return this.el_.src;
+      return this.el_.src
     }
 
-    this.isReady_ = false;
-    this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
-    this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks();
-    this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks();
-    this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
+    this.isReady_ = false
+    this.featuresNativeTextTracks = Dash.supportsNativeTextTracks()
+    this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks()
+    this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks()
+    this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData)
     // Save the context after the first initialization for subsequent instances
-    this.context_ = this.context_ || {};
-    // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = MediaPlayer(this.context_).create();
+    this.context_ = this.context_ || {}
+    // reuse MediaPlayer if it already exists
+    if (!this.mediaPlayer_) {
+      // But make a fresh MediaPlayer each time the sourceHandler is used
+      this.mediaPlayer_ = MediaPlayer(this.context_).create()
 
-    // Must run controller before these two lines or else there is no
-    // element to bind to.
-    this.mediaPlayer_.initialize();
-    this.mediaPlayer_.attachView(this.el());
+      // Must run controller before these two lines or else there is no
+      // element to bind to.
+      this.mediaPlayer_.initialize()
+    }
 
-    this.mediaPlayer_.on(MediaPlayer.events.STREAM_INITIALIZED, ::this.onInitialized);
-    this.mediaPlayer_.on(MediaPlayer.events.TEXT_TRACKS_ADDED, ::this.onTextTracksAdded);
-    this.mediaPlayer_.on(MediaPlayer.events.METRIC_CHANGED, ::this.onMetricChanged);
-    this.mediaPlayer_.on(MediaPlayer.events.PLAYBACK_PROGRESS, ::this.onProgress);
+    this.mediaPlayer_.on(MediaPlayer.events.STREAM_INITIALIZED, ::this.onInitialized)
+    this.mediaPlayer_.on(MediaPlayer.events.TEXT_TRACKS_ADDED, ::this.onTextTracksAdded)
+    this.mediaPlayer_.on(MediaPlayer.events.METRIC_CHANGED, ::this.onMetricChanged)
+    this.mediaPlayer_.on(MediaPlayer.events.PLAYBACK_PROGRESS, ::this.onProgress)
     // Dash.js autoplays by default
     if (!this.player_.options().autoplay) {
-      this.mediaPlayer_.setAutoPlay(false);
+      this.mediaPlayer_.setAutoPlay(false)
     }
 
-    this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
-    this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
-    this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace');//alwaysReplace
-    this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace');//alwaysReplace
+    this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings)
+    this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings)
+    this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace')//alwaysReplace
+    this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace')//alwaysReplace
 
-    this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
-    this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
-    this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+    this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused)
+    this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch)
+    this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled)
 
-    this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
-    this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
-    // this.mediaPlayer_.setSelectionModeForInitialTrack(this.options_.initialSelectionMode);
-    this.mediaPlayer_.setBufferToKeep(this.options_.buffer.bufferToKeep);
-    this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
-    this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
-    this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
-    this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm);
-    this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
-    this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
-    this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
-    this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
-    this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
-    this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
+    this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount)
+    this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate)
+    // this.mediaPlayer_.setSelectionModeForInitialTrack(this.options_.initialSelectionMode)
+    this.mediaPlayer_.setBufferToKeep(this.options_.buffer.bufferToKeep)
+    this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval)
+    this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime)
+    this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality)
+    this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm)
+    this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold)
+    this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold)
+    this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor)
+    this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout)
+    this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts)
+    this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval)
     // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
     // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
-    //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
+    //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video})
 
-    this.player_.trigger('loadstart');
-    // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
-    this.ready(() => {
-      this.mediaPlayer_.retrieveManifest(src, ::this.initializeDashJS);
-    });
+    this.player_.trigger('loadstart')
+    this.mediaPlayer_.attachView(this.el_)
+    this.mediaPlayer_.setProtectionData(this.keySystemOptions_)
+    this.mediaPlayer_.attachSource(src)
+
+    this.triggerReady()
   }
 
   onInitialized ({streamInfo :{manifestInfo:{isDynamic = false}}}, err) {
     if (this.playbackInitialized) {
-      return;
+      return
     }
-    this.playbackInitialized = true;
+    this.playbackInitialized = true
 
     if (err) {
-      this.player_.error(err);
+      this.player_.error(err)
     }
-    // this.streamInfo = streamInfo;
-    this.isDynamic(isDynamic);
-    this.trigger(MediaPlayer.events.STREAM_INITIALIZED);
-    let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
-    let audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
-    let videoDashTracks = this.mediaPlayer_.getTracksFor('video');
-    let autoSwitch = this.mediaPlayer_.getAutoSwitchQuality();
+    // this.streamInfo = streamInfo
+    this.isDynamic(isDynamic)
+    this.trigger(MediaPlayer.events.STREAM_INITIALIZED)
+    let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
+    let audioDashTracks = this.mediaPlayer_.getTracksFor('audio')
+    let videoDashTracks = this.mediaPlayer_.getTracksFor('video')
+    let autoSwitch = this.mediaPlayer_.getAutoSwitchQuality()
 
-    let defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio');
-    let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video');
-    let initialVideoBitrate = this.mediaPlayer_.getInitialBitrateFor('video');
+    let defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio')
+    let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video')
+    let initialVideoBitrate = this.mediaPlayer_.getInitialBitrateFor('video')
 
-    let i;
+    let i
 
     for (i = 0; i < audioDashTracks.length; i++) {
-      let track = audioDashTracks[i];
-      track.label = track.label || track.lang;
-      let plTrack = this.addAudioTrack('main', track.label, track.lang);
-      plTrack.enabled = plTrack['language'] === ((defaultAudio && this.options_.inititalMediaSettings.lang === defaultAudio.lang && defaultAudio.lang) || this.options_.inititalMediaSettings.lang);
+      let track = audioDashTracks[i]
+      track.label = track.label || track.lang
+      let plTrack = this.addAudioTrack('main', track.label, track.lang)
+      plTrack.enabled = plTrack['language'] === ((defaultAudio && this.options_.inititalMediaSettings.lang === defaultAudio.lang && defaultAudio.lang) || this.options_.inititalMediaSettings.lang)
     }
 
     for (i = 0; i < videoDashTracks.length; i++) {
-      let track = videoDashTracks[i];
-      let bitrateList = track.bitrateList;
+      let track = videoDashTracks[i]
+      let bitrateList = track.bitrateList
       for (let j = 0; j < bitrateList.length; j++) {
-        let bitRateInfo = bitrateList[j] / 1000;
-        let label = Dash.qualityLabels[j] || bitRateInfo;
-        let bitRateTrack = this.addVideoTrack('main', label, bitRateInfo);
-        bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
+        let bitRateInfo = bitrateList[j] / 1000
+        let label = Dash.qualityLabels[j] || bitRateInfo
+        let bitRateTrack = this.addVideoTrack('main', label, bitRateInfo)
+        bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo
       }
     }
 
   }
 
   onProgress (e) {
-    this.trigger('progress');
+    this.trigger('progress')
   }
 
   onMetricChanged (e) {
     // get current buffered ranges of video element and keep them up to date
     if (e.mediaType !== 'video' && e.mediaType !== 'audio' && e.mediaType !== 'p2pweb') {
-      return;
+      return
     }
-    var metrics = this.getCribbedMetricsFor(e.mediaType);
+    var metrics = this.getCribbedMetricsFor(e.mediaType)
     if (metrics) {
-      this.metrics_[e.mediaType] = videojs.mergeOptions(this.metrics_[e.mediaType], metrics);
-      //this.trigger(videojs.obj.copy(e));
+      this.metrics_[e.mediaType] = videojs.mergeOptions(this.metrics_[e.mediaType], metrics)
+      //this.trigger(videojs.obj.copy(e))
       var metricsChangeEvent = {
         type: MediaPlayer.events.METRIC_CHANGED,
         mediaType: e.mediaType
-      };
-      this.trigger(e);
+      }
+      this.trigger(e)
     }
   }
 
@@ -241,115 +244,115 @@ class Dash extends Html5 {
         var requestWindow,
           downloadTimes,
           latencyTimes,
-          durationTimes;
+          durationTimes
 
         requestWindow = Requests
           .slice(-20)
           .filter(function (req) {
-            return req.responsecode >= 200 && req.responsecode < 300 && !!req._mediaduration && req.type === "MediaSegment" && req._stream === type;
+            return req.responsecode >= 200 && req.responsecode < 300 && !!req._mediaduration && req.type === "MediaSegment" && req._stream === type
           })
-          .slice(-4);
+          .slice(-4)
         if (requestWindow.length > 0) {
 
           latencyTimes = requestWindow.map(function (req) {
-            return Math.abs(req.tresponse.getTime() - req.trequest.getTime()) / 1000;
-          });
+            return Math.abs(req.tresponse.getTime() - req.trequest.getTime()) / 1000
+          })
 
           movingLatency[type] = {
             average: latencyTimes.reduce(function (l, r) {
-              return l + r;
+              return l + r
             }) / latencyTimes.length,
             high: latencyTimes.reduce(function (l, r) {
-              return l < r ? r : l;
+              return l < r ? r : l
             }),
             low: latencyTimes.reduce(function (l, r) {
-              return l < r ? l : r;
+              return l < r ? l : r
             }),
             count: latencyTimes.length
-          };
+          }
 
           downloadTimes = requestWindow.map(function (req) {
-            return Math.abs(req._tfinish.getTime() - req.tresponse.getTime()) / 1000;
-          });
+            return Math.abs(req._tfinish.getTime() - req.tresponse.getTime()) / 1000
+          })
 
           movingDownload[type] = {
             average: downloadTimes.reduce(function (l, r) {
-              return l + r;
+              return l + r
             }) / downloadTimes.length,
             high: downloadTimes.reduce(function (l, r) {
-              return l < r ? r : l;
+              return l < r ? r : l
             }),
             low: downloadTimes.reduce(function (l, r) {
-              return l < r ? l : r;
+              return l < r ? l : r
             }),
             count: downloadTimes.length
-          };
+          }
 
           durationTimes = requestWindow.map(function (req) {
-            return req._mediaduration;
-          });
+            return req._mediaduration
+          })
 
           movingRatio[type] = {
             average: (durationTimes.reduce(function (l, r) {
-              return l + r;
+              return l + r
             }) / downloadTimes.length) / movingDownload[type].average,
             high: durationTimes.reduce(function (l, r) {
-              return l < r ? r : l;
+              return l < r ? r : l
             }) / movingDownload[type].low,
             low: durationTimes.reduce(function (l, r) {
-              return l < r ? l : r;
+              return l < r ? l : r
             }) / movingDownload[type].high,
             count: durationTimes.length
-          };
+          }
         }
-      };
-
-    if (metrics && dashMetrics) {
-      repSwitch = dashMetrics.getCurrentRepresentationSwitch(metrics);
-      bufferLevel = dashMetrics.getCurrentBufferLevel(metrics);
-      httpRequests = dashMetrics.getHttpRequests(metrics);
-      droppedFramesMetrics = dashMetrics.getCurrentDroppedFrames(metrics);
-      requestsQueue = dashMetrics.getRequestsQueue(metrics);
-
-      fillmoving("video", httpRequests);
-      fillmoving("audio", httpRequests);
-
-      var streamIdx = this.streamInfo ? this.streamInfo.index : 0;
-
-      if (repSwitch !== null) {
-        bitrateIndexValue = dashMetrics.getIndexForRepresentation(repSwitch.to, streamIdx);
-        bandwidthValue = dashMetrics.getBandwidthForRepresentation(repSwitch.to, streamIdx);
-        bandwidthValue = bandwidthValue / 1000;
-        bandwidthValue = Math.round(bandwidthValue);
       }
 
-      numBitratesValue = dashMetrics.getMaxIndexForBufferType(type, streamIdx);
+    if (metrics && dashMetrics) {
+      repSwitch = dashMetrics.getCurrentRepresentationSwitch(metrics)
+      bufferLevel = dashMetrics.getCurrentBufferLevel(metrics)
+      httpRequests = dashMetrics.getHttpRequests(metrics)
+      droppedFramesMetrics = dashMetrics.getCurrentDroppedFrames(metrics)
+      requestsQueue = dashMetrics.getRequestsQueue(metrics)
+
+      fillmoving('video', httpRequests)
+      fillmoving('audio', httpRequests)
+
+      var streamIdx = this.streamInfo ? this.streamInfo.index : 0
+
+      if (repSwitch !== null) {
+        bitrateIndexValue = dashMetrics.getIndexForRepresentation(repSwitch.to, streamIdx)
+        bandwidthValue = dashMetrics.getBandwidthForRepresentation(repSwitch.to, streamIdx)
+        bandwidthValue = bandwidthValue / 1000
+        bandwidthValue = Math.round(bandwidthValue)
+      }
+
+      numBitratesValue = dashMetrics.getMaxIndexForBufferType(type, streamIdx)
 
       if (bufferLevel !== null) {
-        bufferLengthValue = bufferLevel.toPrecision(5);
+        bufferLengthValue = bufferLevel.toPrecision(5)
       }
 
       if (droppedFramesMetrics !== null) {
-        droppedFramesValue = droppedFramesMetrics.droppedFrames;
+        droppedFramesValue = droppedFramesMetrics.droppedFrames
       }
 
       if (isNaN(bandwidthValue) || bandwidthValue === undefined) {
-        bandwidthValue = 0;
+        bandwidthValue = 0
       }
 
       if (isNaN(bitrateIndexValue) || bitrateIndexValue === undefined) {
-        bitrateIndexValue = 0;
+        bitrateIndexValue = 0
       }
 
       if (isNaN(numBitratesValue) || numBitratesValue === undefined) {
-        numBitratesValue = 0;
+        numBitratesValue = 0
       }
 
       if (isNaN(bufferLengthValue) || bufferLengthValue === undefined) {
-        bufferLengthValue = 0;
+        bufferLengthValue = 0
       }
 
-      pendingValue = this.mediaPlayer_.getQualityFor(type);
+      pendingValue = this.mediaPlayer_.getQualityFor(type)
 
       return {
         bandwidth: bandwidthValue,
@@ -364,67 +367,42 @@ class Dash extends Html5 {
         requestsQueue: requestsQueue
       }
     } else {
-      return null;
+      return null
     }
   }
 
   buildDashJSProtData (keySystemOptions) {
-    var output = {};
+    var output = {}
 
     if (!keySystemOptions) {
-      return output;
+      return output
     }
 
     Object.keys(keySystemOptions).forEach((key, data)=> {
       if (data.licenseUrl) {
-        data.laURL = data.licenseUrl;
-        delete data.licenseUrl;
+        data.laURL = data.licenseUrl
+        delete data.licenseUrl
       }
-    });
+    })
 
-    return keySystemOptions;
-  }
-
-  initializeDashJS (manifest, err) {
-    let manifestProtectionData = {};
-
-    if (err) {
-      this.showErrors();
-      this.triggerReady();
-      this.dispose();
-      return;
-    }
-
-    // If we haven't received protection data from the outside world try to get it from the manifest
-    // We merge the two allowing the manifest to override any keySystemOptions provided via src()
-    if (this.getWidevineProtectionData) {
-      manifestProtectionData = this.getWidevineProtectionData(manifest);
-      this.keySystemOptions_ = videojs.mergeOptions(
-        this.keySystemOptions_,
-        manifestProtectionData);
-    }
-
-    // We have to reset any mediaKeys before the attachSource call below
-    this.resetSrc_(()=> {
-      this.afterMediaKeysReset(manifest)
-    });
+    return keySystemOptions
   }
 
   onTextTracksAdded (e) {
-    const tracks = e.tracks;
+    const tracks = e.tracks
 
     if (tracks) {
-      const plTracks = this.textTracks();
-      var l = tracks.length, track, plTrack;
+      const plTracks = this.textTracks()
+      var l = tracks.length, track, plTrack
       for (var i = 0; i < l; i++) {
-        track = tracks[i];
-        track.label = track.label || track.lang;
-        plTrack = plTracks[i];
-        track.defaultTrack = track.lang === 'fra' || track.lang === 'fr';
+        track = tracks[i]
+        track.label = track.label || track.lang
+        plTrack = plTracks[i]
+        track.defaultTrack = track.lang === 'fra' || track.lang === 'fr'
         if (track.defaultTrack) {
-          this.mediaPlayer_.setTextTrack(i);
+          this.mediaPlayer_.setTextTrack(i)
           if (plTrack) {
-            plTrack.mode = 'showing';
+            plTrack.mode = 'showing'
           }
         }
       }
@@ -437,44 +415,44 @@ class Dash extends Html5 {
    * @method updateDisplay
    */
   handleTracksChange () {
-    const tracks = this.textTracks();
+    const tracks = this.textTracks()
 
     if (!tracks || !this.playbackInitialized) {
-      return;
+      return
     }
-    let selected;
+    let selected
 
     for (let i = 0; i < tracks.length; i++) {
-      let track = tracks[i];
+      let track = tracks[i]
       if (track['mode'] === 'showing') {
-        selected = true;
-        this.mediaPlayer_.setTextTrack(i);
+        selected = true
+        this.mediaPlayer_.setTextTrack(i)
       }
     }
     if (!selected) {
-      this.mediaPlayer_.setTextTrack(-1);
+      this.mediaPlayer_.setTextTrack(-1)
     }
   }
 
   handleAudioTracksChange () {
-    const tracks = this.audioTracks();
+    const tracks = this.audioTracks()
 
     if (!tracks || !this.playbackInitialized) {
-      return;
+      return
     }
 
-    let audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
+    let audioDashTracks = this.mediaPlayer_.getTracksFor('audio')
 
     for (let i = 0; i < tracks.length; i++) {
-      let track = tracks[i];
+      let track = tracks[i]
       if (track['enabled']) {
-        let audioDashTrack = audioDashTracks[i];
+        let audioDashTrack = audioDashTracks[i]
         if (track['language'] == audioDashTrack['lang']) {
-          audioDashTracks['enabled'] = true;
+          audioDashTracks['enabled'] = true
           try {
-            this.mediaPlayer_.setCurrentTrack(audioDashTracks[i]);
+            this.mediaPlayer_.setCurrentTrack(audioDashTracks[i])
           } catch (err) {
-            videojs.log(err);
+            videojs.log(err)
           }
         }
       }
@@ -482,26 +460,26 @@ class Dash extends Html5 {
   }
 
   handleVideoTracksChange () {
-    const tracks = this.videoTracks();
+    const tracks = this.videoTracks()
 
     if (!tracks || !this.playbackInitialized || !this.options_.autoSwitch) {
-      return;
+      return
     }
-    var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && (tracks.selectedIndex % 1 === 0);
-    this.mediaPlayer_.setAutoSwitchQuality(!isInt);
+    var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && (tracks.selectedIndex % 1 === 0)
+    this.mediaPlayer_.setAutoSwitchQuality(!isInt)
     if (isInt) {
-      this.mediaPlayer_.setQualityFor('video', tracks.selectedIndex);
+      this.mediaPlayer_.setQualityFor('video', tracks.selectedIndex)
     }
   }
 
   afterMediaKeysReset (manifest) {
-    this.showErrors();
+    this.showErrors()
 
     // Attach the source with any protection data
-    this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
-    this.mediaPlayer_.attachSource(manifest);
+    this.mediaPlayer_.setProtectionData(this.keySystemOptions_)
+    this.mediaPlayer_.attachSource(manifest)
 
-    this.triggerReady();
+    this.triggerReady()
   }
 
   showErrors () {
@@ -510,36 +488,20 @@ class Dash extends Html5 {
     // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
     // in my testing
     this.setTimeout(()=> {
-      this.player_.removeClass('vjs-dashjs-hide-errors');
-    }, 250);
-  }
-
-  resetSrc_ (callback) {
-    // In Chrome, MediaKeys can NOT be changed when a src is loaded in the video element
-    // Dash.js has a bug where it doesn't correctly reset the data so we do it manually
-    // The order of these two lines is important. The video element's src must be reset
-    // to allow `mediaKeys` to changed otherwise a DOMException is thrown.
-    if (this.el()) {
-      this.el().src = '';
-      if (this.el().setMediaKeys) {
-        this.el().setMediaKeys(null).then(callback, callback);
-      } else {
-        callback();
-      }
-    }
+      this.player_.removeClass('vjs-dashjs-hide-errors')
+    }, 250)
   }
 
   dispose () {
     if (this.mediaPlayer_) {
       this.mediaPlayer_.reset();
     }
-    this.resetSrc_(Function.prototype);
-    super.dispose(this);
+    super.dispose(this)
   }
 
 }
 
-Dash.prototype.isDynamic_ = false;
+Dash.prototype.isDynamic_ = false
 
 Dash.prototype.options_ = {
   inititalMediaSettings: {
@@ -584,16 +546,16 @@ Dash.prototype.options_ = {
     fragmentLoaderRetryInterval: 1000
   },
   protData: {}
-};
+}
 
 /* Dash Support Testing -------------------------------------------------------- */
 
 Dash.isSupported = function () {
-  return Html5.isSupported() && !!window.MediaSource;
-};
+  return Html5.isSupported() && !!window.MediaSource
+}
 
 // Add Source Handler pattern functions to this tech
-Tech.withSourceHandlers(Dash);
+Tech.withSourceHandlers(Dash)
 
 /*
  * The default native source handler.
@@ -602,22 +564,22 @@ Tech.withSourceHandlers(Dash);
  * @param  {Object} source   The source object
  * @param  {Flash} tech  The instance of the Flash tech
  */
-Dash.nativeSourceHandler = {};
+Dash.nativeSourceHandler = {}
 
-Dash.prototype['featuresNativeTextTracks'] = false;
+Dash.prototype['featuresNativeTextTracks'] = false
 /*
  * Sets the tech's status on native audio track support
  *
  * @type {Boolean}
  */
-Dash.prototype['featuresNativeAudioTracks'] = false;
+Dash.prototype['featuresNativeAudioTracks'] = false
 
 /*
  * Sets the tech's status on native video track support
  *
  * @type {Boolean}
  */
-Dash.prototype['featuresNativeVideoTracks'] = false;
+Dash.prototype['featuresNativeVideoTracks'] = false
 
 /*
  * Sets the tech's status on native audio track support
@@ -625,16 +587,16 @@ Dash.prototype['featuresNativeVideoTracks'] = false;
  * @type {Boolean}
  */
 Dash.supportsNativeTextTracks = function () {
-  var supportsTextTracks;
-  supportsTextTracks = !!Html5.TEST_VID.textTracks;
+  var supportsTextTracks
+  supportsTextTracks = !!Html5.TEST_VID.textTracks
   if (supportsTextTracks && Html5.TEST_VID.textTracks.length > 0) {
-    supportsTextTracks = typeof Html5.TEST_VID.textTracks[0]['mode'] !== 'number';
+    supportsTextTracks = typeof Html5.TEST_VID.textTracks[0]['mode'] !== 'number'
   }
   if (supportsTextTracks && !('onremovetrack' in Html5.TEST_VID.textTracks)) {
-    supportsTextTracks = false;
+    supportsTextTracks = false
   }
-  return supportsTextTracks;
-};
+  return supportsTextTracks
+}
 
 /*
  * Check to see if native video tracks are supported by this browser/device
@@ -642,9 +604,9 @@ Dash.supportsNativeTextTracks = function () {
  * @return {Boolean}
  */
 Dash.supportsNativeVideoTracks = function () {
-  let supportsVideoTracks = !!Html5.TEST_VID.videoTracks;
-  return supportsVideoTracks;
-};
+  let supportsVideoTracks = !!Html5.TEST_VID.videoTracks
+  return supportsVideoTracks
+}
 
 /*
  * Check to see if native audio tracks are supported by this browser/device
@@ -652,9 +614,9 @@ Dash.supportsNativeVideoTracks = function () {
  * @return {Boolean}
  */
 Dash.supportsNativeAudioTracks = function () {
-  let supportsAudioTracks = !!Html5.TEST_VID.audioTracks;
-  return supportsAudioTracks;
-};
+  let supportsAudioTracks = !!Html5.TEST_VID.audioTracks
+  return supportsAudioTracks
+}
 
 /**
  * Check if Flash can play the given videotype
@@ -663,20 +625,20 @@ Dash.supportsNativeAudioTracks = function () {
  */
 Dash.nativeSourceHandler.canPlayType = function (type) {
 
-  const dashTypeRE = /^application\/dash\+xml/i;
-  const dashExtRE = /\.mpd/i;
+  const dashTypeRE = /^application\/dash\+xml/i
+  const dashExtRE = /\.mpd/i
 
   if (dashTypeRE.test(type)) {
-    return 'probably';
+    return 'probably'
   } else if (dashExtRE.test(type)) {
-    return 'maybe';
+    return 'maybe'
   } else {
-    return '';
+    return ''
   }
 
-  return '';
+  return ''
 
-};
+}
 
 /*
  * Check Flash can handle the source natively
@@ -688,15 +650,15 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
 
   // If a type was provided we should rely on that
   if (source.type) {
-    return Dash.nativeSourceHandler.canPlayType(source.type);
+    return Dash.nativeSourceHandler.canPlayType(source.type)
   } else if (source.src) {
-    return Dash.nativeSourceHandler.canPlayType(source.src);
+    return Dash.nativeSourceHandler.canPlayType(source.src)
   }
 
-  return '';
-};
+  return ''
+}
 
-Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];
+Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD']
 
 /*
  * Pass the source to the flash object
@@ -707,21 +669,21 @@ Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];
  * @param  {Flash} tech   The instance of the Flash tech
  */
 Dash.nativeSourceHandler.handleSource = function (source, tech) {
-  tech.src(source.src);
-};
+  tech.src(source.src)
+}
 
 /*
  * Clean up the source handler when disposing the player or switching sources..
  * (no cleanup is needed when supporting the format natively)
  */
 Dash.nativeSourceHandler.dispose = function () {
-};
+}
 
 // Register the native source handler
-Dash.registerSourceHandler(Dash.nativeSourceHandler);
+Dash.registerSourceHandler(Dash.nativeSourceHandler)
 
-videojs.options.dash = {};
+videojs.options.dash = {}
 
-Component.registerComponent('Dash', Dash);
-Tech.registerTech('Dash', Dash);
-export default Dash;
+Component.registerComponent('Dash', Dash)
+Tech.registerTech('Dash', Dash)
+export default Dash
