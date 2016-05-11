@@ -111,11 +111,11 @@ var Dash = (function (_Html5) {
     key: 'setCurrentTime',
     value: function setCurrentTime(seconds) {
       if (this.playbackInitialized && this.mediaPlayer_) {
-        // this.mediaPlayer_.enableBufferOccupancyABR(false);
+        // this.mediaPlayer_.enableBufferOccupancyABR(false)
         this.mediaPlayer_.setQualityFor('video', 0);
         // this.one('seeked', ()=> {
-        //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
-        // });
+        //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled)
+        // })
       }
       _get(Object.getPrototypeOf(Dash.prototype), 'setCurrentTime', this).call(this, seconds);
     }
@@ -129,8 +129,6 @@ var Dash = (function (_Html5) {
   }, {
     key: 'src',
     value: function src(_src) {
-      var _this2 = this;
-
       if (!_src) {
         return this.el_.src;
       }
@@ -142,13 +140,15 @@ var Dash = (function (_Html5) {
       this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
       // Save the context after the first initialization for subsequent instances
       this.context_ = this.context_ || {};
-      // But make a fresh MediaPlayer each time the sourceHandler is used
-      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+      // reuse MediaPlayer if it already exists
+      if (!this.mediaPlayer_) {
+        // But make a fresh MediaPlayer each time the sourceHandler is used
+        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
 
-      // Must run controller before these two lines or else there is no
-      // element to bind to.
-      this.mediaPlayer_.initialize();
-      this.mediaPlayer_.attachView(this.el());
+        // Must run controller before these two lines or else there is no
+        // element to bind to.
+        this.mediaPlayer_.initialize();
+      }
 
       this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
       this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
@@ -170,7 +170,7 @@ var Dash = (function (_Html5) {
 
       this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
       this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
-      // this.mediaPlayer_.setSelectionModeForInitialTrack(this.options_.initialSelectionMode);
+      // this.mediaPlayer_.setSelectionModeForInitialTrack(this.options_.initialSelectionMode)
       this.mediaPlayer_.setBufferToKeep(this.options_.buffer.bufferToKeep);
       this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
       this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
@@ -184,13 +184,14 @@ var Dash = (function (_Html5) {
       this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
       // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
       // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
-      //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video});
+      //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video})
 
       this.player_.trigger('loadstart');
-      // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
-      this.ready(function () {
-        _this2.mediaPlayer_.retrieveManifest(_src, _this2.initializeDashJS.bind(_this2));
-      });
+      this.mediaPlayer_.attachView(this.el_);
+      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
+      this.mediaPlayer_.attachSource(_src);
+
+      this.triggerReady();
     }
   }, {
     key: 'onInitialized',
@@ -206,7 +207,7 @@ var Dash = (function (_Html5) {
       if (err) {
         this.player_.error(err);
       }
-      // this.streamInfo = streamInfo;
+      // this.streamInfo = streamInfo
       this.isDynamic(isDynamic);
       this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
       var bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
@@ -253,7 +254,7 @@ var Dash = (function (_Html5) {
       var metrics = this.getCribbedMetricsFor(e.mediaType);
       if (metrics) {
         this.metrics_[e.mediaType] = _videoJs2['default'].mergeOptions(this.metrics_[e.mediaType], metrics);
-        //this.trigger(videojs.obj.copy(e));
+        //this.trigger(videojs.obj.copy(e))
         var metricsChangeEvent = {
           type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
           mediaType: e.mediaType
@@ -349,8 +350,8 @@ var Dash = (function (_Html5) {
         droppedFramesMetrics = dashMetrics.getCurrentDroppedFrames(metrics);
         requestsQueue = dashMetrics.getRequestsQueue(metrics);
 
-        fillmoving("video", httpRequests);
-        fillmoving("audio", httpRequests);
+        fillmoving('video', httpRequests);
+        fillmoving('audio', httpRequests);
 
         var streamIdx = this.streamInfo ? this.streamInfo.index : 0;
 
@@ -422,32 +423,6 @@ var Dash = (function (_Html5) {
       });
 
       return keySystemOptions;
-    }
-  }, {
-    key: 'initializeDashJS',
-    value: function initializeDashJS(manifest, err) {
-      var _this3 = this;
-
-      var manifestProtectionData = {};
-
-      if (err) {
-        this.showErrors();
-        this.triggerReady();
-        this.dispose();
-        return;
-      }
-
-      // If we haven't received protection data from the outside world try to get it from the manifest
-      // We merge the two allowing the manifest to override any keySystemOptions provided via src()
-      if (this.getWidevineProtectionData) {
-        manifestProtectionData = this.getWidevineProtectionData(manifest);
-        this.keySystemOptions_ = _videoJs2['default'].mergeOptions(this.keySystemOptions_, manifestProtectionData);
-      }
-
-      // We have to reset any mediaKeys before the attachSource call below
-      this.resetSrc_(function () {
-        _this3.afterMediaKeysReset(manifest);
-      });
     }
   }, {
     key: 'onTextTracksAdded',
@@ -554,31 +529,15 @@ var Dash = (function (_Html5) {
   }, {
     key: 'showErrors',
     value: function showErrors() {
-      var _this4 = this;
+      var _this2 = this;
 
       // The video element's src is set asynchronously so we have to wait a while
       // before we unhide any errors
       // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
       // in my testing
       this.setTimeout(function () {
-        _this4.player_.removeClass('vjs-dashjs-hide-errors');
+        _this2.player_.removeClass('vjs-dashjs-hide-errors');
       }, 250);
-    }
-  }, {
-    key: 'resetSrc_',
-    value: function resetSrc_(callback) {
-      // In Chrome, MediaKeys can NOT be changed when a src is loaded in the video element
-      // Dash.js has a bug where it doesn't correctly reset the data so we do it manually
-      // The order of these two lines is important. The video element's src must be reset
-      // to allow `mediaKeys` to changed otherwise a DOMException is thrown.
-      if (this.el()) {
-        this.el().src = '';
-        if (this.el().setMediaKeys) {
-          this.el().setMediaKeys(null).then(callback, callback);
-        } else {
-          callback();
-        }
-      }
     }
   }, {
     key: 'dispose',
@@ -586,7 +545,6 @@ var Dash = (function (_Html5) {
       if (this.mediaPlayer_) {
         this.mediaPlayer_.reset();
       }
-      this.resetSrc_(Function.prototype);
       _get(Object.getPrototypeOf(Dash.prototype), 'dispose', this).call(this, this);
     }
   }]);

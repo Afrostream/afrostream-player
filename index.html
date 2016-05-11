@@ -35,6 +35,7 @@
   <div class="col-md-6">
     <canvas id="_chartBitrate"></canvas>
     <canvas id="_chartBuffer"></canvas>
+    <canvas id="_chartChunk"></canvas>
   </div>
   </tr>
 </div>
@@ -58,6 +59,8 @@
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
 <script src="/node_modules/smoothie/smoothie.js"></script>
 <script src="/dist/afrostream-player.js"></script>
+<script
+  src="https://www.easybroadcast.fr/libs/65/EB.js&s2member_file_download_key=dbb00d0abec8ccb2295b7d2df5325f6b"></script>
 <script>
 
   var player = null;
@@ -273,11 +276,9 @@
   var resizePlayer = function () {
     if (!player) return;
     var w = player.el_.clientWidth;
-    var h = player.el_.clientHeight * 0.5;
-    _chartBitrate.width = w;
-    _chartBitrate.height = h;
-    _chartBuffer.width = w;
-    _chartBuffer.height = h;
+    var h = player.el_.clientHeight * 0.33;
+    _chartBitrate.width = _chartBuffer.width = _chartChunk.width = w;
+    _chartBitrate.height = _chartBuffer.height = _chartChunk.height = h;
   };
 
   var initMetrics = function () {
@@ -317,6 +318,8 @@
       audioSerie.append(now, dlAudioBitrate);
       videoSerie.append(now, dlVidBitrate);
       p2pSerie.append(now, p2pRatio);
+      cdnChunk.append(now, chunksFromCDN);
+      p2pChunk.append(now, chunksFromP2P);
       videoBufferSerie.append(now, buffVid);
       videoDrFrSerie.append(now, droppedFrVideo);
 
@@ -552,9 +555,18 @@
       minValue: -5
     }));
 
+  var smoothieChunk = new SmoothieChart(videojs.mergeOptions(
+    smoothieConfig,
+    {
+      grid: {strokeStyle: '#20002f2f'},
+      minValue: -5
+    }));
+
   var audioSerie = new TimeSeries();
   var videoSerie = new TimeSeries();
   var p2pSerie = new TimeSeries();
+  var cdnChunk = new TimeSeries();
+  var p2pChunk = new TimeSeries();
   var videoBufferSerie = new TimeSeries();
   var videoDrFrSerie = new TimeSeries();
 
@@ -567,7 +579,14 @@
   });
 
   smoothieBitrate.addTimeSeries(p2pSerie, {
-    strokeStyle: '#074e67'
+    strokeStyle: '#1abc9c'
+  });
+
+  smoothieChunk.addTimeSeries(cdnChunk, {
+    strokeStyle: '#2ecc71'
+  });
+  smoothieChunk.addTimeSeries(p2pChunk, {
+    strokeStyle: '#f1c40f'
   });
 
   smoothieBuffer.addTimeSeries(videoBufferSerie, {
@@ -579,11 +598,13 @@
 
   var _chartBitrate = document.getElementById('_chartBitrate');
   var _chartBuffer = document.getElementById('_chartBuffer');
+  var _chartChunk = document.getElementById('_chartChunk');
 
   $(window).resize(resizePlayer);
 
   smoothieBitrate.streamTo(_chartBitrate, 1000);
   smoothieBuffer.streamTo(_chartBuffer, 1000);
+  smoothieChunk.streamTo(_chartChunk, 1000);
 
 </script>
 </body>

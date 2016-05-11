@@ -1,8 +1,8 @@
-import videojs from 'video.js';
+import videojs from 'video.js'
 
-let MediaTechController = videojs.getComponent('MediaTechController');
-let AudioTrack = videojs.getComponent('AudioTrack');
-let VideoTrack = videojs.getComponent('VideoTrack');
+let MediaTechController = videojs.getComponent('MediaTechController')
+let AudioTrack = videojs.getComponent('AudioTrack')
+let VideoTrack = videojs.getComponent('VideoTrack')
 
 MediaTechController.METRICS_DATA = {
   bandwidth: -1,
@@ -15,7 +15,7 @@ MediaTechController.METRICS_DATA = {
   movingDownload: 0,
   movingRatio: 0,
   requestsQueue: 0
-};
+}
 
 MediaTechController.prototype.metrics_ = {
   video: videojs.mergeOptions({
@@ -33,7 +33,7 @@ MediaTechController.prototype.metrics_ = {
     p2pRatio: -1,
     startupTime: -1
   }
-};
+}
 
 
 /**
@@ -41,8 +41,8 @@ MediaTechController.prototype.metrics_ = {
  * @returns {{video: {bandwidth: number}, audio: {bandwidth: number}}}
  */
 MediaTechController.prototype.getPlaybackStatistics = function () {
-  return this.metrics_;
-};
+  return this.metrics_
+}
 
 /**
  * Get default metrix statistics object for specified type
@@ -50,8 +50,8 @@ MediaTechController.prototype.getPlaybackStatistics = function () {
  * @returns {*}
  */
 MediaTechController.prototype.getCribbedMetricsFor = function (type) {
-  return this.metrics_[type];
-};
+  return this.metrics_[type]
+}
 
 /**
  * Creates and returns a remote text track object
@@ -65,46 +65,46 @@ MediaTechController.prototype.getCribbedMetricsFor = function (type) {
  */
 MediaTechController.prototype.addAudioTrack = function (kind, label, language, options = {}) {
   if (!kind) {
-    throw new Error('AudioTrack kind is required but was not provided');
+    throw new Error('AudioTrack kind is required but was not provided')
   }
 
-  let tracks = this.audioTracks();
+  let tracks = this.audioTracks()
 
-  options.kind = kind;
+  options.kind = kind
 
   if (label) {
-    options.label = label;
+    options.label = label
   }
   if (language) {
-    options.language = language;
+    options.language = language
   }
-  options.tech = self;
+  options.tech = self
 
-  let track = new AudioTrack(options);
-  tracks.addTrack_(track);
+  let track = new AudioTrack(options)
+  tracks.addTrack_(track)
 
-  return track;
+  return track
 }
 
 MediaTechController.prototype.addVideoTrack = function (kind, label, language, options = {}) {
   if (!kind) {
-    throw new Error('VideoTrack kind is required but was not provided');
+    throw new Error('VideoTrack kind is required but was not provided')
   }
 
-  let tracks = this.videoTracks();
+  let tracks = this.videoTracks()
 
-  options.kind = kind;
+  options.kind = kind
 
   if (label) {
-    options.label = label;
+    options.label = label
   }
   if (language) {
-    options.language = language;
+    options.language = language
   }
-  options.tech = self;
+  options.tech = self
 
-  let track = new VideoTrack(options);
-  tracks.addTrack_(track);
+  let track = new VideoTrack(options)
+  tracks.addTrack_(track)
 
-  return track;
+  return track
 }

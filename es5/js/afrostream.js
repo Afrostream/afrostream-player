@@ -37,6 +37,10 @@ var _techDashas = require('./tech/dashas');
 
 var _techDashas2 = _interopRequireDefault(_techDashas);
 
+var _techEasyBroadcast = require('./tech/easy-broadcast');
+
+var _techEasyBroadcast2 = _interopRequireDefault(_techEasyBroadcast);
+
 var _dashjs = require('dashjs');
 
 var _componentControlBar = require('./component/control-bar/');
