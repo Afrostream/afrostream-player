@@ -33,6 +33,12 @@
   background: rgba($slider-load-bg-color, 0.2);
 }
 
+.video-js.vjs-youtube {
+  .vjs-load-progress div {
+    display: none;
+  }
+}
+
 /* The load progress bar also has internal divs that represent
    smaller disconnected loaded time ranges */
 .video-js .vjs-load-progress div {

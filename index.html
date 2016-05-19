@@ -58,6 +58,7 @@
 <script> window.dashjs = {skipAutoCreate: true}; </script>
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
 <script src="/node_modules/smoothie/smoothie.js"></script>
+<script src="/node_modules/videojs-youtube/dist/Youtube.js"></script>
 <script src="/dist/afrostream-player.js"></script>
 <script
   src="https://www.easybroadcast.fr/libs/65/EB.js&s2member_file_download_key=dbb00d0abec8ccb2295b7d2df5325f6b"></script>
@@ -337,6 +338,7 @@
 
   var sources =
     [
+      { "type": "video/youtube", "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"}
 //      {
 //        "src": "https://hw.cdn.afrostream.net/vod/6207276-JOSEPHINEBAKER-PART1-4X3-133-25-EN_RID1663875_PN178503-cut/5df9fae9becaeb60.ism/master.m3u8",
 //        "type": "application/vnd.apple.mpegurl"
@@ -365,10 +367,10 @@
 //      type: "application/dash+xml"
 //    }
     //LIVE BET
-    {
-      src: "https://origin.cdn.afrostream.net/live/betdev.isml/bet.mpd",
-      type: "application/dash+xml"
-    }
+//    {
+//      src: "https://origin.cdn.afrostream.net/live/betdev.isml/bet.mpd",
+//      type: "application/dash+xml"
+//    }
     //EXTERNAL SIMPLE
 //    {
 //      "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
@@ -456,7 +458,7 @@
     //}
   ];
 
-  techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas'];
+  techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas', 'youtube'];
   muted = qs.muted ? qs.muted : false;
   drm = qs.drm ? qs.drm : false;
   url = qs.url ? qs.url : false;
