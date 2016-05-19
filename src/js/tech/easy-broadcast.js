@@ -74,7 +74,7 @@ class EasyBroadcast extends Dash {
 /* EasyBroadcast Support Testing -------------------------------------------------------- */
 
 EasyBroadcast.isSupported = function () {
-  return Dash.isSupported()
+  return Dash.isSupported() && !videojs.browser.IS_ANDROID
 }
 
 // Add Source Handler pattern functions to this tech

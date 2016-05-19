@@ -5824,7 +5824,7 @@ var EasyBroadcast = (function (_Dash) {
 })(_dash2['default']);
 
 EasyBroadcast.isSupported = function () {
-  return _dash2['default'].isSupported();
+  return _dash2['default'].isSupported() && !_videoJs2['default'].browser.IS_ANDROID;
 };
 
 // Add Source Handler pattern functions to this tech
