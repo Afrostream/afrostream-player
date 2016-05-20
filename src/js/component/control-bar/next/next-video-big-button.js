@@ -17,7 +17,8 @@ const ClickableComponent = videojs.getComponent('ClickableComponent');
 class NextVideoBigButton extends ClickableComponent {
 
   constructor (player, options) {
-    options = videojs.mergeOptions(options, player.options_.controlBar.nextVideoButton || {});
+    let nextOpts = player.options_.controlBar && player.options_.controlBar.nextVideoButton ? player.options_.controlBar.nextVideoButton : {}
+    options = videojs.mergeOptions(options, nextOpts);
     super(player, options);
     if (!options.poster) {
       this.hide();

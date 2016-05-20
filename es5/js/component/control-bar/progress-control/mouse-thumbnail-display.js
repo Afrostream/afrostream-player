@@ -68,7 +68,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       var url = this.destroyLoader();
       _videoJs2['default'].log('thumbnails : next error ' + url);
       if (this.itemIndex = 1) {
-        this.dispose();
+        this.error = true;
       }
     }
   }, {
@@ -130,6 +130,9 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
     key: 'update',
     value: function update(newTime, position) {
       _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'update', this).call(this, newTime, position);
+      if (this.error) {
+        return;
+      }
       var timeInterval = 60;
       var spriteSize = {
         w: 600,
@@ -174,6 +177,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
   return MouseThumbnailDisplay;
 })(MouseTimeDisplay);
 
+MouseThumbnailDisplay.prototype.error = false;
 MouseThumbnailDisplay.prototype.itemIndex = 0;
 MouseThumbnailDisplay.prototype.options_ = {
   host: null

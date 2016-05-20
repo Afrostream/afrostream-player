@@ -42,7 +42,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
     const url = this.destroyLoader();
     videojs.log('thumbnails : next error ' + url);
     if (this.itemIndex = 1) {
-      this.dispose();
+      this.error = true;
     }
   }
 
@@ -97,6 +97,9 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
   update (newTime, position) {
     super.update(newTime, position);
+    if (this.error) {
+      return;
+    }
     const timeInterval = 60;
     const spriteSize = {
       w: 600,
@@ -138,6 +141,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
   }
 }
 
+MouseThumbnailDisplay.prototype.error = false;
 MouseThumbnailDisplay.prototype.itemIndex = 0;
 MouseThumbnailDisplay.prototype.options_ = {
   host: null

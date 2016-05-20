@@ -75,7 +75,8 @@ var NextVideoBigButton = (function (_ClickableComponent) {
   function NextVideoBigButton(player, options) {
     _classCallCheck(this, NextVideoBigButton);
 
-    options = _videoJs2['default'].mergeOptions(options, player.options_.controlBar.nextVideoButton || {});
+    var nextOpts = player.options_.controlBar && player.options_.controlBar.nextVideoButton ? player.options_.controlBar.nextVideoButton : {};
+    options = _videoJs2['default'].mergeOptions(options, nextOpts);
     _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'constructor', this).call(this, player, options);
     if (!options.poster) {
       this.hide();
@@ -588,7 +589,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       var url = this.destroyLoader();
       _videoJs2['default'].log('thumbnails : next error ' + url);
       if (this.itemIndex = 1) {
-        this.dispose();
+        this.error = true;
       }
     }
   }, {
@@ -650,6 +651,9 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
     key: 'update',
     value: function update(newTime, position) {
       _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'update', this).call(this, newTime, position);
+      if (this.error) {
+        return;
+      }
       var timeInterval = 60;
       var spriteSize = {
         w: 600,
@@ -694,6 +698,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
   return MouseThumbnailDisplay;
 })(MouseTimeDisplay);
 
+MouseThumbnailDisplay.prototype.error = false;
 MouseThumbnailDisplay.prototype.itemIndex = 0;
 MouseThumbnailDisplay.prototype.options_ = {
   host: null

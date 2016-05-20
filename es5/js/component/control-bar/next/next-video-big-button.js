@@ -39,7 +39,8 @@ var NextVideoBigButton = (function (_ClickableComponent) {
   function NextVideoBigButton(player, options) {
     _classCallCheck(this, NextVideoBigButton);
 
-    options = _videoJs2['default'].mergeOptions(options, player.options_.controlBar.nextVideoButton || {});
+    var nextOpts = player.options_.controlBar && player.options_.controlBar.nextVideoButton ? player.options_.controlBar.nextVideoButton : {};
+    options = _videoJs2['default'].mergeOptions(options, nextOpts);
     _get(Object.getPrototypeOf(NextVideoBigButton.prototype), 'constructor', this).call(this, player, options);
     if (!options.poster) {
       this.hide();
