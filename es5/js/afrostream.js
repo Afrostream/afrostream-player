@@ -25,35 +25,23 @@ var _videoJs = require('video.js');
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _techMedia = require('./tech/media');
-
-var _techMedia2 = _interopRequireDefault(_techMedia);
-
-var _techDash = require('./tech/dash');
-
-var _techDash2 = _interopRequireDefault(_techDash);
-
-var _techDashas = require('./tech/dashas');
-
-var _techDashas2 = _interopRequireDefault(_techDashas);
-
-var _techEasyBroadcast = require('./tech/easy-broadcast');
-
-var _techEasyBroadcast2 = _interopRequireDefault(_techEasyBroadcast);
-
 var _dashjs = require('dashjs');
 
-var _componentControlBar = require('./component/control-bar/');
+require('./tech/media');
 
-var _componentControlBar2 = _interopRequireDefault(_componentControlBar);
+require('./tech/dash');
 
-var _videojsMetrics = require('videojs-metrics');
+require('./tech/dashas');
 
-var _videojsMetrics2 = _interopRequireDefault(_videojsMetrics);
+require('./tech/easy-broadcast');
 
-var _videojsChromecast = require('videojs-chromecast');
+require('./component/control-bar/');
 
-var _videojsChromecast2 = _interopRequireDefault(_videojsChromecast);
+require('videojs-metrics');
+
+require('videojs-chromecast');
+
+require('videojs-youtube');
 
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');

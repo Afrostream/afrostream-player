@@ -6,14 +6,15 @@
  **/
 
 import videojs from 'video.js'
-import MediaTechController from './tech/media'
-import Dash from './tech/dash'
-import Dashas from './tech/dashas'
-import EasyBroadcast from './tech/easy-broadcast'
 import { MediaPlayer } from 'dashjs'
-import ControlBarChilds from './component/control-bar/'
-import Metrics from 'videojs-metrics'
-import Chromecast from 'videojs-chromecast'
+import './tech/media'
+import './tech/dash'
+import './tech/dashas'
+import './tech/easy-broadcast'
+import './component/control-bar/'
+import 'videojs-metrics'
+import 'videojs-chromecast'
+import 'videojs-youtube'
 
 const Component = videojs.getComponent('Component')
 const ControlBar = videojs.getComponent('ControlBar')

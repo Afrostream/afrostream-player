@@ -2129,7 +2129,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":13,"global/document":2,"global/window":3,"xhr":14}],12:[function(require,module,exports){
+},{"./utils.js":13,"global/document":2,"global/window":3,"xhr":15}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2251,6 +2251,727 @@ function getBrowser() {
 	return data;
 }
 },{"global/document":2,"global/window":3}],14:[function(require,module,exports){
+(function (global){
+/**
+ * @file Youtube.js
+ * Youtube Media Controller - Wrapper for HTML5 Media API
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Tech = _videoJs2['default'].getComponent('Tech');
+
+/**
+ * Youtube Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Tech
+ * @class Youtube
+ */
+
+var Youtube = (function (_Tech) {
+  _inherits(Youtube, _Tech);
+
+  function Youtube(options, ready) {
+    _classCallCheck(this, Youtube);
+
+    _get(Object.getPrototypeOf(Youtube.prototype), 'constructor', this).call(this, options, ready);
+
+    this.setPoster(options.poster);
+    this.setSrc(this.options_.source, true);
+    // Set the vjs-youtube class to the player
+    // Parent is not set yet so we have to wait a tick
+    setTimeout((function () {
+      this.el_.parentNode.className += ' vjs-youtube';
+
+      if (_isOnMobile) {
+        this.el_.parentNode.className += ' vjs-youtube-mobile';
+      }
+
+      if (Youtube.isApiReady) {
+        this.initYTPlayer();
+      } else {
+        Youtube.apiReadyQueue.push(this);
+      }
+    }).bind(this));
+  }
+
+  _createClass(Youtube, [{
+    key: 'dispose',
+    value: function dispose() {
+      this.el_.parentNode.className = this.el_.parentNode.className.replace(' vjs-youtube', '').replace(' vjs-youtube-mobile', '');
+      _get(Object.getPrototypeOf(Youtube.prototype), 'dispose', this).call(this, this);
+    }
+  }, {
+    key: 'createEl',
+    value: function createEl() {
+
+      var div = _videoJs2['default'].createEl('div', {
+        id: this.options_.techId,
+        style: 'width:100%;height:100%;top:0;left:0;position:absolute'
+      });
+
+      var divWrapper = _videoJs2['default'].createEl('div');
+      divWrapper.appendChild(div);
+
+      if (!_isOnMobile && !this.options_.ytControls) {
+        var divBlocker = _videoJs2['default'].createEl('div', {
+          className: 'vjs-iframe-blocker',
+          style: 'position:absolute;top:0;left:0;width:100%;height:100%'
+        });
+
+        // In case the blocker is still there and we want to pause
+        divBlocker.onclick = this.pause.bind(this);
+
+        divWrapper.appendChild(divBlocker);
+      }
+
+      return divWrapper;
+    }
+  }, {
+    key: 'initYTPlayer',
+    value: function initYTPlayer() {
+      var playerVars = {
+        controls: 0,
+        modestbranding: 1,
+        rel: 0,
+        showinfo: 0,
+        loop: this.options_.loop ? 1 : 0
+      };
+
+      // Let the user set any YouTube parameter
+      // https://developers.google.com/youtube/player_parameters?playerVersion=HTML5#Parameters
+      // To use YouTube controls, you must use ytControls instead
+      // To use the loop or autoplay, use the video.js settings
+
+      if (typeof this.options_.autohide !== 'undefined') {
+        playerVars.autohide = this.options_.autohide;
+      }
+
+      if (typeof this.options_['cc_load_policy'] !== 'undefined') {
+        playerVars['cc_load_policy'] = this.options_['cc_load_policy'];
+      }
+
+      if (typeof this.options_.ytControls !== 'undefined') {
+        playerVars.controls = this.options_.ytControls;
+      }
+
+      if (typeof this.options_.disablekb !== 'undefined') {
+        playerVars.disablekb = this.options_.disablekb;
+      }
+
+      if (typeof this.options_.end !== 'undefined') {
+        playerVars.end = this.options_.end;
+      }
+
+      if (typeof this.options_.color !== 'undefined') {
+        playerVars.color = this.options_.color;
+      }
+
+      if (!playerVars.controls) {
+        // Let video.js handle the fullscreen unless it is the YouTube native controls
+        playerVars.fs = 0;
+      } else if (typeof this.options_.fs !== 'undefined') {
+        playerVars.fs = this.options_.fs;
+      }
+
+      if (typeof this.options_.end !== 'undefined') {
+        playerVars.end = this.options_.end;
+      }
+
+      if (typeof this.options_.hl !== 'undefined') {
+        playerVars.hl = this.options_.hl;
+      } else if (typeof this.options_.language !== 'undefined') {
+        // Set the YouTube player on the same language than video.js
+        playerVars.hl = this.options_.language.substr(0, 2);
+      }
+
+      if (typeof this.options_['iv_load_policy'] !== 'undefined') {
+        playerVars['iv_load_policy'] = this.options_['iv_load_policy'];
+      }
+
+      if (typeof this.options_.list !== 'undefined') {
+        playerVars.list = this.options_.list;
+      } else if (this.url && typeof this.url.listId !== 'undefined') {
+        playerVars.list = this.url.listId;
+      }
+
+      if (typeof this.options_.listType !== 'undefined') {
+        playerVars.listType = this.options_.listType;
+      }
+
+      if (typeof this.options_.modestbranding !== 'undefined') {
+        playerVars.modestbranding = this.options_.modestbranding;
+      }
+
+      if (typeof this.options_.playlist !== 'undefined') {
+        playerVars.playlist = this.options_.playlist;
+      }
+
+      if (typeof this.options_.playsinline !== 'undefined') {
+        playerVars.playsinline = this.options_.playsinline;
+      }
+
+      if (typeof this.options_.rel !== 'undefined') {
+        playerVars.rel = this.options_.rel;
+      }
+
+      if (typeof this.options_.showinfo !== 'undefined') {
+        playerVars.showinfo = this.options_.showinfo;
+      }
+
+      if (typeof this.options_.start !== 'undefined') {
+        playerVars.start = this.options_.start;
+      }
+
+      if (typeof this.options_.theme !== 'undefined') {
+        playerVars.theme = this.options_.theme;
+      }
+
+      this.activeVideoId = this.url ? this.url.videoId : null;
+      this.activeList = playerVars.list;
+
+      this.ytPlayer = new YT.Player(this.options_.techId, {
+        videoId: this.activeVideoId,
+        playerVars: playerVars,
+        events: {
+          onReady: this.onPlayerReady.bind(this),
+          onPlaybackQualityChange: this.onPlayerPlaybackQualityChange.bind(this),
+          onStateChange: this.onPlayerStateChange.bind(this),
+          onError: this.onPlayerError.bind(this)
+        }
+      });
+    }
+  }, {
+    key: 'onPlayerReady',
+    value: function onPlayerReady() {
+      this.playerReady_ = true;
+      this.triggerReady();
+
+      if (this.playOnReady) {
+        this.play();
+      }
+    }
+  }, {
+    key: 'onPlayerPlaybackQualityChange',
+    value: function onPlayerPlaybackQualityChange() {}
+  }, {
+    key: 'onPlayerStateChange',
+    value: function onPlayerStateChange(e) {
+      var state = e.data;
+
+      if (state === this.lastState || this.errorNumber) {
+        return;
+      }
+
+      switch (state) {
+        case -1:
+          this.trigger('loadedmetadata');
+          this.trigger('durationchange');
+          break;
+
+        case YT.PlayerState.ENDED:
+          this.trigger('ended');
+          break;
+
+        case YT.PlayerState.PLAYING:
+          this.trigger('timeupdate');
+          this.trigger('durationchange');
+          this.trigger('playing');
+          this.trigger('play');
+
+          if (this.isSeeking) {
+            this.onSeeked();
+          }
+          break;
+
+        case YT.PlayerState.PAUSED:
+          this.trigger('canplay');
+          if (this.isSeeking) {
+            this.onSeeked();
+          } else {
+            this.trigger('pause');
+          }
+          break;
+
+        case YT.PlayerState.BUFFERING:
+          this.player_.trigger('timeupdate');
+          this.player_.trigger('waiting');
+          break;
+      }
+
+      this.lastState = state;
+    }
+  }, {
+    key: 'onPlayerError',
+    value: function onPlayerError(e) {
+      this.errorNumber = e.data;
+      this.trigger('error');
+
+      this.ytPlayer.stopVideo();
+      this.ytPlayer.destroy();
+      this.ytPlayer = null;
+    }
+  }, {
+    key: 'error',
+    value: function error() {
+      switch (this.errorNumber) {
+        case 5:
+          return { code: 'Error while trying to play the video' };
+
+        case 2:
+        case 100:
+        case 150:
+          return { code: 'Unable to find the video' };
+        case 101:
+          return { code: 'Playback on other Websites has been disabled by the video owner.' };
+      }
+
+      return { code: 'YouTube unknown error (' + this.errorNumber + ')' };
+    }
+  }, {
+    key: 'src',
+    value: function src(_src) {
+      if (_src) {
+        this.setSrc({ src: _src });
+
+        if (this.options_.autoplay && !_isOnMobile) {
+          this.play();
+        }
+      }
+
+      return this.source;
+    }
+  }, {
+    key: 'poster',
+    value: function poster() {
+      // You can't start programmaticlly a video with a mobile
+      // through the iframe so we hide the poster and the play button (with CSS)
+      if (_isOnMobile) {
+        return null;
+      }
+
+      return this.poster_;
+    }
+  }, {
+    key: 'setPoster',
+    value: function setPoster(poster) {
+      this.poster_ = poster;
+    }
+  }, {
+    key: 'setSrc',
+    value: function setSrc(source) {
+      if (!source || !source.src) {
+        return;
+      }
+
+      delete this.errorNumber;
+      this.source = source;
+      this.url = Youtube.parseUrl(source.src);
+
+      if (!this.options_.poster) {
+        if (this.url.videoId) {
+          // Set the low resolution first
+          this.poster_ = 'https://img.youtube.com/vi/' + this.url.videoId + '/0.jpg';
+
+          // Check if their is a high res
+          this.checkHighResPoster();
+        }
+      }
+
+      if (this.options_.autoplay && !_isOnMobile) {
+        if (this.isReady_) {
+          this.play();
+        } else {
+          this.playOnReady = true;
+        }
+      }
+    }
+  }, {
+    key: 'play',
+    value: function play() {
+      if (!this.url || !this.url.videoId) {
+        return;
+      }
+
+      this.wasPausedBeforeSeek = false;
+
+      if (this.isReady_) {
+        if (this.url.listId) {
+          if (this.activeList === this.url.listId) {
+            this.ytPlayer.playVideo();
+          } else {
+            this.ytPlayer.loadPlaylist(this.url.listId);
+            this.activeList = this.url.listId;
+          }
+        }
+
+        if (this.activeVideoId === this.url.videoId) {
+          this.ytPlayer.playVideo();
+        } else {
+          this.ytPlayer.loadVideoById(this.url.videoId);
+          this.activeVideoId = this.url.videoId;
+        }
+      } else {
+        this.trigger('waiting');
+        this.playOnReady = true;
+      }
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      if (this.ytPlayer) {
+        this.ytPlayer.pauseVideo();
+      }
+    }
+  }, {
+    key: 'paused',
+    value: function paused() {
+      return this.ytPlayer ? this.lastState !== YT.PlayerState.PLAYING && this.lastState !== YT.PlayerState.BUFFERING : true;
+    }
+  }, {
+    key: 'currentTime',
+    value: function currentTime() {
+      return this.ytPlayer ? this.ytPlayer.getCurrentTime() : 0;
+    }
+  }, {
+    key: 'setCurrentTime',
+    value: function setCurrentTime(seconds) {
+      if (this.lastState === YT.PlayerState.PAUSED) {
+        this.timeBeforeSeek = this.currentTime();
+      }
+
+      if (!this.isSeeking) {
+        this.wasPausedBeforeSeek = this.paused();
+      }
+
+      this.ytPlayer.seekTo(seconds, true);
+      this.trigger('timeupdate');
+      this.trigger('seeking');
+      this.isSeeking = true;
+
+      // A seek event during pause does not return an event to trigger a seeked event,
+      // so run an interval timer to look for the currentTime to change
+      if (this.lastState === YT.PlayerState.PAUSED && this.timeBeforeSeek !== seconds) {
+        this.clearInterval(this.checkSeekedInPauseInterval);
+        this.checkSeekedInPauseInterval = this.setInterval((function () {
+          if (this.lastState !== YT.PlayerState.PAUSED || !this.isSeeking) {
+            // If something changed while we were waiting for the currentTime to change,
+            //  clear the interval timer
+            this.clearInterval(this.checkSeekedInPauseInterval);
+          } else if (this.currentTime() !== this.timeBeforeSeek) {
+            this.trigger('timeupdate');
+            this.onSeeked();
+          }
+        }).bind(this), 250);
+      }
+    }
+  }, {
+    key: 'onSeeked',
+    value: function onSeeked() {
+      this.clearInterval(this.checkSeekedInPauseInterval);
+      this.isSeeking = false;
+
+      if (this.wasPausedBeforeSeek) {
+        this.pause();
+      }
+
+      this.trigger('seeked');
+    }
+  }, {
+    key: 'playbackRate',
+    value: function playbackRate() {
+      return this.ytPlayer ? this.ytPlayer.getPlaybackRate() : 1;
+    }
+  }, {
+    key: 'setPlaybackRate',
+    value: function setPlaybackRate(suggestedRate) {
+      if (!this.ytPlayer) {
+        return;
+      }
+
+      this.ytPlayer.setPlaybackRate(suggestedRate);
+      this.trigger('ratechange');
+    }
+  }, {
+    key: 'duration',
+    value: function duration() {
+      return this.ytPlayer ? this.ytPlayer.getDuration() : 0;
+    }
+  }, {
+    key: 'currentSrc',
+    value: function currentSrc() {
+      return this.source;
+    }
+  }, {
+    key: 'ended',
+    value: function ended() {
+      return this.ytPlayer ? this.lastState === YT.PlayerState.ENDED : false;
+    }
+  }, {
+    key: 'volume',
+    value: function volume() {
+      return this.ytPlayer ? this.ytPlayer.getVolume() / 100.0 : 1;
+    }
+  }, {
+    key: 'setVolume',
+    value: function setVolume(percentAsDecimal) {
+      if (!this.ytPlayer) {
+        return;
+      }
+
+      this.ytPlayer.setVolume(percentAsDecimal * 100.0);
+      this.setTimeout(function () {
+        this.trigger('volumechange');
+      }, 50);
+    }
+  }, {
+    key: 'muted',
+    value: function muted() {
+      return this.ytPlayer ? this.ytPlayer.isMuted() : false;
+    }
+  }, {
+    key: 'setMuted',
+    value: function setMuted(mute) {
+      if (!this.ytPlayer) {
+        return;
+      } else {
+        this.muted(true);
+      }
+
+      if (mute) {
+        this.ytPlayer.mute();
+      } else {
+        this.ytPlayer.unMute();
+      }
+      this.setTimeout(function () {
+        this.trigger('volumechange');
+      }, 50);
+    }
+  }, {
+    key: 'buffered',
+    value: function buffered() {
+      if (!this.ytPlayer || !this.ytPlayer.getVideoLoadedFraction) {
+        return {
+          length: 0,
+          start: function start() {
+            throw new Error('This TimeRanges object is empty');
+          },
+          end: function end() {
+            throw new Error('This TimeRanges object is empty');
+          }
+        };
+      }
+
+      var _end = this.ytPlayer.getVideoLoadedFraction() * this.ytPlayer.getDuration();
+
+      return {
+        length: this.ytPlayer.getDuration(),
+        start: function start() {
+          return 0;
+        },
+        end: function end() {
+          return _end;
+        }
+      };
+    }
+
+    // TODO: Can we really do something with this on YouTUbe?
+  }, {
+    key: 'load',
+    value: function load() {}
+  }, {
+    key: 'resetction',
+    value: function resetction() {}
+  }, {
+    key: 'supportsFullScreen',
+    value: function supportsFullScreen() {
+      return true;
+    }
+
+    // Tries to get the highest resolution thumbnail available for the video
+  }, {
+    key: 'checkHighResPoster',
+    value: function checkHighResPoster() {
+      var _this = this;
+
+      var uri = 'https://img.youtube.com/vi/' + this.url.videoId + '/maxresdefault.jpg';
+
+      try {
+        (function () {
+          var image = new Image();
+          image.onload = (function () {
+            // Onload may still be called if YouTube returns the 120x90 error thumbnail
+            if ('naturalHeight' in image) {
+              if (image.naturalHeight <= 90 || image.naturalWidth <= 120) {
+                return;
+              }
+            } else if (image.height <= 90 || image.width <= 120) {
+              return;
+            }
+
+            this.poster_ = uri;
+            this.trigger('posterchange');
+          }).bind(_this);
+          image.onerror = function () {};
+          image.src = uri;
+        })();
+      } catch (e) {}
+    }
+  }]);
+
+  return Youtube;
+})(Tech);
+
+Youtube.prototype.options_ = {};
+
+Youtube.apiReadyQueue = [];
+
+/* Youtube Support Testing -------------------------------------------------------- */
+
+Youtube.isSupported = function () {
+  return true;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Youtube);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Youtube.nativeSourceHandler = {};
+
+var _isOnMobile = /(iPad|iPhone|iPod|Android)/g.test(navigator.userAgent);
+
+Youtube.parseUrl = function (url) {
+  var result = {
+    videoId: null
+  };
+
+  var regex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  var match = url.match(regex);
+
+  if (match && match[2].length === 11) {
+    result.videoId = match[2];
+  }
+
+  var regPlaylist = /[?&]list=([^#\&\?]+)/;
+  match = url.match(regPlaylist);
+
+  if (match && match[1]) {
+    result.listId = match[1];
+  }
+
+  return result;
+};
+
+var loadApi = function loadApi() {
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+};
+
+var injectCss = function injectCss() {
+  var css = // iframe blocker to catch mouse events
+  '.vjs-youtube .vjs-iframe-blocker { display: none; }' + '.vjs-youtube.vjs-user-inactive .vjs-iframe-blocker { display: block; }' + '.vjs-youtube .vjs-poster { background-size: cover; }' + '.vjs-youtube-mobile .vjs-big-play-button { display: none; }';
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+
+  head.appendChild(style);
+};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Youtube.nativeSourceHandler.canPlayType = function (source) {
+  return source === 'video/youtube';
+};
+
+/*
+ * Check Youtube can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Youtube.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Youtube.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Youtube.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+Youtube.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Youtube.nativeSourceHandler.dispose = function () {};
+
+// Register the native source handler
+Youtube.registerSourceHandler(Youtube.nativeSourceHandler);
+
+window.onYouTubeIframeAPIReady = function () {
+  Youtube.isApiReady = true;
+
+  for (var i = 0; i < Youtube.apiReadyQueue.length; ++i) {
+    Youtube.apiReadyQueue[i].initYTPlayer();
+  }
+};
+
+loadApi();
+injectCss();
+
+Component.registerComponent('Youtube', Youtube);
+
+Tech.registerTech('Youtube', Youtube);
+
+exports['default'] = Youtube;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],15:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -2471,7 +3192,7 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":3,"is-function":15,"once":16,"parse-headers":19,"xtend":20}],15:[function(require,module,exports){
+},{"global/window":3,"is-function":16,"once":17,"parse-headers":20,"xtend":21}],16:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -2488,7 +3209,7 @@ function isFunction (fn) {
       fn === window.prompt))
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -2509,7 +3230,7 @@ function once (fn) {
   }
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var isFunction = require('is-function')
 
 module.exports = forEach
@@ -2557,7 +3278,7 @@ function forEachObject(object, iterator, context) {
     }
 }
 
-},{"is-function":15}],18:[function(require,module,exports){
+},{"is-function":16}],19:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -2573,7 +3294,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -2605,7 +3326,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":17,"trim":18}],20:[function(require,module,exports){
+},{"for-each":18,"trim":19}],21:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -2626,7 +3347,7 @@ function extend() {
     return target
 }
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (global){
 /**
  * ! afrostrream-player - v2.0.0 - 2016-02-15
@@ -2655,35 +3376,23 @@ var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof globa
 
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _techMedia = require('./tech/media');
-
-var _techMedia2 = _interopRequireDefault(_techMedia);
-
-var _techDash = require('./tech/dash');
-
-var _techDash2 = _interopRequireDefault(_techDash);
-
-var _techDashas = require('./tech/dashas');
-
-var _techDashas2 = _interopRequireDefault(_techDashas);
-
-var _techEasyBroadcast = require('./tech/easy-broadcast');
-
-var _techEasyBroadcast2 = _interopRequireDefault(_techEasyBroadcast);
-
 var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
 
-var _componentControlBar = require('./component/control-bar/');
+require('./tech/media');
 
-var _componentControlBar2 = _interopRequireDefault(_componentControlBar);
+require('./tech/dash');
 
-var _videojsMetrics = require('videojs-metrics');
+require('./tech/dashas');
 
-var _videojsMetrics2 = _interopRequireDefault(_videojsMetrics);
+require('./tech/easy-broadcast');
 
-var _videojsChromecast = require('videojs-chromecast');
+require('./component/control-bar/');
 
-var _videojsChromecast2 = _interopRequireDefault(_videojsChromecast);
+require('videojs-metrics');
+
+require('videojs-chromecast');
+
+require('videojs-youtube');
 
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
@@ -2834,7 +3543,7 @@ exports['default'] = Afrostream;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":22,"./tech/dash":37,"./tech/dashas":38,"./tech/easy-broadcast":39,"./tech/media":40,"videojs-chromecast":8,"videojs-metrics":12}],22:[function(require,module,exports){
+},{"./component/control-bar/":23,"./tech/dash":38,"./tech/dashas":39,"./tech/easy-broadcast":40,"./tech/media":41,"videojs-chromecast":8,"videojs-metrics":12,"videojs-youtube":14}],23:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -2863,7 +3572,7 @@ var _progressControlMouseThumbnailDisplay = require('./progress-control/mouse-th
 
 var _progressControlMouseThumbnailDisplay2 = _interopRequireDefault(_progressControlMouseThumbnailDisplay);
 
-},{"./next/next-video-button":24,"./progress-control/load-progress-spinner":26,"./progress-control/mouse-thumbnail-display":27,"./track-controls/audio-track-button":28,"./track-controls/caption-track-button":30,"./track-controls/video-track-button":35}],23:[function(require,module,exports){
+},{"./next/next-video-button":25,"./progress-control/load-progress-spinner":27,"./progress-control/mouse-thumbnail-display":28,"./track-controls/audio-track-button":29,"./track-controls/caption-track-button":31,"./track-controls/video-track-button":36}],24:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-big-button.js
@@ -2966,7 +3675,7 @@ exports['default'] = NextVideoBigButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-button.js
@@ -3085,7 +3794,7 @@ exports['default'] = NextVideoButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./next-video-big-button":23,"./next-video-item":25}],25:[function(require,module,exports){
+},{"./next-video-big-button":24,"./next-video-item":26}],26:[function(require,module,exports){
 (function (global){
 /**
  * @file next-video-item.js
@@ -3191,7 +3900,7 @@ exports['default'] = NextVideoItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (global){
 /**
  * @file load-progress-spinner.js
@@ -3351,7 +4060,7 @@ exports['default'] = LoadProgressSpinner;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (global){
 /**
  * @file mouse-thumbnail-display.js
@@ -3540,7 +4249,7 @@ exports['default'] = MouseThumbnailDisplay;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 (function (global){
 /**
  * @file audio-track-button.js
@@ -3676,7 +4385,7 @@ exports['default'] = AudioTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":29,"./off-audio-track-menu-item":32}],29:[function(require,module,exports){
+},{"./audio-track-menu-item":30,"./off-audio-track-menu-item":33}],30:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3774,7 +4483,7 @@ exports['default'] = AudioTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3875,7 +4584,7 @@ exports['default'] = CaptionTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":31,"./off-caption-track-menu-item":33}],31:[function(require,module,exports){
+},{"./caption-track-menu-item":32,"./off-caption-track-menu-item":34}],32:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4005,7 +4714,7 @@ exports['default'] = CaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function (global){
 /**
  * @file off-audio-track-menu-item.js
@@ -4100,7 +4809,7 @@ exports['default'] = OffAudioTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":29}],33:[function(require,module,exports){
+},{"./audio-track-menu-item":30}],34:[function(require,module,exports){
 (function (global){
 /**
  * @file caption-track-button-off.js
@@ -4194,7 +4903,7 @@ exports['default'] = OffCaptionTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":31}],34:[function(require,module,exports){
+},{"./caption-track-menu-item":32}],35:[function(require,module,exports){
 (function (global){
 /**
  * @file off-video-track-menu-item.js
@@ -4288,7 +4997,7 @@ exports['default'] = OffVideoTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./video-track-menu-item":36}],35:[function(require,module,exports){
+},{"./video-track-menu-item":37}],36:[function(require,module,exports){
 (function (global){
 /**
  * @file video-track-button.js
@@ -4428,7 +5137,7 @@ exports['default'] = VideoTrackButton;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./off-video-track-menu-item":34,"./video-track-menu-item":36}],36:[function(require,module,exports){
+},{"./off-video-track-menu-item":35,"./video-track-menu-item":37}],37:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4532,7 +5241,7 @@ exports['default'] = VideoTrackMenuItem;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 (function (global){
 /**
  * @file dash.js
@@ -5275,7 +5984,7 @@ exports['default'] = Dash;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 (function (global){
 /**
  * @file dashas.js
@@ -5713,7 +6422,7 @@ exports['default'] = Dashas;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 (function (global){
 /**
  * @file easy-broadcast.js
@@ -5868,7 +6577,7 @@ exports['default'] = EasyBroadcast;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./dash":37}],40:[function(require,module,exports){
+},{"./dash":38}],41:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5991,7 +6700,7 @@ MediaTechController.prototype.addVideoTrack = function (kind, label, language) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -6032,7 +6741,7 @@ _qunit2['default'].test('afrostreamMaker takes a player and returns a metrics', 
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/js/afrostream":21,"./player-proxy":42,"global/window":3}],42:[function(require,module,exports){
+},{"../src/js/afrostream":22,"./player-proxy":43,"global/window":3}],43:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -6074,7 +6783,7 @@ exports['default'] = proxy;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"node.extend":4}],43:[function(require,module,exports){
+},{"node.extend":4}],44:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -6109,4 +6818,4 @@ _qunit2['default'].test('registers itself with video.js', function (assert) {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/js/afrostream":21}]},{},[41,43]);
+},{"../src/js/afrostream":22}]},{},[42,44]);
