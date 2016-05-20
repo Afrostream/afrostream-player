@@ -50,8 +50,6 @@ var EasyBroadcast = (function (_Dash) {
     _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'constructor', this).call(this, options, ready);
   }
 
-  /* EasyBroadcast Support Testing -------------------------------------------------------- */
-
   /**
    * Set video
    *
@@ -105,6 +103,13 @@ var EasyBroadcast = (function (_Dash) {
 
   return EasyBroadcast;
 })(_dash2['default']);
+
+EasyBroadcast.prototype.options_ = _videoJs2['default'].mergeOptions(_dash2['default'].prototype.options_, {
+  //override option EB, cause switch lang too long
+  trackSwitchMode: 'alwaysReplace'
+});
+
+/* EasyBroadcast Support Testing -------------------------------------------------------- */
 
 EasyBroadcast.isSupported = function () {
   return _dash2['default'].isSupported() && !_videoJs2['default'].browser.IS_ANDROID;

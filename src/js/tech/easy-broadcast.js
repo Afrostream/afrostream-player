@@ -71,6 +71,11 @@ class EasyBroadcast extends Dash {
 
 }
 
+EasyBroadcast.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
+  //override option EB, cause switch lang too long
+  trackSwitchMode: 'alwaysReplace'
+})
+
 /* EasyBroadcast Support Testing -------------------------------------------------------- */
 
 EasyBroadcast.isSupported = function () {

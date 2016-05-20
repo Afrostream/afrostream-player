@@ -161,8 +161,8 @@ var Dash = (function (_Html5) {
 
       this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
       this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
-      this.mediaPlayer_.setTrackSwitchModeFor('audio', 'neverReplace'); //alwaysReplace
-      this.mediaPlayer_.setTrackSwitchModeFor('video', 'neverReplace'); //alwaysReplace
+      this.mediaPlayer_.setTrackSwitchModeFor('audio', this.options_.trackSwitchMode); //alwaysReplace
+      this.mediaPlayer_.setTrackSwitchModeFor('video', this.options_.trackSwitchMode); //alwaysReplace
 
       this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
       this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
@@ -560,6 +560,12 @@ Dash.prototype.options_ = {
   },
   //Set to false to switch off adaptive bitrate switching.
   autoSwitch: true,
+  /*This method sets the current track switch mode. Available options are:
+   * MediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
+   * (used to forbid clearing the buffered data (prior to current playback position) after track switch. Default for video)
+   * MediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
+   * (used to clear the buffered data (prior to current playback position) after track switch. Default for audio)*/
+  trackSwitchMode: 'neverReplace', //alwaysReplace
   //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
   bolaEnabled: true,
   //Set to true if you would like dash.js to keep downloading fragments in the background
