@@ -34,9 +34,17 @@ class EasyBroadcast extends Dash {
       return this.el_.src
     }
 
-    this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, src, true)
-
-    super.src(src)
+    this.clearTimeout(this.loadEBTimeout)
+    if (!EasyBroadcast.ebLoaded) {
+      // Set the source when ready
+      this.loadEBTimeout = this.setTimeout(()=> {
+        super.src(src)
+      }, 2000)
+      return this.injectJs(src)
+    } else {
+      this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, src, true)
+      super.src(src)
+    }
 
   }
 
@@ -65,13 +73,36 @@ class EasyBroadcast extends Dash {
     super.onMetricChanged(e)
   }
 
-  afterMediaKeysReset (manifest) {
-    super.afterMediaKeysReset(manifest)
+  onReady () {
+    this.triggerReady()
   }
+
+  injectJs (src) {
+    let url = this.options_.ebLib
+    let t = 'script'
+    let d = document
+    let s = d.getElementsByTagName('head')[0] || d.documentElement
+    let js = d.createElement(t)
+    let cb = ::this.src
+    js.async = true
+    js.type = 'text/javascript'
+
+    js.onload = js.onreadystatechange = function () {
+      let rs = this.readyState;
+      if (!EasyBroadcast.ebLoaded && (!rs || /loaded|complete/.test(rs))) {
+        EasyBroadcast.ebLoaded = true
+        cb(src)
+      }
+    }
+    js.src = url
+    s.insertBefore(js, s.firstChild)
+  }
+
 
 }
 
 EasyBroadcast.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
+  ebLib: '//www.easybroadcast.fr/libs/65/EB.js&s2member_file_download_key=dbb00d0abec8ccb2295b7d2df5325f6b',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'
 })
@@ -115,6 +146,9 @@ EasyBroadcast.supportsNativeVideoTracks = Dash.supportsNativeVideoTracks
  */
 EasyBroadcast.supportsNativeAudioTracks = Dash.supportsNativeAudioTracks
 
+EasyBroadcast.loadEBTimeout = 0
+
+EasyBroadcast.ebLoaded = false
 
 videojs.options.easybroadcast = {}
 

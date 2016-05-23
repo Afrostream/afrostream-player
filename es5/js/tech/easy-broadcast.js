@@ -60,13 +60,23 @@ var EasyBroadcast = (function (_Dash) {
   _createClass(EasyBroadcast, [{
     key: 'src',
     value: function src(_src) {
+      var _this = this;
+
       if (!_src) {
         return this.el_.src;
       }
 
-      this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
-
-      _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
+      this.clearTimeout(this.loadEBTimeout);
+      if (!EasyBroadcast.ebLoaded) {
+        // Set the source when ready
+        this.loadEBTimeout = this.setTimeout(function () {
+          _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', _this).call(_this, _src);
+        }, 2000);
+        return this.injectJs(_src);
+      } else {
+        this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
+        _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
+      }
     }
   }, {
     key: 'getCribbedMetricsFor',
@@ -95,9 +105,31 @@ var EasyBroadcast = (function (_Dash) {
       _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'onMetricChanged', this).call(this, e);
     }
   }, {
-    key: 'afterMediaKeysReset',
-    value: function afterMediaKeysReset(manifest) {
-      _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'afterMediaKeysReset', this).call(this, manifest);
+    key: 'onReady',
+    value: function onReady() {
+      this.triggerReady();
+    }
+  }, {
+    key: 'injectJs',
+    value: function injectJs(src) {
+      var url = this.options_.ebLib;
+      var t = 'script';
+      var d = document;
+      var s = d.getElementsByTagName('head')[0] || d.documentElement;
+      var js = d.createElement(t);
+      var cb = this.src.bind(this);
+      js.async = true;
+      js.type = 'text/javascript';
+
+      js.onload = js.onreadystatechange = function () {
+        var rs = this.readyState;
+        if (!EasyBroadcast.ebLoaded && (!rs || /loaded|complete/.test(rs))) {
+          EasyBroadcast.ebLoaded = true;
+          cb(src);
+        }
+      };
+      js.src = url;
+      s.insertBefore(js, s.firstChild);
     }
   }]);
 
@@ -105,6 +137,7 @@ var EasyBroadcast = (function (_Dash) {
 })(_dash2['default']);
 
 EasyBroadcast.prototype.options_ = _videoJs2['default'].mergeOptions(_dash2['default'].prototype.options_, {
+  ebLib: '//www.easybroadcast.fr/libs/65/EB.js&s2member_file_download_key=dbb00d0abec8ccb2295b7d2df5325f6b',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'
 });
@@ -147,6 +180,10 @@ EasyBroadcast.supportsNativeVideoTracks = _dash2['default'].supportsNativeVideoT
  * @return {Boolean}
  */
 EasyBroadcast.supportsNativeAudioTracks = _dash2['default'].supportsNativeAudioTracks;
+
+EasyBroadcast.loadEBTimeout = 0;
+
+EasyBroadcast.ebLoaded = false;
 
 _videoJs2['default'].options.easybroadcast = {};
 

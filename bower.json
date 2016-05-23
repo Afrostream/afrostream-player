@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "Player afrostream",
   "main": [
     "dist/afrostream.player.js"
