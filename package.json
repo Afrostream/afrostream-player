@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "description": "Player afrostream",
   "main": "es5/js/afrostream.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "mkdirs": "mkdir -p dist dist-test es5",
     "prepublish": "npm run build",
     "prestart": "npm-run-all -p docs build",
-    "dev": "echo 'requiring node v4.2.4' && . ~/.nvm/nvm.sh && nvm use 4.2.4 && npm-run-all -p start watch",
+    "dev": "echo 'requiring node v4.4.4' && . ~/.nvm/nvm.sh && nvm use 4.4.4 && npm-run-all -p start watch",
     "start": "npm-run-all -p start:serve",
     "start:serve": "babel-node --optional es7.functionBind,es7.classProperties,es7.decorators  scripts/server.js",
     "pretest": "npm-run-all build:test",
@@ -117,7 +117,7 @@
     "karma-ie-launcher": "^0.2.0",
     "karma-qunit": "^0.1.0",
     "karma-safari-launcher": "^0.1.0",
-    "lodash-compat": "^3.10.0",
+    "lodash": "^4.13.1",
     "minimist": "^1.2.0",
     "node-sass": "^3.4.2",
     "node.extend": "^1.1.5",
@@ -143,6 +143,6 @@
   "peerDependencies": {},
   "private": true,
   "engines": {
-    "node": "4.2.4"
+    "node": "4.4.4"
   }
 }
