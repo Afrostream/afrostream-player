@@ -35,6 +35,8 @@ require('./tech/dashas');
 
 require('./tech/easy-broadcast');
 
+require('./tech/streamroot');
+
 require('./component/control-bar/');
 
 require('videojs-metrics');

@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "npm-run-all -p build:*",
-    "build:js": "npm-run-all mkdirs build:js:babel build:js:browserify build:js:bannerize build:js:uglify copy",
+    "build:js": "npm-run-all mkdirs build:js:babel build:js:browserify build:js:bannerize copy",
     "build:js:babel": "babel --optional es7.functionBind,es7.classProperties,es7.decorators src -d es5",
     "build:js:bannerize": "bannerize dist/afrostream-player.js --banner=scripts/banner.ejs",
     "build:js:browserify": "browserify . -s afrostream-player -o dist/afrostream-player.js",
@@ -130,6 +130,7 @@
     "serve-static": "^1.10.0",
     "sinon": "1.14.1",
     "smoothie": "^1.27.0",
+    "streamroot-dashjs-p2p-wrapper": "^1.2.4",
     "uglify-js": "^2.5.0",
     "video.js": "^5.9.2",
     "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.5",
