@@ -1,12 +1,12 @@
 'use strict';
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _video = require('video.js');
 
-var _videoJs = require('video.js');
+var _video2 = _interopRequireDefault(_video);
 
-var _videoJs2 = _interopRequireDefault(_videoJs);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Player = _videoJs2['default'].getComponent('Player');
+var Player = _video2.default.getComponent('Player');
 
 Player.prototype.audioTracks = function () {
   return this.tech_ && this.tech_.audioTracks();

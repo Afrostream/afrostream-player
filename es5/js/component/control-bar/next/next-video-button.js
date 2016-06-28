@@ -1,37 +1,35 @@
-/**
- * @file next-video-button.js
- */
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _video = require('video.js');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _videoJs = require('video.js');
-
-var _videoJs2 = _interopRequireDefault(_videoJs);
+var _video2 = _interopRequireDefault(_video);
 
 var _nextVideoItem = require('./next-video-item');
 
 var _nextVideoItem2 = _interopRequireDefault(_nextVideoItem);
 
-var _nextVideoBigButton = require('./next-video-big-button');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _nextVideoBigButton2 = _interopRequireDefault(_nextVideoBigButton);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Component = _videoJs2['default'].getComponent('Component');
-var ControlBar = _videoJs2['default'].getComponent('ControlBar');
-var MenuButton = _videoJs2['default'].getComponent('MenuButton');
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file next-video-button.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var ControlBar = _video2.default.getComponent('ControlBar');
+var MenuButton = _video2.default.getComponent('MenuButton');
 /**
  * The base class for buttons that toggle next video
  *
@@ -41,7 +39,7 @@ var MenuButton = _videoJs2['default'].getComponent('MenuButton');
  * @class NextVideoButton
  */
 
-var NextVideoButton = (function (_MenuButton) {
+var NextVideoButton = function (_MenuButton) {
   _inherits(NextVideoButton, _MenuButton);
 
   function NextVideoButton(player) {
@@ -49,7 +47,7 @@ var NextVideoButton = (function (_MenuButton) {
 
     _classCallCheck(this, NextVideoButton);
 
-    _get(Object.getPrototypeOf(NextVideoButton.prototype), 'constructor', this).call(this, player, options);
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(NextVideoButton).call(this, player, options));
   }
 
   /**
@@ -57,6 +55,7 @@ var NextVideoButton = (function (_MenuButton) {
    *
    * @method createItems
    */
+
 
   _createClass(NextVideoButton, [{
     key: 'createItems',
@@ -68,7 +67,7 @@ var NextVideoButton = (function (_MenuButton) {
         return items;
       }
 
-      var item = new _nextVideoItem2['default'](this.player_, {
+      var item = new _nextVideoItem2.default(this.player_, {
         label: 'Next',
         selectable: false,
         poster: this.options_.poster
@@ -84,6 +83,7 @@ var NextVideoButton = (function (_MenuButton) {
      * @return {String} The constructed class name
      * @method buildCSSClass
      */
+
   }, {
     key: 'buildCSSClass',
     value: function buildCSSClass() {
@@ -94,6 +94,7 @@ var NextVideoButton = (function (_MenuButton) {
      * Handle click on mute
      * @method handleClick
      */
+
   }, {
     key: 'handleClick',
     value: function handleClick() {
@@ -103,7 +104,7 @@ var NextVideoButton = (function (_MenuButton) {
   }]);
 
   return NextVideoButton;
-})(MenuButton);
+}(MenuButton);
 
 NextVideoButton.prototype.controlText_ = 'Next video';
 
@@ -111,5 +112,4 @@ NextVideoButton.prototype.controlText_ = 'Next video';
 ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 1, 0, 'nextVideoButton');
 
 Component.registerComponent('NextVideoButton', NextVideoButton);
-exports['default'] = NextVideoButton;
-module.exports = exports['default'];
+exports.default = NextVideoButton;

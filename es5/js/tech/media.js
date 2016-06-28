@@ -1,14 +1,14 @@
 'use strict';
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _video = require('video.js');
 
-var _videoJs = require('video.js');
+var _video2 = _interopRequireDefault(_video);
 
-var _videoJs2 = _interopRequireDefault(_videoJs);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var MediaTechController = _videoJs2['default'].getComponent('MediaTechController');
-var AudioTrack = _videoJs2['default'].getComponent('AudioTrack');
-var VideoTrack = _videoJs2['default'].getComponent('VideoTrack');
+var MediaTechController = _video2.default.getComponent('MediaTechController');
+var AudioTrack = _video2.default.getComponent('AudioTrack');
+var VideoTrack = _video2.default.getComponent('VideoTrack');
 
 MediaTechController.METRICS_DATA = {
   bandwidth: -1,
@@ -24,10 +24,10 @@ MediaTechController.METRICS_DATA = {
 };
 
 MediaTechController.prototype.metrics_ = {
-  video: _videoJs2['default'].mergeOptions({
+  video: _video2.default.mergeOptions({
     bandwidth: /*this.el().webkitVideoDecodedByteCount ||*/-1
   }, MediaTechController.METRICS_DATA),
-  audio: _videoJs2['default'].mergeOptions({
+  audio: _video2.default.mergeOptions({
     bandwidth: /*this.el().webkitAudioDecodedByteCount || */-1
   }, MediaTechController.METRICS_DATA),
   p2pweb: {

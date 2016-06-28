@@ -1,27 +1,61 @@
 'use strict';
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var _trackControlsCaptionTrackButton = require('./track-controls/caption-track-button');
+var _captionTrackButton = require('./track-controls/caption-track-button');
 
-var _trackControlsCaptionTrackButton2 = _interopRequireDefault(_trackControlsCaptionTrackButton);
+Object.defineProperty(exports, 'CaptionTrackButton', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_captionTrackButton).default;
+  }
+});
 
-var _trackControlsAudioTrackButton = require('./track-controls/audio-track-button');
+var _audioTrackButton = require('./track-controls/audio-track-button');
 
-var _trackControlsAudioTrackButton2 = _interopRequireDefault(_trackControlsAudioTrackButton);
+Object.defineProperty(exports, 'AudioTrackButton', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_audioTrackButton).default;
+  }
+});
 
-var _trackControlsVideoTrackButton = require('./track-controls/video-track-button');
+var _videoTrackButton = require('./track-controls/video-track-button');
 
-var _trackControlsVideoTrackButton2 = _interopRequireDefault(_trackControlsVideoTrackButton);
+Object.defineProperty(exports, 'VideoTrackButton', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_videoTrackButton).default;
+  }
+});
 
-var _nextNextVideoButton = require('./next/next-video-button');
+var _nextVideoButton = require('./next/next-video-button');
 
-var _nextNextVideoButton2 = _interopRequireDefault(_nextNextVideoButton);
+Object.defineProperty(exports, 'NextVideoButton', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_nextVideoButton).default;
+  }
+});
 
-var _progressControlLoadProgressSpinner = require('./progress-control/load-progress-spinner');
+var _loadProgressSpinner = require('./progress-control/load-progress-spinner');
 
-var _progressControlLoadProgressSpinner2 = _interopRequireDefault(_progressControlLoadProgressSpinner);
+Object.defineProperty(exports, 'LoadProgressSpinner', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_loadProgressSpinner).default;
+  }
+});
 
-var _progressControlMouseThumbnailDisplay = require('./progress-control/mouse-thumbnail-display');
+var _mouseThumbnailDisplay = require('./progress-control/mouse-thumbnail-display');
 
-var _progressControlMouseThumbnailDisplay2 = _interopRequireDefault(_progressControlMouseThumbnailDisplay);
+Object.defineProperty(exports, 'MouseThumbnailDisplay', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_mouseThumbnailDisplay).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

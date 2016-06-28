@@ -1,32 +1,34 @@
-/**
- * @file dashas.js
- * DASH Media Controller - Wrapper for Flash Media API
- */
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _video = require('video.js');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _videoJs = require('video.js');
-
-var _videoJs2 = _interopRequireDefault(_videoJs);
+var _video2 = _interopRequireDefault(_video);
 
 var _dashjs = require('dashjs');
 
-var Component = _videoJs2['default'].getComponent('Component');
-var Tech = _videoJs2['default'].getComponent('Tech');
-var Flash = _videoJs2['default'].getComponent('Flash');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file dashas.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * DASH Media Controller - Wrapper for Flash Media API
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var Tech = _video2.default.getComponent('Tech');
+var Flash = _video2.default.getComponent('Flash');
 
 /**
  * Dash Media Controller - Wrapper for HTML5 Media API
@@ -37,34 +39,38 @@ var Flash = _videoJs2['default'].getComponent('Flash');
  * @class Dash
  */
 
-var Dashas = (function (_Flash) {
+var Dashas = function (_Flash) {
   _inherits(Dashas, _Flash);
 
   function Dashas(options, ready) {
     _classCallCheck(this, Dashas);
 
-    _get(Object.getPrototypeOf(Dashas.prototype), 'constructor', this).call(this, options, ready);
     // Add global window functions that the swf expects
     // A 4.x workflow we weren't able to solve for in 5.0
     // because of the need to hard code these functions
     // into the swf for security reasons
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashas).call(this, options, ready));
+
     window.videojs = window.videojs || {};
     window.videojs.Dashas = window.videojs.Dashas || {};
     window.videojs.Dashas.onReady = Flash.onReady;
     window.videojs.Dashas.onEvent = Flash.onEvent;
     window.videojs.Dashas.onError = Flash.onError;
 
-    this.metricsInterval = this.setInterval(this.detectBandwithChange, 5000);
-    this.one('loadedmetadata', this.onInitialized.bind(this));
+    _this.metricsInterval = _this.setInterval(_this.detectBandwithChange, 5000);
+    _this.one('loadedmetadata', _this.onInitialized.bind(_this));
 
-    var tracks = this.audioTracks();
+    var tracks = _this.audioTracks();
 
-    var changeHandler = this.handleAudioTracksChange.bind(this);
+    var changeHandler = _this.handleAudioTracksChange.bind(_this);
 
     tracks.addEventListener('change', changeHandler);
-    this.on('dispose', function () {
+    _this.on('dispose', function () {
       tracks.removeEventListener('change', changeHandler);
     });
+
+    return _this;
   }
 
   /**
@@ -74,6 +80,7 @@ var Dashas = (function (_Flash) {
    * @method createEl
    */
 
+
   _createClass(Dashas, [{
     key: 'createEl',
     value: function createEl() {
@@ -81,7 +88,7 @@ var Dashas = (function (_Flash) {
       var serverUrl = Dashas.buildMetadataUrl(options);
       var customData = Dashas.buildOptData(options);
       // Merge default flashvars with ones passed in to init
-      options.flashVars = _videoJs2['default'].mergeOptions({
+      options.flashVars = _video2.default.mergeOptions({
         'metadataUrl': encodeURIComponent(serverUrl),
         'authenticationToken': encodeURIComponent(customData),
         'language': 'fr',
@@ -102,7 +109,7 @@ var Dashas = (function (_Flash) {
       if (!metrics) {
         return;
       }
-      this.metrics_ = _videoJs2['default'].mergeOptions(this.metrics_, metrics);
+      this.metrics_ = _video2.default.mergeOptions(this.metrics_, metrics);
 
       this.addAudioTracks();
     }
@@ -121,7 +128,7 @@ var Dashas = (function (_Flash) {
           try {
             this.el_.vjs_setProperty('forcedAudioLang', i);
           } catch (err) {
-            _videoJs2['default'].log(err);
+            _video2.default.log(err);
           }
         }
       }
@@ -151,7 +158,7 @@ var Dashas = (function (_Flash) {
     key: 'detectBandwithChange',
     value: function detectBandwithChange() {
       var metrics = this.getPlaybackStatistics();
-      var metricsChangeType = undefined;
+      var metricsChangeType = void 0;
       if (!metrics) {
         return;
       }
@@ -237,7 +244,7 @@ var Dashas = (function (_Flash) {
         bandwidth: K / 1000,
         bufferLength: z
       };
-      return _videoJs2['default'].mergeOptions(this.metrics_, { video: R, audio: N });
+      return _video2.default.mergeOptions(this.metrics_, { video: R, audio: N });
     }
   }, {
     key: 'src',
@@ -264,7 +271,7 @@ var Dashas = (function (_Flash) {
   }]);
 
   return Dashas;
-})(Flash);
+}(Flash);
 
 Dashas.extractAssetId = function (source) {
   var reg = /^(.*\/)?(?:$|(.+?)(?:(\.[^.]*$)|$))/;
@@ -397,7 +404,7 @@ Dashas.nativeSourceHandler.dispose = function () {};
 // Register the native source handler
 Dashas.registerSourceHandler(Dashas.nativeSourceHandler);
 
-_videoJs2['default'].options.dashas = {};
+_video2.default.options.dashas = {};
 
 Component.registerComponent('Dashas', Dashas);
 Tech.registerTech('Dashas', Dashas);
@@ -430,5 +437,4 @@ HTMLObjectElement.prototype.vjs_load = function () {};
  */
 HTMLObjectElement.prototype.vjs_src = function (src) {};
 
-exports['default'] = Dashas;
-module.exports = exports['default'];
+exports.default = Dashas;

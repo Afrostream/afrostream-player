@@ -5,7 +5,6 @@ import OffCaptionTrackMenuItem from './off-caption-track-menu-item';
 const Component = videojs.getComponent('Component');
 const ControlBar = videojs.getComponent('ControlBar');
 const CaptionsButton = videojs.getComponent('CaptionsButton');
-const TextTrackMenuItem = videojs.getComponent('TextTrackMenuItem');
 
 class CaptionTrackButton extends CaptionsButton {
   constructor (options, ready) {
