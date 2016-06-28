@@ -32,7 +32,7 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
   }
 
   handleComplete () {
-    const url = this.destroyLoader();
+    this.destroyLoader();
     if (videojs.hasClass(this.fallbackImg_, 'vjs-hidden')) {
       videojs.removeClass(this.fallbackImg_, 'vjs-hidden');
     }

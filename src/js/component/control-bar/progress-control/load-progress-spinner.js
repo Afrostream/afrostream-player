@@ -16,7 +16,7 @@ const LoadProgressBar = videojs.getComponent('LoadProgressBar');
  */
 class LoadProgressSpinner extends LoadProgressBar {
 
-  constructor(player, options) {
+  constructor (player, options) {
     super(player, options);
   }
 
@@ -26,7 +26,7 @@ class LoadProgressSpinner extends LoadProgressBar {
    * @return {Element}
    * @method createEl
    */
-  createEl() {
+  createEl () {
     let el = videojs.createEl('div', {
       className: 'vjs-load-progress-spinner',
       innerHTML: `<svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="${this.options_.rayon}" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg>`
@@ -48,12 +48,8 @@ class LoadProgressSpinner extends LoadProgressBar {
    *
    * @method update
    */
-  update() {
+  update () {
     let buffered = this.player_.buffered();
-    let duration = this.player_.duration();
-    let bufferedEnd = this.player_.bufferedEnd();
-    let children = this.el_.children;
-    let rayon = this.options_.rayon;
 
     // get the percent width of a time compared to the total end
     //let percentify = function (time, end) {
@@ -102,7 +98,7 @@ class LoadProgressSpinner extends LoadProgressBar {
     //}
   }
 
-  getFirstChild(el) {
+  getFirstChild (el) {
     let firstChild = el.firstChild;
     while (firstChild != null && firstChild.nodeType == 3) { // skip TextNodes
       firstChild = firstChild.nextSibling;

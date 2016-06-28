@@ -68,6 +68,7 @@
   var url;
   var bola;
   var captions;
+  var dashOpts;
 
   var qs = (function (a) {
     if (a == '') return {};
@@ -472,6 +473,31 @@
       }
     ]
   }
+
+  dashOpts = {
+    trackSwitchMode: 'neverReplace',
+    nativeCaptions: false,
+    nativeTextTracks: false,
+    autoSwitch: true,
+    bolaEnabled: bola,
+    scheduleWhilePaused: true,
+    initialBitrate: 400,
+    liveFragmentCount: 4,
+    buffer: {
+      bufferToKeep: 60,
+      minBufferTime: 16,
+      bufferPruningInterval: 30,
+      bandwidthSafetyFactor: 0.9,
+      bufferTimeAtTopQuality: 30,
+      bufferTimeAtTopQualityLongForm: 60,
+      longFormContentDurationThreshold: 600,
+      richBufferThreshold: 20,
+      abandonLoadTimeout: 4,
+      fragmentLoaderRetryAttempts: 3,
+      fragmentLoaderRetryInterval: 1000
+    }
+  }
+
   options = {
     controls: true,
     autoplay: true,
@@ -500,29 +526,12 @@
     dashas: {
       swf: './dashas.swf'
     },
-    dash: {
-      trackSwitchMode: 'neverReplace',
-      nativeCaptions: false,
-      nativeTextTracks: false,
-      autoSwitch: true,
-      bolaEnabled: bola,
-      scheduleWhilePaused: true,
-      initialBitrate: 400,
-      liveFragmentCount: 4,
-      buffer: {
-        bufferToKeep: 60,
-        minBufferTime: 16,
-        bufferPruningInterval: 30,
-        bandwidthSafetyFactor: 0.9,
-        bufferTimeAtTopQuality: 30,
-        bufferTimeAtTopQualityLongForm: 60,
-        longFormContentDurationThreshold: 600,
-        richBufferThreshold: 20,
-        abandonLoadTimeout: 4,
-        fragmentLoaderRetryAttempts: 3,
-        fragmentLoaderRetryInterval: 1000
+    dash: dashOpts,
+    streamroot: videojs.mergeOptions(dashOpts, {
+      p2pConfig: {
+        streamrootKey: 'a913c6b8-5037-4ed8-9c94-918f70c40320'
       }
-    },
+    }),
     chromecast: {},
     techOrder: techOrder
   };

@@ -11,7 +11,7 @@ class VideoTrackMenuItem extends MenuItem {
    * @static
    */
 
-  constructor(player, options) {
+  constructor (player, options) {
     let track = options['track'];
     let tracks = player.videoTracks();
 
@@ -38,8 +38,7 @@ class VideoTrackMenuItem extends MenuItem {
    *
    * @method handleClick
    */
-  handleClick(event) {
-    let kind = this.track['kind'];
+  handleClick (event) {
     let tracks = this.player_.videoTracks();
 
     super.handleClick(event);
@@ -57,7 +56,7 @@ class VideoTrackMenuItem extends MenuItem {
    *
    * @method handleTracksChange
    */
-  handleTracksChange() {
+  handleTracksChange () {
     this.selected(this.track['selected']);
   }
 }

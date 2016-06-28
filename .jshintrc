@@ -5,8 +5,10 @@
   "quotmark": "single",
   "trailing": true,
   "undef": true,
+  "unused": true,
   "predef": [
     "videojs",
+    "_dashjs",
     "module",
     "Dash",
     "UTF8",
