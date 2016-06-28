@@ -5,7 +5,7 @@
   "quotmark": "single",
   "trailing": true,
   "undef": true,
-  "unused": true,
+  "unused": false,
   "predef": [
     "videojs",
     "_dashjs",

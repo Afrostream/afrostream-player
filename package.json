@@ -10,7 +10,7 @@
     "build:js:babel": "babel src -d es5",
     "build:js:bannerize": "bannerize dist/afrostream-player.js --banner=scripts/banner.ejs",
     "build:js:browserify": "browserify . -s afrostream-player -o dist/afrostream-player.js",
-    "build:js:uglify": "uglifyjs dist/afrostream-player.js --comments --mangle --compress warnings=false -o  dist/afrostream-player.min.js",
+    "build:js:uglify": "uglifyjs dist/afrostream-player.js --comments --mangle --compress -o dist/afrostream-player.min.js",
     "copy:swf": "cp dashas.swf dist/",
     "copy:font": "cp -R src/fonts dist/fonts",
     "copy": "npm-run-all -p copy:*",
@@ -23,7 +23,7 @@
     "mkdirs": "mkdir -p dist dist-test es5",
     "prepublish": "npm run build",
     "prestart": "npm-run-all -p docs build",
-    "dev": "echo 'requiring node v4.4.4' && . ~/.nvm/nvm.sh && nvm use 4.4.4 && npm-run-all -p start watch",
+    "dev": "echo 'requiring node v4.4.5' && . ~/.nvm/nvm.sh && nvm use 4.4.5 && npm-run-all -p start watch",
     "start": "npm-run-all -p start:serve",
     "start:serve": "babel-node scripts/server.js",
     "pretest": "npm-run-all build:test",
@@ -117,7 +117,7 @@
     "karma-safari-launcher": "^0.1.0",
     "lodash": "^4.13.1",
     "minimist": "^1.2.0",
-    "node-sass": "^3.4.2",
+    "node-sass": "^3.8.0",
     "node.extend": "^1.1.5",
     "nodemon": "^1.9.1",
     "npm-run-all": "~1.2.0",
@@ -142,6 +142,6 @@
   "peerDependencies": {},
   "private": true,
   "engines": {
-    "node": "4.4.4"
+    "node": "4.4.5"
   }
 }
