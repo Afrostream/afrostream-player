@@ -170,13 +170,13 @@ class Dash extends Html5 {
     // this.streamInfo = streamInfo
     this.isDynamic(isDynamic)
     this.trigger(MediaPlayer.events.STREAM_INITIALIZED)
-    let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
+    //let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
     let audioDashTracks = this.mediaPlayer_.getTracksFor('audio')
     let videoDashTracks = this.mediaPlayer_.getTracksFor('video')
     let autoSwitch = this.mediaPlayer_.getAutoSwitchQuality()
 
     let defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio')
-    let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video')
+    //let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video')
     let initialVideoBitrate = this.mediaPlayer_.getInitialBitrateFor('video')
 
     let i
@@ -213,11 +213,6 @@ class Dash extends Html5 {
     var metrics = this.getCribbedMetricsFor(e.mediaType)
     if (metrics) {
       this.metrics_[e.mediaType] = videojs.mergeOptions(this.metrics_[e.mediaType], metrics)
-      //this.trigger(videojs.obj.copy(e))
-      var metricsChangeEvent = {
-        type: MediaPlayer.events.METRIC_CHANGED,
-        mediaType: e.mediaType
-      }
       this.trigger(e)
     }
   }
@@ -234,7 +229,6 @@ class Dash extends Html5 {
       pendingValue,
       numBitratesValue,
       bufferLengthValue = 0,
-      point,
       movingLatency = {},
       movingDownload = {},
       movingRatio = {},
@@ -632,16 +626,16 @@ Dash.nativeSourceHandler.canPlayType = function (type) {
 
   const dashTypeRE = /^application\/dash\+xml/i
   const dashExtRE = /\.mpd/i
-
+  let canPlay = ''
   if (dashTypeRE.test(type)) {
-    return 'probably'
+    canPlay = 'probably'
   } else if (dashExtRE.test(type)) {
-    return 'maybe'
+    canPlay = 'maybe'
   } else {
-    return ''
+    canPlay = ''
   }
 
-  return ''
+  return canPlay
 
 }
 

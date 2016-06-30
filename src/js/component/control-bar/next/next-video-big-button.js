@@ -1,10 +1,10 @@
 /**
  * @file next-video-big-button.js
  */
-import videojs from 'video.js';
-
-const Component = videojs.getComponent('Component');
-const ClickableComponent = videojs.getComponent('ClickableComponent');
+import videojs from 'video.js'
+import './next-video-big-button'
+const Component = videojs.getComponent('Component')
+const ClickableComponent = videojs.getComponent('ClickableComponent')
 
 /**
  * The base class for buttons that toggle next video
@@ -18,10 +18,10 @@ class NextVideoBigButton extends ClickableComponent {
 
   constructor (player, options) {
     let nextOpts = player.options_.controlBar && player.options_.controlBar.nextVideoButton ? player.options_.controlBar.nextVideoButton : {}
-    options = videojs.mergeOptions(options, nextOpts);
-    super(player, options);
+    options = videojs.mergeOptions(options, nextOpts)
+    super(player, options)
     if (!options.poster) {
-      this.hide();
+      this.hide()
     }
   }
 
@@ -37,9 +37,9 @@ class NextVideoBigButton extends ClickableComponent {
     let el = super.createEl('div', {
       className: 'vjs-next-video-big-button',
       tabIndex: -1,
-    }, attrs);
+    }, attrs)
 
-    return el;
+    return el
   }
 
   /**
@@ -47,24 +47,24 @@ class NextVideoBigButton extends ClickableComponent {
    * @method handleClick
    */
   handleClick () {
-    super.handleClick();
-    this.player_.trigger('next');
+    super.handleClick()
+    this.player_.trigger('next')
   }
 
 }
 
 NextVideoBigButton.prototype.options_ = {
   selectable: false
-};
+}
 
-NextVideoBigButton.prototype.controlText_ = 'Next';
+NextVideoBigButton.prototype.controlText_ = 'Next'
 
-Component.registerComponent('NextVideoBigButton', NextVideoBigButton);
+Component.registerComponent('NextVideoBigButton', NextVideoBigButton)
 
 /**
  * Inject Next button in core player
  * @type {{}}
  */
-videojs.options.children.push('nextVideoBigButton');
+videojs.options.children.push('nextVideoBigButton')
 
-export default NextVideoBigButton;
+export default NextVideoBigButton
