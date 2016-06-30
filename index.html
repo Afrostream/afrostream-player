@@ -53,8 +53,7 @@
   </td>
 </div>
 </div>
-<!--<script src="/node_modules/video.js/dist/video.js"></script>-->
-<script src="/libs/video.js"></script>
+<script src="/node_modules/video.js/dist/video.js"></script>
 <script> window.dashjs = {skipAutoCreate: true}; </script>
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
 <script src="/node_modules/smoothie/smoothie.js"></script>
@@ -339,28 +338,28 @@
       //YOUTUBE
 //      {"type": "video/youtube", "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"}
     //BASE AFROSTREAM ALL
-    {
-      "src": "https://hw.cdn.afrostream.net/vod/6207276-JOSEPHINEBAKER-PART1-4X3-133-25-EN_RID1663875_PN178503-cut/5df9fae9becaeb60.ism/master.m3u8",
-      "type": "application/vnd.apple.mpegurl"
-    },
-    {
-      "src": "https://hw.cdn.afrostream.net/vod/POETICJUSTICE_178_25_ProRes422_FRA_ENG_HD_STEREO/0a368cf6cc03e0fd.ism/0a368cf6cc03e0fd.mpd",
-      "type": "application/dash+xml"
-    },
-    {
-      "src": "https://hw.cdn.afrostream.net/vod/6207276-JOSEPHINEBAKER-PART1-4X3-133-25-EN_RID1663875_PN178503-cut/5df9fae9becaeb60.ism/MANIFEST",
-      "type": "application/vnd.ms-sstr+xml"
-    }
+//    {
+//      "src": "https://hw.cdn.afrostream.net/vod/6207276-JOSEPHINEBAKER-PART1-4X3-133-25-EN_RID1663875_PN178503-cut/5df9fae9becaeb60.ism/master.m3u8",
+//      "type": "application/vnd.apple.mpegurl"
+//    },
+//    {
+//      "src": "https://hw.cdn.afrostream.net/vod/POETICJUSTICE_178_25_ProRes422_FRA_ENG_HD_STEREO/0a368cf6cc03e0fd.ism/0a368cf6cc03e0fd.mpd",
+//      "type": "application/dash+xml"
+//    },
+//    {
+//      "src": "https://hw.cdn.afrostream.net/vod/6207276-JOSEPHINEBAKER-PART1-4X3-133-25-EN_RID1663875_PN178503-cut/5df9fae9becaeb60.ism/MANIFEST",
+//      "type": "application/vnd.ms-sstr+xml"
+//    }
     //BLACK ACTRESS
 //    {
 //      src: "https://hw.cdn.afrostream.net/vod/BlackActress_ep101/3eb142bad921d01d.ism/3eb142bad921d01d.mpd",
 //      type: "application/dash+xml"
 //    }
     //WWWEST
-//    {
-//      src: "https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd",
-//      type: "application/dash+xml"
-//    }
+    {
+      src: "https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd",
+      type: "application/dash+xml"
+    }
     //24HOURLOVE
 //    {
 //      src: "https://hw.cdn.afrostream.net/vod/24hourlovebis/d4eed726882a4be3.ism/d4eed726882a4be3.mpd",
@@ -503,6 +502,7 @@
     autoplay: true,
     sources: sources,
     muted: muted,
+    starttime: 700,
     aspectRatio: '16:9',
     controlBar: {
       volumeMenuButton: {

@@ -491,9 +491,8 @@ var Dash = (function (_Html5) {
         if (track['enabled']) {
           var audioDashTrack = audioDashTracks[i];
           if (track['language'] == audioDashTrack['lang']) {
-            audioDashTracks['enabled'] = true;
             try {
-              this.mediaPlayer_.setCurrentTrack(audioDashTracks[i]);
+              this.mediaPlayer_.setCurrentTrack(audioDashTrack);
             } catch (err) {
               _videoJs2['default'].log(err);
             }

@@ -448,9 +448,8 @@ class Dash extends Html5 {
       if (track['enabled']) {
         let audioDashTrack = audioDashTracks[i]
         if (track['language'] == audioDashTrack['lang']) {
-          audioDashTracks['enabled'] = true
           try {
-            this.mediaPlayer_.setCurrentTrack(audioDashTracks[i])
+            this.mediaPlayer_.setCurrentTrack(audioDashTrack)
           } catch (err) {
             videojs.log(err)
           }

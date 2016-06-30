@@ -20,7 +20,7 @@ const MenuItem = videojs.getComponent('MenuItem');
  */
 class AudioTrackButton extends MenuButton {
 
-  constructor(player, options) {
+  constructor (player, options) {
     super(player, options);
 
     let tracks = this.player_.audioTracks();
@@ -45,12 +45,12 @@ class AudioTrackButton extends MenuButton {
    * @return {String} The constructed class name
    * @method buildCSSClass
    */
-  buildCSSClass() {
+  buildCSSClass () {
     return `vjs-audio-button ${super.buildCSSClass()}`;
   }
 
   // Create a menu item for each text track
-  createItems() {
+  createItems () {
     let items = [];
     items.push(new MenuItem(this.player_, {
       label: this.controlText_,
@@ -91,7 +91,7 @@ AudioTrackButton.prototype.kind_ = 'audio';
 AudioTrackButton.prototype.controlText_ = 'Audio Selection';
 
 //Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(12, 0, 'audioTrackButton');
+//ControlBar.prototype.options_.children.splice(12, 0, 'audioTrackButton');
 
 Component.registerComponent('AudioTrackButton', AudioTrackButton);
 export default AudioTrackButton;

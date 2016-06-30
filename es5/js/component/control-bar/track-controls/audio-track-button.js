@@ -125,7 +125,7 @@ AudioTrackButton.prototype.kind_ = 'audio';
 AudioTrackButton.prototype.controlText_ = 'Audio Selection';
 
 //Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(12, 0, 'audioTrackButton');
+//ControlBar.prototype.options_.children.splice(12, 0, 'audioTrackButton');
 
 Component.registerComponent('AudioTrackButton', AudioTrackButton);
 exports['default'] = AudioTrackButton;
