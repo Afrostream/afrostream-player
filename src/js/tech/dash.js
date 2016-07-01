@@ -20,7 +20,6 @@ const Html5 = videojs.getComponent('Html5')
 class Dash extends Html5 {
   constructor (options, ready) {
     super(options, ready)
-
     let tTracks = this.textTracks()
 
     if (tTracks) {
@@ -96,8 +95,8 @@ class Dash extends Html5 {
     if (!src) {
       return this.el_.src
     }
+    this.trigger('loadstart')
 
-    this.isReady_ = false
     this.featuresNativeTextTracks = Dash.supportsNativeTextTracks()
     this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks()
     this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks()
@@ -123,8 +122,8 @@ class Dash extends Html5 {
       this.mediaPlayer_.setAutoPlay(false)
     }
 
-    this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings)
-    this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings)
+    this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings.audio)
+    this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings.video)
     this.mediaPlayer_.setTrackSwitchModeFor('audio', this.options_.trackSwitchMode)//alwaysReplace
     this.mediaPlayer_.setTrackSwitchModeFor('video', this.options_.trackSwitchMode)//alwaysReplace
 
@@ -150,12 +149,10 @@ class Dash extends Html5 {
     // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
     //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video})
 
-    this.player_.trigger('loadstart')
+
     this.mediaPlayer_.attachView(this.el_)
     this.mediaPlayer_.setProtectionData(this.keySystemOptions_)
     this.mediaPlayer_.attachSource(src)
-
-    this.triggerReady()
   }
 
   onInitialized ({streamInfo :{manifestInfo:{isDynamic = false}}}, err) {
@@ -185,7 +182,7 @@ class Dash extends Html5 {
       let track = audioDashTracks[i]
       track.label = track.label || track.lang
       let plTrack = this.addAudioTrack('main', track.label, track.lang)
-      plTrack.enabled = plTrack['language'] === ((defaultAudio && this.options_.inititalMediaSettings.lang === defaultAudio.lang && defaultAudio.lang) || this.options_.inititalMediaSettings.lang)
+      plTrack.enabled = plTrack['language'] === ((defaultAudio && this.options_.inititalMediaSettings.text.lang === defaultAudio.lang && defaultAudio.lang) || this.options_.inititalMediaSettings.text.lang)
     }
 
     for (i = 0; i < videoDashTracks.length; i++) {
@@ -201,7 +198,7 @@ class Dash extends Html5 {
 
   }
 
-  onProgress (e) {
+  onProgress () {
     this.trigger('progress')
   }
 
@@ -392,7 +389,7 @@ class Dash extends Html5 {
         track = tracks[i]
         track.label = track.label || track.lang
         plTrack = plTracks[i]
-        track.defaultTrack = track.lang === 'fra' || track.lang === 'fr'
+        track.defaultTrack = track.lang === this.options_.inititalMediaSettings.lang
         if (track.defaultTrack) {
           this.mediaPlayer_.setTextTrack(i)
           if (plTrack) {
@@ -498,7 +495,15 @@ Dash.prototype.isDynamic_ = false
 
 Dash.prototype.options_ = {
   inititalMediaSettings: {
-    lang: 'fr'
+    text: {
+      lang: 'fra'
+    },
+    audio: {
+      lang: 'fra'
+    },
+    video: {
+      lang: 'fra'
+    }
   },
   //Set to false to switch off adaptive bitrate switching.
   autoSwitch: true,

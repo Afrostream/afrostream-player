@@ -86,6 +86,14 @@ var Dash = function (_Html) {
       })();
     }
 
+    if (options.startTime) {
+      _this.ready(function () {
+        this.load();
+        this.play();
+        this.currentTime(options.startTime);
+      }, true);
+    }
+
     return _this;
   }
 
@@ -192,6 +200,7 @@ var Dash = function (_Html) {
 
       this.player_.trigger('loadstart');
       this.mediaPlayer_.attachView(this.el_);
+      this.mediaPlayer_.setAutoPlay(false);
       this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
       this.mediaPlayer_.attachSource(_src);
 
@@ -686,12 +695,12 @@ Dash.nativeSourceHandler.canPlayType = function (type) {
   if (dashTypeRE.test(type)) {
     canPlay = 'probably';
   } else if (dashExtRE.test(type)) {
-    canPlay = 'maybe';
+    return 'maybe';
   } else {
-    canPlay = '';
+    return '';
   }
 
-  return canPlay;
+  return '';
 };
 
 /*
