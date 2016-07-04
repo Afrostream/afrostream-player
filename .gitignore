@@ -5,5 +5,4 @@ node_modules/
 demo/libs/
 /bower_components
 *~
-/dist/
 /dist-test/
