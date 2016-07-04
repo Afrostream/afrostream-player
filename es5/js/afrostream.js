@@ -60,6 +60,7 @@ var Afrostream = function (_Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Afrostream).call(this, player, options, ready));
 
     player.one('loadstart', _this.onLoadStart.bind(_this));
+    player.one('firstplay', _this.onFirstPlay.bind(_this));
     player.getPlaybackStatistics = _this.getPlaybackStatistics.bind(_this);
     player.one('fullscreenchange', _this.onFullScreenChange.bind(_this));
     return _this;
@@ -93,6 +94,13 @@ var Afrostream = function (_Component) {
     key: 'onLoadStart',
     value: function onLoadStart() {
       this.addMediaPlayerHandlers();
+    }
+  }, {
+    key: 'onFirstPlay',
+    value: function onFirstPlay() {
+      if (this.player_.options_.starttime) {
+        this.player_.currentTime(this.player_.options_.starttime);
+      }
     }
   }, {
     key: 'addMediaPlayerHandlers',

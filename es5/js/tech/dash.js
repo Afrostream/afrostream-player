@@ -86,14 +86,6 @@ var Dash = function (_Html) {
       })();
     }
 
-    if (options.startTime) {
-      _this.ready(function () {
-        this.load();
-        this.play();
-        this.currentTime(options.startTime);
-      }, true);
-    }
-
     return _this;
   }
 
@@ -144,8 +136,8 @@ var Dash = function (_Html) {
       if (!_src) {
         return this.el_.src;
       }
+      this.trigger('loadstart');
 
-      this.isReady_ = false;
       this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
       this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks();
       this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks();
@@ -171,8 +163,8 @@ var Dash = function (_Html) {
         this.mediaPlayer_.setAutoPlay(false);
       }
 
-      this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
-      this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
+      this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings.audio);
+      this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings.video);
       this.mediaPlayer_.setTrackSwitchModeFor('audio', this.options_.trackSwitchMode); //alwaysReplace
       this.mediaPlayer_.setTrackSwitchModeFor('video', this.options_.trackSwitchMode); //alwaysReplace
 
@@ -198,13 +190,9 @@ var Dash = function (_Html) {
       // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
       //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video})
 
-      this.player_.trigger('loadstart');
       this.mediaPlayer_.attachView(this.el_);
-      this.mediaPlayer_.setAutoPlay(false);
       this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
       this.mediaPlayer_.attachSource(_src);
-
-      this.triggerReady();
     }
   }, {
     key: 'onInitialized',
@@ -238,7 +226,7 @@ var Dash = function (_Html) {
         var track = audioDashTracks[i];
         track.label = track.label || track.lang;
         var plTrack = this.addAudioTrack('main', track.label, track.lang);
-        plTrack.enabled = plTrack['language'] === (defaultAudio && this.options_.inititalMediaSettings.lang === defaultAudio.lang && defaultAudio.lang || this.options_.inititalMediaSettings.lang);
+        plTrack.enabled = plTrack['language'] === (defaultAudio && defaultAudio.lang.indexOf(this.options_.inititalMediaSettings.audio.lang) && defaultAudio.lang || this.options_.inititalMediaSettings.audio.lang);
       }
 
       for (i = 0; i < videoDashTracks.length; i++) {
@@ -254,7 +242,7 @@ var Dash = function (_Html) {
     }
   }, {
     key: 'onProgress',
-    value: function onProgress(e) {
+    value: function onProgress() {
       this.trigger('progress');
     }
   }, {
@@ -445,7 +433,7 @@ var Dash = function (_Html) {
           track = tracks[i];
           track.label = track.label || track.lang;
           plTrack = plTracks[i];
-          track.defaultTrack = track.lang === 'fra' || track.lang === 'fr';
+          track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
           if (track.defaultTrack) {
             this.mediaPlayer_.setTextTrack(i);
             if (plTrack) {
@@ -563,7 +551,15 @@ Dash.prototype.isDynamic_ = false;
 
 Dash.prototype.options_ = {
   inititalMediaSettings: {
-    lang: 'fr'
+    text: {
+      lang: 'fra'
+    },
+    audio: {
+      lang: 'fra'
+    },
+    video: {
+      lang: 'fra'
+    }
   },
   //Set to false to switch off adaptive bitrate switching.
   autoSwitch: true,
@@ -695,12 +691,12 @@ Dash.nativeSourceHandler.canPlayType = function (type) {
   if (dashTypeRE.test(type)) {
     canPlay = 'probably';
   } else if (dashExtRE.test(type)) {
-    return 'maybe';
+    canPlay = 'maybe';
   } else {
-    return '';
+    canPlay = '';
   }
 
-  return '';
+  return canPlay;
 };
 
 /*
