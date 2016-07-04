@@ -1,26 +1,16 @@
-/**
- * @file streamroot.js
- * STREAMROOT P2P Media Controller - Wrapper for DASH Media API
- */
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _video = require('video.js');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _videoJs = require('video.js');
-
-var _videoJs2 = _interopRequireDefault(_videoJs);
+var _video2 = _interopRequireDefault(_video);
 
 var _dash = require('./dash');
 
@@ -32,8 +22,20 @@ var _streamrootDashjsP2pWrapper2 = _interopRequireDefault(_streamrootDashjsP2pWr
 
 var _dashjs = require('dashjs');
 
-var Component = _videoJs2['default'].getComponent('Component');
-var Tech = _videoJs2['default'].getComponent('Tech');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file streamroot.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * STREAMROOT P2P Media Controller - Wrapper for DASH Media API
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var Tech = _video2.default.getComponent('Tech');
 
 /**
  * Dash Media Controller - Wrapper for HTML5 Media API
@@ -44,13 +46,13 @@ var Tech = _videoJs2['default'].getComponent('Tech');
  * @class EasyBroadcast
  */
 
-var Streamroot = (function (_Dash) {
+var Streamroot = function (_Dash) {
   _inherits(Streamroot, _Dash);
 
   function Streamroot(options, ready) {
     _classCallCheck(this, Streamroot);
 
-    _get(Object.getPrototypeOf(Streamroot.prototype), 'constructor', this).call(this, options, ready);
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(Streamroot).call(this, options, ready));
   }
 
   /**
@@ -60,6 +62,7 @@ var Streamroot = (function (_Dash) {
    * @method setSrc
    */
 
+
   _createClass(Streamroot, [{
     key: 'src',
     value: function src(_src) {
@@ -68,7 +71,7 @@ var Streamroot = (function (_Dash) {
       }
       // But make a fresh MediaPlayer each time the sourceHandler is used
       this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-      this.dashjsWrapper_ = new _streamrootDashjsP2pWrapper2['default'](this.mediaPlayer_, this.options_.p2pConfig, 30);
+      this.dashjsWrapper_ = new _streamrootDashjsP2pWrapper2.default(this.mediaPlayer_, this.options_.p2pConfig, 30);
       // Apply any options that are set
       this.mediaPlayer_.initialize();
       this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
@@ -96,16 +99,16 @@ var Streamroot = (function (_Dash) {
       var metricsKey = 'p2p';
       var metrics = this.getCribbedMetricsFor(metricsKey);
       if (metrics) {
-        this.metrics_[metricsKey] = _videoJs2['default'].mergeOptions(this.metrics_[metricsKey], metrics);
+        this.metrics_[metricsKey] = _video2.default.mergeOptions(this.metrics_[metricsKey], metrics);
       }
       _get(Object.getPrototypeOf(Streamroot.prototype), 'onMetricChanged', this).call(this, e);
     }
   }]);
 
   return Streamroot;
-})(_dash2['default']);
+}(_dash2.default);
 
-Streamroot.prototype.options_ = _videoJs2['default'].mergeOptions(_dash2['default'].prototype.options_, {
+Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
   p2pConfig: {
     streamrootKey: 'none',
     debug: true
@@ -116,15 +119,14 @@ Streamroot.prototype.options_ = _videoJs2['default'].mergeOptions(_dash2['defaul
 /* Streamroot Support Testing -------------------------------------------------------- */
 
 Streamroot.isSupported = function () {
-  return _dash2['default'].isSupported();
+  return _dash2.default.isSupported();
 };
 
 // Add Source Handler pattern functions to this tech
 Tech.withSourceHandlers(Streamroot);
 
-_videoJs2['default'].options.streamroot = {};
+_video2.default.options.streamroot = {};
 
 Component.registerComponent('Streamroot', Streamroot);
 Tech.registerTech('Streamroot', Streamroot);
-exports['default'] = Streamroot;
-module.exports = exports['default'];
+exports.default = Streamroot;

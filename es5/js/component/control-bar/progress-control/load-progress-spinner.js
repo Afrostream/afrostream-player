@@ -1,28 +1,28 @@
-/**
- * @file load-progress-spinner.js
- */
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _video = require('video.js');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _video2 = _interopRequireDefault(_video);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _videoJs = require('video.js');
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _videoJs2 = _interopRequireDefault(_videoJs);
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file load-progress-spinner.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
-var Component = _videoJs2['default'].getComponent('Component');
-var LoadProgressBar = _videoJs2['default'].getComponent('LoadProgressBar');
+
+var Component = _video2.default.getComponent('Component');
+var LoadProgressBar = _video2.default.getComponent('LoadProgressBar');
 
 /**
  * Shows load progress
@@ -33,13 +33,13 @@ var LoadProgressBar = _videoJs2['default'].getComponent('LoadProgressBar');
  * @class LoadProgressSpinner
  */
 
-var LoadProgressSpinner = (function (_LoadProgressBar) {
+var LoadProgressSpinner = function (_LoadProgressBar) {
   _inherits(LoadProgressSpinner, _LoadProgressBar);
 
   function LoadProgressSpinner(player, options) {
     _classCallCheck(this, LoadProgressSpinner);
 
-    _get(Object.getPrototypeOf(LoadProgressSpinner.prototype), 'constructor', this).call(this, player, options);
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(LoadProgressSpinner).call(this, player, options));
   }
 
   /**
@@ -49,15 +49,16 @@ var LoadProgressSpinner = (function (_LoadProgressBar) {
    * @method createEl
    */
 
+
   _createClass(LoadProgressSpinner, [{
     key: 'createEl',
     value: function createEl() {
-      var el = _videoJs2['default'].createEl('div', {
+      var el = _video2.default.createEl('div', {
         className: 'vjs-load-progress-spinner',
         innerHTML: '<svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="' + this.options_.rayon + '" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg>'
       });
 
-      this.circle = _videoJs2['default'].createEl('svg', {
+      this.circle = _video2.default.createEl('svg', {
         className: 'circular',
         innerHTML: '<circle class="path" cx="50" cy="50" r="' + this.options_.rayon + '" fill="none" stroke-width="2" stroke-miterlimit="10"/>'
       }, {
@@ -73,14 +74,11 @@ var LoadProgressSpinner = (function (_LoadProgressBar) {
      *
      * @method update
      */
+
   }, {
     key: 'update',
     value: function update() {
       var buffered = this.player_.buffered();
-      var duration = this.player_.duration();
-      var bufferedEnd = this.player_.bufferedEnd();
-      var children = this.el_.children;
-      var rayon = this.options_.rayon;
 
       // get the percent width of a time compared to the total end
       //let percentify = function (time, end) {
@@ -141,7 +139,7 @@ var LoadProgressSpinner = (function (_LoadProgressBar) {
   }]);
 
   return LoadProgressSpinner;
-})(LoadProgressBar);
+}(LoadProgressBar);
 
 LoadProgressSpinner.prototype.options_ = {
   rayon: 20
@@ -150,7 +148,6 @@ LoadProgressSpinner.prototype.options_ = {
 Component.registerComponent('LoadProgressSpinner', LoadProgressSpinner);
 
 //Replace videojs CaptionButton child with this one
-_videoJs2['default'].options.children.splice(3, 1, 'loadProgressSpinner');
+_video2.default.options.children.splice(3, 1, 'loadProgressSpinner');
 
-exports['default'] = LoadProgressSpinner;
-module.exports = exports['default'];
+exports.default = LoadProgressSpinner;

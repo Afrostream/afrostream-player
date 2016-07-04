@@ -4,7 +4,7 @@ const Component = videojs.getComponent('Component');
 const MenuItem = videojs.getComponent('MenuItem');
 
 class AudioTrackMenuItem extends MenuItem {
-  constructor(player, options) {
+  constructor (player, options) {
     let track = options['track'];
     let tracks = player.audioTracks();
 
@@ -31,8 +31,7 @@ class AudioTrackMenuItem extends MenuItem {
    *
    * @method handleClick
    */
-  handleClick(event) {
-    let kind = this.track['kind'];
+  handleClick (event) {
     let tracks = this.player_.audioTracks();
 
     super.handleClick(event);
@@ -50,7 +49,7 @@ class AudioTrackMenuItem extends MenuItem {
    *
    * @method handleTracksChange
    */
-  handleTracksChange() {
+  handleTracksChange () {
     this.selected(this.track['enabled']);
   }
 }

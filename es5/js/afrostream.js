@@ -1,29 +1,14 @@
-/**
- * ! afrostrream-player - v2.0.0 - 2016-02-15
- * Copyright (c) 2015 benjipott
- * Licensed under the Apache-2.0 license.
- * @file afrostream.js
- **/
-
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _video = require('video.js');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _videoJs = require('video.js');
-
-var _videoJs2 = _interopRequireDefault(_videoJs);
+var _video2 = _interopRequireDefault(_video);
 
 var _dashjs = require('dashjs');
 
@@ -45,24 +30,40 @@ require('videojs-chromecast');
 
 require('videojs-youtube');
 
-var Component = _videoJs2['default'].getComponent('Component');
-var ControlBar = _videoJs2['default'].getComponent('ControlBar');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * ! afrostrream-player - v2.0.0 - 2016-02-15
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 benjipott
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Licensed under the Apache-2.0 license.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file afrostream.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                **/
+
+var Component = _video2.default.getComponent('Component');
+var ControlBar = _video2.default.getComponent('ControlBar');
 
 /**
  * Initialize the plugin.
  * @param options (optional) {object} configuration for the plugin
  */
 
-var Afrostream = (function (_Component) {
+var Afrostream = function (_Component) {
   _inherits(Afrostream, _Component);
 
   function Afrostream(player, options, ready) {
     _classCallCheck(this, Afrostream);
 
-    _get(Object.getPrototypeOf(Afrostream.prototype), 'constructor', this).call(this, player, options, ready);
-    player.one('loadstart', this.onLoadStart.bind(this));
-    player.getPlaybackStatistics = this.getPlaybackStatistics.bind(this);
-    player.one('fullscreenchange', this.onFullScreenChange.bind(this));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Afrostream).call(this, player, options, ready));
+
+    player.one('loadstart', _this.onLoadStart.bind(_this));
+    player.one('firstplay', _this.onFirstPlay.bind(_this));
+    player.getPlaybackStatistics = _this.getPlaybackStatistics.bind(_this);
+    player.one('fullscreenchange', _this.onFullScreenChange.bind(_this));
+    return _this;
   }
 
   _createClass(Afrostream, [{
@@ -86,13 +87,20 @@ var Afrostream = (function (_Component) {
           screen.orientation.unlock();
         }
       } catch (e) {
-        _videoJs2['default'].log(e);
+        _video2.default.log(e);
       }
     }
   }, {
     key: 'onLoadStart',
     value: function onLoadStart() {
       this.addMediaPlayerHandlers();
+    }
+  }, {
+    key: 'onFirstPlay',
+    value: function onFirstPlay() {
+      if (this.player_.options_.starttime) {
+        this.player_.currentTime(this.player_.options_.starttime);
+      }
     }
   }, {
     key: 'addMediaPlayerHandlers',
@@ -169,7 +177,7 @@ var Afrostream = (function (_Component) {
   }]);
 
   return Afrostream;
-})(Component);
+}(Component);
 
 Afrostream.prototype.options_ = {};
 
@@ -185,10 +193,9 @@ Afrostream.prototype.tech_ = null;
  * add afrostream to videojs childs
  * @type {{}}
  */
-_videoJs2['default'].options.children.push('afrostream');
+_video2.default.options.children.push('afrostream');
 
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
 
 Component.registerComponent('Afrostream', Afrostream);
-exports['default'] = Afrostream;
-module.exports = exports['default'];
+exports.default = Afrostream;
