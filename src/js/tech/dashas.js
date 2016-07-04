@@ -3,7 +3,7 @@
  * DASH Media Controller - Wrapper for Flash Media API
  */
 import videojs from 'video.js';
-import {MediaPlayer} from 'dashjs';
+import { MediaPlayer } from 'dashjs';
 
 const Component = videojs.getComponent('Component');
 const Tech = videojs.getComponent('Tech');
@@ -18,7 +18,7 @@ const Flash = videojs.getComponent('Flash');
  * @class Dash
  */
 class Dashas extends Flash {
-  constructor(options, ready) {
+  constructor (options, ready) {
     super(options, ready);
     // Add global window functions that the swf expects
     // A 4.x workflow we weren't able to solve for in 5.0
@@ -50,7 +50,7 @@ class Dashas extends Flash {
    * @return {Element}
    * @method createEl
    */
-  createEl() {
+  createEl () {
     let options = this.options_;
     var serverUrl = Dashas.buildMetadataUrl(options);
     var customData = Dashas.buildOptData(options);
@@ -70,7 +70,7 @@ class Dashas extends Flash {
     return super.createEl();
   }
 
-  onInitialized() {
+  onInitialized () {
     const metrics = this.getPlaybackStatistics();
     if (!metrics) {
       return;
@@ -80,7 +80,7 @@ class Dashas extends Flash {
     this.addAudioTracks();
   }
 
-  handleAudioTracksChange() {
+  handleAudioTracksChange () {
     const tracks = this.audioTracks();
 
     if (!tracks) {
@@ -99,7 +99,7 @@ class Dashas extends Flash {
     }
   }
 
-  addAudioTracks() {
+  addAudioTracks () {
     const tracks = this.el_.vjs_getProperty('audioTracks');
 
     if (!tracks) {
@@ -120,7 +120,7 @@ class Dashas extends Flash {
 
   }
 
-  detectBandwithChange() {
+  detectBandwithChange () {
     let metrics = this.getPlaybackStatistics();
     let metricsChangeType;
     if (!metrics) {
@@ -148,43 +148,43 @@ class Dashas extends Flash {
     }
   }
 
-  subtitleTracks() {
+  subtitleTracks () {
     return this.textTracks();
   }
 
-  setSubsTrack(track) {
+  setSubsTrack (track) {
     this.setTextTrack(track);
   }
 
-  getDroppedFrames() {
+  getDroppedFrames () {
     return this.el_.vjs_getProperty('droppedFrames');
   }
 
-  getBuffered() {
+  getBuffered () {
     return this.el_.vjs_getProperty('buffered');
   }
 
-  getBufferLevel() {
+  getBufferLevel () {
     return this.el_.vjs_getProperty('bufferLevel');
   }
 
-  getCurrentAudioBandwidth() {
+  getCurrentAudioBandwidth () {
     return this.el_.vjs_getProperty('currentAudioBandwidth');
   }
 
-  getCurrentVideoBandwidth() {
+  getCurrentVideoBandwidth () {
     return this.el_.vjs_getProperty('currentVideoBandwidth');
   }
 
-  audioTracks() {
+  audioTracks () {
     return Tech.prototype.audioTracks.call(this);
   }
 
-  poster() {
+  poster () {
     return '';
   }
 
-  getPlaybackStatistics() {
+  getPlaybackStatistics () {
     let z = this.getBuffered();
     let W = (this.getBufferLevel(), this.getDroppedFrames());
     let Z = this.getCurrentVideoBandwidth();
@@ -201,7 +201,7 @@ class Dashas extends Flash {
     return videojs.mergeOptions(this.metrics_, {video: R, audio: N});
   }
 
-  src(src) {
+  src (src) {
     if (!src) {
       return this.currentSrc();
     }
@@ -212,11 +212,11 @@ class Dashas extends Flash {
     this.el_.vjs_source(src, autoPlay, serverUrl, customData);
   }
 
-  currentTime() {
+  currentTime () {
     return this.el_.vjs_getProperty('currentTime');
   }
 
-  buffered() {
+  buffered () {
     return this.el_.vjs_getProperty('buffered');
   }
 }

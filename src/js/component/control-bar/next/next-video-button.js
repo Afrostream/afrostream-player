@@ -1,13 +1,12 @@
 /**
  * @file next-video-button.js
  */
-import videojs from 'video.js';
-import NextVideoItem from './next-video-item';
-import NextVideoBigButton from './next-video-big-button';
+import videojs from 'video.js'
+import NextVideoItem from './next-video-item'
 
-const Component = videojs.getComponent('Component');
-const ControlBar = videojs.getComponent('ControlBar');
-const MenuButton = videojs.getComponent('MenuButton');
+const Component = videojs.getComponent('Component')
+const ControlBar = videojs.getComponent('ControlBar')
+const MenuButton = videojs.getComponent('MenuButton')
 /**
  * The base class for buttons that toggle next video
  *
@@ -19,7 +18,7 @@ const MenuButton = videojs.getComponent('MenuButton');
 class NextVideoButton extends MenuButton {
 
   constructor (player, options = {}) {
-    super(player, options);
+    super(player, options)
   }
 
   /**
@@ -29,18 +28,18 @@ class NextVideoButton extends MenuButton {
    */
   createItems (items = []) {
     if (!this.options_.poster) {
-      this.hide();
-      return items;
+      this.hide()
+      return items
     }
 
     const item = new NextVideoItem(this.player_, {
       label: 'Next',
       selectable: false,
       poster: this.options_.poster
-    });
-    items.push(item);
+    })
+    items.push(item)
 
-    return items;
+    return items
   }
 
   /**
@@ -50,7 +49,7 @@ class NextVideoButton extends MenuButton {
    * @method buildCSSClass
    */
   buildCSSClass () {
-    return `vjs-next-video-button ${super.buildCSSClass()}`;
+    return `vjs-next-video-button ${super.buildCSSClass()}`
   }
 
   /**
@@ -58,15 +57,15 @@ class NextVideoButton extends MenuButton {
    * @method handleClick
    */
   handleClick () {
-    super.handleClick();
-    this.player_.trigger('next');
+    super.handleClick()
+    this.player_.trigger('next')
   }
 }
 
-NextVideoButton.prototype.controlText_ = 'Next video';
+NextVideoButton.prototype.controlText_ = 'Next video'
 
 //Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 1, 0, 'nextVideoButton');
+ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 1, 0, 'nextVideoButton')
 
-Component.registerComponent('NextVideoButton', NextVideoButton);
-export default NextVideoButton;
+Component.registerComponent('NextVideoButton', NextVideoButton)
+export default NextVideoButton

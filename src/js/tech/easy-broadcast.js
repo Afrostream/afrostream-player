@@ -8,7 +8,6 @@ import { MediaPlayer } from 'dashjs'
 
 const Component = videojs.getComponent('Component')
 const Tech = videojs.getComponent('Tech')
-const Html5 = videojs.getComponent('Html5')
 
 /**
  * Dash Media Controller - Wrapper for HTML5 Media API

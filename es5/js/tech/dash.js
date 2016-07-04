@@ -1,32 +1,34 @@
-/**
- * @file dash.js
- * DASH Media Controller - Wrapper for HTML5 Media API
- */
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _video = require('video.js');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _videoJs = require('video.js');
-
-var _videoJs2 = _interopRequireDefault(_videoJs);
+var _video2 = _interopRequireDefault(_video);
 
 var _dashjs = require('dashjs');
 
-var Component = _videoJs2['default'].getComponent('Component');
-var Tech = _videoJs2['default'].getComponent('Tech');
-var Html5 = _videoJs2['default'].getComponent('Html5');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file dash.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * DASH Media Controller - Wrapper for HTML5 Media API
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var Tech = _video2.default.getComponent('Tech');
+var Html5 = _video2.default.getComponent('Html5');
 
 /**
  * Dash Media Controller - Wrapper for HTML5 Media API
@@ -37,17 +39,15 @@ var Html5 = _videoJs2['default'].getComponent('Html5');
  * @class Dash
  */
 
-var Dash = (function (_Html5) {
-  _inherits(Dash, _Html5);
+var Dash = function (_Html) {
+  _inherits(Dash, _Html);
 
   function Dash(options, ready) {
-    var _this = this;
-
     _classCallCheck(this, Dash);
 
-    _get(Object.getPrototypeOf(Dash.prototype), 'constructor', this).call(this, options, ready);
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dash).call(this, options, ready));
 
-    var tTracks = this.textTracks();
+    var tTracks = _this.textTracks();
 
     if (tTracks) {
       (function () {
@@ -60,7 +60,7 @@ var Dash = (function (_Html5) {
       })();
     }
 
-    var aTracks = this.audioTracks();
+    var aTracks = _this.audioTracks();
 
     if (aTracks) {
       (function () {
@@ -73,7 +73,7 @@ var Dash = (function (_Html5) {
       })();
     }
 
-    var vTracks = this.videoTracks();
+    var vTracks = _this.videoTracks();
 
     if (vTracks) {
       (function () {
@@ -85,12 +85,15 @@ var Dash = (function (_Html5) {
         });
       })();
     }
+
+    return _this;
   }
 
   /**
    * Detect if source is Live
    * @returns {boolean}
    */
+
 
   _createClass(Dash, [{
     key: 'isDynamic',
@@ -126,14 +129,15 @@ var Dash = (function (_Html5) {
      * @param {Object=} src Source object
      * @method setSrc
      */
+
   }, {
     key: 'src',
     value: function src(_src) {
       if (!_src) {
         return this.el_.src;
       }
+      this.trigger('loadstart');
 
-      this.isReady_ = false;
       this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
       this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks();
       this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks();
@@ -159,8 +163,8 @@ var Dash = (function (_Html5) {
         this.mediaPlayer_.setAutoPlay(false);
       }
 
-      this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings);
-      this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings);
+      this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings.audio);
+      this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings.video);
       this.mediaPlayer_.setTrackSwitchModeFor('audio', this.options_.trackSwitchMode); //alwaysReplace
       this.mediaPlayer_.setTrackSwitchModeFor('video', this.options_.trackSwitchMode); //alwaysReplace
 
@@ -186,18 +190,15 @@ var Dash = (function (_Html5) {
       // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
       //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video})
 
-      this.player_.trigger('loadstart');
       this.mediaPlayer_.attachView(this.el_);
       this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
       this.mediaPlayer_.attachSource(_src);
-
-      this.triggerReady();
     }
   }, {
     key: 'onInitialized',
     value: function onInitialized(_ref, err) {
-      var _ref$streamInfo$manifestInfo$isDynamic = _ref.streamInfo.manifestInfo.isDynamic;
-      var isDynamic = _ref$streamInfo$manifestInfo$isDynamic === undefined ? false : _ref$streamInfo$manifestInfo$isDynamic;
+      var _ref$streamInfo$manif = _ref.streamInfo.manifestInfo.isDynamic;
+      var isDynamic = _ref$streamInfo$manif === undefined ? false : _ref$streamInfo$manif;
 
       if (this.playbackInitialized) {
         return;
@@ -210,27 +211,27 @@ var Dash = (function (_Html5) {
       // this.streamInfo = streamInfo
       this.isDynamic(isDynamic);
       this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
-      var bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
+      //let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
       var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
       var videoDashTracks = this.mediaPlayer_.getTracksFor('video');
       var autoSwitch = this.mediaPlayer_.getAutoSwitchQuality();
 
       var defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio');
-      var defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video');
+      //let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video')
       var initialVideoBitrate = this.mediaPlayer_.getInitialBitrateFor('video');
 
-      var i = undefined;
+      var i = void 0;
 
       for (i = 0; i < audioDashTracks.length; i++) {
         var track = audioDashTracks[i];
         track.label = track.label || track.lang;
         var plTrack = this.addAudioTrack('main', track.label, track.lang);
-        plTrack.enabled = plTrack['language'] === (defaultAudio && this.options_.inititalMediaSettings.lang === defaultAudio.lang && defaultAudio.lang || this.options_.inititalMediaSettings.lang);
+        plTrack.enabled = plTrack['language'] === (defaultAudio && defaultAudio.lang.indexOf(this.options_.inititalMediaSettings.audio.lang) && defaultAudio.lang || this.options_.inititalMediaSettings.audio.lang);
       }
 
       for (i = 0; i < videoDashTracks.length; i++) {
-        var track = videoDashTracks[i];
-        var bitrateList = track.bitrateList;
+        var _track = videoDashTracks[i];
+        var bitrateList = _track.bitrateList;
         for (var j = 0; j < bitrateList.length; j++) {
           var bitRateInfo = bitrateList[j] / 1000;
           var label = Dash.qualityLabels[j] || bitRateInfo;
@@ -241,7 +242,7 @@ var Dash = (function (_Html5) {
     }
   }, {
     key: 'onProgress',
-    value: function onProgress(e) {
+    value: function onProgress() {
       this.trigger('progress');
     }
   }, {
@@ -253,12 +254,7 @@ var Dash = (function (_Html5) {
       }
       var metrics = this.getCribbedMetricsFor(e.mediaType);
       if (metrics) {
-        this.metrics_[e.mediaType] = _videoJs2['default'].mergeOptions(this.metrics_[e.mediaType], metrics);
-        //this.trigger(videojs.obj.copy(e))
-        var metricsChangeEvent = {
-          type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
-          mediaType: e.mediaType
-        };
+        this.metrics_[e.mediaType] = _video2.default.mergeOptions(this.metrics_[e.mediaType], metrics);
         this.trigger(e);
       }
     }
@@ -267,21 +263,20 @@ var Dash = (function (_Html5) {
     value: function getCribbedMetricsFor(type) {
       var metrics = this.mediaPlayer_.getMetricsFor(type),
           dashMetrics = this.mediaPlayer_.getDashMetrics(),
-          repSwitch = undefined,
-          bufferLevel = undefined,
-          httpRequests = undefined,
-          droppedFramesMetrics = undefined,
-          bitrateIndexValue = undefined,
-          bandwidthValue = undefined,
-          pendingValue = undefined,
-          numBitratesValue = undefined,
+          repSwitch = void 0,
+          bufferLevel = void 0,
+          httpRequests = void 0,
+          droppedFramesMetrics = void 0,
+          bitrateIndexValue = void 0,
+          bandwidthValue = void 0,
+          pendingValue = void 0,
+          numBitratesValue = void 0,
           bufferLengthValue = 0,
-          point = undefined,
           movingLatency = {},
           movingDownload = {},
           movingRatio = {},
           droppedFramesValue = 0,
-          requestsQueue = undefined,
+          requestsQueue = void 0,
           fillmoving = function fillmoving(type, Requests) {
         var requestWindow, downloadTimes, latencyTimes, durationTimes;
 
@@ -438,7 +433,7 @@ var Dash = (function (_Html5) {
           track = tracks[i];
           track.label = track.label || track.lang;
           plTrack = plTracks[i];
-          track.defaultTrack = track.lang === 'fra' || track.lang === 'fr';
+          track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
           if (track.defaultTrack) {
             this.mediaPlayer_.setTextTrack(i);
             if (plTrack) {
@@ -454,6 +449,7 @@ var Dash = (function (_Html5) {
      *
      * @method updateDisplay
      */
+
   }, {
     key: 'handleTracksChange',
     value: function handleTracksChange() {
@@ -462,7 +458,7 @@ var Dash = (function (_Html5) {
       if (!tracks || !this.playbackInitialized) {
         return;
       }
-      var selected = undefined;
+      var selected = void 0;
 
       for (var i = 0; i < tracks.length; i++) {
         var track = tracks[i];
@@ -491,11 +487,10 @@ var Dash = (function (_Html5) {
         if (track['enabled']) {
           var audioDashTrack = audioDashTracks[i];
           if (track['language'] == audioDashTrack['lang']) {
-            audioDashTracks['enabled'] = true;
             try {
-              this.mediaPlayer_.setCurrentTrack(audioDashTracks[i]);
+              this.mediaPlayer_.setCurrentTrack(audioDashTrack);
             } catch (err) {
-              _videoJs2['default'].log(err);
+              _video2.default.log(err);
             }
           }
         }
@@ -550,13 +545,21 @@ var Dash = (function (_Html5) {
   }]);
 
   return Dash;
-})(Html5);
+}(Html5);
 
 Dash.prototype.isDynamic_ = false;
 
 Dash.prototype.options_ = {
   inititalMediaSettings: {
-    lang: 'fr'
+    text: {
+      lang: 'fra'
+    },
+    audio: {
+      lang: 'fra'
+    },
+    video: {
+      lang: 'fra'
+    }
   },
   //Set to false to switch off adaptive bitrate switching.
   autoSwitch: true,
@@ -684,16 +687,16 @@ Dash.nativeSourceHandler.canPlayType = function (type) {
 
   var dashTypeRE = /^application\/dash\+xml/i;
   var dashExtRE = /\.mpd/i;
-
+  var canPlay = '';
   if (dashTypeRE.test(type)) {
-    return 'probably';
+    canPlay = 'probably';
   } else if (dashExtRE.test(type)) {
-    return 'maybe';
+    canPlay = 'maybe';
   } else {
-    return '';
+    canPlay = '';
   }
 
-  return '';
+  return canPlay;
 };
 
 /*
@@ -737,9 +740,8 @@ Dash.nativeSourceHandler.dispose = function () {};
 // Register the native source handler
 Dash.registerSourceHandler(Dash.nativeSourceHandler);
 
-_videoJs2['default'].options.dash = {};
+_video2.default.options.dash = {};
 
 Component.registerComponent('Dash', Dash);
 Tech.registerTech('Dash', Dash);
-exports['default'] = Dash;
-module.exports = exports['default'];
+exports.default = Dash;

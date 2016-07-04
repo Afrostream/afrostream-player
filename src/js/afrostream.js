@@ -11,6 +11,7 @@ import './tech/media'
 import './tech/dash'
 import './tech/dashas'
 import './tech/easy-broadcast'
+import './tech/streamroot'
 import './component/control-bar/'
 import 'videojs-metrics'
 import 'videojs-chromecast'
@@ -28,6 +29,7 @@ class Afrostream extends Component {
 
     super(player, options, ready)
     player.one('loadstart', ::this.onLoadStart)
+    player.one('firstplay', ::this.onFirstPlay)
     player.getPlaybackStatistics = ::this.getPlaybackStatistics
     player.one('fullscreenchange', ::this.onFullScreenChange)
   }
@@ -58,6 +60,11 @@ class Afrostream extends Component {
     this.addMediaPlayerHandlers()
   }
 
+  onFirstPlay () {
+    if (this.player_.options_.starttime) {
+      this.player_.currentTime(this.player_.options_.starttime);
+    }
+  }
 
   addMediaPlayerHandlers () {
     this.player_.tech_.on(MediaPlayer.events.STREAM_INITIALIZED,

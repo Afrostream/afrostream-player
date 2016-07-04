@@ -1,29 +1,31 @@
-/**
- * @file mouse-thumbnail-display.js
- */
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _video = require('video.js');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _video2 = _interopRequireDefault(_video);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _videoJs = require('video.js');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _videoJs2 = _interopRequireDefault(_videoJs);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var Component = _videoJs2['default'].getComponent('Component');
-var MouseTimeDisplay = _videoJs2['default'].getComponent('MouseTimeDisplay');
-var SeekBar = _videoJs2['default'].getComponent('SeekBar');
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file mouse-thumbnail-display.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var MouseTimeDisplay = _video2.default.getComponent('MouseTimeDisplay');
+var SeekBar = _video2.default.getComponent('SeekBar');
 
 /**
  * The Mouse Time Display component shows the time you will seek to
@@ -35,13 +37,13 @@ var SeekBar = _videoJs2['default'].getComponent('SeekBar');
  * @class MouseThumbnailDisplay
  */
 
-var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
+var MouseThumbnailDisplay = function (_MouseTimeDisplay) {
   _inherits(MouseThumbnailDisplay, _MouseTimeDisplay);
 
   function MouseThumbnailDisplay(player, options) {
     _classCallCheck(this, MouseThumbnailDisplay);
 
-    _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'constructor', this).call(this, player, options);
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(MouseThumbnailDisplay).call(this, player, options));
   }
 
   _createClass(MouseThumbnailDisplay, [{
@@ -57,16 +59,16 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
   }, {
     key: 'handleComplete',
     value: function handleComplete() {
-      var url = this.destroyLoader();
-      if (_videoJs2['default'].hasClass(this.fallbackImg_, 'vjs-hidden')) {
-        _videoJs2['default'].removeClass(this.fallbackImg_, 'vjs-hidden');
+      this.destroyLoader();
+      if (_video2.default.hasClass(this.fallbackImg_, 'vjs-hidden')) {
+        _video2.default.removeClass(this.fallbackImg_, 'vjs-hidden');
       }
     }
   }, {
     key: 'handleError',
     value: function handleError() {
       var url = this.destroyLoader();
-      _videoJs2['default'].log('thumbnails : next error ' + url);
+      _video2.default.log('thumbnails : next error ' + url);
       if (this.itemIndex = 1) {
         this.error = true;
       }
@@ -89,7 +91,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
       var max = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
 
       var currentSrc = this.player_.currentSrc();
-      var urlInfo = _videoJs2['default'].parseUrl(currentSrc);
+      var urlInfo = _video2.default.parseUrl(currentSrc);
       var pathname = urlInfo.pathname.replace(/\/([a-z0-9\/\._-]{16}\.[is]sml?)+\/([a-z0-9\/\._-]*\.(mpd|m3u8)?)$/gi, '');
       var host = this.options_.host || urlInfo.host;
       var fullPah = urlInfo.protocol + '//' + host + pathname + '/frames/map-{index}.jpg';
@@ -111,14 +113,15 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
      * @return {Element}
      * @method createEl
      */
+
   }, {
     key: 'createEl',
     value: function createEl() {
-      var el = _videoJs2['default'].createEl('div', {
+      var el = _video2.default.createEl('div', {
         className: 'vjs-thumbnail-display'
       });
 
-      this.fallbackImg_ = _videoJs2['default'].createEl('div', {
+      this.fallbackImg_ = _video2.default.createEl('div', {
         className: 'vjs-thumbnail-display_thumb vjs-hidden'
       });
 
@@ -175,7 +178,7 @@ var MouseThumbnailDisplay = (function (_MouseTimeDisplay) {
   }]);
 
   return MouseThumbnailDisplay;
-})(MouseTimeDisplay);
+}(MouseTimeDisplay);
 
 MouseThumbnailDisplay.prototype.error = false;
 MouseThumbnailDisplay.prototype.itemIndex = 0;
@@ -185,5 +188,4 @@ MouseThumbnailDisplay.prototype.options_ = {
 //Push videojs SeekBar child with this one
 SeekBar.prototype.options_.children.splice(1, 1, 'mouseThumbnailDisplay');
 Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
-exports['default'] = MouseThumbnailDisplay;
-module.exports = exports['default'];
+exports.default = MouseThumbnailDisplay;
