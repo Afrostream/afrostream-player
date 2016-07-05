@@ -2,7 +2,7 @@
   "name": "afrostream-player",
   "version": "2.1.12",
   "description": "Player afrostream",
-  "main": "src/js/afrostream.js",
+  "main": "es5/js/afrostream.js",
   "scripts": {
     "prebuild": "npm run clean",
     "build": "npm-run-all -p build:*",
@@ -96,7 +96,7 @@
     "bannerize": "^1.0.0",
     "bootstrap-slider": "^6.1.7",
     "bootstrap-switch": "^3.3.2",
-    "browserify": "^11.0.0",
+    "browserify": "^13.0.1",
     "browserify-shim": "^3.0.0",
     "connect": "^3.4.0",
     "cowsay": "^1.1.0",
