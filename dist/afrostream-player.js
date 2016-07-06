@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.1.12
+ * @version 2.1.13
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -3277,7 +3277,7 @@ Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prot
 /* Streamroot Support Testing -------------------------------------------------------- */
 
 Streamroot.isSupported = function () {
-  return _dash2.default.isSupported();
+  return _dash2.default.isSupported() && !!(window.RTCPeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection) && !_video2.default.browser.IS_IOS && !_video2.default.browser.IS_ANDROID;
 };
 
 // Add Source Handler pattern functions to this tech

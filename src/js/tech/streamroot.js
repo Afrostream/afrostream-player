@@ -80,7 +80,7 @@ Streamroot.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
 /* Streamroot Support Testing -------------------------------------------------------- */
 
 Streamroot.isSupported = function () {
-  return Dash.isSupported()
+  return Dash.isSupported() && !!(window.RTCPeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection) && (!videojs.browser.IS_IOS && !videojs.browser.IS_ANDROID)
 }
 
 // Add Source Handler pattern functions to this tech
