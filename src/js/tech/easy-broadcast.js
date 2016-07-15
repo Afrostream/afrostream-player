@@ -109,7 +109,7 @@ EasyBroadcast.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_,
 /* EasyBroadcast Support Testing -------------------------------------------------------- */
 
 EasyBroadcast.isSupported = function () {
-  return Dash.isSupported() && !videojs.browser.IS_ANDROID
+  return Dash.isSupported() && !!(window.RTCPeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection) && (!videojs.browser.IS_IOS && !videojs.browser.IS_ANDROID)
 }
 
 // Add Source Handler pattern functions to this tech

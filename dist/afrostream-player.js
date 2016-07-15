@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.1.14
+ * @version 2.1.15
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -2986,7 +2986,7 @@ EasyBroadcast.prototype.options_ = _video2.default.mergeOptions(_dash2.default.p
 /* EasyBroadcast Support Testing -------------------------------------------------------- */
 
 EasyBroadcast.isSupported = function () {
-  return _dash2.default.isSupported() && !_video2.default.browser.IS_ANDROID;
+  return _dash2.default.isSupported() && !!(window.RTCPeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection) && !_video2.default.browser.IS_IOS && !_video2.default.browser.IS_ANDROID;
 };
 
 // Add Source Handler pattern functions to this tech
