@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.1.15
+ * @version 2.1.16
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
