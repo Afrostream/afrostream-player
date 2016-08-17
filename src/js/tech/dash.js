@@ -608,7 +608,7 @@ Dash.supportsNativeTextTracks = function () {
  * @return {Boolean}
  */
 Dash.supportsNativeVideoTracks = function () {
-  let supportsVideoTracks = !!Html5.TEST_VID.videoTracks
+  let supportsVideoTracks = !!Html5.TEST_VID.videoTracks && !videojs.browser.IS_SAFARI
   return supportsVideoTracks
 }
 
@@ -618,7 +618,7 @@ Dash.supportsNativeVideoTracks = function () {
  * @return {Boolean}
  */
 Dash.supportsNativeAudioTracks = function () {
-  let supportsAudioTracks = !!Html5.TEST_VID.audioTracks
+  let supportsAudioTracks = !!Html5.TEST_VID.audioTracks && !videojs.browser.IS_SAFARI
   return supportsAudioTracks
 }
 

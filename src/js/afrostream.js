@@ -107,22 +107,6 @@ class Afrostream extends Component {
     }
   }
 
-  audioTracks () {
-    return this.player_.tech_ && this.player_.techGet_('audioTracks')
-  }
-
-  setAudioTrack (track) {
-    return this.player_.tech_ && this.player_.techCall_('setAudioTrack', track)
-  }
-
-  videoTracks () {
-    return this.player_.tech_ && this.player_.techGet_('videoTracks')
-  }
-
-  setVideoTrack (track) {
-    return this.player_.tech_ && this.player_.tech_.setVideoTrack(track)
-  }
-
   getPlaybackStatistics () {
     return this.player_.tech_ && this.player_.tech_.getPlaybackStatistics()
   }
@@ -142,6 +126,9 @@ Afrostream.prototype.streamInfo = null
 
 Afrostream.prototype.tech_ = null
 
+const USER_AGENT = window.navigator.userAgent
+
+videojs.browser.IS_SAFARI = (/safari/i).test(USER_AGENT)
 /**
  * add afrostream to videojs childs
  * @type {{}}

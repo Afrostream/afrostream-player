@@ -1,3297 +1,4 @@
-/**
- * afrostream-player
- * @version 2.1.16
- * @copyright 2016 Afrostream, Inc.
- * @license Apache-2.0
- */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.afrostreamPlayer = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _captionTrackButton = require('./track-controls/caption-track-button');
-
-Object.defineProperty(exports, 'CaptionTrackButton', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_captionTrackButton).default;
-  }
-});
-
-var _audioTrackButton = require('./track-controls/audio-track-button');
-
-Object.defineProperty(exports, 'AudioTrackButton', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_audioTrackButton).default;
-  }
-});
-
-var _videoTrackButton = require('./track-controls/video-track-button');
-
-Object.defineProperty(exports, 'VideoTrackButton', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_videoTrackButton).default;
-  }
-});
-
-var _nextVideoButton = require('./next/next-video-button');
-
-Object.defineProperty(exports, 'NextVideoButton', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_nextVideoButton).default;
-  }
-});
-
-var _loadProgressSpinner = require('./progress-control/load-progress-spinner');
-
-Object.defineProperty(exports, 'LoadProgressSpinner', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_loadProgressSpinner).default;
-  }
-});
-
-var _mouseThumbnailDisplay = require('./progress-control/mouse-thumbnail-display');
-
-Object.defineProperty(exports, 'MouseThumbnailDisplay', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_mouseThumbnailDisplay).default;
-  }
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./next/next-video-button":2,"./progress-control/load-progress-spinner":4,"./progress-control/mouse-thumbnail-display":5,"./track-controls/audio-track-button":6,"./track-controls/caption-track-button":8,"./track-controls/video-track-button":13}],2:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _nextVideoItem = require('./next-video-item');
-
-var _nextVideoItem2 = _interopRequireDefault(_nextVideoItem);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file next-video-button.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var ControlBar = _video2.default.getComponent('ControlBar');
-var MenuButton = _video2.default.getComponent('MenuButton');
-/**
- * The base class for buttons that toggle next video
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends MenuButton
- * @class NextVideoButton
- */
-
-var NextVideoButton = function (_MenuButton) {
-  _inherits(NextVideoButton, _MenuButton);
-
-  function NextVideoButton(player) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-    _classCallCheck(this, NextVideoButton);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(NextVideoButton).call(this, player, options));
-  }
-
-  /**
-   * Create the list of menu items. Specific to each subclass.
-   *
-   * @method createItems
-   */
-
-
-  _createClass(NextVideoButton, [{
-    key: 'createItems',
-    value: function createItems() {
-      var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-
-      if (!this.options_.poster) {
-        this.hide();
-        return items;
-      }
-
-      var item = new _nextVideoItem2.default(this.player_, {
-        label: 'Next',
-        selectable: false,
-        poster: this.options_.poster
-      });
-      items.push(item);
-
-      return items;
-    }
-
-    /**
-     * Allow sub components to stack CSS class names
-     *
-     * @return {String} The constructed class name
-     * @method buildCSSClass
-     */
-
-  }, {
-    key: 'buildCSSClass',
-    value: function buildCSSClass() {
-      return 'vjs-next-video-button ' + _get(Object.getPrototypeOf(NextVideoButton.prototype), 'buildCSSClass', this).call(this);
-    }
-
-    /**
-     * Handle click on mute
-     * @method handleClick
-     */
-
-  }, {
-    key: 'handleClick',
-    value: function handleClick() {
-      _get(Object.getPrototypeOf(NextVideoButton.prototype), 'handleClick', this).call(this);
-      this.player_.trigger('next');
-    }
-  }]);
-
-  return NextVideoButton;
-}(MenuButton);
-
-NextVideoButton.prototype.controlText_ = 'Next video';
-
-//Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 1, 0, 'nextVideoButton');
-
-Component.registerComponent('NextVideoButton', NextVideoButton);
-exports.default = NextVideoButton;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./next-video-item":3}],3:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file next-video-item.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var MenuItem = _video2.default.getComponent('MenuItem');
-
-/**
- * The base class for buttons that toggle next video
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends MenuItem
- * @class NextVideoItem
- */
-
-var NextVideoItem = function (_MenuItem) {
-  _inherits(NextVideoItem, _MenuItem);
-
-  function NextVideoItem(player, options) {
-    _classCallCheck(this, NextVideoItem);
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NextVideoItem).call(this, player, options));
-
-    _this.setSrc(options.poster);
-    return _this;
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @param {String=} type Desc
-   * @param {Object=} props Desc
-   * @return {Element}
-   * @method createEl
-   */
-
-
-  _createClass(NextVideoItem, [{
-    key: 'createEl',
-    value: function createEl(type, props, attrs) {
-      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, type, props, attrs);
-
-      this.fallbackImg_ = _video2.default.createEl(_video2.default.browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
-        className: 'thumb-tile_thumb'
-      });
-
-      el.appendChild(this.fallbackImg_);
-
-      return el;
-    }
-  }, {
-    key: 'setSrc',
-    value: function setSrc(url) {
-      var backgroundImage = void 0;
-
-      if (!_video2.default.browser.BACKGROUND_SIZE_SUPPORTED) {
-        this.fallbackImg_.src = url;
-      } else {
-        backgroundImage = '';
-        if (url) {
-          backgroundImage = 'url("' + url + '")';
-        }
-
-        this.fallbackImg_.style.backgroundImage = backgroundImage;
-      }
-    }
-
-    /**
-     * Handle click on mute
-     * @method handleClick
-     */
-
-  }, {
-    key: 'handleClick',
-    value: function handleClick() {
-      _get(Object.getPrototypeOf(NextVideoItem.prototype), 'handleClick', this).call(this);
-      this.player_.trigger('next');
-    }
-  }]);
-
-  return NextVideoItem;
-}(MenuItem);
-
-Component.registerComponent('NextVideoItem', NextVideoItem);
-exports.default = NextVideoItem;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file load-progress-spinner.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var LoadProgressBar = _video2.default.getComponent('LoadProgressBar');
-
-/**
- * Shows load progress
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class LoadProgressSpinner
- */
-
-var LoadProgressSpinner = function (_LoadProgressBar) {
-  _inherits(LoadProgressSpinner, _LoadProgressBar);
-
-  function LoadProgressSpinner(player, options) {
-    _classCallCheck(this, LoadProgressSpinner);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(LoadProgressSpinner).call(this, player, options));
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @return {Element}
-   * @method createEl
-   */
-
-
-  _createClass(LoadProgressSpinner, [{
-    key: 'createEl',
-    value: function createEl() {
-      var el = _video2.default.createEl('div', {
-        className: 'vjs-load-progress-spinner',
-        innerHTML: '<svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="' + this.options_.rayon + '" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg>'
-      });
-
-      this.circle = _video2.default.createEl('svg', {
-        className: 'circular',
-        innerHTML: '<circle class="path" cx="50" cy="50" r="' + this.options_.rayon + '" fill="none" stroke-width="2" stroke-miterlimit="10"/>'
-      }, {
-        viewBox: '25 25 50 50'
-      });
-
-      //el.appendChild(this.circle);
-      return el;
-    }
-
-    /**
-     * Update progress bar
-     *
-     * @method update
-     */
-
-  }, {
-    key: 'update',
-    value: function update() {
-      var buffered = this.player_.buffered();
-
-      // get the percent width of a time compared to the total end
-      //let percentify = function (time, end) {
-      //  let percent = (time / end) || 0; // no NaN
-      //  percent = ((percent >= 1 ? 1 : percent) * 100);
-      //
-      //  let c = Math.PI * (rayon * 2);
-      //  let pct = ((100 - percent) / 200) * c;
-      //  return pct;
-      //};
-
-      // get the percent width of a time compared to the total end
-      var percentify = function percentify(time, end) {
-        var percent = time / end || 0; // no NaN
-        return (percent >= 1 ? 1 : percent) * 125;
-      };
-
-      // update the width of the progress bar
-      var svg = this.getFirstChild(this.el_);
-      if (svg) {
-        var i = buffered.length - 1;
-        var start = buffered.start(i);
-        var end = buffered.end(i);
-        var percent = percentify(end - start, 30);
-        var firstSvgChild = this.getFirstChild(svg);
-        if (firstSvgChild) {
-          var stroke = this.getFirstChild(firstSvgChild);
-          if (stroke) {
-            stroke.style.strokeDasharray = [percent, 125];
-          }
-        }
-      }
-
-      //for (let i = 0; i < buffered.length; i++) {
-      //  let start = buffered.start(i);
-      //  let end = buffered.end(i);
-      //
-      //  // set the percent based on the width of the progress bar (bufferedEnd)
-      //  part.style.left = percentify(start, bufferedEnd);
-      //  part.style.width = percentify(end - start, bufferedEnd);
-      //}
-      //
-      //// remove unused buffered range elements
-      //for (let i = children.length; i > buffered.length; i--) {
-      //  this.el_.removeChild(children[i - 1]);
-      //}
-    }
-  }, {
-    key: 'getFirstChild',
-    value: function getFirstChild(el) {
-      var firstChild = el.firstChild;
-      while (firstChild != null && firstChild.nodeType == 3) {
-        // skip TextNodes
-        firstChild = firstChild.nextSibling;
-      }
-      return firstChild;
-    }
-  }]);
-
-  return LoadProgressSpinner;
-}(LoadProgressBar);
-
-LoadProgressSpinner.prototype.options_ = {
-  rayon: 20
-};
-
-Component.registerComponent('LoadProgressSpinner', LoadProgressSpinner);
-
-//Replace videojs CaptionButton child with this one
-_video2.default.options.children.splice(3, 1, 'loadProgressSpinner');
-
-exports.default = LoadProgressSpinner;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file mouse-thumbnail-display.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var MouseTimeDisplay = _video2.default.getComponent('MouseTimeDisplay');
-var SeekBar = _video2.default.getComponent('SeekBar');
-
-/**
- * The Mouse Time Display component shows the time you will seek to
- * when hovering over the progress bar
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class MouseThumbnailDisplay
- */
-
-var MouseThumbnailDisplay = function (_MouseTimeDisplay) {
-  _inherits(MouseThumbnailDisplay, _MouseTimeDisplay);
-
-  function MouseThumbnailDisplay(player, options) {
-    _classCallCheck(this, MouseThumbnailDisplay);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(MouseThumbnailDisplay).call(this, player, options));
-  }
-
-  _createClass(MouseThumbnailDisplay, [{
-    key: 'createLoader',
-    value: function createLoader(src) {
-      this.destroyLoader();
-
-      this.img = new Image();
-      this.img.onload = this.handleComplete.bind(this);
-      this.img.onerror = this.handleError.bind(this);
-      this.img.src = src;
-    }
-  }, {
-    key: 'handleComplete',
-    value: function handleComplete() {
-      this.destroyLoader();
-      if (_video2.default.hasClass(this.fallbackImg_, 'vjs-hidden')) {
-        _video2.default.removeClass(this.fallbackImg_, 'vjs-hidden');
-      }
-    }
-  }, {
-    key: 'handleError',
-    value: function handleError() {
-      var url = this.destroyLoader();
-      _video2.default.log('thumbnails : next error ' + url);
-      if (this.itemIndex = 1) {
-        this.error = true;
-      }
-    }
-  }, {
-    key: 'destroyLoader',
-    value: function destroyLoader() {
-      var imgSrouce = '';
-      if (this.img) {
-        imgSrouce = this.img.src;
-        this.img.onload = null;
-        this.img.onerror = null;
-        this.img = null;
-      }
-      return imgSrouce;
-    }
-  }, {
-    key: 'extractAssetUri',
-    value: function extractAssetUri() {
-      var max = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-
-      var currentSrc = this.player_.currentSrc();
-      var urlInfo = _video2.default.parseUrl(currentSrc);
-      var pathname = urlInfo.pathname.replace(/\/([a-z0-9\/\._-]{16}\.[is]sml?)+\/([a-z0-9\/\._-]*\.(mpd|m3u8)?)$/gi, '');
-      var host = this.options_.host || urlInfo.host;
-      var fullPah = urlInfo.protocol + '//' + host + pathname + '/frames/map-{index}.jpg';
-      var current = fullPah.replace('{index}', this.itemIndex);
-      var next = fullPah.replace('{index}', this.itemIndex + 1);
-      if (this.itemIndex === 1) {
-        this.createLoader(current);
-      }
-      if (this.itemIndex < max) {
-        this.createLoader(next);
-      }
-
-      return current;
-    }
-
-    /**
-     * Create the component's DOM element
-     *
-     * @return {Element}
-     * @method createEl
-     */
-
-  }, {
-    key: 'createEl',
-    value: function createEl() {
-      var el = _video2.default.createEl('div', {
-        className: 'vjs-thumbnail-display'
-      });
-
-      this.fallbackImg_ = _video2.default.createEl('div', {
-        className: 'vjs-thumbnail-display_thumb vjs-hidden'
-      });
-
-      el.appendChild(this.fallbackImg_);
-
-      return el;
-    }
-  }, {
-    key: 'update',
-    value: function update(newTime, position) {
-      _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'update', this).call(this, newTime, position);
-      if (this.error) {
-        return;
-      }
-      var timeInterval = 60;
-      var spriteSize = {
-        w: 600,
-        h: 330
-      };
-      var spritesPerRow = 5;
-      var spritesPerCol = 5;
-
-      var sheetWidth = spriteSize.w / spritesPerRow;
-      var sheetHeight = spriteSize.h / spritesPerCol;
-
-      if (this.player_.isFullscreen()) {
-        sheetWidth = 200;
-        sheetHeight = 112;
-      }
-
-      var spritesPerSheet = spritesPerRow * spritesPerCol;
-      var secondsPerSheet = timeInterval * spritesPerSheet;
-
-      var index = Math.max(1, Math.ceil(newTime / secondsPerSheet));
-      var duration = this.player_.duration();
-      var maxItem = 1;
-      if (duration) {
-        maxItem = Math.ceil(duration / secondsPerSheet);
-      }
-      var stripedTime = newTime - (index - 1) * secondsPerSheet;
-      var sheetIndex = Math.floor(stripedTime / timeInterval);
-      var x = Math.floor(sheetIndex % 5 * sheetWidth);
-      var y = Math.floor(sheetIndex / spritesPerCol) * sheetHeight;
-      if (this.itemIndex !== index) {
-        this.itemIndex = index;
-        var url = this.extractAssetUri(maxItem);
-        var backgroundImage = 'url("' + url + '")';
-        this.fallbackImg_.style.backgroundImage = backgroundImage;
-      }
-
-      this.fallbackImg_.style.backgroundPositionX = -x + 'px';
-      this.fallbackImg_.style.backgroundPositionY = -y + 'px';
-    }
-  }]);
-
-  return MouseThumbnailDisplay;
-}(MouseTimeDisplay);
-
-MouseThumbnailDisplay.prototype.error = false;
-MouseThumbnailDisplay.prototype.itemIndex = 0;
-MouseThumbnailDisplay.prototype.options_ = {
-  host: null
-};
-//Push videojs SeekBar child with this one
-SeekBar.prototype.options_.children.splice(1, 1, 'mouseThumbnailDisplay');
-Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
-exports.default = MouseThumbnailDisplay;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],6:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _audioTrackMenuItem = require('./audio-track-menu-item');
-
-var _audioTrackMenuItem2 = _interopRequireDefault(_audioTrackMenuItem);
-
-require('./off-audio-track-menu-item');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file audio-track-button.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var ControlBar = _video2.default.getComponent('ControlBar');
-var MenuButton = _video2.default.getComponent('MenuButton');
-var MenuItem = _video2.default.getComponent('MenuItem');
-
-/**
- * The base class for buttons that toggle specific audio track types (e.g. description)
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends MenuButton
- * @class AudioTrackButton
- */
-
-var AudioTrackButton = function (_MenuButton) {
-  _inherits(AudioTrackButton, _MenuButton);
-
-  function AudioTrackButton(player, options) {
-    _classCallCheck(this, AudioTrackButton);
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AudioTrackButton).call(this, player, options));
-
-    var tracks = _this.player_.audioTracks();
-
-    if (!tracks) {
-      return _possibleConstructorReturn(_this);
-    }
-
-    var updateHandler = _this.update.bind(_this);
-    tracks.addEventListener('removetrack', updateHandler);
-    tracks.addEventListener('addtrack', updateHandler);
-
-    _this.player_.on('dispose', function () {
-      tracks.removeEventListener('removetrack', updateHandler);
-      tracks.removeEventListener('addtrack', updateHandler);
-    });
-    return _this;
-  }
-
-  /**
-   * Allow sub components to stack CSS class names
-   *
-   * @return {String} The constructed class name
-   * @method buildCSSClass
-   */
-
-
-  _createClass(AudioTrackButton, [{
-    key: 'buildCSSClass',
-    value: function buildCSSClass() {
-      return 'vjs-audio-button ' + _get(Object.getPrototypeOf(AudioTrackButton.prototype), 'buildCSSClass', this).call(this);
-    }
-
-    // Create a menu item for each text track
-
-  }, {
-    key: 'createItems',
-    value: function createItems() {
-      var items = [];
-      items.push(new MenuItem(this.player_, {
-        label: this.controlText_,
-        selectable: false
-      }));
-
-      var tracks = this.player_.audioTracks();
-
-      if (!tracks) {
-        return items;
-      }
-
-      if (tracks.length < 2) {
-        this.hide();
-        return items;
-      }
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-
-        // only add tracks that are of the appropriate kind and have a label
-        if (track['kind'] === 'main') {
-          items.push(new _audioTrackMenuItem2.default(this.player_, {
-            // MenuItem is selectable
-            'selectable': true,
-            'track': track
-          }));
-        }
-      }
-
-      return items;
-    }
-  }]);
-
-  return AudioTrackButton;
-}(MenuButton);
-
-AudioTrackButton.prototype.kind_ = 'audio';
-AudioTrackButton.prototype.controlText_ = 'Audio Selection';
-
-//Replace videojs CaptionButton child with this one
-//ControlBar.prototype.options_.children.splice(12, 0, 'audioTrackButton')
-
-Component.registerComponent('AudioTrackButton', AudioTrackButton);
-exports.default = AudioTrackButton;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":7,"./off-audio-track-menu-item":10}],7:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Component = _video2.default.getComponent('Component');
-var MenuItem = _video2.default.getComponent('MenuItem');
-
-var AudioTrackMenuItem = function (_MenuItem) {
-  _inherits(AudioTrackMenuItem, _MenuItem);
-
-  function AudioTrackMenuItem(player, options) {
-    _classCallCheck(this, AudioTrackMenuItem);
-
-    var track = options['track'];
-    var tracks = player.audioTracks();
-
-    // Modify options for parent MenuItem class's init.
-    options['label'] = track['label'] || track['language'] || 'Unknown';
-    options['selected'] = track['default'] || track['enabled'] === true;
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AudioTrackMenuItem).call(this, player, options));
-
-    _this.track = track;
-
-    if (tracks) {
-      (function () {
-        var changeHandler = _this.handleTracksChange.bind(_this);
-
-        tracks.addEventListener('change', changeHandler);
-        _this.on('dispose', function () {
-          tracks.removeEventListener('change', changeHandler);
-        });
-      })();
-    }
-    return _this;
-  }
-
-  /**
-   * Handle click on text track
-   *
-   * @method handleClick
-   */
-
-
-  _createClass(AudioTrackMenuItem, [{
-    key: 'handleClick',
-    value: function handleClick(event) {
-      var tracks = this.player_.audioTracks();
-
-      _get(Object.getPrototypeOf(AudioTrackMenuItem.prototype), 'handleClick', this).call(this, event);
-
-      if (!tracks) return;
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-        track['enabled'] = track === this.track;
-      }
-    }
-
-    /**
-     * Handle text track change
-     *
-     * @method handleTracksChange
-     */
-
-  }, {
-    key: 'handleTracksChange',
-    value: function handleTracksChange() {
-      this.selected(this.track['enabled']);
-    }
-  }]);
-
-  return AudioTrackMenuItem;
-}(MenuItem);
-
-Component.registerComponent('AudioTrackMenuItem', AudioTrackMenuItem);
-exports.default = AudioTrackMenuItem;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],8:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _captionTrackMenuItem = require('./caption-track-menu-item');
-
-var _captionTrackMenuItem2 = _interopRequireDefault(_captionTrackMenuItem);
-
-var _offCaptionTrackMenuItem = require('./off-caption-track-menu-item');
-
-var _offCaptionTrackMenuItem2 = _interopRequireDefault(_offCaptionTrackMenuItem);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Component = _video2.default.getComponent('Component');
-var ControlBar = _video2.default.getComponent('ControlBar');
-var CaptionsButton = _video2.default.getComponent('CaptionsButton');
-
-var CaptionTrackButton = function (_CaptionsButton) {
-  _inherits(CaptionTrackButton, _CaptionsButton);
-
-  function CaptionTrackButton(options, ready) {
-    _classCallCheck(this, CaptionTrackButton);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(CaptionTrackButton).call(this, options, ready));
-  }
-
-  // Create a menu item for each text track
-
-
-  _createClass(CaptionTrackButton, [{
-    key: 'createItems',
-    value: function createItems() {
-      var items = [];
-      // Add an OFF menu item to turn all tracks off
-      items.push(new _offCaptionTrackMenuItem2.default(this.player_, { 'kind': this.kind_, 'mode': 'hidden' }));
-
-      var tracks = this.player_.textTracks();
-
-      if (!tracks) {
-        return items;
-      }
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-
-        // only add tracks that are of the appropriate kind and have a label
-        if (track['kind'] === this.kind_) {
-          items.push(new _captionTrackMenuItem2.default(this.player_, {
-            'selectable': true,
-            'track': track
-          }));
-        }
-      }
-
-      return items;
-    }
-
-    /**
-     * Allow sub components to stack CSS class names
-     *
-     * @return {String} The constructed class name
-     * @method buildCSSClass
-     */
-
-  }, {
-    key: 'buildCSSClass',
-    value: function buildCSSClass() {
-      return 'vjs-captions-extended-button ' + _get(Object.getPrototypeOf(CaptionTrackButton.prototype), 'buildCSSClass', this).call(this);
-    }
-  }]);
-
-  return CaptionTrackButton;
-}(CaptionsButton);
-
-CaptionTrackButton.prototype.kind_ = 'captions';
-CaptionTrackButton.prototype.controlText_ = 'Captions';
-
-//Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(13, 1, 'captionTrackButton');
-
-Component.registerComponent('CaptionTrackButton', CaptionTrackButton);
-exports.default = CaptionTrackButton;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":9,"./off-caption-track-menu-item":11}],9:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Component = _video2.default.getComponent('Component');
-var MenuItem = _video2.default.getComponent('MenuItem');
-
-var CaptionTrackMenuItem = function (_MenuItem) {
-  _inherits(CaptionTrackMenuItem, _MenuItem);
-
-  function CaptionTrackMenuItem(player, options) {
-    _classCallCheck(this, CaptionTrackMenuItem);
-
-    var track = options['track'];
-    var tracks = player.textTracks();
-
-    // Modify options for parent MenuItem class's init.
-    options['label'] = track['label'] || track['language'] || 'Unknown';
-    options['selected'] = track['default'] || track['mode'] === 'showing';
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CaptionTrackMenuItem).call(this, player, options));
-
-    _this.track = track;
-
-    if (tracks) {
-      tracks.addEventListener('change', _this.handleTracksChange.bind(_this));
-      _this.on('dispose', function () {
-        tracks.removeEventListener('change', this.handleTracksChange.bind(this));
-      });
-    }
-
-    // iOS7 doesn't dispatch change events to TextTrackLists when an
-    // associated track's mode changes. Without something like
-    // Object.observe() (also not present on iOS7), it's not
-    // possible to detect changes to the mode attribute and polyfill
-    // the change event. As a poor substitute, we manually dispatch
-    // change events whenever the controls modify the mode.
-    if (tracks && tracks.onchange === undefined) {
-      (function () {
-        var event = void 0;
-
-        _this.on(['tap', 'click'], function () {
-          if (_typeof(window.Event) !== 'object') {
-            // Android 2.3 throws an Illegal Constructor error for window.Event
-            try {
-              event = new window.Event('change');
-            } catch (err) {}
-          }
-
-          if (!event) {
-            event = document.createEvent('Event');
-            event.initEvent('change', true, true);
-          }
-
-          tracks.dispatchEvent(event);
-        });
-      })();
-    }
-    return _this;
-  }
-
-  /**
-   * Handle click on text track
-   *
-   * @method handleClick
-   */
-
-
-  _createClass(CaptionTrackMenuItem, [{
-    key: 'handleClick',
-    value: function handleClick(event) {
-      var kind = this.track['kind'];
-      var tracks = this.player_.textTracks();
-
-      _get(Object.getPrototypeOf(CaptionTrackMenuItem.prototype), 'handleClick', this).call(this, event);
-
-      if (!tracks) return;
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-
-        if (track['kind'] !== kind) {
-          continue;
-        }
-
-        if (track === this.track) {
-          track['mode'] = 'showing';
-        } else {
-          track['mode'] = 'hidden';
-        }
-      }
-    }
-
-    /**
-     * Handle text track change
-     *
-     * @method handleTracksChange
-     */
-
-  }, {
-    key: 'handleTracksChange',
-    value: function handleTracksChange() {
-      this.selected(this.track['mode'] === 'showing');
-    }
-  }]);
-
-  return CaptionTrackMenuItem;
-}(MenuItem);
-
-Component.registerComponent('CaptionTrackMenuItem', CaptionTrackMenuItem);
-exports.default = CaptionTrackMenuItem;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _audioTrackMenuItem = require('./audio-track-menu-item');
-
-var _audioTrackMenuItem2 = _interopRequireDefault(_audioTrackMenuItem);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file off-audio-track-menu-item.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-//const AudioTrackMenuItem = videojs.getComponent('AudioTrackMenuItem');
-
-/**
- * A special menu item for turning of a specific type of audio track
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends AudioTrackMenuItem
- * @class OffAudioTrackMenuItem
- */
-
-var OffAudioTrackMenuItem = function (_AudioTrackMenuItem) {
-  _inherits(OffAudioTrackMenuItem, _AudioTrackMenuItem);
-
-  function OffAudioTrackMenuItem(player, options) {
-    _classCallCheck(this, OffAudioTrackMenuItem);
-
-    // Create pseudo track info
-    // Requires options['kind']
-    options['track'] = {
-      'kind': options['kind'],
-      'player': player,
-      'label': options['kind'] + ' off',
-      'default': false,
-      'enabled': false
-    };
-
-    // MenuItem is selectable
-    options['selectable'] = true;
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(OffAudioTrackMenuItem).call(this, player, options));
-  }
-
-  /**
-   * Handle text track change
-   *
-   * @param {Object} event Event object
-   * @method handleTracksChange
-   */
-
-
-  _createClass(OffAudioTrackMenuItem, [{
-    key: 'handleTracksChange',
-    value: function handleTracksChange(event) {
-      var tracks = this.player().audioTracks();
-      var selected = true;
-
-      for (var i = 0, l = tracks.length; i < l; i++) {
-        var track = tracks[i];
-        if (track['kind'] === 'main' && track['enabled']) {
-          selected = false;
-          break;
-        }
-      }
-      this.selected(selected);
-    }
-  }]);
-
-  return OffAudioTrackMenuItem;
-}(_audioTrackMenuItem2.default);
-
-Component.registerComponent('OffAudioTrackMenuItem', OffAudioTrackMenuItem);
-exports.default = OffAudioTrackMenuItem;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./audio-track-menu-item":7}],11:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _captionTrackMenuItem = require('./caption-track-menu-item');
-
-var _captionTrackMenuItem2 = _interopRequireDefault(_captionTrackMenuItem);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file caption-track-button-off.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-/**
- * A special menu item for turning of a specific type of text track
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends TextTrackMenuItem
- * @class OffTextTrackMenuItem
- */
-
-var OffCaptionTrackMenuItem = function (_CaptionTrackMenuItem) {
-  _inherits(OffCaptionTrackMenuItem, _CaptionTrackMenuItem);
-
-  function OffCaptionTrackMenuItem(player, options) {
-    _classCallCheck(this, OffCaptionTrackMenuItem);
-
-    // Create pseudo track info
-    // Requires options['kind']
-    options['track'] = {
-      'kind': options['kind'],
-      'player': player,
-      'label': options['kind'] + ' off',
-      'default': false,
-      'mode': 'hidden'
-    };
-
-    // MenuItem is selectable
-    options['selectable'] = true;
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(OffCaptionTrackMenuItem).call(this, player, options));
-  }
-
-  /**
-   * Handle text track change
-   *
-   * @param {Object} event Event object
-   * @method handleTracksChange
-   */
-
-
-  _createClass(OffCaptionTrackMenuItem, [{
-    key: 'handleTracksChange',
-    value: function handleTracksChange(event) {
-      var tracks = this.player().textTracks();
-      var selected = true;
-
-      for (var i = 0, l = tracks.length; i < l; i++) {
-        var track = tracks[i];
-        if (track['kind'] === this.track['kind'] && track['mode'] === 'showing') {
-          selected = false;
-          break;
-        }
-      }
-
-      this.selected(selected);
-    }
-  }]);
-
-  return OffCaptionTrackMenuItem;
-}(_captionTrackMenuItem2.default);
-
-Component.registerComponent('OffCaptionTrackMenuItem', OffCaptionTrackMenuItem);
-exports.default = OffCaptionTrackMenuItem;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caption-track-menu-item":9}],12:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _videoTrackMenuItem = require('./video-track-menu-item');
-
-var _videoTrackMenuItem2 = _interopRequireDefault(_videoTrackMenuItem);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file off-video-track-menu-item.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-
-/**
- * A special menu item for turning of a specific type of video track
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends VideoTrackMenuItem
- * @class OffVideoTrackMenuItem
- */
-
-var OffVideoTrackMenuItem = function (_VideoTrackMenuItem) {
-  _inherits(OffVideoTrackMenuItem, _VideoTrackMenuItem);
-
-  function OffVideoTrackMenuItem(player, options) {
-    _classCallCheck(this, OffVideoTrackMenuItem);
-
-    // Create pseudo track info
-    // Requires options['kind']
-    options['track'] = {
-      'kind': options['kind'],
-      'player': player,
-      'label': options['kind'],
-      'default': false,
-      'selected': true
-    };
-
-    // MenuItem is selectable
-    options['selectable'] = true;
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(OffVideoTrackMenuItem).call(this, player, options));
-  }
-
-  /**
-   * Handle text track change
-   *
-   * @param {Object} event Event object
-   * @method handleTracksChange
-   */
-
-
-  _createClass(OffVideoTrackMenuItem, [{
-    key: 'handleTracksChange',
-    value: function handleTracksChange(event) {
-      var tracks = this.player().videoTracks();
-      var selected = true;
-
-      for (var i = 0, l = tracks.length; i < l; i++) {
-        var track = tracks[i];
-        if (track['kind'] === 'main' && track['selected']) {
-          selected = false;
-          break;
-        }
-      }
-      this.selected(selected);
-    }
-  }]);
-
-  return OffVideoTrackMenuItem;
-}(_videoTrackMenuItem2.default);
-
-Component.registerComponent('OffVideoTrackMenuItem', OffVideoTrackMenuItem);
-exports.default = OffVideoTrackMenuItem;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./video-track-menu-item":14}],13:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _videoTrackMenuItem = require('./video-track-menu-item');
-
-var _videoTrackMenuItem2 = _interopRequireDefault(_videoTrackMenuItem);
-
-var _offVideoTrackMenuItem = require('./off-video-track-menu-item');
-
-var _offVideoTrackMenuItem2 = _interopRequireDefault(_offVideoTrackMenuItem);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file video-track-button.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var ControlBar = _video2.default.getComponent('ControlBar');
-var MenuButton = _video2.default.getComponent('MenuButton');
-var MenuItem = _video2.default.getComponent('MenuItem');
-
-/**
- * The base class for buttons that toggle specific video track types (e.g. commentary)
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends MenuButton
- * @class VideoTrackButton
- */
-
-var VideoTrackButton = function (_MenuButton) {
-  _inherits(VideoTrackButton, _MenuButton);
-
-  function VideoTrackButton(player, options) {
-    _classCallCheck(this, VideoTrackButton);
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VideoTrackButton).call(this, player, options));
-
-    var tracks = _this.player_.videoTracks();
-
-    if (!tracks) {
-      return _possibleConstructorReturn(_this);
-    }
-
-    var updateHandler = _this.update.bind(_this);
-    tracks.addEventListener('removetrack', updateHandler);
-    tracks.addEventListener('addtrack', updateHandler);
-
-    _this.player_.on('dispose', function () {
-      tracks.removeEventListener('removetrack', updateHandler);
-      tracks.removeEventListener('addtrack', updateHandler);
-    });
-    return _this;
-  }
-
-  /**
-   * Allow sub components to stack CSS class names
-   *
-   * @return {String} The constructed class name
-   * @method buildCSSClass
-   */
-
-
-  _createClass(VideoTrackButton, [{
-    key: 'buildCSSClass',
-    value: function buildCSSClass() {
-      return 'vjs-video-button ' + _get(Object.getPrototypeOf(VideoTrackButton.prototype), 'buildCSSClass', this).call(this);
-    }
-
-    // Create a menu item for each text track
-
-  }, {
-    key: 'createItems',
-    value: function createItems() {
-      var items = [];
-      // Add an OFF menu item to turn all tracks off
-      items.push(new MenuItem(this.player_, {
-        'label': 'Quality',
-        selectable: false
-      }));
-      // Add an OFF menu item to turn all tracks off
-      items.push(new _offVideoTrackMenuItem2.default(this.player_, {
-        'kind': 'Auto'
-      }));
-
-      var tracks = this.player_.videoTracks();
-
-      if (!tracks) {
-        return items;
-      }
-
-      if (tracks.length < 2) {
-        return [];
-      }
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-
-        // only add tracks that are of the appropriate kind and have a label
-        if (track['kind'] === 'main') {
-          items.push(new _videoTrackMenuItem2.default(this.player_, {
-            // MenuItem is selectable
-            'selectable': true,
-            'track': track
-          }));
-        }
-      }
-
-      return items;
-    }
-  }]);
-
-  return VideoTrackButton;
-}(MenuButton);
-
-VideoTrackButton.prototype.kind_ = 'video';
-VideoTrackButton.prototype.controlText_ = 'Quality Selection';
-
-//Replace videojs CaptionButton child with this one
-ControlBar.prototype.options_.children.splice(12, 0, 'videoTrackButton');
-
-Component.registerComponent('VideoTrackButton', VideoTrackButton);
-exports.default = VideoTrackButton;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./off-video-track-menu-item":12,"./video-track-menu-item":14}],14:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Component = _video2.default.getComponent('Component');
-var MenuItem = _video2.default.getComponent('MenuItem');
-
-var VideoTrackMenuItem = function (_MenuItem) {
-  _inherits(VideoTrackMenuItem, _MenuItem);
-
-  /**
-   * LABELS
-   *
-   * @static
-   */
-
-  function VideoTrackMenuItem(player, options) {
-    _classCallCheck(this, VideoTrackMenuItem);
-
-    var track = options['track'];
-    var tracks = player.videoTracks();
-
-    // Modify options for parent MenuItem class's init.
-    options['label'] = track['label'] || track['language'] || 'Unknown';
-    options['selected'] = track['default'] || track['selected'] === true;
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VideoTrackMenuItem).call(this, player, options));
-
-    _this.track = track;
-
-    if (tracks) {
-      (function () {
-        var changeHandler = _this.handleTracksChange.bind(_this);
-
-        tracks.addEventListener('change', changeHandler);
-        _this.on('dispose', function () {
-          tracks.removeEventListener('change', changeHandler);
-        });
-      })();
-    }
-    return _this;
-  }
-
-  /**
-   * Handle click on text track
-   *
-   * @method handleClick
-   */
-
-
-  _createClass(VideoTrackMenuItem, [{
-    key: 'handleClick',
-    value: function handleClick(event) {
-      var tracks = this.player_.videoTracks();
-
-      _get(Object.getPrototypeOf(VideoTrackMenuItem.prototype), 'handleClick', this).call(this, event);
-
-      if (!tracks) return;
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-        track['selected'] = track === this.track;
-      }
-    }
-
-    /**
-     * Handle text track change
-     *
-     * @method handleTracksChange
-     */
-
-  }, {
-    key: 'handleTracksChange',
-    value: function handleTracksChange() {
-      this.selected(this.track['selected']);
-    }
-  }]);
-
-  return VideoTrackMenuItem;
-}(MenuItem);
-
-Component.registerComponent('VideoTrackMenuItem', VideoTrackMenuItem);
-exports.default = VideoTrackMenuItem;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],15:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file dash.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * DASH Media Controller - Wrapper for HTML5 Media API
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var Tech = _video2.default.getComponent('Tech');
-var Html5 = _video2.default.getComponent('Html5');
-
-/**
- * Dash Media Controller - Wrapper for HTML5 Media API
- *
- * @param {Object=} options Object of option names and values
- * @param {Function=} ready Ready callback function
- * @extends Html5
- * @class Dash
- */
-
-var Dash = function (_Html) {
-  _inherits(Dash, _Html);
-
-  function Dash(options, ready) {
-    _classCallCheck(this, Dash);
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dash).call(this, options, ready));
-
-    var tTracks = _this.textTracks();
-
-    if (tTracks) {
-      (function () {
-        var tTracksChangeHandler = _this.handleTracksChange.bind(_this);
-
-        tTracks.addEventListener('change', tTracksChangeHandler);
-        _this.on('dispose', function () {
-          tTracks.removeEventListener('change', tTracksChangeHandler);
-        });
-      })();
-    }
-
-    var aTracks = _this.audioTracks();
-
-    if (aTracks) {
-      (function () {
-        var aTracksChangeHandler = _this.handleAudioTracksChange.bind(_this);
-
-        aTracks.addEventListener('change', aTracksChangeHandler);
-        _this.on('dispose', function () {
-          aTracks.removeEventListener('change', aTracksChangeHandler);
-        });
-      })();
-    }
-
-    var vTracks = _this.videoTracks();
-
-    if (vTracks) {
-      (function () {
-        var vTracksChangeHandler = _this.handleVideoTracksChange.bind(_this);
-
-        vTracks.addEventListener('change', vTracksChangeHandler);
-        _this.on('dispose', function () {
-          vTracks.removeEventListener('change', vTracksChangeHandler);
-        });
-      })();
-    }
-
-    return _this;
-  }
-
-  /**
-   * Detect if source is Live
-   * @returns {boolean}
-   */
-
-
-  _createClass(Dash, [{
-    key: 'isDynamic',
-    value: function isDynamic(dynamic) {
-      if (dynamic !== undefined) {
-        return this.isDynamic_ = dynamic;
-      }
-      return this.isDynamic_;
-    }
-  }, {
-    key: 'duration',
-    value: function duration() {
-      var duration = _get(Object.getPrototypeOf(Dash.prototype), 'duration', this).call(this);
-      //FIXME WTF for detect live we should get duration to Infinity
-      return this.isDynamic() ? Infinity : duration;
-    }
-  }, {
-    key: 'setCurrentTime',
-    value: function setCurrentTime(seconds) {
-      if (this.playbackInitialized && this.mediaPlayer_) {
-        // this.mediaPlayer_.enableBufferOccupancyABR(false)
-        this.mediaPlayer_.setQualityFor('video', 0);
-        // this.one('seeked', ()=> {
-        //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled)
-        // })
-      }
-      _get(Object.getPrototypeOf(Dash.prototype), 'setCurrentTime', this).call(this, seconds);
-    }
-
-    /**
-     * Set video
-     *
-     * @param {Object=} src Source object
-     * @method setSrc
-     */
-
-  }, {
-    key: 'src',
-    value: function src(_src) {
-      if (!_src) {
-        return this.el_.src;
-      }
-      this.trigger('loadstart');
-
-      this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
-      this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks();
-      this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks();
-      this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
-      // Save the context after the first initialization for subsequent instances
-      this.context_ = this.context_ || {};
-      // reuse MediaPlayer if it already exists
-      if (!this.mediaPlayer_) {
-        // But make a fresh MediaPlayer each time the sourceHandler is used
-        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-
-        // Must run controller before these two lines or else there is no
-        // element to bind to.
-        this.mediaPlayer_.initialize();
-      }
-
-      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
-      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
-      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
-      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.PLAYBACK_PROGRESS, this.onProgress.bind(this));
-      // Dash.js autoplays by default
-      if (!this.player_.options().autoplay) {
-        this.mediaPlayer_.setAutoPlay(false);
-      }
-
-      this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings.audio);
-      this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings.video);
-      this.mediaPlayer_.setTrackSwitchModeFor('audio', this.options_.trackSwitchMode); //alwaysReplace
-      this.mediaPlayer_.setTrackSwitchModeFor('video', this.options_.trackSwitchMode); //alwaysReplace
-
-      this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
-      this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
-      this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
-
-      this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
-      this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
-      // this.mediaPlayer_.setSelectionModeForInitialTrack(this.options_.initialSelectionMode)
-      this.mediaPlayer_.setBufferToKeep(this.options_.buffer.bufferToKeep);
-      this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
-      this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
-      this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
-      this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm);
-      this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
-      this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
-      this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
-      this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
-      this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
-      this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
-      // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
-      // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
-      //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video})
-
-      this.mediaPlayer_.attachView(this.el_);
-      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
-      this.mediaPlayer_.attachSource(_src);
-    }
-  }, {
-    key: 'onInitialized',
-    value: function onInitialized(_ref, err) {
-      var _ref$streamInfo$manif = _ref.streamInfo.manifestInfo.isDynamic;
-      var isDynamic = _ref$streamInfo$manif === undefined ? false : _ref$streamInfo$manif;
-
-      if (this.playbackInitialized) {
-        return;
-      }
-      this.playbackInitialized = true;
-
-      if (err) {
-        this.player_.error(err);
-      }
-      // this.streamInfo = streamInfo
-      this.isDynamic(isDynamic);
-      this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
-      //let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
-      var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
-      var videoDashTracks = this.mediaPlayer_.getTracksFor('video');
-      var autoSwitch = this.mediaPlayer_.getAutoSwitchQuality();
-
-      var defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio');
-      //let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video')
-      var initialVideoBitrate = this.mediaPlayer_.getInitialBitrateFor('video');
-
-      var i = void 0;
-
-      for (i = 0; i < audioDashTracks.length; i++) {
-        var track = audioDashTracks[i];
-        track.label = track.label || track.lang;
-        var plTrack = this.addAudioTrack('main', track.label, track.lang);
-        plTrack.enabled = plTrack['language'] === (defaultAudio && defaultAudio.lang.indexOf(this.options_.inititalMediaSettings.audio.lang) && defaultAudio.lang || this.options_.inititalMediaSettings.audio.lang);
-      }
-
-      for (i = 0; i < videoDashTracks.length; i++) {
-        var _track = videoDashTracks[i];
-        var bitrateList = _track.bitrateList;
-        for (var j = 0; j < bitrateList.length; j++) {
-          var bitRateInfo = bitrateList[j] / 1000;
-          var label = Dash.qualityLabels[j] || bitRateInfo;
-          var bitRateTrack = this.addVideoTrack('main', label, bitRateInfo);
-          bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
-        }
-      }
-    }
-  }, {
-    key: 'onProgress',
-    value: function onProgress() {
-      this.trigger('progress');
-    }
-  }, {
-    key: 'onMetricChanged',
-    value: function onMetricChanged(e) {
-      // get current buffered ranges of video element and keep them up to date
-      if (e.mediaType !== 'video' && e.mediaType !== 'audio' && e.mediaType !== 'p2pweb') {
-        return;
-      }
-      var metrics = this.getCribbedMetricsFor(e.mediaType);
-      if (metrics) {
-        this.metrics_[e.mediaType] = _video2.default.mergeOptions(this.metrics_[e.mediaType], metrics);
-        this.trigger(e);
-      }
-    }
-  }, {
-    key: 'getCribbedMetricsFor',
-    value: function getCribbedMetricsFor(type) {
-      var metrics = this.mediaPlayer_.getMetricsFor(type),
-          dashMetrics = this.mediaPlayer_.getDashMetrics(),
-          repSwitch = void 0,
-          bufferLevel = void 0,
-          httpRequests = void 0,
-          droppedFramesMetrics = void 0,
-          bitrateIndexValue = void 0,
-          bandwidthValue = void 0,
-          pendingValue = void 0,
-          numBitratesValue = void 0,
-          bufferLengthValue = 0,
-          movingLatency = {},
-          movingDownload = {},
-          movingRatio = {},
-          droppedFramesValue = 0,
-          requestsQueue = void 0,
-          fillmoving = function fillmoving(type, Requests) {
-        var requestWindow, downloadTimes, latencyTimes, durationTimes;
-
-        requestWindow = Requests.slice(-20).filter(function (req) {
-          return req.responsecode >= 200 && req.responsecode < 300 && !!req._mediaduration && req.type === "MediaSegment" && req._stream === type;
-        }).slice(-4);
-        if (requestWindow.length > 0) {
-
-          latencyTimes = requestWindow.map(function (req) {
-            return Math.abs(req.tresponse.getTime() - req.trequest.getTime()) / 1000;
-          });
-
-          movingLatency[type] = {
-            average: latencyTimes.reduce(function (l, r) {
-              return l + r;
-            }) / latencyTimes.length,
-            high: latencyTimes.reduce(function (l, r) {
-              return l < r ? r : l;
-            }),
-            low: latencyTimes.reduce(function (l, r) {
-              return l < r ? l : r;
-            }),
-            count: latencyTimes.length
-          };
-
-          downloadTimes = requestWindow.map(function (req) {
-            return Math.abs(req._tfinish.getTime() - req.tresponse.getTime()) / 1000;
-          });
-
-          movingDownload[type] = {
-            average: downloadTimes.reduce(function (l, r) {
-              return l + r;
-            }) / downloadTimes.length,
-            high: downloadTimes.reduce(function (l, r) {
-              return l < r ? r : l;
-            }),
-            low: downloadTimes.reduce(function (l, r) {
-              return l < r ? l : r;
-            }),
-            count: downloadTimes.length
-          };
-
-          durationTimes = requestWindow.map(function (req) {
-            return req._mediaduration;
-          });
-
-          movingRatio[type] = {
-            average: durationTimes.reduce(function (l, r) {
-              return l + r;
-            }) / downloadTimes.length / movingDownload[type].average,
-            high: durationTimes.reduce(function (l, r) {
-              return l < r ? r : l;
-            }) / movingDownload[type].low,
-            low: durationTimes.reduce(function (l, r) {
-              return l < r ? l : r;
-            }) / movingDownload[type].high,
-            count: durationTimes.length
-          };
-        }
-      };
-
-      if (metrics && dashMetrics) {
-        repSwitch = dashMetrics.getCurrentRepresentationSwitch(metrics);
-        bufferLevel = dashMetrics.getCurrentBufferLevel(metrics);
-        httpRequests = dashMetrics.getHttpRequests(metrics);
-        droppedFramesMetrics = dashMetrics.getCurrentDroppedFrames(metrics);
-        requestsQueue = dashMetrics.getRequestsQueue(metrics);
-
-        fillmoving('video', httpRequests);
-        fillmoving('audio', httpRequests);
-
-        var streamIdx = this.streamInfo ? this.streamInfo.index : 0;
-
-        if (repSwitch !== null) {
-          bitrateIndexValue = dashMetrics.getIndexForRepresentation(repSwitch.to, streamIdx);
-          bandwidthValue = dashMetrics.getBandwidthForRepresentation(repSwitch.to, streamIdx);
-          bandwidthValue = bandwidthValue / 1000;
-          bandwidthValue = Math.round(bandwidthValue);
-        }
-
-        numBitratesValue = dashMetrics.getMaxIndexForBufferType(type, streamIdx);
-
-        if (bufferLevel !== null) {
-          bufferLengthValue = bufferLevel.toPrecision(5);
-        }
-
-        if (droppedFramesMetrics !== null) {
-          droppedFramesValue = droppedFramesMetrics.droppedFrames;
-        }
-
-        if (isNaN(bandwidthValue) || bandwidthValue === undefined) {
-          bandwidthValue = 0;
-        }
-
-        if (isNaN(bitrateIndexValue) || bitrateIndexValue === undefined) {
-          bitrateIndexValue = 0;
-        }
-
-        if (isNaN(numBitratesValue) || numBitratesValue === undefined) {
-          numBitratesValue = 0;
-        }
-
-        if (isNaN(bufferLengthValue) || bufferLengthValue === undefined) {
-          bufferLengthValue = 0;
-        }
-
-        pendingValue = this.mediaPlayer_.getQualityFor(type);
-
-        return {
-          bandwidth: bandwidthValue,
-          bitrateIndex: bitrateIndexValue + 1,
-          pendingIndex: pendingValue !== bitrateIndexValue ? "(-> " + (pendingValue + 1) + ")" : "",
-          numBitrates: numBitratesValue,
-          bufferLength: bufferLengthValue,
-          droppedFrames: droppedFramesValue,
-          movingLatency: movingLatency,
-          movingDownload: movingDownload,
-          movingRatio: movingRatio,
-          requestsQueue: requestsQueue
-        };
-      } else {
-        return null;
-      }
-    }
-  }, {
-    key: 'buildDashJSProtData',
-    value: function buildDashJSProtData(keySystemOptions) {
-      var output = {};
-
-      if (!keySystemOptions) {
-        return output;
-      }
-
-      Object.keys(keySystemOptions).forEach(function (key, data) {
-        if (data.licenseUrl) {
-          data.laURL = data.licenseUrl;
-          delete data.licenseUrl;
-        }
-      });
-
-      return keySystemOptions;
-    }
-  }, {
-    key: 'onTextTracksAdded',
-    value: function onTextTracksAdded(e) {
-      var tracks = e.tracks;
-
-      if (tracks) {
-        var plTracks = this.textTracks();
-        var l = tracks.length,
-            track,
-            plTrack;
-        for (var i = 0; i < l; i++) {
-          track = tracks[i];
-          track.label = track.label || track.lang;
-          plTrack = plTracks[i];
-          track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
-          if (track.defaultTrack) {
-            this.mediaPlayer_.setTextTrack(i);
-            if (plTrack) {
-              plTrack.mode = 'showing';
-            }
-          }
-        }
-      }
-    }
-
-    /**
-     * Update display texttracks
-     *
-     * @method updateDisplay
-     */
-
-  }, {
-    key: 'handleTracksChange',
-    value: function handleTracksChange() {
-      var tracks = this.textTracks();
-
-      if (!tracks || !this.playbackInitialized) {
-        return;
-      }
-      var selected = void 0;
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-        if (track['mode'] === 'showing') {
-          selected = true;
-          this.mediaPlayer_.setTextTrack(i);
-        }
-      }
-      if (!selected) {
-        this.mediaPlayer_.setTextTrack(-1);
-      }
-    }
-  }, {
-    key: 'handleAudioTracksChange',
-    value: function handleAudioTracksChange() {
-      var tracks = this.audioTracks();
-
-      if (!tracks || !this.playbackInitialized) {
-        return;
-      }
-
-      var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-        if (track['enabled']) {
-          var audioDashTrack = audioDashTracks[i];
-          if (track['language'] == audioDashTrack['lang']) {
-            try {
-              this.mediaPlayer_.setCurrentTrack(audioDashTrack);
-            } catch (err) {
-              _video2.default.log(err);
-            }
-          }
-        }
-      }
-    }
-  }, {
-    key: 'handleVideoTracksChange',
-    value: function handleVideoTracksChange() {
-      var tracks = this.videoTracks();
-
-      if (!tracks || !this.playbackInitialized || !this.options_.autoSwitch) {
-        return;
-      }
-      var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && tracks.selectedIndex % 1 === 0;
-      this.mediaPlayer_.setAutoSwitchQuality(!isInt);
-      if (isInt) {
-        this.mediaPlayer_.setQualityFor('video', tracks.selectedIndex);
-      }
-    }
-  }, {
-    key: 'afterMediaKeysReset',
-    value: function afterMediaKeysReset(manifest) {
-      this.showErrors();
-
-      // Attach the source with any protection data
-      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
-      this.mediaPlayer_.attachSource(manifest);
-
-      this.triggerReady();
-    }
-  }, {
-    key: 'showErrors',
-    value: function showErrors() {
-      var _this2 = this;
-
-      // The video element's src is set asynchronously so we have to wait a while
-      // before we unhide any errors
-      // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
-      // in my testing
-      this.setTimeout(function () {
-        _this2.player_.removeClass('vjs-dashjs-hide-errors');
-      }, 250);
-    }
-  }, {
-    key: 'dispose',
-    value: function dispose() {
-      if (this.mediaPlayer_) {
-        this.mediaPlayer_.reset();
-      }
-      _get(Object.getPrototypeOf(Dash.prototype), 'dispose', this).call(this, this);
-    }
-  }]);
-
-  return Dash;
-}(Html5);
-
-Dash.prototype.isDynamic_ = false;
-
-Dash.prototype.options_ = {
-  inititalMediaSettings: {
-    text: {
-      lang: 'fra'
-    },
-    audio: {
-      lang: 'fra'
-    },
-    video: {
-      lang: 'fra'
-    }
-  },
-  //Set to false to switch off adaptive bitrate switching.
-  autoSwitch: true,
-  /*This method sets the current track switch mode. Available options are:
-   * MediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
-   * (used to forbid clearing the buffered data (prior to current playback position) after track switch. Default for video)
-   * MediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
-   * (used to clear the buffered data (prior to current playback position) after track switch. Default for audio)*/
-  trackSwitchMode: 'neverReplace', //alwaysReplace
-  //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
-  bolaEnabled: true,
-  //Set to true if you would like dash.js to keep downloading fragments in the background
-  scheduleWhilePaused: false,
-  //A value of the initial bitrate, kbps
-  initialBitrate: 400,
-  //This method sets the selection mode for the initial track. This mode defines how the initial track will be selected
-  // initialSelectionMode: 'highestBitrate',//widestRange,highestBitrate
-  //Represents how many segment durations to delay the live stream.
-  liveFragmentCount: 4,
-  //This value influences the buffer pruning logic.
-  //https://github.com/Dash-Industry-Forum/dash.js/blob/master/src/streaming/MediaPlayer.js
-  buffer: {
-    //Allows you to modify the buffer that is kept in source buffer in seconds.
-    bufferToKeep: 30,
-    //When the time is set higher than the default you will have to wait longer
-    minBufferTime: 12,
-    //Allows you to modify the interval of pruning buffer in seconds.
-    bufferPruningInterval: 30,
-    //A percentage between 0.0 and 1 to reduce the measured throughput calculations
-    bandwidthSafetyFactor: 0.9,
-    //The time that the internal buffer target will be set to once playing the top quality.
-    bufferTimeAtTopQuality: 30,
-    //The time that the internal buffer target will be set to once playing the top quality for long form content.
-    bufferTimeAtTopQualityLongForm: 60,
-    //This will directly affect the buffer targets when playing back at the top quality.
-    longFormContentDurationThreshold: 600,
-    //A threshold, in seconds, of when dashjs abr becomes less conservative since we have a larger "rich" buffer
-    richBufferThreshold: 20,
-    //A timeout value in seconds, which during the ABRController will block switch-up events.
-    abandonLoadTimeout: 10,
-    //Total number of retry attempts that will occur on a fragment load before it fails.
-    fragmentLoaderRetryAttempts: 3,
-    //Time in milliseconds of which to reload a failed fragment load attempt.
-    fragmentLoaderRetryInterval: 1000
-  },
-  protData: {}
-};
-
-/* Dash Support Testing -------------------------------------------------------- */
-
-Dash.isSupported = function () {
-  return Html5.isSupported() && !!window.MediaSource;
-};
-
-// Add Source Handler pattern functions to this tech
-Tech.withSourceHandlers(Dash);
-
-/*
- * The default native source handler.
- * This simply passes the source to the video element. Nothing fancy.
- *
- * @param  {Object} source   The source object
- * @param  {Flash} tech  The instance of the Flash tech
- */
-Dash.nativeSourceHandler = {};
-
-Dash.prototype['featuresNativeTextTracks'] = false;
-/*
- * Sets the tech's status on native audio track support
- *
- * @type {Boolean}
- */
-Dash.prototype['featuresNativeAudioTracks'] = false;
-
-/*
- * Sets the tech's status on native video track support
- *
- * @type {Boolean}
- */
-Dash.prototype['featuresNativeVideoTracks'] = false;
-
-/*
- * Sets the tech's status on native audio track support
- *
- * @type {Boolean}
- */
-Dash.supportsNativeTextTracks = function () {
-  var supportsTextTracks;
-  supportsTextTracks = !!Html5.TEST_VID.textTracks;
-  if (supportsTextTracks && Html5.TEST_VID.textTracks.length > 0) {
-    supportsTextTracks = typeof Html5.TEST_VID.textTracks[0]['mode'] !== 'number';
-  }
-  if (supportsTextTracks && !('onremovetrack' in Html5.TEST_VID.textTracks)) {
-    supportsTextTracks = false;
-  }
-  return supportsTextTracks;
-};
-
-/*
- * Check to see if native video tracks are supported by this browser/device
- *
- * @return {Boolean}
- */
-Dash.supportsNativeVideoTracks = function () {
-  var supportsVideoTracks = !!Html5.TEST_VID.videoTracks;
-  return supportsVideoTracks;
-};
-
-/*
- * Check to see if native audio tracks are supported by this browser/device
- *
- * @return {Boolean}
- */
-Dash.supportsNativeAudioTracks = function () {
-  var supportsAudioTracks = !!Html5.TEST_VID.audioTracks;
-  return supportsAudioTracks;
-};
-
-/**
- * Check if Flash can play the given videotype
- * @param  {String} type    The mimetype to check
- * @return {String}         'probably', 'maybe', or '' (empty string)
- */
-Dash.nativeSourceHandler.canPlayType = function (type) {
-
-  var dashTypeRE = /^application\/dash\+xml/i;
-  var dashExtRE = /\.mpd/i;
-  var canPlay = '';
-  if (dashTypeRE.test(type)) {
-    canPlay = 'probably';
-  } else if (dashExtRE.test(type)) {
-    canPlay = 'maybe';
-  } else {
-    canPlay = '';
-  }
-
-  return canPlay;
-};
-
-/*
- * Check Flash can handle the source natively
- *
- * @param  {Object} source  The source object
- * @return {String}         'probably', 'maybe', or '' (empty string)
- */
-Dash.nativeSourceHandler.canHandleSource = function (source) {
-
-  // If a type was provided we should rely on that
-  if (source.type) {
-    return Dash.nativeSourceHandler.canPlayType(source.type);
-  } else if (source.src) {
-    return Dash.nativeSourceHandler.canPlayType(source.src);
-  }
-
-  return '';
-};
-
-Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];
-
-/*
- * Pass the source to the flash object
- * Adaptive source handlers will have more complicated workflows before passing
- * video data to the video element
- *
- * @param  {Object} source    The source object
- * @param  {Flash} tech   The instance of the Flash tech
- */
-Dash.nativeSourceHandler.handleSource = function (source, tech) {
-  tech.src(source.src);
-};
-
-/*
- * Clean up the source handler when disposing the player or switching sources..
- * (no cleanup is needed when supporting the format natively)
- */
-Dash.nativeSourceHandler.dispose = function () {};
-
-// Register the native source handler
-Dash.registerSourceHandler(Dash.nativeSourceHandler);
-
-_video2.default.options.dash = {};
-
-Component.registerComponent('Dash', Dash);
-Tech.registerTech('Dash', Dash);
-exports.default = Dash;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],16:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file dashas.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * DASH Media Controller - Wrapper for Flash Media API
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var Tech = _video2.default.getComponent('Tech');
-var Flash = _video2.default.getComponent('Flash');
-
-/**
- * Dash Media Controller - Wrapper for HTML5 Media API
- *
- * @param {Object=} options Object of option names and values
- * @param {Function=} ready Ready callback function
- * @extends Html5
- * @class Dash
- */
-
-var Dashas = function (_Flash) {
-  _inherits(Dashas, _Flash);
-
-  function Dashas(options, ready) {
-    _classCallCheck(this, Dashas);
-
-    // Add global window functions that the swf expects
-    // A 4.x workflow we weren't able to solve for in 5.0
-    // because of the need to hard code these functions
-    // into the swf for security reasons
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashas).call(this, options, ready));
-
-    window.videojs = window.videojs || {};
-    window.videojs.Dashas = window.videojs.Dashas || {};
-    window.videojs.Dashas.onReady = Flash.onReady;
-    window.videojs.Dashas.onEvent = Flash.onEvent;
-    window.videojs.Dashas.onError = Flash.onError;
-
-    _this.metricsInterval = _this.setInterval(_this.detectBandwithChange, 5000);
-    _this.one('loadedmetadata', _this.onInitialized.bind(_this));
-
-    var tracks = _this.audioTracks();
-
-    var changeHandler = _this.handleAudioTracksChange.bind(_this);
-
-    tracks.addEventListener('change', changeHandler);
-    _this.on('dispose', function () {
-      tracks.removeEventListener('change', changeHandler);
-    });
-
-    return _this;
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @return {Element}
-   * @method createEl
-   */
-
-
-  _createClass(Dashas, [{
-    key: 'createEl',
-    value: function createEl() {
-      var options = this.options_;
-      var serverUrl = Dashas.buildMetadataUrl(options);
-      var customData = Dashas.buildOptData(options);
-      // Merge default flashvars with ones passed in to init
-      options.flashVars = _video2.default.mergeOptions({
-        'metadataUrl': encodeURIComponent(serverUrl),
-        'authenticationToken': encodeURIComponent(customData),
-        'language': 'fr',
-        'spinner': !1,
-        'watermark': !1,
-        'muted': this.player_.options_.muted,
-        'debug': true,
-        'quality': 'autolow',
-        'maxBufferLength': 8
-      }, options.flashVars || {});
-
-      return _get(Object.getPrototypeOf(Dashas.prototype), 'createEl', this).call(this);
-    }
-  }, {
-    key: 'onInitialized',
-    value: function onInitialized() {
-      var metrics = this.getPlaybackStatistics();
-      if (!metrics) {
-        return;
-      }
-      this.metrics_ = _video2.default.mergeOptions(this.metrics_, metrics);
-
-      this.addAudioTracks();
-    }
-  }, {
-    key: 'handleAudioTracksChange',
-    value: function handleAudioTracksChange() {
-      var tracks = this.audioTracks();
-
-      if (!tracks) {
-        return;
-      }
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-        if (track['enabled']) {
-          try {
-            this.el_.vjs_setProperty('forcedAudioLang', i);
-          } catch (err) {
-            _video2.default.log(err);
-          }
-        }
-      }
-    }
-  }, {
-    key: 'addAudioTracks',
-    value: function addAudioTracks() {
-      var tracks = this.el_.vjs_getProperty('audioTracks');
-
-      if (!tracks) {
-        return;
-      }
-
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
-        if (typeof track === 'string') {
-          track = {
-            label: track,
-            lang: track
-          };
-        }
-        var plTrack = this.addAudioTrack('main', track.label, track.lang);
-        plTrack.enabled = plTrack['language'] === 'fra' || plTrack['language'] === 'fr';
-      }
-    }
-  }, {
-    key: 'detectBandwithChange',
-    value: function detectBandwithChange() {
-      var metrics = this.getPlaybackStatistics();
-      var metricsChangeType = void 0;
-      if (!metrics) {
-        return;
-      }
-      switch (true) {
-        case metrics.video.bandwidth !== this.metrics_.video.bandwidth:
-          this.metrics_.video.bandwidth = metrics.video.bandwidth;
-          metricsChangeType = 'video';
-          break;
-        case metrics.audio.bandwidth !== this.metrics_.audio.bandwidth:
-          this.metrics_.audio.bandwidth = metrics.audio.bandwidth;
-          metricsChangeType = 'audio';
-          break;
-        default:
-          break;
-      }
-      if (metricsChangeType) {
-        var metricsChangeEvent = {
-          type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
-          mediaType: metricsChangeType
-        };
-
-        this.trigger(metricsChangeEvent);
-      }
-    }
-  }, {
-    key: 'subtitleTracks',
-    value: function subtitleTracks() {
-      return this.textTracks();
-    }
-  }, {
-    key: 'setSubsTrack',
-    value: function setSubsTrack(track) {
-      this.setTextTrack(track);
-    }
-  }, {
-    key: 'getDroppedFrames',
-    value: function getDroppedFrames() {
-      return this.el_.vjs_getProperty('droppedFrames');
-    }
-  }, {
-    key: 'getBuffered',
-    value: function getBuffered() {
-      return this.el_.vjs_getProperty('buffered');
-    }
-  }, {
-    key: 'getBufferLevel',
-    value: function getBufferLevel() {
-      return this.el_.vjs_getProperty('bufferLevel');
-    }
-  }, {
-    key: 'getCurrentAudioBandwidth',
-    value: function getCurrentAudioBandwidth() {
-      return this.el_.vjs_getProperty('currentAudioBandwidth');
-    }
-  }, {
-    key: 'getCurrentVideoBandwidth',
-    value: function getCurrentVideoBandwidth() {
-      return this.el_.vjs_getProperty('currentVideoBandwidth');
-    }
-  }, {
-    key: 'audioTracks',
-    value: function audioTracks() {
-      return Tech.prototype.audioTracks.call(this);
-    }
-  }, {
-    key: 'poster',
-    value: function poster() {
-      return '';
-    }
-  }, {
-    key: 'getPlaybackStatistics',
-    value: function getPlaybackStatistics() {
-      var z = this.getBuffered();
-      var W = (this.getBufferLevel(), this.getDroppedFrames());
-      var Z = this.getCurrentVideoBandwidth();
-      var K = this.getCurrentAudioBandwidth();
-      var R = {
-        bandwidth: Z / 1000,
-        bufferLength: z,
-        droppedFrames: W
-      };
-      var N = {
-        bandwidth: K / 1000,
-        bufferLength: z
-      };
-      return _video2.default.mergeOptions(this.metrics_, { video: R, audio: N });
-    }
-  }, {
-    key: 'src',
-    value: function src(_src) {
-      if (!_src) {
-        return this.currentSrc();
-      }
-      var options = this.options_;
-      var autoPlay = this.player_.autoplay();
-      var serverUrl = Dashas.buildMetadataUrl(options);
-      var customData = Dashas.buildOptData(options);
-      this.el_.vjs_source(_src, autoPlay, serverUrl, customData);
-    }
-  }, {
-    key: 'currentTime',
-    value: function currentTime() {
-      return this.el_.vjs_getProperty('currentTime');
-    }
-  }, {
-    key: 'buffered',
-    value: function buffered() {
-      return this.el_.vjs_getProperty('buffered');
-    }
-  }]);
-
-  return Dashas;
-}(Flash);
-
-Dashas.extractAssetId = function (source) {
-  var reg = /^(.*\/)?(?:$|(.+?)(?:(\.[^.]*$)|$))/;
-  var filePath = source.match(reg);
-
-  var assetId = filePath[2];
-  return assetId;
-};
-
-Dashas.getDRMData = function (options) {
-  var drmData = options.protData['com.adobe.flashaccess'];
-  var assetId = options.source ? Dashas.extractAssetId(options.source.src) : '';
-  var customData = drmData['httpRequestHeaders'] ? drmData['httpRequestHeaders'].customData || {} : {};
-  var serverUrl = drmData['serverURL'] ? drmData['serverURL'] || '' : '';
-
-  if (options.source && !options.source.drm) {
-    serverUrl = customData = assetId = '';
-  }
-
-  return {
-    customData: customData,
-    serverUrl: serverUrl,
-    assetId: assetId,
-    variantId: '' //on utilise pas cette key
-  };
-};
-
-Dashas.buildMetadataUrl = function (options) {
-  var data = Dashas.getDRMData(options);
-  var metadataUrl = data.serverUrl;
-  if (data.customData) {
-    metadataUrl += '?optData=' + data.customData;
-  }
-  if (data.assetId) {
-    metadataUrl += '&assetId=' + data.assetId;
-  }
-  if (data.variantId) {
-    metadataUrl += '&variantId=' + data.variantId;
-  }
-  return metadataUrl;
-};
-
-Dashas.buildOptData = function (options) {
-  return Dashas.getDRMData(options).customData;
-};
-
-Dashas.prototype.options_ = {
-  customData: {},
-  protData: {
-    "com.widevine.alpha": {},
-    "com.microsoft.playready": {},
-    "com.adobe.flashaccess": {},
-    "org.w3.clearkey": {}
-  }
-};
-
-/* Dash Support Testing -------------------------------------------------------- */
-
-Dashas.isSupported = function () {
-  return Flash.isSupported() && Flash.version()[0] >= 14;
-};
-
-// Add Source Handler pattern functions to this tech
-Tech.withSourceHandlers(Dashas);
-
-/*
- * The default native source handler.
- * This simply passes the source to the video element. Nothing fancy.
- *
- * @param  {Object} source   The source object
- * @param  {Flash} tech  The instance of the Flash tech
- */
-Dashas.nativeSourceHandler = {};
-
-/**
- * Check if Flash can play the given videotype
- * @param  {String} type    The mimetype to check
- * @return {String}         'probably', 'maybe', or '' (empty string)
- */
-Dashas.nativeSourceHandler.canPlayType = function (source) {
-
-  var dashTypeRE = /^application\/dash\+xml/i;
-  var dashExtRE = /\.mpd/i;
-
-  if (dashTypeRE.test(source)) {
-    return 'probably';
-  } else if (dashExtRE.test(source)) {
-    return 'maybe';
-  } else {
-    return '';
-  }
-};
-
-/*
- * Check Flash can handle the source natively
- *
- * @param  {Object} source  The source object
- * @return {String}         'probably', 'maybe', or '' (empty string)
- */
-Dashas.nativeSourceHandler.canHandleSource = function (source) {
-
-  // If a type was provided we should rely on that
-  if (source.type) {
-    return Dashas.nativeSourceHandler.canPlayType(source.type);
-  } else if (source.src) {
-    return Dashas.nativeSourceHandler.canPlayType(source.src);
-  }
-
-  return '';
-};
-
-/*
- * Pass the source to the flash object
- * Adaptive source handlers will have more complicated workflows before passing
- * video data to the video element
- *
- * @param  {Object} source    The source object
- * @param  {Flash} tech   The instance of the Flash tech
- */
-Dashas.nativeSourceHandler.handleSource = function (source, tech) {
-  tech.src(source.src);
-};
-
-/*
- * Clean up the source handler when disposing the player or switching sources..
- * (no cleanup is needed when supporting the format natively)
- */
-Dashas.nativeSourceHandler.dispose = function () {};
-
-// Register the native source handler
-Dashas.registerSourceHandler(Dashas.nativeSourceHandler);
-
-_video2.default.options.dashas = {};
-
-Component.registerComponent('Dashas', Dashas);
-Tech.registerTech('Dashas', Dashas);
-
-/**
- * @fileoverview Externs for video-js.swf. Externs are functions
- * that the compiler shouldn't obfuscate.
- */
-
-/**
- * @param {string} name
- */
-HTMLObjectElement.prototype.vjs_getProperty = function (name) {};
-
-/**
- * @param {string} name
- * @param {string|number} value
- */
-HTMLObjectElement.prototype.vjs_setProperty = function (name, value) {};
-
-/**
- * Control methods
- */
-HTMLObjectElement.prototype.vjs_play = function () {};
-HTMLObjectElement.prototype.vjs_pause = function () {};
-HTMLObjectElement.prototype.vjs_load = function () {};
-
-/**
- * @param {string} src
- */
-HTMLObjectElement.prototype.vjs_src = function (src) {};
-
-exports.default = Dashas;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _dash = require('./dash');
-
-var _dash2 = _interopRequireDefault(_dash);
-
-var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file easy-broadcast.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * EASY_BROADCAST P2P Media Controller - Wrapper for DASH Media API
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var Tech = _video2.default.getComponent('Tech');
-
-/**
- * Dash Media Controller - Wrapper for HTML5 Media API
- *
- * @param {Object=} options Object of option names and values
- * @param {Function=} ready Ready callback function
- * @extends Dash
- * @class EasyBroadcast
- */
-
-var EasyBroadcast = function (_Dash) {
-  _inherits(EasyBroadcast, _Dash);
-
-  function EasyBroadcast(options, ready) {
-    _classCallCheck(this, EasyBroadcast);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(EasyBroadcast).call(this, options, ready));
-  }
-
-  /**
-   * Set video
-   *
-   * @param {Object=} src Source object
-   * @method setSrc
-   */
-
-
-  _createClass(EasyBroadcast, [{
-    key: 'src',
-    value: function src(_src) {
-      var _this2 = this;
-
-      if (!_src) {
-        return this.el_.src;
-      }
-
-      this.clearTimeout(this.loadEBTimeout);
-      if (!EasyBroadcast.ebLoaded) {
-        // Set the source when ready
-        this.loadEBTimeout = this.setTimeout(function () {
-          _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', _this2).call(_this2, _src);
-        }, 2000);
-        return this.injectJs(_src);
-      } else {
-        this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
-        _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
-      }
-    }
-  }, {
-    key: 'getCribbedMetricsFor',
-    value: function getCribbedMetricsFor(type) {
-      if (type !== 'p2pweb') {
-        return _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'getCribbedMetricsFor', this).call(this, type);
-      }
-      var metrics = this.mediaPlayer_.getMetricsFor(type);
-      if (metrics) {
-        return metrics.metricsP2PWeb;
-      } else {
-        return null;
-      }
-    }
-  }, {
-    key: 'onMetricChanged',
-    value: function onMetricChanged(e) {
-      if (e.mediaType !== 'video' && e.mediaType !== 'audio') {
-        return;
-      }
-      var metricsKey = 'p2pweb';
-      var metrics = this.getCribbedMetricsFor(metricsKey);
-      if (metrics) {
-        this.metrics_[metricsKey] = _video2.default.mergeOptions(this.metrics_[metricsKey], metrics);
-      }
-      _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'onMetricChanged', this).call(this, e);
-    }
-  }, {
-    key: 'onReady',
-    value: function onReady() {
-      this.triggerReady();
-    }
-  }, {
-    key: 'injectJs',
-    value: function injectJs(src) {
-      var url = this.options_.ebLib;
-      var t = 'script';
-      var d = document;
-      var s = d.getElementsByTagName('head')[0] || d.documentElement;
-      var js = d.createElement(t);
-      var cb = this.src.bind(this);
-      js.async = true;
-      js.type = 'text/javascript';
-
-      js.onload = js.onreadystatechange = function () {
-        var rs = this.readyState;
-        if (!EasyBroadcast.ebLoaded && (!rs || /loaded|complete/.test(rs))) {
-          EasyBroadcast.ebLoaded = true;
-          cb(src);
-        }
-      };
-      js.src = url;
-      s.insertBefore(js, s.firstChild);
-    }
-  }]);
-
-  return EasyBroadcast;
-}(_dash2.default);
-
-EasyBroadcast.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
-  ebLib: '//www.easybroadcast.fr/libs/65/EB.js&s2member_file_download_key=dbb00d0abec8ccb2295b7d2df5325f6b',
-  //override option EB, cause switch lang too long
-  trackSwitchMode: 'alwaysReplace'
-});
-
-/* EasyBroadcast Support Testing -------------------------------------------------------- */
-
-EasyBroadcast.isSupported = function () {
-  return _dash2.default.isSupported() && !!(window.RTCPeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection) && !_video2.default.browser.IS_IOS && !_video2.default.browser.IS_ANDROID;
-};
-
-// Add Source Handler pattern functions to this tech
-Tech.withSourceHandlers(EasyBroadcast);
-
-/*
- * The default native source handler.
- * This simply passes the source to the video element. Nothing fancy.
- *
- * @param  {Object} source   The source object
- * @param  {Flash} tech  The instance of the Flash tech
- */
-EasyBroadcast.nativeSourceHandler = _dash2.default.nativeSourceHandler;
-
-/*
- * Sets the tech's status on native audio track support
- *
- * @type {Boolean}
- */
-EasyBroadcast.supportsNativeTextTracks = _dash2.default.supportsNativeTextTracks;
-
-/*
- * Check to see if native video tracks are supported by this browser/device
- *
- * @return {Boolean}
- */
-EasyBroadcast.supportsNativeVideoTracks = _dash2.default.supportsNativeVideoTracks;
-
-/*
- * Check to see if native audio tracks are supported by this browser/device
- *
- * @return {Boolean}
- */
-EasyBroadcast.supportsNativeAudioTracks = _dash2.default.supportsNativeAudioTracks;
-
-EasyBroadcast.loadEBTimeout = 0;
-
-EasyBroadcast.ebLoaded = false;
-
-_video2.default.options.easybroadcast = {};
-
-Component.registerComponent('EasyBroadcast', EasyBroadcast);
-Tech.registerTech('EasyBroadcast', EasyBroadcast);
-exports.default = EasyBroadcast;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./dash":15}],18:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var MediaTechController = _video2.default.getComponent('MediaTechController');
-var AudioTrack = _video2.default.getComponent('AudioTrack');
-var VideoTrack = _video2.default.getComponent('VideoTrack');
-
-MediaTechController.METRICS_DATA = {
-  bandwidth: -1,
-  bitrateIndex: 0,
-  pendingIndex: '',
-  numBitrates: 0,
-  bufferLength: 0,
-  droppedFrames: 0,
-  movingLatency: 0,
-  movingDownload: 0,
-  movingRatio: 0,
-  requestsQueue: 0
-};
-
-MediaTechController.prototype.metrics_ = {
-  video: _video2.default.mergeOptions({
-    bandwidth: /*this.el().webkitVideoDecodedByteCount ||*/-1
-  }, MediaTechController.METRICS_DATA),
-  audio: _video2.default.mergeOptions({
-    bandwidth: /*this.el().webkitAudioDecodedByteCount || */-1
-  }, MediaTechController.METRICS_DATA),
-  p2pweb: {
-    chunksFromCDN: 0,
-    chunksFromP2P: 0,
-    chunksSent: 0,
-    bufferLength: -1,
-    swarmSize: -1,
-    p2pRatio: -1,
-    startupTime: -1
-  }
-};
-
-/**
- * Get default metrix statistics object
- * @returns {{video: {bandwidth: number}, audio: {bandwidth: number}}}
- */
-MediaTechController.prototype.getPlaybackStatistics = function () {
-  return this.metrics_;
-};
-
-/**
- * Get default metrix statistics object for specified type
- * @param type
- * @returns {*}
- */
-MediaTechController.prototype.getCribbedMetricsFor = function (type) {
-  return this.metrics_[type];
-};
-
-/**
- * Creates and returns a remote text track object
- *
- * @param {String} kind Text track kind (subtitles, captions, descriptions
- *                                       chapters and metadata)
- * @param {String=} label Label to identify the text track
- * @param {String=} language Two letter language abbreviation
- * @return {TextTrackObject}
- * @method addTextTrack
- */
-MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
-  var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
-
-  if (!kind) {
-    throw new Error('AudioTrack kind is required but was not provided');
-  }
-
-  var tracks = this.audioTracks();
-
-  options.kind = kind;
-
-  if (label) {
-    options.label = label;
-  }
-  if (language) {
-    options.language = language;
-  }
-  options.tech = self;
-
-  var track = new AudioTrack(options);
-  tracks.addTrack_(track);
-
-  return track;
-};
-
-MediaTechController.prototype.addVideoTrack = function (kind, label, language) {
-  var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
-
-  if (!kind) {
-    throw new Error('VideoTrack kind is required but was not provided');
-  }
-
-  var tracks = this.videoTracks();
-
-  options.kind = kind;
-
-  if (label) {
-    options.label = label;
-  }
-  if (language) {
-    options.language = language;
-  }
-  options.tech = self;
-
-  var track = new VideoTrack(options);
-  tracks.addTrack_(track);
-
-  return track;
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],19:[function(require,module,exports){
-(function (global){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
-
-var _video2 = _interopRequireDefault(_video);
-
-var _dash = require('./dash');
-
-var _dash2 = _interopRequireDefault(_dash);
-
-var _streamrootDashjsP2pWrapper = require('streamroot-dashjs-p2p-wrapper');
-
-var _streamrootDashjsP2pWrapper2 = _interopRequireDefault(_streamrootDashjsP2pWrapper);
-
-var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file streamroot.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * STREAMROOT P2P Media Controller - Wrapper for DASH Media API
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-var Component = _video2.default.getComponent('Component');
-var Tech = _video2.default.getComponent('Tech');
-
-/**
- * Dash Media Controller - Wrapper for HTML5 Media API
- *
- * @param {Object=} options Object of option names and values
- * @param {Function=} ready Ready callback function
- * @extends Dash
- * @class EasyBroadcast
- */
-
-var Streamroot = function (_Dash) {
-  _inherits(Streamroot, _Dash);
-
-  function Streamroot(options, ready) {
-    _classCallCheck(this, Streamroot);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Streamroot).call(this, options, ready));
-  }
-
-  /**
-   * Set video
-   *
-   * @param {Object=} src Source object
-   * @method setSrc
-   */
-
-
-  _createClass(Streamroot, [{
-    key: 'src',
-    value: function src(_src) {
-      if (!_src) {
-        return this.el_.src;
-      }
-      // But make a fresh MediaPlayer each time the sourceHandler is used
-      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-      this.dashjsWrapper_ = new _streamrootDashjsP2pWrapper2.default(this.mediaPlayer_, this.options_.p2pConfig, 30);
-      // Apply any options that are set
-      this.mediaPlayer_.initialize();
-      this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
-      _get(Object.getPrototypeOf(Streamroot.prototype), 'src', this).call(this, _src);
-    }
-  }, {
-    key: 'getCribbedMetricsFor',
-    value: function getCribbedMetricsFor(type) {
-      if (type !== 'p2p') {
-        return _get(Object.getPrototypeOf(Streamroot.prototype), 'getCribbedMetricsFor', this).call(this, type);
-      }
-      var metrics = this.mediaPlayer_.getMetricsFor(type);
-      if (metrics) {
-        return metrics.metricsP2PWeb;
-      } else {
-        return null;
-      }
-    }
-  }, {
-    key: 'onMetricChanged',
-    value: function onMetricChanged(e) {
-      if (e.mediaType !== 'video' && e.mediaType !== 'audio') {
-        return;
-      }
-      var metricsKey = 'p2p';
-      var metrics = this.getCribbedMetricsFor(metricsKey);
-      if (metrics) {
-        this.metrics_[metricsKey] = _video2.default.mergeOptions(this.metrics_[metricsKey], metrics);
-      }
-      _get(Object.getPrototypeOf(Streamroot.prototype), 'onMetricChanged', this).call(this, e);
-    }
-  }]);
-
-  return Streamroot;
-}(_dash2.default);
-
-Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
-  p2pConfig: {
-    streamrootKey: 'none',
-    debug: true
-  },
-  limitBitrateByPortal: true
-});
-
-/* Streamroot Support Testing -------------------------------------------------------- */
-
-Streamroot.isSupported = function () {
-  return _dash2.default.isSupported() && !!(window.RTCPeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection) && !_video2.default.browser.IS_IOS && !_video2.default.browser.IS_ANDROID;
-};
-
-// Add Source Handler pattern functions to this tech
-Tech.withSourceHandlers(Streamroot);
-
-_video2.default.options.streamroot = {};
-
-Component.registerComponent('Streamroot', Streamroot);
-Tech.registerTech('Streamroot', Streamroot);
-exports.default = Streamroot;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./dash":15,"streamroot-dashjs-p2p-wrapper":23}],20:[function(require,module,exports){
-
-},{}],21:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -3310,7 +17,7 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":20}],22:[function(require,module,exports){
+},{"min-document":12}],2:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -3323,7 +30,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],23:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (global){
 /**
  * streamroot-dashjs-p2p-wrapper
@@ -3347,7 +54,7 @@ t.exports=e("../../modules/_core").Object.isFrozen},{"../../modules/_core":170,"
 for(var k in b)C.call(b,k)&&(h[k]=b[k])}else i.utf8=b}(this)}).call(this,"undefined"!=typeof i?i:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],297:[function(e,t,n){function r(e,t,n){var r;return r=t?new o(e,t):new o(e)}var i=function(){return this}(),o=i.WebSocket||i.MozWebSocket;t.exports=o?r:null,o&&(r.prototype=o.prototype)},{}],298:[function(e,t,n){(function(t){var r=e("isarray"),i=e("./is-buffer");n.deconstructPacket=function(e){function t(e){if(!e)return e;if(i(e)){var o={_placeholder:!0,num:n.length};return n.push(e),o}if(r(e)){for(var a=new Array(e.length),s=0;s<e.length;s++)a[s]=t(e[s]);return a}if("object"==typeof e&&!(e instanceof Date)){var a={};for(var u in e)a[u]=t(e[u]);return a}return e}var n=[],o=e.data,a=e;return a.data=t(o),a.attachments=n.length,{packet:a,buffers:n}},n.reconstructPacket=function(e,t){function n(e){if(e&&e._placeholder){var i=t[e.num];return i}if(r(e)){for(var o=0;o<e.length;o++)e[o]=n(e[o]);return e}if(e&&"object"==typeof e){for(var a in e)e[a]=n(e[a]);return e}return e}return e.data=n(e.data),e.attachments=void 0,e},n.removeBlobs=function(e,n){function o(e,u,c){if(!e)return e;if(t.Blob&&e instanceof Blob||t.File&&e instanceof File){a++;var l=new FileReader;l.onload=function(){c?c[u]=this.result:s=this.result,--a||n(s)},l.readAsArrayBuffer(e)}else if(r(e))for(var f=0;f<e.length;f++)o(e[f],f,e);else if(e&&"object"==typeof e&&!i(e))for(var d in e)o(e[d],d,e)}var a=0,s=e;o(s),a||n(s)}}).call(this,"undefined"!=typeof i?i:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./is-buffer":300,isarray:260}],299:[function(e,t,n){function r(){}function i(e){var t="",r=!1;return t+=e.type,n.BINARY_EVENT!=e.type&&n.BINARY_ACK!=e.type||(t+=e.attachments,t+="-"),e.nsp&&"/"!=e.nsp&&(r=!0,t+=e.nsp),null!=e.id&&(r&&(t+=",",r=!1),t+=e.id),null!=e.data&&(r&&(t+=","),t+=f.stringify(e.data)),l("encoded %j as %s",e,t),t}function o(e,t){function n(e){var n=h.deconstructPacket(e),r=i(n.packet),o=n.buffers;o.unshift(r),t(o)}h.removeBlobs(e,n)}function a(){this.reconstructor=null}function s(e){var t={},r=0;if(t.type=Number(e.charAt(0)),null==n.types[t.type])return c();if(n.BINARY_EVENT==t.type||n.BINARY_ACK==t.type){for(t.attachments="";"-"!=e.charAt(++r);)t.attachments+=e.charAt(r);t.attachments=Number(t.attachments)}if("/"==e.charAt(r+1))for(t.nsp="";++r;){var i=e.charAt(r);if(","==i)break;if(t.nsp+=i,r+1==e.length)break}else t.nsp="/";var o=e.charAt(r+1);if(""!=o&&Number(o)==o){for(t.id="";++r;){var i=e.charAt(r);if(null==i||Number(i)!=i){--r;break}if(t.id+=e.charAt(r),r+1==e.length)break}t.id=Number(t.id)}if(e.charAt(++r))try{t.data=f.parse(e.substr(r))}catch(a){return c()}return l("decoded %s as %j",e,t),t}function u(e){this.reconPack=e,this.buffers=[]}function c(e){return{type:n.ERROR,data:"parser error"}}var l=e("debug")("socket.io-parser"),f=e("json3"),d=(e("isarray"),e("component-emitter")),h=e("./binary"),p=e("./is-buffer");n.protocol=4,n.types=["CONNECT","DISCONNECT","EVENT","BINARY_EVENT","ACK","BINARY_ACK","ERROR"],n.CONNECT=0,n.DISCONNECT=1,n.EVENT=2,n.ACK=3,n.ERROR=4,n.BINARY_EVENT=5,n.BINARY_ACK=6,n.Encoder=r,n.Decoder=a,r.prototype.encode=function(e,t){if(l("encoding packet %j",e),n.BINARY_EVENT==e.type||n.BINARY_ACK==e.type)o(e,t);else{var r=i(e);t([r])}},d(a.prototype),a.prototype.add=function(e){var t;if("string"==typeof e)t=s(e),n.BINARY_EVENT==t.type||n.BINARY_ACK==t.type?(this.reconstructor=new u(t),0==this.reconstructor.reconPack.attachments&&this.emit("decoded",t)):this.emit("decoded",t);else{if(!p(e)&&!e.base64)throw new Error("Unknown type: "+e);if(!this.reconstructor)throw new Error("got binary data when not reconstructing a packet");t=this.reconstructor.takeBinaryData(e),t&&(this.reconstructor=null,this.emit("decoded",t))}},a.prototype.destroy=function(){this.reconstructor&&this.reconstructor.finishedReconstruction()},u.prototype.takeBinaryData=function(e){if(this.buffers.push(e),this.buffers.length==this.reconPack.attachments){var t=h.reconstructPacket(this.reconPack,this.buffers);return this.finishedReconstruction(),t}return null},u.prototype.finishedReconstruction=function(){this.reconPack=null,this.buffers=[]}},{"./binary":298,"./is-buffer":300,"component-emitter":135,debug:301,isarray:260,json3:261}],300:[function(e,t,n){(function(e){function n(t){return e.Buffer&&e.Buffer.isBuffer(t)||e.ArrayBuffer&&t instanceof ArrayBuffer}t.exports=n}).call(this,"undefined"!=typeof i?i:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],301:[function(e,t,n){arguments[4][276][0].apply(n,arguments)},{dup:276}],302:[function(e,t,n){function r(e,t){var n=[];t=t||0;for(var r=t||0;r<e.length;r++)n[r-t]=e[r];return n}t.exports=r},{}],303:[function(t,n,r){!function(t,i){"use strict";var o="0.7.9",a="",s="?",u="function",c="undefined",l="object",f="string",d="major",h="model",p="name",_="type",m="vendor",v="version",g="architecture",y="console",b="mobile",w="tablet",C="smarttv",k="wearable",E="embedded",S={extend:function(e,t){for(var n in t)-1!=="browser cpu device engine os".indexOf(n)&&t[n].length%2===0&&(e[n]=t[n].concat(e[n]));return e},has:function(e,t){return"string"==typeof e&&-1!==t.toLowerCase().indexOf(e.toLowerCase())},lowerize:function(e){return e.toLowerCase()},major:function(e){return typeof e===f?e.split(".")[0]:i}},T={rgx:function(){for(var e,t,n,r,o,a,s,f=0,d=arguments;f<d.length&&!a;){var h=d[f],p=d[f+1];if(typeof e===c){e={};for(r in p)o=p[r],typeof o===l?e[o[0]]=i:e[o]=i}for(t=n=0;t<h.length&&!a;)if(a=h[t++].exec(this.getUA()))for(r=0;r<p.length;r++)s=a[++n],o=p[r],typeof o===l&&o.length>0?2==o.length?typeof o[1]==u?e[o[0]]=o[1].call(this,s):e[o[0]]=o[1]:3==o.length?typeof o[1]!==u||o[1].exec&&o[1].test?e[o[0]]=s?s.replace(o[1],o[2]):i:e[o[0]]=s?o[1].call(this,s,o[2]):i:4==o.length&&(e[o[0]]=s?o[3].call(this,s.replace(o[1],o[2])):i):e[o]=s?s:i;f+=2}return e},str:function(e,t){for(var n in t)if(typeof t[n]===l&&t[n].length>0){for(var r=0;r<t[n].length;r++)if(S.has(t[n][r],e))return n===s?i:n}else if(S.has(t[n],e))return n===s?i:n;return e}},j={browser:{oldsafari:{version:{"1.0":"/8",1.2:"/1",1.3:"/3","2.0":"/412","2.0.2":"/416","2.0.3":"/417","2.0.4":"/419","?":"/"}}},device:{amazon:{model:{"Fire Phone":["SD","KF"]}},sprint:{model:{"Evo Shift 4G":"7373KT"},vendor:{HTC:"APA",Sprint:"Sprint"}}},os:{windows:{version:{ME:"4.90","NT 3.11":"NT3.51","NT 4.0":"NT4.0",2e3:"NT 5.0",XP:["NT 5.1","NT 5.2"],Vista:"NT 6.0",7:"NT 6.1",8:"NT 6.2",8.1:"NT 6.3",10:["NT 6.4","NT 10.0"],RT:"ARM"}}}},A={browser:[[/(opera\smini)\/([\w\.-]+)/i,/(opera\s[mobiletab]+).+version\/([\w\.-]+)/i,/(opera).+version\/([\w\.]+)/i,/(opera)[\/\s]+([\w\.]+)/i],[p,v],[/\s(opr)\/([\w\.]+)/i],[[p,"Opera"],v],[/(kindle)\/([\w\.]+)/i,/(lunascape|maxthon|netfront|jasmine|blazer)[\/\s]?([\w\.]+)*/i,/(avant\s|iemobile|slim|baidu)(?:browser)?[\/\s]?([\w\.]*)/i,/(?:ms|\()(ie)\s([\w\.]+)/i,/(rekonq)\/([\w\.]+)*/i,/(chromium|flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi|iridium)\/([\w\.-]+)/i],[p,v],[/(trident).+rv[:\s]([\w\.]+).+like\sgecko/i],[[p,"IE"],v],[/(edge)\/((\d+)?[\w\.]+)/i],[p,v],[/(yabrowser)\/([\w\.]+)/i],[[p,"Yandex"],v],[/(comodo_dragon)\/([\w\.]+)/i],[[p,/_/g," "],v],[/(chrome|omniweb|arora|[tizenoka]{5}\s?browser)\/v?([\w\.]+)/i,/(uc\s?browser|qqbrowser)[\/\s]?([\w\.]+)/i],[p,v],[/(dolfin)\/([\w\.]+)/i],[[p,"Dolphin"],v],[/((?:android.+)crmo|crios)\/([\w\.]+)/i],[[p,"Chrome"],v],[/XiaoMi\/MiuiBrowser\/([\w\.]+)/i],[v,[p,"MIUI Browser"]],[/android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)/i],[v,[p,"Android Browser"]],[/FBAV\/([\w\.]+);/i],[v,[p,"Facebook"]],[/version\/([\w\.]+).+?mobile\/\w+\s(safari)/i],[v,[p,"Mobile Safari"]],[/version\/([\w\.]+).+?(mobile\s?safari|safari)/i],[v,p],[/webkit.+?(mobile\s?safari|safari)(\/[\w\.]+)/i],[p,[v,T.str,j.browser.oldsafari.version]],[/(konqueror)\/([\w\.]+)/i,/(webkit|khtml)\/([\w\.]+)/i],[p,v],[/(navigator|netscape)\/([\w\.-]+)/i],[[p,"Netscape"],v],[/fxios\/([\w\.-]+)/i],[v,[p,"Firefox"]],[/(swiftfox)/i,/(icedragon|iceweasel|camino|chimera|fennec|maemo\sbrowser|minimo|conkeror)[\/\s]?([\w\.\+]+)/i,/(firefox|seamonkey|k-meleon|icecat|iceape|firebird|phoenix)\/([\w\.-]+)/i,/(mozilla)\/([\w\.]+).+rv\:.+gecko\/\d+/i,/(polaris|lynx|dillo|icab|doris|amaya|w3m|netsurf)[\/\s]?([\w\.]+)/i,/(links)\s\(([\w\.]+)/i,/(gobrowser)\/?([\w\.]+)*/i,/(ice\s?browser)\/v?([\w\._]+)/i,/(mosaic)[\/\s]([\w\.]+)/i],[p,v]],cpu:[[/(?:(amd|x(?:(?:86|64)[_-])?|wow|win)64)[;\)]/i],[[g,"amd64"]],[/(ia32(?=;))/i],[[g,S.lowerize]],[/((?:i[346]|x)86)[;\)]/i],[[g,"ia32"]],[/windows\s(ce|mobile);\sppc;/i],[[g,"arm"]],[/((?:ppc|powerpc)(?:64)?)(?:\smac|;|\))/i],[[g,/ower/,"",S.lowerize]],[/(sun4\w)[;\)]/i],[[g,"sparc"]],[/((?:avr32|ia64(?=;))|68k(?=\))|arm(?:64|(?=v\d+;))|(?=atmel\s)avr|(?:irix|mips|sparc)(?:64)?(?=;)|pa-risc)/i],[[g,S.lowerize]]],device:[[/\((ipad|playbook);[\w\s\);-]+(rim|apple)/i],[h,m,[_,w]],[/applecoremedia\/[\w\.]+ \((ipad)/],[h,[m,"Apple"],[_,w]],[/(apple\s{0,1}tv)/i],[[h,"Apple TV"],[m,"Apple"]],[/(archos)\s(gamepad2?)/i,/(hp).+(touchpad)/i,/(kindle)\/([\w\.]+)/i,/\s(nook)[\w\s]+build\/(\w+)/i,/(dell)\s(strea[kpr\s\d]*[\dko])/i],[m,h,[_,w]],[/(kf[A-z]+)\sbuild\/[\w\.]+.*silk\//i],[h,[m,"Amazon"],[_,w]],[/(sd|kf)[0349hijorstuw]+\sbuild\/[\w\.]+.*silk\//i],[[h,T.str,j.device.amazon.model],[m,"Amazon"],[_,b]],[/\((ip[honed|\s\w*]+);.+(apple)/i],[h,m,[_,b]],[/\((ip[honed|\s\w*]+);/i],[h,[m,"Apple"],[_,b]],[/(blackberry)[\s-]?(\w+)/i,/(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|huawei|meizu|motorola|polytron)[\s_-]?([\w-]+)*/i,/(hp)\s([\w\s]+\w)/i,/(asus)-?(\w+)/i],[m,h,[_,b]],[/\(bb10;\s(\w+)/i],[h,[m,"BlackBerry"],[_,b]],[/android.+(transfo[prime\s]{4,10}\s\w+|eeepc|slider\s\w+|nexus 7)/i],[h,[m,"Asus"],[_,w]],[/(sony)\s(tablet\s[ps])\sbuild\//i,/(sony)?(?:sgp.+)\sbuild\//i],[[m,"Sony"],[h,"Xperia Tablet"],[_,w]],[/(?:sony)?(?:(?:(?:c|d)\d{4})|(?:so[-l].+))\sbuild\//i],[[m,"Sony"],[h,"Xperia Phone"],[_,b]],[/\s(ouya)\s/i,/(nintendo)\s([wids3u]+)/i],[m,h,[_,y]],[/android.+;\s(shield)\sbuild/i],[h,[m,"Nvidia"],[_,y]],[/(playstation\s[3portablevi]+)/i],[h,[m,"Sony"],[_,y]],[/(sprint\s(\w+))/i],[[m,T.str,j.device.sprint.vendor],[h,T.str,j.device.sprint.model],[_,b]],[/(lenovo)\s?(S(?:5000|6000)+(?:[-][\w+]))/i],[m,h,[_,w]],[/(htc)[;_\s-]+([\w\s]+(?=\))|\w+)*/i,/(zte)-(\w+)*/i,/(alcatel|geeksphone|huawei|lenovo|nexian|panasonic|(?=;\s)sony)[_\s-]?([\w-]+)*/i],[m,[h,/_/g," "],[_,b]],[/(nexus\s9)/i],[h,[m,"HTC"],[_,w]],[/[\s\(;](xbox(?:\sone)?)[\s\);]/i],[h,[m,"Microsoft"],[_,y]],[/(kin\.[onetw]{3})/i],[[h,/\./g," "],[m,"Microsoft"],[_,b]],[/\s(milestone|droid(?:[2-4x]|\s(?:bionic|x2|pro|razr))?(:?\s4g)?)[\w\s]+build\//i,/mot[\s-]?(\w+)*/i,/(XT\d{3,4}) build\//i],[h,[m,"Motorola"],[_,b]],[/android.+\s(mz60\d|xoom[\s2]{0,2})\sbuild\//i],[h,[m,"Motorola"],[_,w]],[/android.+((sch-i[89]0\d|shw-m380s|gt-p\d{4}|gt-n8000|sgh-t8[56]9|nexus 10))/i,/((SM-T\w+))/i],[[m,"Samsung"],h,[_,w]],[/((s[cgp]h-\w+|gt-\w+|galaxy\snexus|sm-n900))/i,/(sam[sung]*)[\s-]*(\w+-?[\w-]*)*/i,/sec-((sgh\w+))/i],[[m,"Samsung"],h,[_,b]],[/(samsung);smarttv/i],[m,h,[_,C]],[/\(dtv[\);].+(aquos)/i],[h,[m,"Sharp"],[_,C]],[/sie-(\w+)*/i],[h,[m,"Siemens"],[_,b]],[/(maemo|nokia).*(n900|lumia\s\d+)/i,/(nokia)[\s_-]?([\w-]+)*/i],[[m,"Nokia"],h,[_,b]],[/android\s3\.[\s\w;-]{10}(a\d{3})/i],[h,[m,"Acer"],[_,w]],[/android\s3\.[\s\w;-]{10}(lg?)-([06cv9]{3,4})/i],[[m,"LG"],h,[_,w]],[/(lg) netcast\.tv/i],[m,h,[_,C]],[/(nexus\s[45])/i,/lg[e;\s\/-]+(\w+)*/i],[h,[m,"LG"],[_,b]],[/android.+(ideatab[a-z0-9\-\s]+)/i],[h,[m,"Lenovo"],[_,w]],[/linux;.+((jolla));/i],[m,h,[_,b]],[/((pebble))app\/[\d\.]+\s/i],[m,h,[_,k]],[/android.+;\s(glass)\s\d/i],[h,[m,"Google"],[_,k]],[/android.+(\w+)\s+build\/hm\1/i,/android.+(hm[\s\-_]*note?[\s_]*(?:\d\w)?)\s+build/i,/android.+(mi[\s\-_]*(?:one|one[\s_]plus)?[\s_]*(?:\d\w)?)\s+build/i],[[h,/_/g," "],[m,"Xiaomi"],[_,b]],[/(mobile|tablet);.+rv\:.+gecko\//i],[[_,S.lowerize],m,h]],engine:[[/windows.+\sedge\/([\w\.]+)/i],[v,[p,"EdgeHTML"]],[/(presto)\/([\w\.]+)/i,/(webkit|trident|netfront|netsurf|amaya|lynx|w3m)\/([\w\.]+)/i,/(khtml|tasman|links)[\/\s]\(?([\w\.]+)/i,/(icab)[\/\s]([23]\.[\d\.]+)/i],[p,v],[/rv\:([\w\.]+).*(gecko)/i],[v,p]],os:[[/microsoft\s(windows)\s(vista|xp)/i],[p,v],[/(windows)\snt\s6\.2;\s(arm)/i,/(windows\sphone(?:\sos)*|windows\smobile|windows)[\s\/]?([ntce\d\.\s]+\w)/i],[p,[v,T.str,j.os.windows.version]],[/(win(?=3|9|n)|win\s9x\s)([nt\d\.]+)/i],[[p,"Windows"],[v,T.str,j.os.windows.version]],[/\((bb)(10);/i],[[p,"BlackBerry"],v],[/(blackberry)\w*\/?([\w\.]+)*/i,/(tizen)[\/\s]([\w\.]+)/i,/(android|webos|palm\sos|qnx|bada|rim\stablet\sos|meego|contiki)[\/\s-]?([\w\.]+)*/i,/linux;.+(sailfish);/i],[p,v],[/(symbian\s?os|symbos|s60(?=;))[\/\s-]?([\w\.]+)*/i],[[p,"Symbian"],v],[/\((series40);/i],[p],[/mozilla.+\(mobile;.+gecko.+firefox/i],[[p,"Firefox OS"],v],[/(nintendo|playstation)\s([wids3portablevu]+)/i,/(mint)[\/\s\(]?(\w+)*/i,/(mageia|vectorlinux)[;\s]/i,/(joli|[kxln]?ubuntu|debian|[open]*suse|gentoo|arch|slackware|fedora|mandriva|centos|pclinuxos|redhat|zenwalk|linpus)[\/\s-]?([\w\.-]+)*/i,/(hurd|linux)\s?([\w\.]+)*/i,/(gnu)\s?([\w\.]+)*/i],[p,v],[/(cros)\s[\w]+\s([\w\.]+\w)/i],[[p,"Chromium OS"],v],[/(sunos)\s?([\w\.]+\d)*/i],[[p,"Solaris"],v],[/\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i],[p,v],[/(ip[honead]+)(?:.*os\s*([\w]+)*\slike\smac|;\sopera)/i],[[p,"iOS"],[v,/_/g,"."]],[/(mac\sos\sx)\s?([\w\s\.]+\w)*/i,/(macintosh|mac(?=_powerpc)\s)/i],[[p,"Mac OS"],[v,/_/g,"."]],[/((?:open)?solaris)[\/\s-]?([\w\.]+)*/i,/(haiku)\s(\w+)/i,/(aix)\s((\d)(?=\.|\)|\s)[\w\.]*)*/i,/(plan\s9|minix|beos|os\/2|amigaos|morphos|risc\sos|openvms)/i,/(unix)\s?([\w\.]+)*/i],[p,v]]},I=function(e,n){if(!(this instanceof I))return new I(e,n).getResult();var r=e||(t&&t.navigator&&t.navigator.userAgent?t.navigator.userAgent:a),i=n?S.extend(A,n):A;return this.getBrowser=function(){var e=T.rgx.apply(this,i.browser);return e.major=S.major(e.version),e},this.getCPU=function(){return T.rgx.apply(this,i.cpu)},this.getDevice=function(){return T.rgx.apply(this,i.device)},this.getEngine=function(){return T.rgx.apply(this,i.engine)},this.getOS=function(){return T.rgx.apply(this,i.os)},this.getResult=function(){return{ua:this.getUA(),browser:this.getBrowser(),engine:this.getEngine(),os:this.getOS(),device:this.getDevice(),cpu:this.getCPU()}},this.getUA=function(){return r},this.setUA=function(e){return r=e,this},this.setUA(r),this};I.VERSION=o,I.BROWSER={NAME:p,MAJOR:d,VERSION:v},I.CPU={ARCHITECTURE:g},I.DEVICE={MODEL:h,VENDOR:m,TYPE:_,CONSOLE:y,MOBILE:b,SMARTTV:C,TABLET:w,WEARABLE:k,EMBEDDED:E},I.ENGINE={NAME:p,VERSION:v},I.OS={NAME:p,VERSION:v},typeof r!==c?(typeof n!==c&&n.exports&&(r=n.exports=I),r.UAParser=I):typeof e===u&&e.amd?e(function(){return I}):t.UAParser=I;var D=t.jQuery||t.Zepto;if(typeof D!==c){var P=new I;D.ua=P.getResult(),D.ua.get=function(){return P.getUA()},D.ua.set=function(e){P.setUA(e);var t=P.getResult();for(var n in t)D.ua[n]=t[n]}}}("object"==typeof window?window:this)},{}],304:[function(t,n,r){(function(){var t=this,i=t._,o={},a=Array.prototype,s=Object.prototype,u=Function.prototype,c=a.push,l=a.slice,f=a.concat,d=s.toString,h=s.hasOwnProperty,p=a.forEach,_=a.map,m=a.reduce,v=a.reduceRight,g=a.filter,y=a.every,b=a.some,w=a.indexOf,C=a.lastIndexOf,k=Array.isArray,E=Object.keys,S=u.bind,T=function(e){return e instanceof T?e:this instanceof T?void(this._wrapped=e):new T(e)};"undefined"!=typeof r?("undefined"!=typeof n&&n.exports&&(r=n.exports=T),r._=T):t._=T,T.VERSION="1.6.0";var j=T.each=T.forEach=function(e,t,n){if(null==e)return e;if(p&&e.forEach===p)e.forEach(t,n);else if(e.length===+e.length){for(var r=0,i=e.length;i>r;r++)if(t.call(n,e[r],r,e)===o)return}else for(var a=T.keys(e),r=0,i=a.length;i>r;r++)if(t.call(n,e[a[r]],a[r],e)===o)return;return e};T.map=T.collect=function(e,t,n){var r=[];return null==e?r:_&&e.map===_?e.map(t,n):(j(e,function(e,i,o){r.push(t.call(n,e,i,o))}),r)};var A="Reduce of empty array with no initial value";T.reduce=T.foldl=T.inject=function(e,t,n,r){var i=arguments.length>2;if(null==e&&(e=[]),m&&e.reduce===m)return r&&(t=T.bind(t,r)),i?e.reduce(t,n):e.reduce(t);if(j(e,function(e,o,a){i?n=t.call(r,n,e,o,a):(n=e,i=!0)}),!i)throw new TypeError(A);return n},T.reduceRight=T.foldr=function(e,t,n,r){var i=arguments.length>2;if(null==e&&(e=[]),v&&e.reduceRight===v)return r&&(t=T.bind(t,r)),i?e.reduceRight(t,n):e.reduceRight(t);var o=e.length;if(o!==+o){var a=T.keys(e);o=a.length}if(j(e,function(s,u,c){u=a?a[--o]:--o,i?n=t.call(r,n,e[u],u,c):(n=e[u],i=!0)}),!i)throw new TypeError(A);return n},T.find=T.detect=function(e,t,n){var r;return I(e,function(e,i,o){return t.call(n,e,i,o)?(r=e,!0):void 0}),r},T.filter=T.select=function(e,t,n){var r=[];return null==e?r:g&&e.filter===g?e.filter(t,n):(j(e,function(e,i,o){t.call(n,e,i,o)&&r.push(e)}),r)},T.reject=function(e,t,n){return T.filter(e,function(e,r,i){return!t.call(n,e,r,i)},n)},T.every=T.all=function(e,t,n){t||(t=T.identity);var r=!0;return null==e?r:y&&e.every===y?e.every(t,n):(j(e,function(e,i,a){return(r=r&&t.call(n,e,i,a))?void 0:o}),!!r)};var I=T.some=T.any=function(e,t,n){t||(t=T.identity);var r=!1;return null==e?r:b&&e.some===b?e.some(t,n):(j(e,function(e,i,a){return r||(r=t.call(n,e,i,a))?o:void 0}),!!r)};T.contains=T.include=function(e,t){return null!=e&&(w&&e.indexOf===w?-1!=e.indexOf(t):I(e,function(e){return e===t}))},T.invoke=function(e,t){var n=l.call(arguments,2),r=T.isFunction(t);return T.map(e,function(e){return(r?t:e[t]).apply(e,n)})},T.pluck=function(e,t){return T.map(e,T.property(t))},T.where=function(e,t){return T.filter(e,T.matches(t))},T.findWhere=function(e,t){return T.find(e,T.matches(t))},T.max=function(e,t,n){if(!t&&T.isArray(e)&&e[0]===+e[0]&&e.length<65535)return Math.max.apply(Math,e);var r=-(1/0),i=-(1/0);return j(e,function(e,o,a){var s=t?t.call(n,e,o,a):e;s>i&&(r=e,i=s)}),r},T.min=function(e,t,n){if(!t&&T.isArray(e)&&e[0]===+e[0]&&e.length<65535)return Math.min.apply(Math,e);var r=1/0,i=1/0;return j(e,function(e,o,a){var s=t?t.call(n,e,o,a):e;i>s&&(r=e,i=s)}),r},T.shuffle=function(e){var t,n=0,r=[];return j(e,function(e){t=T.random(n++),r[n-1]=r[t],r[t]=e}),r},T.sample=function(e,t,n){return null==t||n?(e.length!==+e.length&&(e=T.values(e)),e[T.random(e.length-1)]):T.shuffle(e).slice(0,Math.max(0,t))};var D=function(e){return null==e?T.identity:T.isFunction(e)?e:T.property(e)};T.sortBy=function(e,t,n){return t=D(t),T.pluck(T.map(e,function(e,r,i){return{value:e,index:r,criteria:t.call(n,e,r,i)}}).sort(function(e,t){var n=e.criteria,r=t.criteria;if(n!==r){if(n>r||void 0===n)return 1;if(r>n||void 0===r)return-1}return e.index-t.index}),"value")};var P=function(e){return function(t,n,r){var i={};return n=D(n),j(t,function(o,a){var s=n.call(r,o,a,t);e(i,s,o)}),i}};T.groupBy=P(function(e,t,n){T.has(e,t)?e[t].push(n):e[t]=[n]}),T.indexBy=P(function(e,t,n){e[t]=n}),T.countBy=P(function(e,t){T.has(e,t)?e[t]++:e[t]=1}),T.sortedIndex=function(e,t,n,r){n=D(n);for(var i=n.call(r,t),o=0,a=e.length;a>o;){var s=o+a>>>1;n.call(r,e[s])<i?o=s+1:a=s}return o},T.toArray=function(e){return e?T.isArray(e)?l.call(e):e.length===+e.length?T.map(e,T.identity):T.values(e):[]},T.size=function(e){return null==e?0:e.length===+e.length?e.length:T.keys(e).length},T.first=T.head=T.take=function(e,t,n){return null!=e?null==t||n?e[0]:0>t?[]:l.call(e,0,t):void 0},T.initial=function(e,t,n){return l.call(e,0,e.length-(null==t||n?1:t))},T.last=function(e,t,n){return null!=e?null==t||n?e[e.length-1]:l.call(e,Math.max(e.length-t,0)):void 0},T.rest=T.tail=T.drop=function(e,t,n){return l.call(e,null==t||n?1:t)},T.compact=function(e){return T.filter(e,T.identity)};var R=function(e,t,n){return t&&T.every(e,T.isArray)?f.apply(n,e):(j(e,function(e){T.isArray(e)||T.isArguments(e)?t?c.apply(n,e):R(e,t,n):n.push(e)}),n)};T.flatten=function(e,t){return R(e,t,[])},T.without=function(e){return T.difference(e,l.call(arguments,1))},T.partition=function(e,t){var n=[],r=[];return j(e,function(e){(t(e)?n:r).push(e)}),[n,r]},T.uniq=T.unique=function(e,t,n,r){T.isFunction(t)&&(r=n,n=t,t=!1);var i=n?T.map(e,n,r):e,o=[],a=[];return j(i,function(n,r){(t?r&&a[a.length-1]===n:T.contains(a,n))||(a.push(n),o.push(e[r]))}),o},T.union=function(){return T.uniq(T.flatten(arguments,!0))},T.intersection=function(e){var t=l.call(arguments,1);return T.filter(T.uniq(e),function(e){return T.every(t,function(t){return T.contains(t,e)})})},T.difference=function(e){var t=f.apply(a,l.call(arguments,1));return T.filter(e,function(e){return!T.contains(t,e)})},T.zip=function(){for(var e=T.max(T.pluck(arguments,"length").concat(0)),t=new Array(e),n=0;e>n;n++)t[n]=T.pluck(arguments,""+n);return t},T.object=function(e,t){if(null==e)return{};for(var n={},r=0,i=e.length;i>r;r++)t?n[e[r]]=t[r]:n[e[r][0]]=e[r][1];return n},T.indexOf=function(e,t,n){if(null==e)return-1;var r=0,i=e.length;if(n){if("number"!=typeof n)return r=T.sortedIndex(e,t),e[r]===t?r:-1;r=0>n?Math.max(0,i+n):n}if(w&&e.indexOf===w)return e.indexOf(t,n);for(;i>r;r++)if(e[r]===t)return r;return-1},T.lastIndexOf=function(e,t,n){if(null==e)return-1;var r=null!=n;if(C&&e.lastIndexOf===C)return r?e.lastIndexOf(t,n):e.lastIndexOf(t);for(var i=r?n:e.length;i--;)if(e[i]===t)return i;return-1},T.range=function(e,t,n){arguments.length<=1&&(t=e||0,e=0),n=arguments[2]||1;for(var r=Math.max(Math.ceil((t-e)/n),0),i=0,o=new Array(r);r>i;)o[i++]=e,e+=n;return o};var M=function(){};T.bind=function(e,t){var n,r;if(S&&e.bind===S)return S.apply(e,l.call(arguments,1));if(!T.isFunction(e))throw new TypeError;return n=l.call(arguments,2),r=function(){if(!(this instanceof r))return e.apply(t,n.concat(l.call(arguments)));M.prototype=e.prototype;var i=new M;M.prototype=null;var o=e.apply(i,n.concat(l.call(arguments)));return Object(o)===o?o:i}},T.partial=function(e){var t=l.call(arguments,1);return function(){for(var n=0,r=t.slice(),i=0,o=r.length;o>i;i++)r[i]===T&&(r[i]=arguments[n++]);for(;n<arguments.length;)r.push(arguments[n++]);return e.apply(this,r)}},T.bindAll=function(e){var t=l.call(arguments,1);if(0===t.length)throw new Error("bindAll must be passed function names");return j(t,function(t){e[t]=T.bind(e[t],e)}),e},T.memoize=function(e,t){var n={};return t||(t=T.identity),function(){var r=t.apply(this,arguments);return T.has(n,r)?n[r]:n[r]=e.apply(this,arguments)}},T.delay=function(e,t){var n=l.call(arguments,2);return setTimeout(function(){return e.apply(null,n)},t)},T.defer=function(e){return T.delay.apply(T,[e,1].concat(l.call(arguments,1)))},T.throttle=function(e,t,n){var r,i,o,a=null,s=0;n||(n={});var u=function(){s=n.leading===!1?0:T.now(),a=null,o=e.apply(r,i),r=i=null};return function(){var c=T.now();s||n.leading!==!1||(s=c);var l=t-(c-s);return r=this,i=arguments,0>=l?(clearTimeout(a),a=null,s=c,o=e.apply(r,i),r=i=null):a||n.trailing===!1||(a=setTimeout(u,l)),o}},T.debounce=function(e,t,n){var r,i,o,a,s,u=function(){var c=T.now()-a;t>c?r=setTimeout(u,t-c):(r=null,n||(s=e.apply(o,i),o=i=null))};return function(){o=this,i=arguments,a=T.now();var c=n&&!r;return r||(r=setTimeout(u,t)),c&&(s=e.apply(o,i),o=i=null),s}},T.once=function(e){var t,n=!1;return function(){return n?t:(n=!0,t=e.apply(this,arguments),e=null,t)}},T.wrap=function(e,t){return T.partial(t,e)},T.compose=function(){var e=arguments;return function(){for(var t=arguments,n=e.length-1;n>=0;n--)t=[e[n].apply(this,t)];return t[0]}},T.after=function(e,t){return function(){return--e<1?t.apply(this,arguments):void 0}},T.keys=function(e){if(!T.isObject(e))return[];if(E)return E(e);var t=[];for(var n in e)T.has(e,n)&&t.push(n);return t},T.values=function(e){for(var t=T.keys(e),n=t.length,r=new Array(n),i=0;n>i;i++)r[i]=e[t[i]];return r},T.pairs=function(e){for(var t=T.keys(e),n=t.length,r=new Array(n),i=0;n>i;i++)r[i]=[t[i],e[t[i]]];return r},T.invert=function(e){for(var t={},n=T.keys(e),r=0,i=n.length;i>r;r++)t[e[n[r]]]=n[r];return t},T.functions=T.methods=function(e){var t=[];for(var n in e)T.isFunction(e[n])&&t.push(n);return t.sort()},T.extend=function(e){return j(l.call(arguments,1),function(t){if(t)for(var n in t)e[n]=t[n]}),e},T.pick=function(e){var t={},n=f.apply(a,l.call(arguments,1));return j(n,function(n){n in e&&(t[n]=e[n])}),t},T.omit=function(e){var t={},n=f.apply(a,l.call(arguments,1));for(var r in e)T.contains(n,r)||(t[r]=e[r]);return t},T.defaults=function(e){return j(l.call(arguments,1),function(t){if(t)for(var n in t)void 0===e[n]&&(e[n]=t[n])}),e},T.clone=function(e){return T.isObject(e)?T.isArray(e)?e.slice():T.extend({},e):e},T.tap=function(e,t){return t(e),e};var x=function(e,t,n,r){if(e===t)return 0!==e||1/e==1/t;if(null==e||null==t)return e===t;e instanceof T&&(e=e._wrapped),t instanceof T&&(t=t._wrapped);var i=d.call(e);if(i!=d.call(t))return!1;switch(i){case"[object String]":return e==String(t);case"[object Number]":return e!=+e?t!=+t:0==e?1/e==1/t:e==+t;case"[object Date]":case"[object Boolean]":return+e==+t;case"[object RegExp]":return e.source==t.source&&e.global==t.global&&e.multiline==t.multiline&&e.ignoreCase==t.ignoreCase}if("object"!=typeof e||"object"!=typeof t)return!1;for(var o=n.length;o--;)if(n[o]==e)return r[o]==t;var a=e.constructor,s=t.constructor;if(a!==s&&!(T.isFunction(a)&&a instanceof a&&T.isFunction(s)&&s instanceof s)&&"constructor"in e&&"constructor"in t)return!1;n.push(e),r.push(t);var u=0,c=!0;if("[object Array]"==i){if(u=e.length,c=u==t.length)for(;u--&&(c=x(e[u],t[u],n,r)););}else{for(var l in e)if(T.has(e,l)&&(u++,!(c=T.has(t,l)&&x(e[l],t[l],n,r))))break;if(c){for(l in t)if(T.has(t,l)&&!u--)break;c=!u}}return n.pop(),r.pop(),c};T.isEqual=function(e,t){return x(e,t,[],[])},T.isEmpty=function(e){if(null==e)return!0;if(T.isArray(e)||T.isString(e))return 0===e.length;for(var t in e)if(T.has(e,t))return!1;return!0},T.isElement=function(e){return!(!e||1!==e.nodeType)},T.isArray=k||function(e){return"[object Array]"==d.call(e)},T.isObject=function(e){return e===Object(e)},j(["Arguments","Function","String","Number","Date","RegExp"],function(e){T["is"+e]=function(t){return d.call(t)=="[object "+e+"]"}}),T.isArguments(arguments)||(T.isArguments=function(e){return!(!e||!T.has(e,"callee"))}),"function"!=typeof/./&&(T.isFunction=function(e){return"function"==typeof e}),T.isFinite=function(e){return isFinite(e)&&!isNaN(parseFloat(e))},T.isNaN=function(e){return T.isNumber(e)&&e!=+e},T.isBoolean=function(e){return e===!0||e===!1||"[object Boolean]"==d.call(e)},T.isNull=function(e){return null===e},T.isUndefined=function(e){return void 0===e},T.has=function(e,t){return h.call(e,t)},T.noConflict=function(){return t._=i,this},T.identity=function(e){return e},T.constant=function(e){return function(){return e}},T.property=function(e){return function(t){return t[e]}},T.matches=function(e){return function(t){if(t===e)return!0;for(var n in e)if(e[n]!==t[n])return!1;return!0}},T.times=function(e,t,n){for(var r=Array(Math.max(0,e)),i=0;e>i;i++)r[i]=t.call(n,i);return r},T.random=function(e,t){return null==t&&(t=e,e=0),e+Math.floor(Math.random()*(t-e+1))},T.now=Date.now||function(){return(new Date).getTime()};var O={escape:{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;"}};O.unescape=T.invert(O.escape);var N={escape:new RegExp("["+T.keys(O.escape).join("")+"]","g"),unescape:new RegExp("("+T.keys(O.unescape).join("|")+")","g")};T.each(["escape","unescape"],function(e){T[e]=function(t){return null==t?"":(""+t).replace(N[e],function(t){return O[e][t]})}}),T.result=function(e,t){if(null!=e){var n=e[t];return T.isFunction(n)?n.call(e):n}},T.mixin=function(e){j(T.functions(e),function(t){var n=T[t]=e[t];T.prototype[t]=function(){var e=[this._wrapped];return c.apply(e,arguments),H.call(this,n.apply(T,e))}})};var L=0;T.uniqueId=function(e){var t=++L+"";return e?e+t:t},T.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var U=/(.)^/,B={"'":"'","\\":"\\","\r":"r","\n":"n","\t":"t","\u2028":"u2028","\u2029":"u2029"},F=/\\|'|\r|\n|\t|\u2028|\u2029/g;T.template=function(e,t,n){var r;n=T.defaults({},n,T.templateSettings);var i=new RegExp([(n.escape||U).source,(n.interpolate||U).source,(n.evaluate||U).source].join("|")+"|$","g"),o=0,a="__p+='";e.replace(i,function(t,n,r,i,s){return a+=e.slice(o,s).replace(F,function(e){return"\\"+B[e]}),n&&(a+="'+\n((__t=("+n+"))==null?'':_.escape(__t))+\n'"),r&&(a+="'+\n((__t=("+r+"))==null?'':__t)+\n'"),i&&(a+="';\n"+i+"\n__p+='"),o=s+t.length,t}),a+="';\n",n.variable||(a="with(obj||{}){\n"+a+"}\n"),a="var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n"+a+"return __p;\n";try{r=new Function(n.variable||"obj","_",a)}catch(s){throw s.source=a,s}if(t)return r(t,T);var u=function(e){return r.call(this,e,T)};return u.source="function("+(n.variable||"obj")+"){\n"+a+"}",u},T.chain=function(e){return T(e).chain()};var H=function(e){return this._chain?T(e).chain():e};T.mixin(T),j(["pop","push","reverse","shift","sort","splice","unshift"],function(e){var t=a[e];T.prototype[e]=function(){var n=this._wrapped;return t.apply(n,arguments),"shift"!=e&&"splice"!=e||0!==n.length||delete n[0],H.call(this,n)}}),j(["concat","join","slice"],function(e){var t=a[e];T.prototype[e]=function(){return H.call(this,t.apply(this._wrapped,arguments))}}),T.extend(T.prototype,{chain:function(){return this._chain=!0,this},value:function(){return this._wrapped}}),"function"==typeof e&&e.amd&&e("underscore",[],function(){return T})}).call(this)},{}],305:[function(e,t,n){(function(e){var n;if(e.crypto&&crypto.getRandomValues){var r=new Uint8Array(16);n=function(){return crypto.getRandomValues(r),r}}if(!n){var i=new Array(16);n=function(){for(var e,t=0;16>t;t++)0===(3&t)&&(e=4294967296*Math.random()),i[t]=e>>>((3&t)<<3)&255;return i}}t.exports=n}).call(this,"undefined"!=typeof i?i:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],306:[function(e,t,n){function r(e,t,n){var r=t&&n||0,i=0;for(t=t||[],e.toLowerCase().replace(/[0-9a-f]{2}/g,function(e){16>i&&(t[r+i++]=c[e])});16>i;)t[r+i++]=0;return t}function i(e,t){var n=t||0,r=u;return r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]}function o(e,t,n){var r=t&&n||0,o=t||[];e=e||{};var a=void 0!==e.clockseq?e.clockseq:h,s=void 0!==e.msecs?e.msecs:(new Date).getTime(),u=void 0!==e.nsecs?e.nsecs:_+1,c=s-p+(u-_)/1e4;if(0>c&&void 0===e.clockseq&&(a=a+1&16383),(0>c||s>p)&&void 0===e.nsecs&&(u=0),u>=1e4)throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");p=s,_=u,h=a,s+=122192928e5;var l=(1e4*(268435455&s)+u)%4294967296;o[r++]=l>>>24&255,o[r++]=l>>>16&255,o[r++]=l>>>8&255,o[r++]=255&l;var f=s/4294967296*1e4&268435455;o[r++]=f>>>8&255,o[r++]=255&f,o[r++]=f>>>24&15|16,o[r++]=f>>>16&255,o[r++]=a>>>8|128,o[r++]=255&a;for(var m=e.node||d,v=0;6>v;v++)o[r+v]=m[v];return t?t:i(o)}function a(e,t,n){var r=t&&n||0;"string"==typeof e&&(t="binary"==e?new Array(16):null,e=null),e=e||{};var o=e.random||(e.rng||s)();if(o[6]=15&o[6]|64,o[8]=63&o[8]|128,t)for(var a=0;16>a;a++)t[r+a]=o[a];return t||i(o)}for(var s=e("./rng"),u=[],c={},l=0;256>l;l++)u[l]=(l+256).toString(16).substr(1),c[u[l]]=l;var f=s(),d=[1|f[0],f[1],f[2],f[3],f[4],f[5]],h=16383&(f[6]<<8|f[7]),p=0,_=0,m=a;m.v1=o,m.v4=a,m.parse=r,m.unparse=i,t.exports=m},{"./rng":305}]},{},[31])(31)})}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}]},{},[17])(17)});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],24:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast-button.js
@@ -3674,7 +381,7 @@ Component.registerComponent('ChromeCastButton', ChromeCastButton);
 exports['default'] = ChromeCastButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],25:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3707,7 +414,7 @@ _videoJs2['default'].plugin('chromecast', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./videojs-chromecast":27}],26:[function(require,module,exports){
+},{"./videojs-chromecast":7}],6:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast.js
@@ -4228,7 +935,7 @@ Tech.registerTech('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],27:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-chromecast - v1.0.0 - 2016-02-15
@@ -4310,7 +1017,7 @@ Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/chromecast-button":24,"./tech/chromecast":26}],28:[function(require,module,exports){
+},{"./component/control-bar/chromecast-button":4,"./tech/chromecast":6}],8:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
@@ -4593,7 +1300,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":30,"global/document":21,"global/window":22,"xhr":32}],29:[function(require,module,exports){
+},{"./utils.js":10,"global/document":1,"global/window":2,"xhr":13}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4626,7 +1333,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":28}],30:[function(require,module,exports){
+},{"./metrics":8}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -4714,7 +1421,7 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":21,"global/window":22}],31:[function(require,module,exports){
+},{"global/document":1,"global/window":2}],11:[function(require,module,exports){
 (function (global){
 /**
  * @file Youtube.js
@@ -5435,7 +2142,9 @@ Tech.registerTech('Youtube', Youtube);
 exports['default'] = Youtube;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],32:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
+
+},{}],13:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -5656,7 +2365,7 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":22,"is-function":33,"once":34,"parse-headers":37,"xtend":38}],33:[function(require,module,exports){
+},{"global/window":2,"is-function":14,"once":15,"parse-headers":18,"xtend":19}],14:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -5673,7 +2382,7 @@ function isFunction (fn) {
       fn === window.prompt))
 };
 
-},{}],34:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -5694,7 +2403,7 @@ function once (fn) {
   }
 }
 
-},{}],35:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var isFunction = require('is-function')
 
 module.exports = forEach
@@ -5742,7 +2451,7 @@ function forEachObject(object, iterator, context) {
     }
 }
 
-},{"is-function":33}],36:[function(require,module,exports){
+},{"is-function":14}],17:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -5758,7 +2467,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],37:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -5790,7 +2499,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":35,"trim":36}],38:[function(require,module,exports){
+},{"for-each":16,"trim":17}],19:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -5811,7 +2520,7 @@ function extend() {
     return target
 }
 
-},{}],39:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5960,26 +2669,6 @@ var Afrostream = function (_Component) {
       }
     }
   }, {
-    key: 'audioTracks',
-    value: function audioTracks() {
-      return this.player_.tech_ && this.player_.techGet_('audioTracks');
-    }
-  }, {
-    key: 'setAudioTrack',
-    value: function setAudioTrack(track) {
-      return this.player_.tech_ && this.player_.techCall_('setAudioTrack', track);
-    }
-  }, {
-    key: 'videoTracks',
-    value: function videoTracks() {
-      return this.player_.tech_ && this.player_.techGet_('videoTracks');
-    }
-  }, {
-    key: 'setVideoTrack',
-    value: function setVideoTrack(track) {
-      return this.player_.tech_ && this.player_.tech_.setVideoTrack(track);
-    }
-  }, {
     key: 'getPlaybackStatistics',
     value: function getPlaybackStatistics() {
       return this.player_.tech_ && this.player_.tech_.getPlaybackStatistics();
@@ -6004,6 +2693,9 @@ Afrostream.prototype.streamInfo = null;
 
 Afrostream.prototype.tech_ = null;
 
+var USER_AGENT = window.navigator.userAgent;
+
+_video2.default.browser.IS_SAFARI = /safari/i.test(USER_AGENT);
 /**
  * add afrostream to videojs childs
  * @type {{}}
@@ -6014,6 +2706,2969 @@ ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.option
 
 Component.registerComponent('Afrostream', Afrostream);
 exports.default = Afrostream;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":1,"./tech/dash":15,"./tech/dashas":16,"./tech/easy-broadcast":17,"./tech/media":18,"./tech/streamroot":19,"videojs-chromecast":25,"videojs-metrics":29,"videojs-youtube":31}]},{},[39])(39)
+},{"./component/control-bar/":21,"./tech/dash":32,"./tech/dashas":33,"./tech/easy-broadcast":34,"./tech/media":35,"./tech/streamroot":36,"videojs-chromecast":5,"videojs-metrics":9,"videojs-youtube":11}],21:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
+
+var _captionTrackButton = require('./track-controls/caption-track-button');
+
+Object.defineProperty(exports, 'CaptionTrackButton', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_captionTrackButton).default;
+  }
+});
+
+var _videoTrackButton = require('./track-controls/video-track-button');
+
+Object.defineProperty(exports, 'VideoTrackButton', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_videoTrackButton).default;
+  }
+});
+
+var _nextVideoButton = require('./next/next-video-button');
+
+Object.defineProperty(exports, 'NextVideoButton', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_nextVideoButton).default;
+  }
+});
+
+var _loadProgressSpinner = require('./progress-control/load-progress-spinner');
+
+Object.defineProperty(exports, 'LoadProgressSpinner', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_loadProgressSpinner).default;
+  }
+});
+
+var _mouseThumbnailDisplay = require('./progress-control/mouse-thumbnail-display');
+
+Object.defineProperty(exports, 'MouseThumbnailDisplay', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_mouseThumbnailDisplay).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+},{"./next/next-video-button":22,"./progress-control/load-progress-spinner":24,"./progress-control/mouse-thumbnail-display":25,"./track-controls/caption-track-button":26,"./track-controls/video-track-button":30}],22:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _nextVideoItem = require('./next-video-item');
+
+var _nextVideoItem2 = _interopRequireDefault(_nextVideoItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file next-video-button.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var ControlBar = _video2.default.getComponent('ControlBar');
+var MenuButton = _video2.default.getComponent('MenuButton');
+/**
+ * The base class for buttons that toggle next video
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends MenuButton
+ * @class NextVideoButton
+ */
+
+var NextVideoButton = function (_MenuButton) {
+  _inherits(NextVideoButton, _MenuButton);
+
+  function NextVideoButton(player) {
+    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    _classCallCheck(this, NextVideoButton);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(NextVideoButton).call(this, player, options));
+  }
+
+  /**
+   * Create the list of menu items. Specific to each subclass.
+   *
+   * @method createItems
+   */
+
+
+  _createClass(NextVideoButton, [{
+    key: 'createItems',
+    value: function createItems() {
+      var items = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+      if (!this.options_.poster) {
+        this.hide();
+        return items;
+      }
+
+      var item = new _nextVideoItem2.default(this.player_, {
+        label: 'Next',
+        selectable: false,
+        poster: this.options_.poster
+      });
+      items.push(item);
+
+      return items;
+    }
+
+    /**
+     * Allow sub components to stack CSS class names
+     *
+     * @return {String} The constructed class name
+     * @method buildCSSClass
+     */
+
+  }, {
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-next-video-button ' + _get(Object.getPrototypeOf(NextVideoButton.prototype), 'buildCSSClass', this).call(this);
+    }
+
+    /**
+     * Handle click on mute
+     * @method handleClick
+     */
+
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      _get(Object.getPrototypeOf(NextVideoButton.prototype), 'handleClick', this).call(this);
+      this.player_.trigger('next');
+    }
+  }]);
+
+  return NextVideoButton;
+}(MenuButton);
+
+NextVideoButton.prototype.controlText_ = 'Next video';
+
+//Replace videojs CaptionButton child with this one
+ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 1, 0, 'nextVideoButton');
+
+Component.registerComponent('NextVideoButton', NextVideoButton);
+exports.default = NextVideoButton;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./next-video-item":23}],23:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file next-video-item.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var MenuItem = _video2.default.getComponent('MenuItem');
+
+/**
+ * The base class for buttons that toggle next video
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends MenuItem
+ * @class NextVideoItem
+ */
+
+var NextVideoItem = function (_MenuItem) {
+  _inherits(NextVideoItem, _MenuItem);
+
+  function NextVideoItem(player, options) {
+    _classCallCheck(this, NextVideoItem);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NextVideoItem).call(this, player, options));
+
+    _this.setSrc(options.poster);
+    return _this;
+  }
+
+  /**
+   * Create the component's DOM element
+   *
+   * @param {String=} type Desc
+   * @param {Object=} props Desc
+   * @return {Element}
+   * @method createEl
+   */
+
+
+  _createClass(NextVideoItem, [{
+    key: 'createEl',
+    value: function createEl(type, props, attrs) {
+      var el = _get(Object.getPrototypeOf(NextVideoItem.prototype), 'createEl', this).call(this, type, props, attrs);
+
+      this.fallbackImg_ = _video2.default.createEl(_video2.default.browser.BACKGROUND_SIZE_SUPPORTED ? 'div' : 'img', {
+        className: 'thumb-tile_thumb'
+      });
+
+      el.appendChild(this.fallbackImg_);
+
+      return el;
+    }
+  }, {
+    key: 'setSrc',
+    value: function setSrc(url) {
+      var backgroundImage = void 0;
+
+      if (!_video2.default.browser.BACKGROUND_SIZE_SUPPORTED) {
+        this.fallbackImg_.src = url;
+      } else {
+        backgroundImage = '';
+        if (url) {
+          backgroundImage = 'url("' + url + '")';
+        }
+
+        this.fallbackImg_.style.backgroundImage = backgroundImage;
+      }
+    }
+
+    /**
+     * Handle click on mute
+     * @method handleClick
+     */
+
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      _get(Object.getPrototypeOf(NextVideoItem.prototype), 'handleClick', this).call(this);
+      this.player_.trigger('next');
+    }
+  }]);
+
+  return NextVideoItem;
+}(MenuItem);
+
+Component.registerComponent('NextVideoItem', NextVideoItem);
+exports.default = NextVideoItem;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],24:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file load-progress-spinner.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var LoadProgressBar = _video2.default.getComponent('LoadProgressBar');
+
+/**
+ * Shows load progress
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends Component
+ * @class LoadProgressSpinner
+ */
+
+var LoadProgressSpinner = function (_LoadProgressBar) {
+  _inherits(LoadProgressSpinner, _LoadProgressBar);
+
+  function LoadProgressSpinner(player, options) {
+    _classCallCheck(this, LoadProgressSpinner);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(LoadProgressSpinner).call(this, player, options));
+  }
+
+  /**
+   * Create the component's DOM element
+   *
+   * @return {Element}
+   * @method createEl
+   */
+
+
+  _createClass(LoadProgressSpinner, [{
+    key: 'createEl',
+    value: function createEl() {
+      var el = _video2.default.createEl('div', {
+        className: 'vjs-load-progress-spinner',
+        innerHTML: '<svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="' + this.options_.rayon + '" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg>'
+      });
+
+      this.circle = _video2.default.createEl('svg', {
+        className: 'circular',
+        innerHTML: '<circle class="path" cx="50" cy="50" r="' + this.options_.rayon + '" fill="none" stroke-width="2" stroke-miterlimit="10"/>'
+      }, {
+        viewBox: '25 25 50 50'
+      });
+
+      //el.appendChild(this.circle);
+      return el;
+    }
+
+    /**
+     * Update progress bar
+     *
+     * @method update
+     */
+
+  }, {
+    key: 'update',
+    value: function update() {
+      var buffered = this.player_.buffered();
+
+      // get the percent width of a time compared to the total end
+      //let percentify = function (time, end) {
+      //  let percent = (time / end) || 0; // no NaN
+      //  percent = ((percent >= 1 ? 1 : percent) * 100);
+      //
+      //  let c = Math.PI * (rayon * 2);
+      //  let pct = ((100 - percent) / 200) * c;
+      //  return pct;
+      //};
+
+      // get the percent width of a time compared to the total end
+      var percentify = function percentify(time, end) {
+        var percent = time / end || 0; // no NaN
+        return (percent >= 1 ? 1 : percent) * 125;
+      };
+
+      // update the width of the progress bar
+      var svg = this.getFirstChild(this.el_);
+      if (svg) {
+        var i = buffered.length - 1;
+        var start = buffered.start(i);
+        var end = buffered.end(i);
+        var percent = percentify(end - start, 30);
+        var firstSvgChild = this.getFirstChild(svg);
+        if (firstSvgChild) {
+          var stroke = this.getFirstChild(firstSvgChild);
+          if (stroke) {
+            stroke.style.strokeDasharray = [percent, 125];
+          }
+        }
+      }
+
+      //for (let i = 0; i < buffered.length; i++) {
+      //  let start = buffered.start(i);
+      //  let end = buffered.end(i);
+      //
+      //  // set the percent based on the width of the progress bar (bufferedEnd)
+      //  part.style.left = percentify(start, bufferedEnd);
+      //  part.style.width = percentify(end - start, bufferedEnd);
+      //}
+      //
+      //// remove unused buffered range elements
+      //for (let i = children.length; i > buffered.length; i--) {
+      //  this.el_.removeChild(children[i - 1]);
+      //}
+    }
+  }, {
+    key: 'getFirstChild',
+    value: function getFirstChild(el) {
+      var firstChild = el.firstChild;
+      while (firstChild != null && firstChild.nodeType == 3) {
+        // skip TextNodes
+        firstChild = firstChild.nextSibling;
+      }
+      return firstChild;
+    }
+  }]);
+
+  return LoadProgressSpinner;
+}(LoadProgressBar);
+
+LoadProgressSpinner.prototype.options_ = {
+  rayon: 20
+};
+
+Component.registerComponent('LoadProgressSpinner', LoadProgressSpinner);
+
+//Replace videojs CaptionButton child with this one
+_video2.default.options.children.splice(3, 1, 'loadProgressSpinner');
+
+exports.default = LoadProgressSpinner;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],25:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file mouse-thumbnail-display.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var MouseTimeDisplay = _video2.default.getComponent('MouseTimeDisplay');
+var SeekBar = _video2.default.getComponent('SeekBar');
+
+/**
+ * The Mouse Time Display component shows the time you will seek to
+ * when hovering over the progress bar
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends Component
+ * @class MouseThumbnailDisplay
+ */
+
+var MouseThumbnailDisplay = function (_MouseTimeDisplay) {
+  _inherits(MouseThumbnailDisplay, _MouseTimeDisplay);
+
+  function MouseThumbnailDisplay(player, options) {
+    _classCallCheck(this, MouseThumbnailDisplay);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(MouseThumbnailDisplay).call(this, player, options));
+  }
+
+  _createClass(MouseThumbnailDisplay, [{
+    key: 'createLoader',
+    value: function createLoader(src) {
+      this.destroyLoader();
+
+      this.img = new Image();
+      this.img.onload = this.handleComplete.bind(this);
+      this.img.onerror = this.handleError.bind(this);
+      this.img.src = src;
+    }
+  }, {
+    key: 'handleComplete',
+    value: function handleComplete() {
+      this.destroyLoader();
+      if (_video2.default.hasClass(this.fallbackImg_, 'vjs-hidden')) {
+        _video2.default.removeClass(this.fallbackImg_, 'vjs-hidden');
+      }
+    }
+  }, {
+    key: 'handleError',
+    value: function handleError() {
+      var url = this.destroyLoader();
+      _video2.default.log('thumbnails : next error ' + url);
+      if (this.itemIndex = 1) {
+        this.error = true;
+      }
+    }
+  }, {
+    key: 'destroyLoader',
+    value: function destroyLoader() {
+      var imgSrouce = '';
+      if (this.img) {
+        imgSrouce = this.img.src;
+        this.img.onload = null;
+        this.img.onerror = null;
+        this.img = null;
+      }
+      return imgSrouce;
+    }
+  }, {
+    key: 'extractAssetUri',
+    value: function extractAssetUri() {
+      var max = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+
+      var currentSrc = this.player_.currentSrc();
+      var urlInfo = _video2.default.parseUrl(currentSrc);
+      var pathname = urlInfo.pathname.replace(/\/([a-z0-9\/\._-]{16}\.[is]sml?)+\/([a-z0-9\/\._-]*\.(mpd|m3u8)?)$/gi, '');
+      var host = this.options_.host || urlInfo.host;
+      var fullPah = urlInfo.protocol + '//' + host + pathname + '/frames/map-{index}.jpg';
+      var current = fullPah.replace('{index}', this.itemIndex);
+      var next = fullPah.replace('{index}', this.itemIndex + 1);
+      if (this.itemIndex === 1) {
+        this.createLoader(current);
+      }
+      if (this.itemIndex < max) {
+        this.createLoader(next);
+      }
+
+      return current;
+    }
+
+    /**
+     * Create the component's DOM element
+     *
+     * @return {Element}
+     * @method createEl
+     */
+
+  }, {
+    key: 'createEl',
+    value: function createEl() {
+      var el = _video2.default.createEl('div', {
+        className: 'vjs-thumbnail-display'
+      });
+
+      this.fallbackImg_ = _video2.default.createEl('div', {
+        className: 'vjs-thumbnail-display_thumb vjs-hidden'
+      });
+
+      el.appendChild(this.fallbackImg_);
+
+      return el;
+    }
+  }, {
+    key: 'update',
+    value: function update(newTime, position) {
+      _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'update', this).call(this, newTime, position);
+      if (this.error) {
+        return;
+      }
+      var timeInterval = 60;
+      var spriteSize = {
+        w: 600,
+        h: 330
+      };
+      var spritesPerRow = 5;
+      var spritesPerCol = 5;
+
+      var sheetWidth = spriteSize.w / spritesPerRow;
+      var sheetHeight = spriteSize.h / spritesPerCol;
+
+      if (this.player_.isFullscreen()) {
+        sheetWidth = 200;
+        sheetHeight = 112;
+      }
+
+      var spritesPerSheet = spritesPerRow * spritesPerCol;
+      var secondsPerSheet = timeInterval * spritesPerSheet;
+
+      var index = Math.max(1, Math.ceil(newTime / secondsPerSheet));
+      var duration = this.player_.duration();
+      var maxItem = 1;
+      if (duration) {
+        maxItem = Math.ceil(duration / secondsPerSheet);
+      }
+      var stripedTime = newTime - (index - 1) * secondsPerSheet;
+      var sheetIndex = Math.floor(stripedTime / timeInterval);
+      var x = Math.floor(sheetIndex % 5 * sheetWidth);
+      var y = Math.floor(sheetIndex / spritesPerCol) * sheetHeight;
+      if (this.itemIndex !== index) {
+        this.itemIndex = index;
+        var url = this.extractAssetUri(maxItem);
+        var backgroundImage = 'url("' + url + '")';
+        this.fallbackImg_.style.backgroundImage = backgroundImage;
+      }
+
+      this.fallbackImg_.style.backgroundPositionX = -x + 'px';
+      this.fallbackImg_.style.backgroundPositionY = -y + 'px';
+    }
+  }]);
+
+  return MouseThumbnailDisplay;
+}(MouseTimeDisplay);
+
+MouseThumbnailDisplay.prototype.error = false;
+MouseThumbnailDisplay.prototype.itemIndex = 0;
+MouseThumbnailDisplay.prototype.options_ = {
+  host: null
+};
+//Push videojs SeekBar child with this one
+SeekBar.prototype.options_.children.splice(1, 1, 'mouseThumbnailDisplay');
+Component.registerComponent('MouseThumbnailDisplay', MouseThumbnailDisplay);
+exports.default = MouseThumbnailDisplay;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],26:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _captionTrackMenuItem = require('./caption-track-menu-item');
+
+var _captionTrackMenuItem2 = _interopRequireDefault(_captionTrackMenuItem);
+
+var _offCaptionTrackMenuItem = require('./off-caption-track-menu-item');
+
+var _offCaptionTrackMenuItem2 = _interopRequireDefault(_offCaptionTrackMenuItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Component = _video2.default.getComponent('Component');
+var ControlBar = _video2.default.getComponent('ControlBar');
+var CaptionsButton = _video2.default.getComponent('CaptionsButton');
+
+var CaptionTrackButton = function (_CaptionsButton) {
+  _inherits(CaptionTrackButton, _CaptionsButton);
+
+  function CaptionTrackButton(options, ready) {
+    _classCallCheck(this, CaptionTrackButton);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(CaptionTrackButton).call(this, options, ready));
+  }
+
+  // Create a menu item for each text track
+
+
+  _createClass(CaptionTrackButton, [{
+    key: 'createItems',
+    value: function createItems() {
+      var items = [];
+      // Add an OFF menu item to turn all tracks off
+      items.push(new _offCaptionTrackMenuItem2.default(this.player_, { 'kind': this.kind_, 'mode': 'hidden' }));
+
+      var tracks = this.player_.textTracks();
+
+      if (!tracks) {
+        return items;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+
+        // only add tracks that are of the appropriate kind and have a label
+        if (track['kind'] === this.kind_) {
+          items.push(new _captionTrackMenuItem2.default(this.player_, {
+            'selectable': true,
+            'track': track
+          }));
+        }
+      }
+
+      return items;
+    }
+
+    /**
+     * Allow sub components to stack CSS class names
+     *
+     * @return {String} The constructed class name
+     * @method buildCSSClass
+     */
+
+  }, {
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-captions-extended-button ' + _get(Object.getPrototypeOf(CaptionTrackButton.prototype), 'buildCSSClass', this).call(this);
+    }
+  }]);
+
+  return CaptionTrackButton;
+}(CaptionsButton);
+
+CaptionTrackButton.prototype.kind_ = 'captions';
+CaptionTrackButton.prototype.controlText_ = 'Captions';
+
+//Replace videojs CaptionButton child with this one
+ControlBar.prototype.options_.children.splice(13, 1, 'captionTrackButton');
+
+Component.registerComponent('CaptionTrackButton', CaptionTrackButton);
+exports.default = CaptionTrackButton;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./caption-track-menu-item":27,"./off-caption-track-menu-item":28}],27:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Component = _video2.default.getComponent('Component');
+var MenuItem = _video2.default.getComponent('MenuItem');
+
+var CaptionTrackMenuItem = function (_MenuItem) {
+  _inherits(CaptionTrackMenuItem, _MenuItem);
+
+  function CaptionTrackMenuItem(player, options) {
+    _classCallCheck(this, CaptionTrackMenuItem);
+
+    var track = options['track'];
+    var tracks = player.textTracks();
+
+    // Modify options for parent MenuItem class's init.
+    options['label'] = track['label'] || track['language'] || 'Unknown';
+    options['selected'] = track['default'] || track['mode'] === 'showing';
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CaptionTrackMenuItem).call(this, player, options));
+
+    _this.track = track;
+
+    if (tracks) {
+      tracks.addEventListener('change', _this.handleTracksChange.bind(_this));
+      _this.on('dispose', function () {
+        tracks.removeEventListener('change', this.handleTracksChange.bind(this));
+      });
+    }
+
+    // iOS7 doesn't dispatch change events to TextTrackLists when an
+    // associated track's mode changes. Without something like
+    // Object.observe() (also not present on iOS7), it's not
+    // possible to detect changes to the mode attribute and polyfill
+    // the change event. As a poor substitute, we manually dispatch
+    // change events whenever the controls modify the mode.
+    if (tracks && tracks.onchange === undefined) {
+      (function () {
+        var event = void 0;
+
+        _this.on(['tap', 'click'], function () {
+          if (_typeof(window.Event) !== 'object') {
+            // Android 2.3 throws an Illegal Constructor error for window.Event
+            try {
+              event = new window.Event('change');
+            } catch (err) {}
+          }
+
+          if (!event) {
+            event = document.createEvent('Event');
+            event.initEvent('change', true, true);
+          }
+
+          tracks.dispatchEvent(event);
+        });
+      })();
+    }
+    return _this;
+  }
+
+  /**
+   * Handle click on text track
+   *
+   * @method handleClick
+   */
+
+
+  _createClass(CaptionTrackMenuItem, [{
+    key: 'handleClick',
+    value: function handleClick(event) {
+      var kind = this.track['kind'];
+      var tracks = this.player_.textTracks();
+
+      _get(Object.getPrototypeOf(CaptionTrackMenuItem.prototype), 'handleClick', this).call(this, event);
+
+      if (!tracks) return;
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+
+        if (track['kind'] !== kind) {
+          continue;
+        }
+
+        if (track === this.track) {
+          track['mode'] = 'showing';
+        } else {
+          track['mode'] = 'hidden';
+        }
+      }
+    }
+
+    /**
+     * Handle text track change
+     *
+     * @method handleTracksChange
+     */
+
+  }, {
+    key: 'handleTracksChange',
+    value: function handleTracksChange() {
+      this.selected(this.track['mode'] === 'showing');
+    }
+  }]);
+
+  return CaptionTrackMenuItem;
+}(MenuItem);
+
+Component.registerComponent('CaptionTrackMenuItem', CaptionTrackMenuItem);
+exports.default = CaptionTrackMenuItem;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],28:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _captionTrackMenuItem = require('./caption-track-menu-item');
+
+var _captionTrackMenuItem2 = _interopRequireDefault(_captionTrackMenuItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file caption-track-button-off.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+/**
+ * A special menu item for turning of a specific type of text track
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends TextTrackMenuItem
+ * @class OffTextTrackMenuItem
+ */
+
+var OffCaptionTrackMenuItem = function (_CaptionTrackMenuItem) {
+  _inherits(OffCaptionTrackMenuItem, _CaptionTrackMenuItem);
+
+  function OffCaptionTrackMenuItem(player, options) {
+    _classCallCheck(this, OffCaptionTrackMenuItem);
+
+    // Create pseudo track info
+    // Requires options['kind']
+    options['track'] = {
+      'kind': options['kind'],
+      'player': player,
+      'label': options['kind'] + ' off',
+      'default': false,
+      'mode': 'hidden'
+    };
+
+    // MenuItem is selectable
+    options['selectable'] = true;
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(OffCaptionTrackMenuItem).call(this, player, options));
+  }
+
+  /**
+   * Handle text track change
+   *
+   * @param {Object} event Event object
+   * @method handleTracksChange
+   */
+
+
+  _createClass(OffCaptionTrackMenuItem, [{
+    key: 'handleTracksChange',
+    value: function handleTracksChange(event) {
+      var tracks = this.player().textTracks();
+      var selected = true;
+
+      for (var i = 0, l = tracks.length; i < l; i++) {
+        var track = tracks[i];
+        if (track['kind'] === this.track['kind'] && track['mode'] === 'showing') {
+          selected = false;
+          break;
+        }
+      }
+
+      this.selected(selected);
+    }
+  }]);
+
+  return OffCaptionTrackMenuItem;
+}(_captionTrackMenuItem2.default);
+
+Component.registerComponent('OffCaptionTrackMenuItem', OffCaptionTrackMenuItem);
+exports.default = OffCaptionTrackMenuItem;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./caption-track-menu-item":27}],29:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _videoTrackMenuItem = require('./video-track-menu-item');
+
+var _videoTrackMenuItem2 = _interopRequireDefault(_videoTrackMenuItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file off-video-track-menu-item.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+
+/**
+ * A special menu item for turning of a specific type of video track
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends VideoTrackMenuItem
+ * @class OffVideoTrackMenuItem
+ */
+
+var OffVideoTrackMenuItem = function (_VideoTrackMenuItem) {
+  _inherits(OffVideoTrackMenuItem, _VideoTrackMenuItem);
+
+  function OffVideoTrackMenuItem(player, options) {
+    _classCallCheck(this, OffVideoTrackMenuItem);
+
+    // Create pseudo track info
+    // Requires options['kind']
+    options['track'] = {
+      'kind': options['kind'],
+      'player': player,
+      'label': options['kind'],
+      'default': false,
+      'selected': true
+    };
+
+    // MenuItem is selectable
+    options['selectable'] = true;
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(OffVideoTrackMenuItem).call(this, player, options));
+  }
+
+  /**
+   * Handle text track change
+   *
+   * @param {Object} event Event object
+   * @method handleTracksChange
+   */
+
+
+  _createClass(OffVideoTrackMenuItem, [{
+    key: 'handleTracksChange',
+    value: function handleTracksChange(event) {
+      var tracks = this.player().videoTracks();
+      var selected = true;
+
+      for (var i = 0, l = tracks.length; i < l; i++) {
+        var track = tracks[i];
+        if (track['kind'] === 'main' && track['selected']) {
+          selected = false;
+          break;
+        }
+      }
+      this.selected(selected);
+    }
+  }]);
+
+  return OffVideoTrackMenuItem;
+}(_videoTrackMenuItem2.default);
+
+Component.registerComponent('OffVideoTrackMenuItem', OffVideoTrackMenuItem);
+exports.default = OffVideoTrackMenuItem;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./video-track-menu-item":31}],30:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _videoTrackMenuItem = require('./video-track-menu-item');
+
+var _videoTrackMenuItem2 = _interopRequireDefault(_videoTrackMenuItem);
+
+var _offVideoTrackMenuItem = require('./off-video-track-menu-item');
+
+var _offVideoTrackMenuItem2 = _interopRequireDefault(_offVideoTrackMenuItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file video-track-button.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var ControlBar = _video2.default.getComponent('ControlBar');
+var MenuButton = _video2.default.getComponent('MenuButton');
+var MenuItem = _video2.default.getComponent('MenuItem');
+
+/**
+ * The base class for buttons that toggle specific video track types (e.g. commentary)
+ *
+ * @param {Player|Object} player
+ * @param {Object=} options
+ * @extends MenuButton
+ * @class VideoTrackButton
+ */
+
+var VideoTrackButton = function (_MenuButton) {
+  _inherits(VideoTrackButton, _MenuButton);
+
+  function VideoTrackButton(player, options) {
+    _classCallCheck(this, VideoTrackButton);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VideoTrackButton).call(this, player, options));
+
+    var tracks = _this.player_.videoTracks();
+
+    if (!tracks) {
+      return _possibleConstructorReturn(_this);
+    }
+
+    var updateHandler = _this.update.bind(_this);
+    tracks.addEventListener('removetrack', updateHandler);
+    tracks.addEventListener('addtrack', updateHandler);
+
+    _this.player_.on('dispose', function () {
+      tracks.removeEventListener('removetrack', updateHandler);
+      tracks.removeEventListener('addtrack', updateHandler);
+    });
+    return _this;
+  }
+
+  /**
+   * Allow sub components to stack CSS class names
+   *
+   * @return {String} The constructed class name
+   * @method buildCSSClass
+   */
+
+
+  _createClass(VideoTrackButton, [{
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-video-button ' + _get(Object.getPrototypeOf(VideoTrackButton.prototype), 'buildCSSClass', this).call(this);
+    }
+
+    // Create a menu item for each text track
+
+  }, {
+    key: 'createItems',
+    value: function createItems() {
+      var items = [];
+      // Add an OFF menu item to turn all tracks off
+      items.push(new MenuItem(this.player_, {
+        'label': 'Quality',
+        selectable: false
+      }));
+      // Add an OFF menu item to turn all tracks off
+      items.push(new _offVideoTrackMenuItem2.default(this.player_, {
+        'kind': 'Auto'
+      }));
+
+      var tracks = this.player_.videoTracks();
+
+      if (!tracks) {
+        return items;
+      }
+
+      if (tracks.length < 2) {
+        return [];
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+
+        // only add tracks that are of the appropriate kind and have a label
+        if (track['kind'] === 'main') {
+          items.push(new _videoTrackMenuItem2.default(this.player_, {
+            // MenuItem is selectable
+            'selectable': true,
+            'track': track
+          }));
+        }
+      }
+
+      return items;
+    }
+  }]);
+
+  return VideoTrackButton;
+}(MenuButton);
+
+VideoTrackButton.prototype.kind_ = 'video';
+VideoTrackButton.prototype.controlText_ = 'Quality Selection';
+
+//Replace videojs CaptionButton child with this one
+ControlBar.prototype.options_.children.splice(12, 0, 'videoTrackButton');
+
+Component.registerComponent('VideoTrackButton', VideoTrackButton);
+exports.default = VideoTrackButton;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./off-video-track-menu-item":29,"./video-track-menu-item":31}],31:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Component = _video2.default.getComponent('Component');
+var MenuItem = _video2.default.getComponent('MenuItem');
+
+var VideoTrackMenuItem = function (_MenuItem) {
+  _inherits(VideoTrackMenuItem, _MenuItem);
+
+  /**
+   * LABELS
+   *
+   * @static
+   */
+
+  function VideoTrackMenuItem(player, options) {
+    _classCallCheck(this, VideoTrackMenuItem);
+
+    var track = options['track'];
+    var tracks = player.videoTracks();
+
+    // Modify options for parent MenuItem class's init.
+    options['label'] = track['label'] || track['language'] || 'Unknown';
+    options['selected'] = track['default'] || track['selected'] === true;
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VideoTrackMenuItem).call(this, player, options));
+
+    _this.track = track;
+
+    if (tracks) {
+      (function () {
+        var changeHandler = _this.handleTracksChange.bind(_this);
+
+        tracks.addEventListener('change', changeHandler);
+        _this.on('dispose', function () {
+          tracks.removeEventListener('change', changeHandler);
+        });
+      })();
+    }
+    return _this;
+  }
+
+  /**
+   * Handle click on text track
+   *
+   * @method handleClick
+   */
+
+
+  _createClass(VideoTrackMenuItem, [{
+    key: 'handleClick',
+    value: function handleClick(event) {
+      var tracks = this.player_.videoTracks();
+
+      _get(Object.getPrototypeOf(VideoTrackMenuItem.prototype), 'handleClick', this).call(this, event);
+
+      if (!tracks) return;
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        track['selected'] = track === this.track;
+      }
+    }
+
+    /**
+     * Handle text track change
+     *
+     * @method handleTracksChange
+     */
+
+  }, {
+    key: 'handleTracksChange',
+    value: function handleTracksChange() {
+      this.selected(this.track['selected']);
+    }
+  }]);
+
+  return VideoTrackMenuItem;
+}(MenuItem);
+
+Component.registerComponent('VideoTrackMenuItem', VideoTrackMenuItem);
+exports.default = VideoTrackMenuItem;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],32:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file dash.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * DASH Media Controller - Wrapper for HTML5 Media API
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var Tech = _video2.default.getComponent('Tech');
+var Html5 = _video2.default.getComponent('Html5');
+
+/**
+ * Dash Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Html5
+ * @class Dash
+ */
+
+var Dash = function (_Html) {
+  _inherits(Dash, _Html);
+
+  function Dash(options, ready) {
+    _classCallCheck(this, Dash);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dash).call(this, options, ready));
+
+    var tTracks = _this.textTracks();
+
+    if (tTracks) {
+      (function () {
+        var tTracksChangeHandler = _this.handleTracksChange.bind(_this);
+
+        tTracks.addEventListener('change', tTracksChangeHandler);
+        _this.on('dispose', function () {
+          tTracks.removeEventListener('change', tTracksChangeHandler);
+        });
+      })();
+    }
+
+    var aTracks = _this.audioTracks();
+
+    if (aTracks) {
+      (function () {
+        var aTracksChangeHandler = _this.handleAudioTracksChange.bind(_this);
+
+        aTracks.addEventListener('change', aTracksChangeHandler);
+        _this.on('dispose', function () {
+          aTracks.removeEventListener('change', aTracksChangeHandler);
+        });
+      })();
+    }
+
+    var vTracks = _this.videoTracks();
+
+    if (vTracks) {
+      (function () {
+        var vTracksChangeHandler = _this.handleVideoTracksChange.bind(_this);
+
+        vTracks.addEventListener('change', vTracksChangeHandler);
+        _this.on('dispose', function () {
+          vTracks.removeEventListener('change', vTracksChangeHandler);
+        });
+      })();
+    }
+
+    return _this;
+  }
+
+  /**
+   * Detect if source is Live
+   * @returns {boolean}
+   */
+
+
+  _createClass(Dash, [{
+    key: 'isDynamic',
+    value: function isDynamic(dynamic) {
+      if (dynamic !== undefined) {
+        return this.isDynamic_ = dynamic;
+      }
+      return this.isDynamic_;
+    }
+  }, {
+    key: 'duration',
+    value: function duration() {
+      var duration = _get(Object.getPrototypeOf(Dash.prototype), 'duration', this).call(this);
+      //FIXME WTF for detect live we should get duration to Infinity
+      return this.isDynamic() ? Infinity : duration;
+    }
+  }, {
+    key: 'setCurrentTime',
+    value: function setCurrentTime(seconds) {
+      if (this.playbackInitialized && this.mediaPlayer_) {
+        // this.mediaPlayer_.enableBufferOccupancyABR(false)
+        this.mediaPlayer_.setQualityFor('video', 0);
+        // this.one('seeked', ()=> {
+        //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled)
+        // })
+      }
+      _get(Object.getPrototypeOf(Dash.prototype), 'setCurrentTime', this).call(this, seconds);
+    }
+
+    /**
+     * Set video
+     *
+     * @param {Object=} src Source object
+     * @method setSrc
+     */
+
+  }, {
+    key: 'src',
+    value: function src(_src) {
+      if (!_src) {
+        return this.el_.src;
+      }
+      this.trigger('loadstart');
+
+      this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
+      this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks();
+      this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks();
+      this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
+      // Save the context after the first initialization for subsequent instances
+      this.context_ = this.context_ || {};
+      // reuse MediaPlayer if it already exists
+      if (!this.mediaPlayer_) {
+        // But make a fresh MediaPlayer each time the sourceHandler is used
+        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+
+        // Must run controller before these two lines or else there is no
+        // element to bind to.
+        this.mediaPlayer_.initialize();
+      }
+
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.METRIC_CHANGED, this.onMetricChanged.bind(this));
+      this.mediaPlayer_.on(_dashjs.MediaPlayer.events.PLAYBACK_PROGRESS, this.onProgress.bind(this));
+      // Dash.js autoplays by default
+      if (!this.player_.options().autoplay) {
+        this.mediaPlayer_.setAutoPlay(false);
+      }
+
+      this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings.audio);
+      this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings.video);
+      this.mediaPlayer_.setTrackSwitchModeFor('audio', this.options_.trackSwitchMode); //alwaysReplace
+      this.mediaPlayer_.setTrackSwitchModeFor('video', this.options_.trackSwitchMode); //alwaysReplace
+
+      this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
+      this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
+      this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+
+      this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
+      this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
+      // this.mediaPlayer_.setSelectionModeForInitialTrack(this.options_.initialSelectionMode)
+      this.mediaPlayer_.setBufferToKeep(this.options_.buffer.bufferToKeep);
+      this.mediaPlayer_.setBufferPruningInterval(this.options_.buffer.bufferPruningInterval);
+      this.mediaPlayer_.setStableBufferTime(this.options_.buffer.minBufferTime);
+      this.mediaPlayer_.setBufferTimeAtTopQuality(this.options_.buffer.bufferTimeAtTopQuality);
+      this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(this.options_.buffer.bufferTimeAtTopQualityLongForm);
+      this.mediaPlayer_.setLongFormContentDurationThreshold(this.options_.buffer.longFormContentDurationThreshold);
+      this.mediaPlayer_.setRichBufferThreshold(this.options_.buffer.longFormContentDurationThreshold);
+      this.mediaPlayer_.setBandwidthSafetyFactor(this.options_.buffer.bandwidthSafetyFactor);
+      this.mediaPlayer_.setAbandonLoadTimeout(this.options_.buffer.abandonLoadTimeout);
+      this.mediaPlayer_.setFragmentLoaderRetryAttempts(this.options_.buffer.fragmentLoaderRetryAttempts);
+      this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
+      // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
+      // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
+      //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video})
+
+      this.mediaPlayer_.attachView(this.el_);
+      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
+      this.mediaPlayer_.attachSource(_src);
+    }
+  }, {
+    key: 'onInitialized',
+    value: function onInitialized(_ref, err) {
+      var _ref$streamInfo$manif = _ref.streamInfo.manifestInfo.isDynamic;
+      var isDynamic = _ref$streamInfo$manif === undefined ? false : _ref$streamInfo$manif;
+
+      if (this.playbackInitialized) {
+        return;
+      }
+      this.playbackInitialized = true;
+
+      if (err) {
+        this.player_.error(err);
+      }
+      // this.streamInfo = streamInfo
+      this.isDynamic(isDynamic);
+      this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
+      //let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
+      var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
+      var videoDashTracks = this.mediaPlayer_.getTracksFor('video');
+      var autoSwitch = this.mediaPlayer_.getAutoSwitchQuality();
+
+      var defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio');
+      //let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video')
+      var initialVideoBitrate = this.mediaPlayer_.getInitialBitrateFor('video');
+
+      var i = void 0;
+
+      for (i = 0; i < audioDashTracks.length; i++) {
+        var track = audioDashTracks[i];
+        track.label = track.label || track.lang;
+        var plTrack = this.addAudioTrack('main', track.label, track.lang);
+        plTrack.enabled = plTrack['language'] === (defaultAudio && defaultAudio.lang.indexOf(this.options_.inititalMediaSettings.audio.lang) && defaultAudio.lang || this.options_.inititalMediaSettings.audio.lang);
+      }
+
+      for (i = 0; i < videoDashTracks.length; i++) {
+        var _track = videoDashTracks[i];
+        var bitrateList = _track.bitrateList;
+        for (var j = 0; j < bitrateList.length; j++) {
+          var bitRateInfo = bitrateList[j] / 1000;
+          var label = Dash.qualityLabels[j] || bitRateInfo;
+          var bitRateTrack = this.addVideoTrack('main', label, bitRateInfo);
+          bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
+        }
+      }
+    }
+  }, {
+    key: 'onProgress',
+    value: function onProgress() {
+      this.trigger('progress');
+    }
+  }, {
+    key: 'onMetricChanged',
+    value: function onMetricChanged(e) {
+      // get current buffered ranges of video element and keep them up to date
+      if (e.mediaType !== 'video' && e.mediaType !== 'audio' && e.mediaType !== 'p2pweb') {
+        return;
+      }
+      var metrics = this.getCribbedMetricsFor(e.mediaType);
+      if (metrics) {
+        this.metrics_[e.mediaType] = _video2.default.mergeOptions(this.metrics_[e.mediaType], metrics);
+        this.trigger(e);
+      }
+    }
+  }, {
+    key: 'getCribbedMetricsFor',
+    value: function getCribbedMetricsFor(type) {
+      var metrics = this.mediaPlayer_.getMetricsFor(type),
+          dashMetrics = this.mediaPlayer_.getDashMetrics(),
+          repSwitch = void 0,
+          bufferLevel = void 0,
+          httpRequests = void 0,
+          droppedFramesMetrics = void 0,
+          bitrateIndexValue = void 0,
+          bandwidthValue = void 0,
+          pendingValue = void 0,
+          numBitratesValue = void 0,
+          bufferLengthValue = 0,
+          movingLatency = {},
+          movingDownload = {},
+          movingRatio = {},
+          droppedFramesValue = 0,
+          requestsQueue = void 0,
+          fillmoving = function fillmoving(type, Requests) {
+        var requestWindow, downloadTimes, latencyTimes, durationTimes;
+
+        requestWindow = Requests.slice(-20).filter(function (req) {
+          return req.responsecode >= 200 && req.responsecode < 300 && !!req._mediaduration && req.type === "MediaSegment" && req._stream === type;
+        }).slice(-4);
+        if (requestWindow.length > 0) {
+
+          latencyTimes = requestWindow.map(function (req) {
+            return Math.abs(req.tresponse.getTime() - req.trequest.getTime()) / 1000;
+          });
+
+          movingLatency[type] = {
+            average: latencyTimes.reduce(function (l, r) {
+              return l + r;
+            }) / latencyTimes.length,
+            high: latencyTimes.reduce(function (l, r) {
+              return l < r ? r : l;
+            }),
+            low: latencyTimes.reduce(function (l, r) {
+              return l < r ? l : r;
+            }),
+            count: latencyTimes.length
+          };
+
+          downloadTimes = requestWindow.map(function (req) {
+            return Math.abs(req._tfinish.getTime() - req.tresponse.getTime()) / 1000;
+          });
+
+          movingDownload[type] = {
+            average: downloadTimes.reduce(function (l, r) {
+              return l + r;
+            }) / downloadTimes.length,
+            high: downloadTimes.reduce(function (l, r) {
+              return l < r ? r : l;
+            }),
+            low: downloadTimes.reduce(function (l, r) {
+              return l < r ? l : r;
+            }),
+            count: downloadTimes.length
+          };
+
+          durationTimes = requestWindow.map(function (req) {
+            return req._mediaduration;
+          });
+
+          movingRatio[type] = {
+            average: durationTimes.reduce(function (l, r) {
+              return l + r;
+            }) / downloadTimes.length / movingDownload[type].average,
+            high: durationTimes.reduce(function (l, r) {
+              return l < r ? r : l;
+            }) / movingDownload[type].low,
+            low: durationTimes.reduce(function (l, r) {
+              return l < r ? l : r;
+            }) / movingDownload[type].high,
+            count: durationTimes.length
+          };
+        }
+      };
+
+      if (metrics && dashMetrics) {
+        repSwitch = dashMetrics.getCurrentRepresentationSwitch(metrics);
+        bufferLevel = dashMetrics.getCurrentBufferLevel(metrics);
+        httpRequests = dashMetrics.getHttpRequests(metrics);
+        droppedFramesMetrics = dashMetrics.getCurrentDroppedFrames(metrics);
+        requestsQueue = dashMetrics.getRequestsQueue(metrics);
+
+        fillmoving('video', httpRequests);
+        fillmoving('audio', httpRequests);
+
+        var streamIdx = this.streamInfo ? this.streamInfo.index : 0;
+
+        if (repSwitch !== null) {
+          bitrateIndexValue = dashMetrics.getIndexForRepresentation(repSwitch.to, streamIdx);
+          bandwidthValue = dashMetrics.getBandwidthForRepresentation(repSwitch.to, streamIdx);
+          bandwidthValue = bandwidthValue / 1000;
+          bandwidthValue = Math.round(bandwidthValue);
+        }
+
+        numBitratesValue = dashMetrics.getMaxIndexForBufferType(type, streamIdx);
+
+        if (bufferLevel !== null) {
+          bufferLengthValue = bufferLevel.toPrecision(5);
+        }
+
+        if (droppedFramesMetrics !== null) {
+          droppedFramesValue = droppedFramesMetrics.droppedFrames;
+        }
+
+        if (isNaN(bandwidthValue) || bandwidthValue === undefined) {
+          bandwidthValue = 0;
+        }
+
+        if (isNaN(bitrateIndexValue) || bitrateIndexValue === undefined) {
+          bitrateIndexValue = 0;
+        }
+
+        if (isNaN(numBitratesValue) || numBitratesValue === undefined) {
+          numBitratesValue = 0;
+        }
+
+        if (isNaN(bufferLengthValue) || bufferLengthValue === undefined) {
+          bufferLengthValue = 0;
+        }
+
+        pendingValue = this.mediaPlayer_.getQualityFor(type);
+
+        return {
+          bandwidth: bandwidthValue,
+          bitrateIndex: bitrateIndexValue + 1,
+          pendingIndex: pendingValue !== bitrateIndexValue ? "(-> " + (pendingValue + 1) + ")" : "",
+          numBitrates: numBitratesValue,
+          bufferLength: bufferLengthValue,
+          droppedFrames: droppedFramesValue,
+          movingLatency: movingLatency,
+          movingDownload: movingDownload,
+          movingRatio: movingRatio,
+          requestsQueue: requestsQueue
+        };
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'buildDashJSProtData',
+    value: function buildDashJSProtData(keySystemOptions) {
+      var output = {};
+
+      if (!keySystemOptions) {
+        return output;
+      }
+
+      Object.keys(keySystemOptions).forEach(function (key, data) {
+        if (data.licenseUrl) {
+          data.laURL = data.licenseUrl;
+          delete data.licenseUrl;
+        }
+      });
+
+      return keySystemOptions;
+    }
+  }, {
+    key: 'onTextTracksAdded',
+    value: function onTextTracksAdded(e) {
+      var tracks = e.tracks;
+
+      if (tracks) {
+        var plTracks = this.textTracks();
+        var l = tracks.length,
+            track,
+            plTrack;
+        for (var i = 0; i < l; i++) {
+          track = tracks[i];
+          track.label = track.label || track.lang;
+          plTrack = plTracks[i];
+          track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
+          if (track.defaultTrack) {
+            this.mediaPlayer_.setTextTrack(i);
+            if (plTrack) {
+              plTrack.mode = 'showing';
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Update display texttracks
+     *
+     * @method updateDisplay
+     */
+
+  }, {
+    key: 'handleTracksChange',
+    value: function handleTracksChange() {
+      var tracks = this.textTracks();
+
+      if (!tracks || !this.playbackInitialized) {
+        return;
+      }
+      var selected = void 0;
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (track['mode'] === 'showing') {
+          selected = true;
+          this.mediaPlayer_.setTextTrack(i);
+        }
+      }
+      if (!selected) {
+        this.mediaPlayer_.setTextTrack(-1);
+      }
+    }
+  }, {
+    key: 'handleAudioTracksChange',
+    value: function handleAudioTracksChange() {
+      var tracks = this.audioTracks();
+
+      if (!tracks || !this.playbackInitialized) {
+        return;
+      }
+
+      var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (track['enabled']) {
+          var audioDashTrack = audioDashTracks[i];
+          if (track['language'] == audioDashTrack['lang']) {
+            try {
+              this.mediaPlayer_.setCurrentTrack(audioDashTrack);
+            } catch (err) {
+              _video2.default.log(err);
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: 'handleVideoTracksChange',
+    value: function handleVideoTracksChange() {
+      var tracks = this.videoTracks();
+
+      if (!tracks || !this.playbackInitialized || !this.options_.autoSwitch) {
+        return;
+      }
+      var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && tracks.selectedIndex % 1 === 0;
+      this.mediaPlayer_.setAutoSwitchQuality(!isInt);
+      if (isInt) {
+        this.mediaPlayer_.setQualityFor('video', tracks.selectedIndex);
+      }
+    }
+  }, {
+    key: 'afterMediaKeysReset',
+    value: function afterMediaKeysReset(manifest) {
+      this.showErrors();
+
+      // Attach the source with any protection data
+      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
+      this.mediaPlayer_.attachSource(manifest);
+
+      this.triggerReady();
+    }
+  }, {
+    key: 'showErrors',
+    value: function showErrors() {
+      var _this2 = this;
+
+      // The video element's src is set asynchronously so we have to wait a while
+      // before we unhide any errors
+      // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
+      // in my testing
+      this.setTimeout(function () {
+        _this2.player_.removeClass('vjs-dashjs-hide-errors');
+      }, 250);
+    }
+  }, {
+    key: 'dispose',
+    value: function dispose() {
+      if (this.mediaPlayer_) {
+        this.mediaPlayer_.reset();
+      }
+      _get(Object.getPrototypeOf(Dash.prototype), 'dispose', this).call(this, this);
+    }
+  }]);
+
+  return Dash;
+}(Html5);
+
+Dash.prototype.isDynamic_ = false;
+
+Dash.prototype.options_ = {
+  inititalMediaSettings: {
+    text: {
+      lang: 'fra'
+    },
+    audio: {
+      lang: 'fra'
+    },
+    video: {
+      lang: 'fra'
+    }
+  },
+  //Set to false to switch off adaptive bitrate switching.
+  autoSwitch: true,
+  /*This method sets the current track switch mode. Available options are:
+   * MediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
+   * (used to forbid clearing the buffered data (prior to current playback position) after track switch. Default for video)
+   * MediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
+   * (used to clear the buffered data (prior to current playback position) after track switch. Default for audio)*/
+  trackSwitchMode: 'neverReplace', //alwaysReplace
+  //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
+  bolaEnabled: true,
+  //Set to true if you would like dash.js to keep downloading fragments in the background
+  scheduleWhilePaused: false,
+  //A value of the initial bitrate, kbps
+  initialBitrate: 400,
+  //This method sets the selection mode for the initial track. This mode defines how the initial track will be selected
+  // initialSelectionMode: 'highestBitrate',//widestRange,highestBitrate
+  //Represents how many segment durations to delay the live stream.
+  liveFragmentCount: 4,
+  //This value influences the buffer pruning logic.
+  //https://github.com/Dash-Industry-Forum/dash.js/blob/master/src/streaming/MediaPlayer.js
+  buffer: {
+    //Allows you to modify the buffer that is kept in source buffer in seconds.
+    bufferToKeep: 30,
+    //When the time is set higher than the default you will have to wait longer
+    minBufferTime: 12,
+    //Allows you to modify the interval of pruning buffer in seconds.
+    bufferPruningInterval: 30,
+    //A percentage between 0.0 and 1 to reduce the measured throughput calculations
+    bandwidthSafetyFactor: 0.9,
+    //The time that the internal buffer target will be set to once playing the top quality.
+    bufferTimeAtTopQuality: 30,
+    //The time that the internal buffer target will be set to once playing the top quality for long form content.
+    bufferTimeAtTopQualityLongForm: 60,
+    //This will directly affect the buffer targets when playing back at the top quality.
+    longFormContentDurationThreshold: 600,
+    //A threshold, in seconds, of when dashjs abr becomes less conservative since we have a larger "rich" buffer
+    richBufferThreshold: 20,
+    //A timeout value in seconds, which during the ABRController will block switch-up events.
+    abandonLoadTimeout: 10,
+    //Total number of retry attempts that will occur on a fragment load before it fails.
+    fragmentLoaderRetryAttempts: 3,
+    //Time in milliseconds of which to reload a failed fragment load attempt.
+    fragmentLoaderRetryInterval: 1000
+  },
+  protData: {}
+};
+
+/* Dash Support Testing -------------------------------------------------------- */
+
+Dash.isSupported = function () {
+  return Html5.isSupported() && !!window.MediaSource;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Dash);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Dash.nativeSourceHandler = {};
+
+Dash.prototype['featuresNativeTextTracks'] = false;
+/*
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
+ */
+Dash.prototype['featuresNativeAudioTracks'] = false;
+
+/*
+ * Sets the tech's status on native video track support
+ *
+ * @type {Boolean}
+ */
+Dash.prototype['featuresNativeVideoTracks'] = false;
+
+/*
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
+ */
+Dash.supportsNativeTextTracks = function () {
+  var supportsTextTracks;
+  supportsTextTracks = !!Html5.TEST_VID.textTracks;
+  if (supportsTextTracks && Html5.TEST_VID.textTracks.length > 0) {
+    supportsTextTracks = typeof Html5.TEST_VID.textTracks[0]['mode'] !== 'number';
+  }
+  if (supportsTextTracks && !('onremovetrack' in Html5.TEST_VID.textTracks)) {
+    supportsTextTracks = false;
+  }
+  return supportsTextTracks;
+};
+
+/*
+ * Check to see if native video tracks are supported by this browser/device
+ *
+ * @return {Boolean}
+ */
+Dash.supportsNativeVideoTracks = function () {
+  var supportsVideoTracks = !!Html5.TEST_VID.videoTracks && !_video2.default.browser.IS_SAFARI;
+  return supportsVideoTracks;
+};
+
+/*
+ * Check to see if native audio tracks are supported by this browser/device
+ *
+ * @return {Boolean}
+ */
+Dash.supportsNativeAudioTracks = function () {
+  var supportsAudioTracks = !!Html5.TEST_VID.audioTracks && !_video2.default.browser.IS_SAFARI;
+  return supportsAudioTracks;
+};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Dash.nativeSourceHandler.canPlayType = function (type) {
+
+  var dashTypeRE = /^application\/dash\+xml/i;
+  var dashExtRE = /\.mpd/i;
+  var canPlay = '';
+  if (dashTypeRE.test(type)) {
+    canPlay = 'probably';
+  } else if (dashExtRE.test(type)) {
+    canPlay = 'maybe';
+  } else {
+    canPlay = '';
+  }
+
+  return canPlay;
+};
+
+/*
+ * Check Flash can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Dash.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Dash.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Dash.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];
+
+/*
+ * Pass the source to the flash object
+ * Adaptive source handlers will have more complicated workflows before passing
+ * video data to the video element
+ *
+ * @param  {Object} source    The source object
+ * @param  {Flash} tech   The instance of the Flash tech
+ */
+Dash.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Dash.nativeSourceHandler.dispose = function () {};
+
+// Register the native source handler
+Dash.registerSourceHandler(Dash.nativeSourceHandler);
+
+_video2.default.options.dash = {};
+
+Component.registerComponent('Dash', Dash);
+Tech.registerTech('Dash', Dash);
+exports.default = Dash;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],33:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file dashas.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * DASH Media Controller - Wrapper for Flash Media API
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var Tech = _video2.default.getComponent('Tech');
+var Flash = _video2.default.getComponent('Flash');
+
+/**
+ * Dash Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Html5
+ * @class Dash
+ */
+
+var Dashas = function (_Flash) {
+  _inherits(Dashas, _Flash);
+
+  function Dashas(options, ready) {
+    _classCallCheck(this, Dashas);
+
+    // Add global window functions that the swf expects
+    // A 4.x workflow we weren't able to solve for in 5.0
+    // because of the need to hard code these functions
+    // into the swf for security reasons
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashas).call(this, options, ready));
+
+    window.videojs = window.videojs || {};
+    window.videojs.Dashas = window.videojs.Dashas || {};
+    window.videojs.Dashas.onReady = Flash.onReady;
+    window.videojs.Dashas.onEvent = Flash.onEvent;
+    window.videojs.Dashas.onError = Flash.onError;
+
+    _this.metricsInterval = _this.setInterval(_this.detectBandwithChange, 5000);
+    _this.one('loadedmetadata', _this.onInitialized.bind(_this));
+
+    var tracks = _this.audioTracks();
+
+    var changeHandler = _this.handleAudioTracksChange.bind(_this);
+
+    tracks.addEventListener('change', changeHandler);
+    _this.on('dispose', function () {
+      tracks.removeEventListener('change', changeHandler);
+    });
+
+    return _this;
+  }
+
+  /**
+   * Create the component's DOM element
+   *
+   * @return {Element}
+   * @method createEl
+   */
+
+
+  _createClass(Dashas, [{
+    key: 'createEl',
+    value: function createEl() {
+      var options = this.options_;
+      var serverUrl = Dashas.buildMetadataUrl(options);
+      var customData = Dashas.buildOptData(options);
+      // Merge default flashvars with ones passed in to init
+      options.flashVars = _video2.default.mergeOptions({
+        'metadataUrl': encodeURIComponent(serverUrl),
+        'authenticationToken': encodeURIComponent(customData),
+        'language': 'fr',
+        'spinner': !1,
+        'watermark': !1,
+        'muted': this.player_.options_.muted,
+        'debug': true,
+        'quality': 'autolow',
+        'maxBufferLength': 8
+      }, options.flashVars || {});
+
+      return _get(Object.getPrototypeOf(Dashas.prototype), 'createEl', this).call(this);
+    }
+  }, {
+    key: 'onInitialized',
+    value: function onInitialized() {
+      var metrics = this.getPlaybackStatistics();
+      if (!metrics) {
+        return;
+      }
+      this.metrics_ = _video2.default.mergeOptions(this.metrics_, metrics);
+
+      this.addAudioTracks();
+    }
+  }, {
+    key: 'handleAudioTracksChange',
+    value: function handleAudioTracksChange() {
+      var tracks = this.audioTracks();
+
+      if (!tracks) {
+        return;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (track['enabled']) {
+          try {
+            this.el_.vjs_setProperty('forcedAudioLang', i);
+          } catch (err) {
+            _video2.default.log(err);
+          }
+        }
+      }
+    }
+  }, {
+    key: 'addAudioTracks',
+    value: function addAudioTracks() {
+      var tracks = this.el_.vjs_getProperty('audioTracks');
+
+      if (!tracks) {
+        return;
+      }
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        if (typeof track === 'string') {
+          track = {
+            label: track,
+            lang: track
+          };
+        }
+        var plTrack = this.addAudioTrack('main', track.label, track.lang);
+        plTrack.enabled = plTrack['language'] === 'fra' || plTrack['language'] === 'fr';
+      }
+    }
+  }, {
+    key: 'detectBandwithChange',
+    value: function detectBandwithChange() {
+      var metrics = this.getPlaybackStatistics();
+      var metricsChangeType = void 0;
+      if (!metrics) {
+        return;
+      }
+      switch (true) {
+        case metrics.video.bandwidth !== this.metrics_.video.bandwidth:
+          this.metrics_.video.bandwidth = metrics.video.bandwidth;
+          metricsChangeType = 'video';
+          break;
+        case metrics.audio.bandwidth !== this.metrics_.audio.bandwidth:
+          this.metrics_.audio.bandwidth = metrics.audio.bandwidth;
+          metricsChangeType = 'audio';
+          break;
+        default:
+          break;
+      }
+      if (metricsChangeType) {
+        var metricsChangeEvent = {
+          type: _dashjs.MediaPlayer.events.METRIC_CHANGED,
+          mediaType: metricsChangeType
+        };
+
+        this.trigger(metricsChangeEvent);
+      }
+    }
+  }, {
+    key: 'subtitleTracks',
+    value: function subtitleTracks() {
+      return this.textTracks();
+    }
+  }, {
+    key: 'setSubsTrack',
+    value: function setSubsTrack(track) {
+      this.setTextTrack(track);
+    }
+  }, {
+    key: 'getDroppedFrames',
+    value: function getDroppedFrames() {
+      return this.el_.vjs_getProperty('droppedFrames');
+    }
+  }, {
+    key: 'getBuffered',
+    value: function getBuffered() {
+      return this.el_.vjs_getProperty('buffered');
+    }
+  }, {
+    key: 'getBufferLevel',
+    value: function getBufferLevel() {
+      return this.el_.vjs_getProperty('bufferLevel');
+    }
+  }, {
+    key: 'getCurrentAudioBandwidth',
+    value: function getCurrentAudioBandwidth() {
+      return this.el_.vjs_getProperty('currentAudioBandwidth');
+    }
+  }, {
+    key: 'getCurrentVideoBandwidth',
+    value: function getCurrentVideoBandwidth() {
+      return this.el_.vjs_getProperty('currentVideoBandwidth');
+    }
+  }, {
+    key: 'audioTracks',
+    value: function audioTracks() {
+      return Tech.prototype.audioTracks.call(this);
+    }
+  }, {
+    key: 'poster',
+    value: function poster() {
+      return '';
+    }
+  }, {
+    key: 'getPlaybackStatistics',
+    value: function getPlaybackStatistics() {
+      var z = this.getBuffered();
+      var W = (this.getBufferLevel(), this.getDroppedFrames());
+      var Z = this.getCurrentVideoBandwidth();
+      var K = this.getCurrentAudioBandwidth();
+      var R = {
+        bandwidth: Z / 1000,
+        bufferLength: z,
+        droppedFrames: W
+      };
+      var N = {
+        bandwidth: K / 1000,
+        bufferLength: z
+      };
+      return _video2.default.mergeOptions(this.metrics_, { video: R, audio: N });
+    }
+  }, {
+    key: 'src',
+    value: function src(_src) {
+      if (!_src) {
+        return this.currentSrc();
+      }
+      var options = this.options_;
+      var autoPlay = this.player_.autoplay();
+      var serverUrl = Dashas.buildMetadataUrl(options);
+      var customData = Dashas.buildOptData(options);
+      this.el_.vjs_source(_src, autoPlay, serverUrl, customData);
+    }
+  }, {
+    key: 'currentTime',
+    value: function currentTime() {
+      return this.el_.vjs_getProperty('currentTime');
+    }
+  }, {
+    key: 'buffered',
+    value: function buffered() {
+      return this.el_.vjs_getProperty('buffered');
+    }
+  }]);
+
+  return Dashas;
+}(Flash);
+
+Dashas.extractAssetId = function (source) {
+  var reg = /^(.*\/)?(?:$|(.+?)(?:(\.[^.]*$)|$))/;
+  var filePath = source.match(reg);
+
+  var assetId = filePath[2];
+  return assetId;
+};
+
+Dashas.getDRMData = function (options) {
+  var drmData = options.protData['com.adobe.flashaccess'];
+  var assetId = options.source ? Dashas.extractAssetId(options.source.src) : '';
+  var customData = drmData['httpRequestHeaders'] ? drmData['httpRequestHeaders'].customData || {} : {};
+  var serverUrl = drmData['serverURL'] ? drmData['serverURL'] || '' : '';
+
+  if (options.source && !options.source.drm) {
+    serverUrl = customData = assetId = '';
+  }
+
+  return {
+    customData: customData,
+    serverUrl: serverUrl,
+    assetId: assetId,
+    variantId: '' //on utilise pas cette key
+  };
+};
+
+Dashas.buildMetadataUrl = function (options) {
+  var data = Dashas.getDRMData(options);
+  var metadataUrl = data.serverUrl;
+  if (data.customData) {
+    metadataUrl += '?optData=' + data.customData;
+  }
+  if (data.assetId) {
+    metadataUrl += '&assetId=' + data.assetId;
+  }
+  if (data.variantId) {
+    metadataUrl += '&variantId=' + data.variantId;
+  }
+  return metadataUrl;
+};
+
+Dashas.buildOptData = function (options) {
+  return Dashas.getDRMData(options).customData;
+};
+
+Dashas.prototype.options_ = {
+  customData: {},
+  protData: {
+    "com.widevine.alpha": {},
+    "com.microsoft.playready": {},
+    "com.adobe.flashaccess": {},
+    "org.w3.clearkey": {}
+  }
+};
+
+/* Dash Support Testing -------------------------------------------------------- */
+
+Dashas.isSupported = function () {
+  return Flash.isSupported() && Flash.version()[0] >= 14;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Dashas);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Dashas.nativeSourceHandler = {};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Dashas.nativeSourceHandler.canPlayType = function (source) {
+
+  var dashTypeRE = /^application\/dash\+xml/i;
+  var dashExtRE = /\.mpd/i;
+
+  if (dashTypeRE.test(source)) {
+    return 'probably';
+  } else if (dashExtRE.test(source)) {
+    return 'maybe';
+  } else {
+    return '';
+  }
+};
+
+/*
+ * Check Flash can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Dashas.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Dashas.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Dashas.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+/*
+ * Pass the source to the flash object
+ * Adaptive source handlers will have more complicated workflows before passing
+ * video data to the video element
+ *
+ * @param  {Object} source    The source object
+ * @param  {Flash} tech   The instance of the Flash tech
+ */
+Dashas.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Dashas.nativeSourceHandler.dispose = function () {};
+
+// Register the native source handler
+Dashas.registerSourceHandler(Dashas.nativeSourceHandler);
+
+_video2.default.options.dashas = {};
+
+Component.registerComponent('Dashas', Dashas);
+Tech.registerTech('Dashas', Dashas);
+
+/**
+ * @fileoverview Externs for video-js.swf. Externs are functions
+ * that the compiler shouldn't obfuscate.
+ */
+
+/**
+ * @param {string} name
+ */
+HTMLObjectElement.prototype.vjs_getProperty = function (name) {};
+
+/**
+ * @param {string} name
+ * @param {string|number} value
+ */
+HTMLObjectElement.prototype.vjs_setProperty = function (name, value) {};
+
+/**
+ * Control methods
+ */
+HTMLObjectElement.prototype.vjs_play = function () {};
+HTMLObjectElement.prototype.vjs_pause = function () {};
+HTMLObjectElement.prototype.vjs_load = function () {};
+
+/**
+ * @param {string} src
+ */
+HTMLObjectElement.prototype.vjs_src = function (src) {};
+
+exports.default = Dashas;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],34:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _dash = require('./dash');
+
+var _dash2 = _interopRequireDefault(_dash);
+
+var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file easy-broadcast.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * EASY_BROADCAST P2P Media Controller - Wrapper for DASH Media API
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var Tech = _video2.default.getComponent('Tech');
+
+/**
+ * Dash Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Dash
+ * @class EasyBroadcast
+ */
+
+var EasyBroadcast = function (_Dash) {
+  _inherits(EasyBroadcast, _Dash);
+
+  function EasyBroadcast(options, ready) {
+    _classCallCheck(this, EasyBroadcast);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(EasyBroadcast).call(this, options, ready));
+  }
+
+  /**
+   * Set video
+   *
+   * @param {Object=} src Source object
+   * @method setSrc
+   */
+
+
+  _createClass(EasyBroadcast, [{
+    key: 'src',
+    value: function src(_src) {
+      var _this2 = this;
+
+      if (!_src) {
+        return this.el_.src;
+      }
+
+      this.clearTimeout(this.loadEBTimeout);
+      if (!EasyBroadcast.ebLoaded) {
+        // Set the source when ready
+        this.loadEBTimeout = this.setTimeout(function () {
+          _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', _this2).call(_this2, _src);
+        }, 2000);
+        return this.injectJs(_src);
+      } else {
+        this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
+        _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
+      }
+    }
+  }, {
+    key: 'getCribbedMetricsFor',
+    value: function getCribbedMetricsFor(type) {
+      if (type !== 'p2pweb') {
+        return _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'getCribbedMetricsFor', this).call(this, type);
+      }
+      var metrics = this.mediaPlayer_.getMetricsFor(type);
+      if (metrics) {
+        return metrics.metricsP2PWeb;
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'onMetricChanged',
+    value: function onMetricChanged(e) {
+      if (e.mediaType !== 'video' && e.mediaType !== 'audio') {
+        return;
+      }
+      var metricsKey = 'p2pweb';
+      var metrics = this.getCribbedMetricsFor(metricsKey);
+      if (metrics) {
+        this.metrics_[metricsKey] = _video2.default.mergeOptions(this.metrics_[metricsKey], metrics);
+      }
+      _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'onMetricChanged', this).call(this, e);
+    }
+  }, {
+    key: 'onReady',
+    value: function onReady() {
+      this.triggerReady();
+    }
+  }, {
+    key: 'injectJs',
+    value: function injectJs(src) {
+      var url = this.options_.ebLib;
+      var t = 'script';
+      var d = document;
+      var s = d.getElementsByTagName('head')[0] || d.documentElement;
+      var js = d.createElement(t);
+      var cb = this.src.bind(this);
+      js.async = true;
+      js.type = 'text/javascript';
+
+      js.onload = js.onreadystatechange = function () {
+        var rs = this.readyState;
+        if (!EasyBroadcast.ebLoaded && (!rs || /loaded|complete/.test(rs))) {
+          EasyBroadcast.ebLoaded = true;
+          cb(src);
+        }
+      };
+      js.src = url;
+      s.insertBefore(js, s.firstChild);
+    }
+  }]);
+
+  return EasyBroadcast;
+}(_dash2.default);
+
+EasyBroadcast.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
+  ebLib: '//www.easybroadcast.fr/libs/65/EB.js&s2member_file_download_key=dbb00d0abec8ccb2295b7d2df5325f6b',
+  //override option EB, cause switch lang too long
+  trackSwitchMode: 'alwaysReplace'
+});
+
+/* EasyBroadcast Support Testing -------------------------------------------------------- */
+
+EasyBroadcast.isSupported = function () {
+  return _dash2.default.isSupported() && !!(window.RTCPeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection) && !_video2.default.browser.IS_IOS && !_video2.default.browser.IS_ANDROID;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(EasyBroadcast);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+EasyBroadcast.nativeSourceHandler = _dash2.default.nativeSourceHandler;
+
+/*
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
+ */
+EasyBroadcast.supportsNativeTextTracks = _dash2.default.supportsNativeTextTracks;
+
+/*
+ * Check to see if native video tracks are supported by this browser/device
+ *
+ * @return {Boolean}
+ */
+EasyBroadcast.supportsNativeVideoTracks = _dash2.default.supportsNativeVideoTracks;
+
+/*
+ * Check to see if native audio tracks are supported by this browser/device
+ *
+ * @return {Boolean}
+ */
+EasyBroadcast.supportsNativeAudioTracks = _dash2.default.supportsNativeAudioTracks;
+
+EasyBroadcast.loadEBTimeout = 0;
+
+EasyBroadcast.ebLoaded = false;
+
+_video2.default.options.easybroadcast = {};
+
+Component.registerComponent('EasyBroadcast', EasyBroadcast);
+Tech.registerTech('EasyBroadcast', EasyBroadcast);
+exports.default = EasyBroadcast;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./dash":32}],35:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MediaTechController = _video2.default.getComponent('MediaTechController');
+var AudioTrack = _video2.default.getComponent('AudioTrack');
+var VideoTrack = _video2.default.getComponent('VideoTrack');
+
+MediaTechController.METRICS_DATA = {
+  bandwidth: -1,
+  bitrateIndex: 0,
+  pendingIndex: '',
+  numBitrates: 0,
+  bufferLength: 0,
+  droppedFrames: 0,
+  movingLatency: 0,
+  movingDownload: 0,
+  movingRatio: 0,
+  requestsQueue: 0
+};
+
+MediaTechController.prototype.metrics_ = {
+  video: _video2.default.mergeOptions({
+    bandwidth: /*this.el().webkitVideoDecodedByteCount ||*/-1
+  }, MediaTechController.METRICS_DATA),
+  audio: _video2.default.mergeOptions({
+    bandwidth: /*this.el().webkitAudioDecodedByteCount || */-1
+  }, MediaTechController.METRICS_DATA),
+  p2pweb: {
+    chunksFromCDN: 0,
+    chunksFromP2P: 0,
+    chunksSent: 0,
+    bufferLength: -1,
+    swarmSize: -1,
+    p2pRatio: -1,
+    startupTime: -1
+  }
+};
+
+/**
+ * Get default metrix statistics object
+ * @returns {{video: {bandwidth: number}, audio: {bandwidth: number}}}
+ */
+MediaTechController.prototype.getPlaybackStatistics = function () {
+  return this.metrics_;
+};
+
+/**
+ * Get default metrix statistics object for specified type
+ * @param type
+ * @returns {*}
+ */
+MediaTechController.prototype.getCribbedMetricsFor = function (type) {
+  return this.metrics_[type];
+};
+
+/**
+ * Creates and returns a remote text track object
+ *
+ * @param {String} kind Text track kind (subtitles, captions, descriptions
+ *                                       chapters and metadata)
+ * @param {String=} label Label to identify the text track
+ * @param {String=} language Two letter language abbreviation
+ * @return {TextTrackObject}
+ * @method addTextTrack
+ */
+MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
+  var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
+  if (!kind) {
+    throw new Error('AudioTrack kind is required but was not provided');
+  }
+
+  var tracks = this.audioTracks();
+
+  options.kind = kind;
+
+  if (label) {
+    options.label = label;
+  }
+  if (language) {
+    options.language = language;
+  }
+  options.tech = self;
+
+  var track = new AudioTrack(options);
+  tracks.addTrack_(track);
+
+  return track;
+};
+
+MediaTechController.prototype.addVideoTrack = function (kind, label, language) {
+  var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
+  if (!kind) {
+    throw new Error('VideoTrack kind is required but was not provided');
+  }
+
+  var tracks = this.videoTracks();
+
+  options.kind = kind;
+
+  if (label) {
+    options.label = label;
+  }
+  if (language) {
+    options.language = language;
+  }
+  options.tech = self;
+
+  var track = new VideoTrack(options);
+  tracks.addTrack_(track);
+
+  return track;
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],36:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _video = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _video2 = _interopRequireDefault(_video);
+
+var _dash = require('./dash');
+
+var _dash2 = _interopRequireDefault(_dash);
+
+var _streamrootDashjsP2pWrapper = require('streamroot-dashjs-p2p-wrapper');
+
+var _streamrootDashjsP2pWrapper2 = _interopRequireDefault(_streamrootDashjsP2pWrapper);
+
+var _dashjs = (typeof window !== "undefined" ? window['dashjs'] : typeof global !== "undefined" ? global['dashjs'] : null);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @file streamroot.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * STREAMROOT P2P Media Controller - Wrapper for DASH Media API
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var Component = _video2.default.getComponent('Component');
+var Tech = _video2.default.getComponent('Tech');
+
+/**
+ * Dash Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Dash
+ * @class EasyBroadcast
+ */
+
+var Streamroot = function (_Dash) {
+  _inherits(Streamroot, _Dash);
+
+  function Streamroot(options, ready) {
+    _classCallCheck(this, Streamroot);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(Streamroot).call(this, options, ready));
+  }
+
+  /**
+   * Set video
+   *
+   * @param {Object=} src Source object
+   * @method setSrc
+   */
+
+
+  _createClass(Streamroot, [{
+    key: 'src',
+    value: function src(_src) {
+      if (!_src) {
+        return this.el_.src;
+      }
+      // But make a fresh MediaPlayer each time the sourceHandler is used
+      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+      this.dashjsWrapper_ = new _streamrootDashjsP2pWrapper2.default(this.mediaPlayer_, this.options_.p2pConfig, 30);
+      // Apply any options that are set
+      this.mediaPlayer_.initialize();
+      this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+      _get(Object.getPrototypeOf(Streamroot.prototype), 'src', this).call(this, _src);
+    }
+  }, {
+    key: 'getCribbedMetricsFor',
+    value: function getCribbedMetricsFor(type) {
+      if (type !== 'p2p') {
+        return _get(Object.getPrototypeOf(Streamroot.prototype), 'getCribbedMetricsFor', this).call(this, type);
+      }
+      var metrics = this.mediaPlayer_.getMetricsFor(type);
+      if (metrics) {
+        return metrics.metricsP2PWeb;
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'onMetricChanged',
+    value: function onMetricChanged(e) {
+      if (e.mediaType !== 'video' && e.mediaType !== 'audio') {
+        return;
+      }
+      var metricsKey = 'p2p';
+      var metrics = this.getCribbedMetricsFor(metricsKey);
+      if (metrics) {
+        this.metrics_[metricsKey] = _video2.default.mergeOptions(this.metrics_[metricsKey], metrics);
+      }
+      _get(Object.getPrototypeOf(Streamroot.prototype), 'onMetricChanged', this).call(this, e);
+    }
+  }]);
+
+  return Streamroot;
+}(_dash2.default);
+
+Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
+  p2pConfig: {
+    streamrootKey: 'none',
+    debug: true
+  },
+  limitBitrateByPortal: true
+});
+
+/* Streamroot Support Testing -------------------------------------------------------- */
+
+Streamroot.isSupported = function () {
+  return _dash2.default.isSupported() && !!(window.RTCPeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection) && !_video2.default.browser.IS_IOS && !_video2.default.browser.IS_ANDROID;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Streamroot);
+
+_video2.default.options.streamroot = {};
+
+Component.registerComponent('Streamroot', Streamroot);
+Tech.registerTech('Streamroot', Streamroot);
+exports.default = Streamroot;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./dash":32,"streamroot-dashjs-p2p-wrapper":3}]},{},[20]);
