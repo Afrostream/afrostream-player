@@ -1,8 +1,6 @@
 import videojs from 'video.js'
 
 let MediaTechController = videojs.getComponent('MediaTechController')
-let AudioTrack = videojs.getComponent('AudioTrack')
-let VideoTrack = videojs.getComponent('VideoTrack')
 
 MediaTechController.METRICS_DATA = {
   bandwidth: -1,
@@ -80,7 +78,7 @@ MediaTechController.prototype.addAudioTrack = function (kind, label, language, o
   }
   options.tech = self
 
-  let track = new AudioTrack(options)
+  let track = new videojs.AudioTrack(options)
   tracks.addTrack_(track)
 
   return track
@@ -103,7 +101,7 @@ MediaTechController.prototype.addVideoTrack = function (kind, label, language, o
   }
   options.tech = self
 
-  let track = new VideoTrack(options)
+  let track = new videojs.VideoTrack(options)
   tracks.addTrack_(track)
 
   return track

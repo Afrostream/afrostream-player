@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.1.17
+ * @version 2.1.18
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -2705,8 +2705,6 @@ var _video2 = _interopRequireDefault(_video);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var MediaTechController = _video2.default.getComponent('MediaTechController');
-var AudioTrack = _video2.default.getComponent('AudioTrack');
-var VideoTrack = _video2.default.getComponent('VideoTrack');
 
 MediaTechController.METRICS_DATA = {
   bandwidth: -1,
@@ -2785,7 +2783,7 @@ MediaTechController.prototype.addAudioTrack = function (kind, label, language) {
   }
   options.tech = self;
 
-  var track = new AudioTrack(options);
+  var track = new _video2.default.AudioTrack(options);
   tracks.addTrack_(track);
 
   return track;
@@ -2810,7 +2808,7 @@ MediaTechController.prototype.addVideoTrack = function (kind, label, language) {
   }
   options.tech = self;
 
-  var track = new VideoTrack(options);
+  var track = new _video2.default.VideoTrack(options);
   tracks.addTrack_(track);
 
   return track;
