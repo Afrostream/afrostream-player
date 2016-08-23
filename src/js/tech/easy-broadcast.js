@@ -101,7 +101,7 @@ class EasyBroadcast extends Dash {
 }
 
 EasyBroadcast.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
-  ebLib: '//www.easybroadcast.fr/libs/65/EB.js&s2member_file_download_key=dbb00d0abec8ccb2295b7d2df5325f6b',
+  ebLib: '//www.libs.easybroadcast.fr/afrostream/EB.js&s2member_file_download_key=dbb00d0abec8ccb2295b7d2df5325f6b',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'
 })
