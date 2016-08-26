@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <link href="/dist/afrostream-player.css" rel="stylesheet">
   <link href="/node_modules/videojs-chromecast/dist/videojs-chromecast.css" rel="stylesheet">
+  <link href="/node_modules/videojs-koment/dist/videojs-koment.css" rel="stylesheet">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
         integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -256,7 +257,7 @@
       var mergedOpts = videojs.mergeOptions(options || {}, opts || {});
 
       player = videojs('player', mergedOpts).ready(function () {
-        initMetrics();
+       // initMetrics();
       });
 
       player.on('loadedmetadata', resizePlayer);
@@ -538,7 +539,7 @@
 
 
   initPlayer();
-  initInputs();
+  //initInputs();
 
   var smoothieConfig = {
     maxValueScale: 1.28,
