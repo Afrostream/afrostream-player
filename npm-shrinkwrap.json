@@ -16609,7 +16609,7 @@
     },
     "videojs-koment": {
       "version": "1.0.0",
-      "from": "git+https://github.com/Afrostream/videojs-koment.git#master",
+      "from": "git+https://github.com/Afrostream/videojs-koment.git",
       "resolved": "git+https://github.com/Afrostream/videojs-koment.git#f8342c03d4b875e5dea48ceeafd3e8690b6e56e2",
       "dependencies": {
         "cross-spawn": {

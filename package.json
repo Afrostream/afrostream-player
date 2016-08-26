@@ -130,7 +130,7 @@
     "video.js": "https://registry.npmjs.org/video.js/-/video.js-5.10.4.tgz",
     "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.5",
     "videojs-font": "^2.0.0",
-    "videojs-koment": "git+https://github.com/Afrostream/videojs-koment.git#master",
+    "videojs-koment": "git+https://github.com/Afrostream/videojs-koment.git",
     "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#2.0.1",
     "videojs-standard": "^4.0.0",
     "videojs-youtube": "git+https://github.com/benjipott/videojs-youtube.git#es6",
