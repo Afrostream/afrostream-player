@@ -387,6 +387,9 @@ class Dash extends Html5 {
       var l = tracks.length, track, plTrack
       for (var i = 0; i < l; i++) {
         track = tracks[i]
+        if (track.kind !== 'captions') {
+          continue
+        }
         track.label = track.label || track.lang
         plTrack = plTracks[i]
         track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang
@@ -415,7 +418,7 @@ class Dash extends Html5 {
 
     for (let i = 0; i < tracks.length; i++) {
       let track = tracks[i]
-      if (track['mode'] === 'showing') {
+      if (track.kind === 'captions' && track['mode'] === 'showing') {
         selected = true
         this.mediaPlayer_.setTextTrack(i)
       }

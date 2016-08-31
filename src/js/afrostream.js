@@ -16,6 +16,7 @@ import './component/control-bar/'
 import 'videojs-metrics'
 import 'videojs-chromecast'
 import 'videojs-youtube'
+import 'videojs-koment'
 
 const Component = videojs.getComponent('Component')
 const ControlBar = videojs.getComponent('ControlBar')

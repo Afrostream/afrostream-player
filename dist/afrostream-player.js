@@ -1739,6 +1739,9 @@ var Dash = function (_Html) {
             plTrack;
         for (var i = 0; i < l; i++) {
           track = tracks[i];
+          if (track.kind !== 'captions') {
+            continue;
+          }
           track.label = track.label || track.lang;
           plTrack = plTracks[i];
           track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
@@ -1770,7 +1773,7 @@ var Dash = function (_Html) {
 
       for (var i = 0; i < tracks.length; i++) {
         var track = tracks[i];
-        if (track['mode'] === 'showing') {
+        if (track.kind === 'captions' && track['mode'] === 'showing') {
           selected = true;
           this.mediaPlayer_.setTextTrack(i);
         }
@@ -2949,9 +2952,57 @@ Component.registerComponent('Streamroot', Streamroot);
 Tech.registerTech('Streamroot', Streamroot);
 exports.default = Streamroot;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./dash":12,"streamroot-dashjs-p2p-wrapper":20}],17:[function(require,module,exports){
+},{"./dash":12,"streamroot-dashjs-p2p-wrapper":23}],17:[function(require,module,exports){
 
 },{}],18:[function(require,module,exports){
+var isFunction = require('is-function')
+
+module.exports = forEach
+
+var toString = Object.prototype.toString
+var hasOwnProperty = Object.prototype.hasOwnProperty
+
+function forEach(list, iterator, context) {
+    if (!isFunction(iterator)) {
+        throw new TypeError('iterator must be a function')
+    }
+
+    if (arguments.length < 3) {
+        context = this
+    }
+    
+    if (toString.call(list) === '[object Array]')
+        forEachArray(list, iterator, context)
+    else if (typeof list === 'string')
+        forEachString(list, iterator, context)
+    else
+        forEachObject(list, iterator, context)
+}
+
+function forEachArray(array, iterator, context) {
+    for (var i = 0, len = array.length; i < len; i++) {
+        if (hasOwnProperty.call(array, i)) {
+            iterator.call(context, array[i], i, array)
+        }
+    }
+}
+
+function forEachString(string, iterator, context) {
+    for (var i = 0, len = string.length; i < len; i++) {
+        // no such thing as a sparse string.
+        iterator.call(context, string.charAt(i), i, string)
+    }
+}
+
+function forEachObject(object, iterator, context) {
+    for (var k in object) {
+        if (hasOwnProperty.call(object, k)) {
+            iterator.call(context, object[k], k, object)
+        }
+    }
+}
+
+},{"is-function":21}],19:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -2970,7 +3021,7 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":17}],19:[function(require,module,exports){
+},{"min-document":17}],20:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -2983,7 +3034,56 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
+module.exports = isFunction
+
+var toString = Object.prototype.toString
+
+function isFunction (fn) {
+  var string = toString.call(fn)
+  return string === '[object Function]' ||
+    (typeof fn === 'function' && string !== '[object RegExp]') ||
+    (typeof window !== 'undefined' &&
+     // IE8 and below
+     (fn === window.setTimeout ||
+      fn === window.alert ||
+      fn === window.confirm ||
+      fn === window.prompt))
+};
+
+},{}],22:[function(require,module,exports){
+var trim = require('trim')
+  , forEach = require('for-each')
+  , isArray = function(arg) {
+      return Object.prototype.toString.call(arg) === '[object Array]';
+    }
+
+module.exports = function (headers) {
+  if (!headers)
+    return {}
+
+  var result = {}
+
+  forEach(
+      trim(headers).split('\n')
+    , function (row) {
+        var index = row.indexOf(':')
+          , key = trim(row.slice(0, index)).toLowerCase()
+          , value = trim(row.slice(index + 1))
+
+        if (typeof(result[key]) === 'undefined') {
+          result[key] = value
+        } else if (isArray(result[key])) {
+          result[key].push(value)
+        } else {
+          result[key] = [ result[key], value ]
+        }
+      }
+  )
+
+  return result
+}
+},{"for-each":18,"trim":24}],23:[function(require,module,exports){
 (function (global){
 /**
  * streamroot-dashjs-p2p-wrapper
@@ -3006,7 +3106,23 @@ o.reliableClearInterval)(t),i.delete(e))},m=function(){t.forEach(function(e){(0,
 for(var u=n.length;u--;)if(n[u]===e)return r[u]===t;if(n.push(e),r.push(t),a){if(u=e.length,u!==t.length)return!1;for(;u--;)if(!x(e[u],t[u],n,r))return!1}else{var l,c=C.keys(e);if(u=c.length,C.keys(t).length!==u)return!1;for(;u--;)if(l=c[u],!C.has(t,l)||!x(e[l],t[l],n,r))return!1}return n.pop(),r.pop(),!0};C.isEqual=function(e,t){return x(e,t)},C.isEmpty=function(e){return null==e||(I(e)&&(C.isArray(e)||C.isString(e)||C.isArguments(e))?0===e.length:0===C.keys(e).length)},C.isElement=function(e){return!(!e||1!==e.nodeType)},C.isArray=_||function(e){return"[object Array]"===p.call(e)},C.isObject=function(e){var t=typeof e;return"function"===t||"object"===t&&!!e},C.each(["Arguments","Function","String","Number","Date","RegExp","Error"],function(e){C["is"+e]=function(t){return p.call(t)==="[object "+e+"]"}}),C.isArguments(arguments)||(C.isArguments=function(e){return C.has(e,"callee")}),"function"!=typeof/./&&"object"!=typeof Int8Array&&(C.isFunction=function(e){return"function"==typeof e||!1}),C.isFinite=function(e){return isFinite(e)&&!isNaN(parseFloat(e))},C.isNaN=function(e){return C.isNumber(e)&&e!==+e},C.isBoolean=function(e){return e===!0||e===!1||"[object Boolean]"===p.call(e)},C.isNull=function(e){return null===e},C.isUndefined=function(e){return void 0===e},C.has=function(e,t){return null!=e&&m.call(e,t)},C.noConflict=function(){return s._=u,this},C.identity=function(e){return e},C.constant=function(e){return function(){return e}},C.noop=function(){},C.property=T,C.propertyOf=function(e){return null==e?function(){}:function(t){return e[t]}},C.matcher=C.matches=function(e){return e=C.extendOwn({},e),function(t){return C.isMatch(t,e)}},C.times=function(e,t,n){var r=Array(Math.max(0,e));t=w(t,n,1);for(var i=0;i<e;i++)r[i]=t(i);return r},C.random=function(e,t){return null==t&&(t=e,e=0),e+Math.floor(Math.random()*(t-e+1))},C.now=Date.now||function(){return(new Date).getTime()};var N={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&#x60;"},L=C.invert(N),U=function(e){var t=function(t){return e[t]},n="(?:"+C.keys(e).join("|")+")",r=RegExp(n),i=RegExp(n,"g");return function(e){return e=null==e?"":""+e,r.test(e)?e.replace(i,t):e}};C.escape=U(N),C.unescape=U(L),C.result=function(e,t,n){var r=null==e?void 0:e[t];return void 0===r&&(r=n),C.isFunction(r)?r.call(e):r};var $=0;C.uniqueId=function(e){var t=++$+"";return e?e+t:t},C.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var F=/(.)^/,H={"'":"'","\\":"\\","\r":"r","\n":"n","\u2028":"u2028","\u2029":"u2029"},B=/\\|'|\r|\n|\u2028|\u2029/g,q=function(e){return"\\"+H[e]};C.template=function(e,t,n){!t&&n&&(t=n),t=C.defaults({},t,C.templateSettings);var r=RegExp([(t.escape||F).source,(t.interpolate||F).source,(t.evaluate||F).source].join("|")+"|$","g"),i=0,a="__p+='";e.replace(r,function(t,n,r,o,s){return a+=e.slice(i,s).replace(B,q),i=s+t.length,n?a+="'+\n((__t=("+n+"))==null?'':_.escape(__t))+\n'":r?a+="'+\n((__t=("+r+"))==null?'':__t)+\n'":o&&(a+="';\n"+o+"\n__p+='"),t}),a+="';\n",t.variable||(a="with(obj||{}){\n"+a+"}\n"),a="var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n"+a+"return __p;\n";try{var o=new Function(t.variable||"obj","_",a)}catch(e){throw e.source=a,e}var s=function(e){return o.call(this,e,C)},u=t.variable||"obj";return s.source="function("+u+"){\n"+a+"}",s},C.chain=function(e){var t=C(e);return t._chain=!0,t};var G=function(e,t){return e._chain?C(t).chain():t};C.mixin=function(e){C.each(C.functions(e),function(t){var n=C[t]=e[t];C.prototype[t]=function(){var e=[this._wrapped];return d.apply(e,arguments),G(this,n.apply(C,e))}})},C.mixin(C),C.each(["pop","push","reverse","shift","sort","splice","unshift"],function(e){var t=l[e];C.prototype[e]=function(){var n=this._wrapped;return t.apply(n,arguments),"shift"!==e&&"splice"!==e||0!==n.length||delete n[0],G(this,n)}}),C.each(["concat","join","slice"],function(e){var t=l[e];C.prototype[e]=function(){return G(this,t.apply(this._wrapped,arguments))}}),C.prototype.value=function(){return this._wrapped},C.prototype.valueOf=C.prototype.toJSON=C.prototype.value,C.prototype.toString=function(){return""+this._wrapped},"function"==typeof e&&e.amd&&e("underscore",[],function(){return C})}).call(this)},{}],227:[function(e,t,n){"use strict";function r(){this.protocol=null,this.slashes=null,this.auth=null,this.host=null,this.port=null,this.hostname=null,this.hash=null,this.search=null,this.query=null,this.pathname=null,this.path=null,this.href=null}function i(e,t,n){if(e&&l.isObject(e)&&e instanceof r)return e;var i=new r;return i.parse(e,t,n),i}function a(e){return l.isString(e)&&(e=i(e)),e instanceof r?e.format():r.prototype.format.call(e)}function o(e,t){return i(e,!1,!0).resolve(t)}function s(e,t){return e?i(e,!1,!0).resolveObject(t):t}var u=e("punycode"),l=e("./util");n.parse=i,n.resolve=o,n.resolveObject=s,n.format=a,n.Url=r;var c=/^([a-z0-9.+-]+:)/i,f=/:[0-9]*$/,d=/^(\/\/?(?!\/)[^\?\s]*)(\?[^\s]*)?$/,h=["<",">",'"',"`"," ","\r","\n","\t"],p=["{","}","|","\\","^","`"].concat(h),m=["'"].concat(p),_=["%","/","?",";","#"].concat(m),v=["/","?","#"],g=255,b=/^[+a-z0-9A-Z_-]{0,63}$/,y=/^([+a-z0-9A-Z_-]{0,63})(.*)$/,C={javascript:!0,"javascript:":!0},w={javascript:!0,"javascript:":!0},S={http:!0,https:!0,ftp:!0,gopher:!0,file:!0,"http:":!0,"https:":!0,"ftp:":!0,"gopher:":!0,"file:":!0},E=e("querystring");r.prototype.parse=function(e,t,n){if(!l.isString(e))throw new TypeError("Parameter 'url' must be a string, not "+typeof e);var r=e.indexOf("?"),i=r!==-1&&r<e.indexOf("#")?"?":"#",a=e.split(i),o=/\\/g;a[0]=a[0].replace(o,"/"),e=a.join(i);var s=e;if(s=s.trim(),!n&&1===e.split("#").length){var f=d.exec(s);if(f)return this.path=s,this.href=s,this.pathname=f[1],f[2]?(this.search=f[2],t?this.query=E.parse(this.search.substr(1)):this.query=this.search.substr(1)):t&&(this.search="",this.query={}),this}var h=c.exec(s);if(h){h=h[0];var p=h.toLowerCase();this.protocol=p,s=s.substr(h.length)}if(n||h||s.match(/^\/\/[^@\/]+@[^@\/]+/)){var k="//"===s.substr(0,2);!k||h&&w[h]||(s=s.substr(2),this.slashes=!0)}if(!w[h]&&(k||h&&!S[h])){for(var T=-1,D=0;D<v.length;D++){var P=s.indexOf(v[D]);P!==-1&&(T===-1||P<T)&&(T=P)}var I,j;j=T===-1?s.lastIndexOf("@"):s.lastIndexOf("@",T),j!==-1&&(I=s.slice(0,j),s=s.slice(j+1),this.auth=decodeURIComponent(I)),T=-1;for(var D=0;D<_.length;D++){var P=s.indexOf(_[D]);P!==-1&&(T===-1||P<T)&&(T=P)}T===-1&&(T=s.length),this.host=s.slice(0,T),s=s.slice(T),this.parseHost(),this.hostname=this.hostname||"";var M="["===this.hostname[0]&&"]"===this.hostname[this.hostname.length-1];if(!M)for(var A=this.hostname.split(/\./),D=0,R=A.length;D<R;D++){var O=A[D];if(O&&!O.match(b)){for(var x="",N=0,L=O.length;N<L;N++)x+=O.charCodeAt(N)>127?"x":O[N];if(!x.match(b)){var U=A.slice(0,D),$=A.slice(D+1),F=O.match(y);F&&(U.push(F[1]),$.unshift(F[2])),$.length&&(s="/"+$.join(".")+s),this.hostname=U.join(".");break}}}this.hostname.length>g?this.hostname="":this.hostname=this.hostname.toLowerCase(),M||(this.hostname=u.toASCII(this.hostname));var H=this.port?":"+this.port:"",B=this.hostname||"";this.host=B+H,this.href+=this.host,M&&(this.hostname=this.hostname.substr(1,this.hostname.length-2),"/"!==s[0]&&(s="/"+s))}if(!C[p])for(var D=0,R=m.length;D<R;D++){var q=m[D];if(s.indexOf(q)!==-1){var G=encodeURIComponent(q);G===q&&(G=escape(q)),s=s.split(q).join(G)}}var V=s.indexOf("#");V!==-1&&(this.hash=s.substr(V),s=s.slice(0,V));var K=s.indexOf("?");if(K!==-1?(this.search=s.substr(K),this.query=s.substr(K+1),t&&(this.query=E.parse(this.query)),s=s.slice(0,K)):t&&(this.search="",this.query={}),s&&(this.pathname=s),S[p]&&this.hostname&&!this.pathname&&(this.pathname="/"),this.pathname||this.search){var H=this.pathname||"",Y=this.search||"";this.path=H+Y}return this.href=this.format(),this},r.prototype.format=function(){var e=this.auth||"";e&&(e=encodeURIComponent(e),e=e.replace(/%3A/i,":"),e+="@");var t=this.protocol||"",n=this.pathname||"",r=this.hash||"",i=!1,a="";this.host?i=e+this.host:this.hostname&&(i=e+(this.hostname.indexOf(":")===-1?this.hostname:"["+this.hostname+"]"),this.port&&(i+=":"+this.port)),this.query&&l.isObject(this.query)&&Object.keys(this.query).length&&(a=E.stringify(this.query));var o=this.search||a&&"?"+a||"";return t&&":"!==t.substr(-1)&&(t+=":"),this.slashes||(!t||S[t])&&i!==!1?(i="//"+(i||""),n&&"/"!==n.charAt(0)&&(n="/"+n)):i||(i=""),r&&"#"!==r.charAt(0)&&(r="#"+r),o&&"?"!==o.charAt(0)&&(o="?"+o),n=n.replace(/[?#]/g,function(e){return encodeURIComponent(e)}),o=o.replace("#","%23"),t+i+n+o+r},r.prototype.resolve=function(e){return this.resolveObject(i(e,!1,!0)).format()},r.prototype.resolveObject=function(e){if(l.isString(e)){var t=new r;t.parse(e,!1,!0),e=t}for(var n=new r,i=Object.keys(this),a=0;a<i.length;a++){var o=i[a];n[o]=this[o]}if(n.hash=e.hash,""===e.href)return n.href=n.format(),n;if(e.slashes&&!e.protocol){for(var s=Object.keys(e),u=0;u<s.length;u++){var c=s[u];"protocol"!==c&&(n[c]=e[c])}return S[n.protocol]&&n.hostname&&!n.pathname&&(n.path=n.pathname="/"),n.href=n.format(),n}if(e.protocol&&e.protocol!==n.protocol){if(!S[e.protocol]){for(var f=Object.keys(e),d=0;d<f.length;d++){var h=f[d];n[h]=e[h]}return n.href=n.format(),n}if(n.protocol=e.protocol,e.host||w[e.protocol])n.pathname=e.pathname;else{for(var p=(e.pathname||"").split("/");p.length&&!(e.host=p.shift()););e.host||(e.host=""),e.hostname||(e.hostname=""),""!==p[0]&&p.unshift(""),p.length<2&&p.unshift(""),n.pathname=p.join("/")}if(n.search=e.search,n.query=e.query,n.host=e.host||"",n.auth=e.auth,n.hostname=e.hostname||e.host,n.port=e.port,n.pathname||n.search){var m=n.pathname||"",_=n.search||"";n.path=m+_}return n.slashes=n.slashes||e.slashes,n.href=n.format(),n}var v=n.pathname&&"/"===n.pathname.charAt(0),g=e.host||e.pathname&&"/"===e.pathname.charAt(0),b=g||v||n.host&&e.pathname,y=b,C=n.pathname&&n.pathname.split("/")||[],p=e.pathname&&e.pathname.split("/")||[],E=n.protocol&&!S[n.protocol];if(E&&(n.hostname="",n.port=null,n.host&&(""===C[0]?C[0]=n.host:C.unshift(n.host)),n.host="",e.protocol&&(e.hostname=null,e.port=null,e.host&&(""===p[0]?p[0]=e.host:p.unshift(e.host)),e.host=null),b=b&&(""===p[0]||""===C[0])),g)n.host=e.host||""===e.host?e.host:n.host,n.hostname=e.hostname||""===e.hostname?e.hostname:n.hostname,n.search=e.search,n.query=e.query,C=p;else if(p.length)C||(C=[]),C.pop(),C=C.concat(p),n.search=e.search,n.query=e.query;else if(!l.isNullOrUndefined(e.search)){if(E){n.hostname=n.host=C.shift();var k=!!(n.host&&n.host.indexOf("@")>0)&&n.host.split("@");k&&(n.auth=k.shift(),n.host=n.hostname=k.shift())}return n.search=e.search,n.query=e.query,l.isNull(n.pathname)&&l.isNull(n.search)||(n.path=(n.pathname?n.pathname:"")+(n.search?n.search:"")),n.href=n.format(),n}if(!C.length)return n.pathname=null,n.search?n.path="/"+n.search:n.path=null,n.href=n.format(),n;for(var T=C.slice(-1)[0],D=(n.host||e.host||C.length>1)&&("."===T||".."===T)||""===T,P=0,I=C.length;I>=0;I--)T=C[I],"."===T?C.splice(I,1):".."===T?(C.splice(I,1),P++):P&&(C.splice(I,1),P--);if(!b&&!y)for(;P--;P)C.unshift("..");!b||""===C[0]||C[0]&&"/"===C[0].charAt(0)||C.unshift(""),D&&"/"!==C.join("/").substr(-1)&&C.push("");var j=""===C[0]||C[0]&&"/"===C[0].charAt(0);if(E){n.hostname=n.host=j?"":C.length?C.shift():"";var k=!!(n.host&&n.host.indexOf("@")>0)&&n.host.split("@");k&&(n.auth=k.shift(),n.host=n.hostname=k.shift())}return b=b||n.host&&C.length,b&&!j&&C.unshift(""),C.length?n.pathname=C.join("/"):(n.pathname=null,n.path=null),l.isNull(n.pathname)&&l.isNull(n.search)||(n.path=(n.pathname?n.pathname:"")+(n.search?n.search:"")),n.auth=e.auth||n.auth,n.slashes=n.slashes||e.slashes,n.href=n.format(),n},r.prototype.parseHost=function(){var e=this.host,t=f.exec(e);t&&(t=t[0],":"!==t&&(this.port=t.substr(1)),e=e.substr(0,e.length-t.length)),e&&(this.hostname=e)}},{"./util":228,punycode:220,querystring:223}],228:[function(e,t,n){"use strict";t.exports={isString:function(e){return"string"==typeof e},isObject:function(e){return"object"==typeof e&&null!==e},isNull:function(e){return null===e},isNullOrUndefined:function(e){return null==e}}},{}],229:[function(e,t,n){(function(e){var n;if(e.crypto&&crypto.getRandomValues){var r=new Uint8Array(16);n=function(){return crypto.getRandomValues(r),r}}if(!n){var i=new Array(16);n=function(){for(var e,t=0;t<16;t++)0===(3&t)&&(e=4294967296*Math.random()),i[t]=e>>>((3&t)<<3)&255;return i}}t.exports=n}).call(this,"undefined"!=typeof i?i:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],230:[function(e,t,n){function r(e,t,n){var r=t&&n||0,i=0;for(t=t||[],e.toLowerCase().replace(/[0-9a-f]{2}/g,function(e){i<16&&(t[r+i++]=l[e])});i<16;)t[r+i++]=0;return t}function i(e,t){var n=t||0,r=u;return r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]}function a(e,t,n){var r=t&&n||0,a=t||[];e=e||{};var o=void 0!==e.clockseq?e.clockseq:h,s=void 0!==e.msecs?e.msecs:(new Date).getTime(),u=void 0!==e.nsecs?e.nsecs:m+1,l=s-p+(u-m)/1e4;if(l<0&&void 0===e.clockseq&&(o=o+1&16383),(l<0||s>p)&&void 0===e.nsecs&&(u=0),u>=1e4)throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");p=s,m=u,h=o,s+=122192928e5;var c=(1e4*(268435455&s)+u)%4294967296;a[r++]=c>>>24&255,a[r++]=c>>>16&255,a[r++]=c>>>8&255,a[r++]=255&c;var f=s/4294967296*1e4&268435455;a[r++]=f>>>8&255,a[r++]=255&f,a[r++]=f>>>24&15|16,a[r++]=f>>>16&255,a[r++]=o>>>8|128,a[r++]=255&o;for(var _=e.node||d,v=0;v<6;v++)a[r+v]=_[v];return t?t:i(a)}function o(e,t,n){var r=t&&n||0;"string"==typeof e&&(t="binary"==e?new Array(16):null,e=null),e=e||{};var a=e.random||(e.rng||s)();if(a[6]=15&a[6]|64,a[8]=63&a[8]|128,t)for(var o=0;o<16;o++)t[r+o]=a[o];return t||i(a)}for(var s=e("./rng"),u=[],l={},c=0;c<256;c++)u[c]=(c+256).toString(16).substr(1),l[u[c]]=c;var f=s(),d=[1|f[0],f[1],f[2],f[3],f[4],f[5]],h=16383&(f[6]<<8|f[7]),p=0,m=0,_=o;_.v1=a,_.v4=o,_.parse=r,_.unparse=i,t.exports=_},{"./rng":229}]},{},[37])(37)})}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}]},{},[17])(17)});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
+
+exports = module.exports = trim;
+
+function trim(str){
+  return str.replace(/^\s*|\s*$/g, '');
+}
+
+exports.left = function(str){
+  return str.replace(/^\s*/, '');
+};
+
+exports.right = function(str){
+  return str.replace(/\s*$/, '');
+};
+
+},{}],25:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast-button.js
@@ -3333,7 +3449,7 @@ Component.registerComponent('ChromeCastButton', ChromeCastButton);
 exports['default'] = ChromeCastButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],22:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3366,7 +3482,7 @@ _videoJs2['default'].plugin('chromecast', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./videojs-chromecast":24}],23:[function(require,module,exports){
+},{"./videojs-chromecast":28}],27:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast.js
@@ -3887,7 +4003,7 @@ Tech.registerTech('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],24:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-chromecast - v1.0.0 - 2016-02-15
@@ -3969,7 +4085,1105 @@ Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/chromecast-button":21,"./tech/chromecast":23}],25:[function(require,module,exports){
+},{"./component/control-bar/chromecast-button":25,"./tech/chromecast":27}],29:[function(require,module,exports){
+(function (global){
+/**
+ * @file koment-button.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _utilsToTitleCase = require('../../../utils/to-title-case');
+
+var _utilsToTitleCase2 = _interopRequireDefault(_utilsToTitleCase);
+
+var _utilsDom = require('../../../utils/dom');
+
+var Dom = _interopRequireWildcard(_utilsDom);
+
+var TextTrackButton = _videoJs2['default'].getComponent('TextTrackButton');
+var Component = _videoJs2['default'].getComponent('Component');
+var TextTrackMenuItem = _videoJs2['default'].getComponent('TextTrackMenuItem');
+var ChaptersTrackMenuItem = _videoJs2['default'].getComponent('ChaptersTrackMenuItem');
+var Menu = _videoJs2['default'].getComponent('Menu');
+
+/**
+ * The button component for toggling and selecting koment
+ * Chapters act much differently than other text tracks
+ * Cues are navigation vs. other tracks of alternative languages
+ *
+ * @param {Object} player  Player object
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready    Ready callback function
+ * @extends TextTrackButton
+ * @class KomentButton
+ */
+
+var KomentButton = (function (_TextTrackButton) {
+    _inherits(KomentButton, _TextTrackButton);
+
+    function KomentButton(player, options, ready) {
+        _classCallCheck(this, KomentButton);
+
+        _get(Object.getPrototypeOf(KomentButton.prototype), 'constructor', this).call(this, player, options, ready);
+        this.el_.setAttribute('aria-label', 'Koment Menu');
+    }
+
+    /**
+     * Allow sub components to stack CSS class names
+     *
+     * @return {String} The constructed class name
+     * @method buildCSSClass
+     */
+
+    _createClass(KomentButton, [{
+        key: 'buildCSSClass',
+        value: function buildCSSClass() {
+            return 'vjs-koment-button ' + _get(Object.getPrototypeOf(KomentButton.prototype), 'buildCSSClass', this).call(this);
+        }
+
+        /**
+         * Create a menu item for each text track
+         *
+         * @return {Array} Array of menu items
+         * @method createItems
+         */
+    }, {
+        key: 'createItems',
+        value: function createItems() {
+            var items = [];
+            var tracks = this.player_.textTracks();
+
+            if (!tracks) {
+                return items;
+            }
+
+            for (var i = 0; i < tracks.length; i++) {
+                var track = tracks[i];
+
+                if (track.kind === this.kind_) {
+                    items.push(new TextTrackMenuItem(this.player_, { track: track }));
+                }
+            }
+
+            return items;
+        }
+
+        /**
+         * Handle click on text track
+         *
+         * @method handleClick
+         */
+    }, {
+        key: 'handleClick',
+        value: function handleClick(event) {
+            var tracks = this.player_.textTracks();
+            _get(Object.getPrototypeOf(KomentButton.prototype), 'handleClick', this).call(this, event);
+
+            if (!tracks) {
+                return;
+            }
+
+            for (var i = 0; i < tracks.length; i++) {
+                var track = tracks[i];
+
+                if (track.kind !== this.kind_) {
+                    continue;
+                }
+                track.mode = this.buttonPressed_ ? 'showing' : 'hidden';
+            }
+        }
+
+        /**
+         * Create menu from chapter buttons
+         *
+         * @return {Menu} Menu of chapter buttons
+         * @method createMenu
+         */
+    }, {
+        key: 'createMenu',
+        value: function createMenu() {
+            var _this = this;
+
+            var tracks = this.player_.textTracks() || [];
+            var komentTrack = undefined;
+            var items = this.items || [];
+
+            for (var i = tracks.length - 1; i >= 0; i--) {
+
+                // We will always choose the last track as our komentTrack
+                var track = tracks[i];
+
+                if (track.kind === this.kind_) {
+                    komentTrack = track;
+
+                    break;
+                }
+            }
+
+            var menu = this.menu;
+
+            if (menu === undefined) {
+                menu = new Menu(this.player_);
+
+                var title = _videoJs2['default'].createEl('li', {
+                    className: 'vjs-menu-title',
+                    innerHTML: (0, _utilsToTitleCase2['default'])(this.controlText_),
+                    tabIndex: -1
+                });
+                menu.children_.unshift(title);
+                Dom.insertElFirst(title, menu.contentEl());
+            } else {
+                // We will empty out the menu children each time because we want a
+                // fresh new menu child list each time
+                items.forEach(function (item) {
+                    return menu.removeChild(item);
+                });
+                // Empty out the KomentButton menu items because we no longer need them
+                items = [];
+            }
+
+            if (komentTrack && (komentTrack.cues === null || komentTrack.cues === undefined)) {
+                komentTrack.mode = 'hidden';
+
+                var remoteTextTrackEl = this.player_.remoteTextTrackEls().getTrackElementByTrack_(komentTrack);
+
+                if (remoteTextTrackEl) {
+                    remoteTextTrackEl.addEventListener('load', function (event) {
+                        return _this.update();
+                    });
+                }
+            }
+
+            if (komentTrack && komentTrack.cues && komentTrack.cues.length > 0) {
+                var cues = komentTrack.cues;
+
+                for (var i = 0, l = cues.length; i < l; i++) {
+                    var cue = cues[i];
+                    var mi = new ChaptersTrackMenuItem(this.player_, {
+                        cue: cue,
+                        track: komentTrack
+                    });
+
+                    items.push(mi);
+
+                    //menu.addChild(mi)
+                }
+            }
+
+            if (items.length > 0) {
+                this.show();
+            }
+            // Assigning the value of items back to this.items for next iteration
+            this.items = items;
+            return menu;
+        }
+    }]);
+
+    return KomentButton;
+})(TextTrackButton);
+
+KomentButton.prototype.kind_ = 'metadata';
+KomentButton.prototype.controlText_ = 'Koment';
+
+Component.registerComponent('KomentButton', KomentButton);
+exports['default'] = KomentButton;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../../utils/dom":33,"../../../utils/to-title-case":34}],30:[function(require,module,exports){
+(function (global){
+/**
+ * @file koment-new-button.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Button = _videoJs2['default'].getComponent('Button');
+var Component = _videoJs2['default'].getComponent('Component');
+
+/**
+ * The button component for toggling and selecting koment
+ * Chapters act much differently than other text tracks
+ * Cues are navigation vs. other tracks of alternative languages
+ *
+ * @param {Object} player  Player object
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready    Ready callback function
+ * @extends TextTrackButton
+ * @class KomentNewButton
+ */
+
+var KomentNewButton = (function (_Button) {
+  _inherits(KomentNewButton, _Button);
+
+  function KomentNewButton(player, options, ready) {
+    _classCallCheck(this, KomentNewButton);
+
+    _get(Object.getPrototypeOf(KomentNewButton.prototype), 'constructor', this).call(this, player, options, ready);
+  }
+
+  /**
+   * Allow sub components to stack CSS class names
+   *
+   * @return {String} The constructed class name
+   * @method buildCSSClass
+   */
+
+  _createClass(KomentNewButton, [{
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'vjs-koment-button vjs-koment-new-button ' + _get(Object.getPrototypeOf(KomentNewButton.prototype), 'buildCSSClass', this).call(this);
+    }
+  }]);
+
+  return KomentNewButton;
+})(Button);
+
+KomentNewButton.prototype.controlText_ = 'Koment New';
+
+Component.registerComponent('KomentNewButton', KomentNewButton);
+exports['default'] = KomentNewButton;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],31:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _videojsKoment = require('./videojs-koment');
+
+var _videojsKoment2 = _interopRequireDefault(_videojsKoment);
+
+/**
+ * The video.js playlist plugin. Invokes the playlist-maker to create a
+ * playlist function on the specific player.
+ *
+ * @param {Array} list
+ */
+var plugin = function plugin(options) {
+  (0, _videojsKoment2['default'])(this, options);
+};
+
+_videoJs2['default'].plugin('koment', plugin);
+
+exports['default'] = plugin;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./videojs-koment":35}],32:[function(require,module,exports){
+(function (global){
+/**
+ * @file koment-track-display.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _globalWindow = require('global/window');
+
+var _globalWindow2 = _interopRequireDefault(_globalWindow);
+
+var Component = _videoJs2['default'].getComponent('Component');
+
+var darkGray = '#222';
+var lightGray = '#ccc';
+var fontMap = {
+    monospace: 'monospace',
+    sansSerif: 'sans-serif',
+    serif: 'serif',
+    monospaceSansSerif: '"Andale Mono", "Lucida Console", monospace',
+    monospaceSerif: '"Courier New", monospace',
+    proportionalSansSerif: 'sans-serif',
+    proportionalSerif: 'serif',
+    casual: '"Comic Sans MS", Impact, fantasy',
+    script: '"Monotype Corsiva", cursive',
+    smallcaps: '"Andale Mono", "Lucida Console", monospace, sans-serif'
+};
+
+/**
+ * Add cue HTML to display
+ *
+ * @param {Number} color Hex number for color, like #f0e
+ * @param {Number} opacity Value for opacity,0.0 - 1.0
+ * @return {RGBAColor} In the form 'rgba(255, 0, 0, 0.3)'
+ * @method constructColor
+ */
+function constructColor(color, opacity) {
+    return 'rgba(' +
+    // color looks like "#f0e"
+    parseInt(color[1] + color[1], 16) + ',' + parseInt(color[2] + color[2], 16) + ',' + parseInt(color[3] + color[3], 16) + ',' + opacity + ')';
+}
+
+/**
+ * Try to update style
+ * Some style changes will throw an error, particularly in IE8. Those should be noops.
+ *
+ * @param {Element} el The element to be styles
+ * @param {CSSProperty} style The CSS property to be styled
+ * @param {CSSStyle} rule The actual style to be applied to the property
+ * @method tryUpdateStyle
+ */
+function tryUpdateStyle(el, style, rule) {
+    try {
+        el.style[style] = rule;
+    } catch (e) {
+
+        // Satisfies linter.
+        return;
+    }
+}
+
+/**
+ * The component for displaying text track cues
+ *
+ * @param {Object} player  Main Player
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready    Ready callback function
+ * @extends Component
+ * @class KomentTrackDisplay
+ */
+
+var KomentTrackDisplay = (function (_Component) {
+    _inherits(KomentTrackDisplay, _Component);
+
+    function KomentTrackDisplay(player, options, ready) {
+        var _this = this;
+
+        _classCallCheck(this, KomentTrackDisplay);
+
+        _get(Object.getPrototypeOf(KomentTrackDisplay.prototype), 'constructor', this).call(this, player, options, ready);
+
+        player.on('loadstart', _videoJs2['default'].bind(this, this.toggleDisplay));
+        player.on('texttrackchange', _videoJs2['default'].bind(this, this.updateDisplay));
+
+        var tracks = player.textTracks();
+
+        if (tracks) {
+            (function () {
+                var changeHandler = _videoJs2['default'].bind(_this, _this.handleTracksChange);
+
+                tracks.addEventListener('change', changeHandler);
+
+                _this.on('dispose', function () {
+                    tracks.removeEventListener('change', changeHandler);
+                });
+            })();
+        }
+
+        player.ready(_videoJs2['default'].bind(this, function () {
+
+            player.on('fullscreenchange', _videoJs2['default'].bind(this, this.updateDisplay));
+
+            var trackList = this.player_.textTracks();
+            var firstKoment = undefined;
+
+            if (trackList) {
+                for (var i = 0; i < trackList.length; i++) {
+                    var track = trackList[i];
+
+                    if (track['default']) {
+                        if (track.kind === this.kind_ && !firstKoment) {
+                            firstKoment = track;
+                        }
+                    }
+                }
+                // We want to show the first default track but captions and subtitles
+                // take precedence over descriptions.
+                // So, display the first default captions or subtitles track
+                // and otherwise the first default descriptions track.
+                if (firstKoment) {
+                    firstKoment.mode = 'showing';
+                }
+            }
+        }));
+    }
+
+    /**
+     * Toggle display texttracks
+     *
+     * @method toggleDisplay
+     */
+
+    _createClass(KomentTrackDisplay, [{
+        key: 'toggleDisplay',
+        value: function toggleDisplay() {
+            this.show();
+        }
+
+        /**
+         * Create the component's DOM element
+         *
+         * @return {Element}
+         * @method createEl
+         */
+    }, {
+        key: 'createEl',
+        value: function createEl() {
+            return _get(Object.getPrototypeOf(KomentTrackDisplay.prototype), 'createEl', this).call(this, 'div', {
+                className: 'vjs-koment-track-display'
+            }, {
+                'aria-live': 'assertive',
+                'aria-atomic': 'true'
+            });
+        }
+
+        /**
+         * Clear display texttracks
+         *
+         * @method clearDisplay
+         */
+    }, {
+        key: 'clearDisplay',
+        value: function clearDisplay() {}
+
+        /**
+         * Handle text track change
+         *
+         * @method handleTracksChange
+         */
+    }, {
+        key: 'handleTracksChange',
+        value: function handleTracksChange() {
+            var tracks = this.player().textTracks();
+            var disabled = true;
+
+            // Check whether a track of a different kind is showing
+            for (var i = 0, l = tracks.length; i < l; i++) {
+                var track = tracks[i];
+
+                if (track.kind === this.kind_ && track.mode === 'showing') {
+                    disabled = false;
+                    break;
+                }
+            }
+
+            // If another track is showing, disable this menu button
+            if (disabled) {
+                this.hide();
+            } else {
+                this.show();
+            }
+
+            this.updateDisplay();
+        }
+
+        /**
+         * Update display texttracks
+         *
+         * @method updateDisplay
+         */
+    }, {
+        key: 'updateDisplay',
+        value: function updateDisplay() {
+            var tracks = this.player_.textTracks();
+
+            this.clearDisplay();
+
+            if (!tracks) {
+                return;
+            }
+
+            // Track display prioritization model: if multiple tracks are 'showing',
+            //  display the first 'subtitles' or 'captions' track which is 'showing',
+            //  otherwise display the first 'descriptions' track which is 'showing'
+
+            var komentTrack = null;
+
+            var i = tracks.length;
+
+            var changeHandler = _videoJs2['default'].bind(this, this.handleTracksChange);
+
+            while (i--) {
+                var track = tracks[i];
+
+                track.removeEventListener('cuechange', changeHandler);
+                if (track.mode === 'showing') {
+                    if (track.kind === this.kind_) {
+                        track.addEventListener('cuechange', changeHandler);
+                        komentTrack = track;
+                    }
+                }
+            }
+
+            if (komentTrack) {
+                this.updateForTrack(komentTrack);
+            }
+        }
+
+        /**
+         * Add texttrack to texttrack list
+         *
+         * @param {TextTrackObject} track Texttrack object to be added to list
+         * @method updateForTrack
+         */
+    }, {
+        key: 'updateForTrack',
+        value: function updateForTrack(track) {
+
+            if (typeof _globalWindow2['default'].WebVTT !== 'function' || !track.activeCues) {
+                return;
+            }
+
+            var overrides = this.player_.textTrackSettings.getValues();
+            var cues = [];
+
+            for (var _i = 0; _i < track.activeCues.length; _i++) {
+                cues.push(track.activeCues[_i]);
+            }
+
+            _globalWindow2['default'].WebVTT.processCues(_globalWindow2['default'], cues, this.el_);
+
+            var i = cues.length;
+            while (i--) {
+                var cue = cues[i];
+
+                if (!cue) {
+                    continue;
+                }
+
+                var cueDiv = cue.displayState;
+                if (overrides.color) {
+                    cueDiv.firstChild.style.color = overrides.color;
+                }
+                if (overrides.textOpacity) {
+                    tryUpdateStyle(cueDiv.firstChild, 'color', constructColor(overrides.color || '#fff', overrides.textOpacity));
+                }
+                if (overrides.backgroundColor) {
+                    cueDiv.firstChild.style.backgroundColor = overrides.backgroundColor;
+                }
+                if (overrides.backgroundOpacity) {
+                    tryUpdateStyle(cueDiv.firstChild, 'backgroundColor', constructColor(overrides.backgroundColor || '#000', overrides.backgroundOpacity));
+                }
+                if (overrides.windowColor) {
+                    if (overrides.windowOpacity) {
+                        tryUpdateStyle(cueDiv, 'backgroundColor', constructColor(overrides.windowColor, overrides.windowOpacity));
+                    } else {
+                        cueDiv.style.backgroundColor = overrides.windowColor;
+                    }
+                }
+                if (overrides.edgeStyle) {
+                    if (overrides.edgeStyle === 'dropshadow') {
+                        cueDiv.firstChild.style.textShadow = '2px 2px 3px ' + darkGray + ', 2px 2px 4px ' + darkGray + ', 2px 2px 5px ' + darkGray;
+                    } else if (overrides.edgeStyle === 'raised') {
+                        cueDiv.firstChild.style.textShadow = '1px 1px ' + darkGray + ', 2px 2px ' + darkGray + ', 3px 3px ' + darkGray;
+                    } else if (overrides.edgeStyle === 'depressed') {
+                        cueDiv.firstChild.style.textShadow = '1px 1px ' + lightGray + ', 0 1px ' + lightGray + ', -1px -1px ' + darkGray + ', 0 -1px ' + darkGray;
+                    } else if (overrides.edgeStyle === 'uniform') {
+                        cueDiv.firstChild.style.textShadow = '0 0 4px ' + darkGray + ', 0 0 4px ' + darkGray + ', 0 0 4px ' + darkGray + ', 0 0 4px ' + darkGray;
+                    }
+                }
+                if (overrides.fontPercent && overrides.fontPercent !== 1) {
+                    var fontSize = _globalWindow2['default'].parseFloat(cueDiv.style.fontSize);
+
+                    cueDiv.style.fontSize = fontSize * overrides.fontPercent + 'px';
+                    cueDiv.style.height = 'auto';
+                    cueDiv.style.top = 'auto';
+                    cueDiv.style.bottom = '2px';
+                }
+                if (overrides.fontFamily && overrides.fontFamily !== 'default') {
+                    if (overrides.fontFamily === 'small-caps') {
+                        cueDiv.firstChild.style.fontVariant = 'small-caps';
+                    } else {
+                        cueDiv.firstChild.style.fontFamily = fontMap[overrides.fontFamily];
+                    }
+                }
+            }
+        }
+    }]);
+
+    return KomentTrackDisplay;
+})(Component);
+
+KomentTrackDisplay.prototype.kind_ = 'metadata';
+
+Component.registerComponent('KomentTrackDisplay', KomentTrackDisplay);
+exports['default'] = KomentTrackDisplay;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"global/window":20}],33:[function(require,module,exports){
+/**
+ * Insert an element as the first child node of another
+ *
+ * @param  {Element} child   Element to insert
+ * @param  {Element} parent Element to insert child into
+ * @private
+ * @function insertElFirst
+ */
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.insertElFirst = insertElFirst;
+
+function insertElFirst(child, parent) {
+    if (parent.firstChild) {
+        parent.insertBefore(child, parent.firstChild);
+    } else {
+        parent.appendChild(child);
+    }
+}
+},{}],34:[function(require,module,exports){
+/**
+ * @file to-title-case.js
+ *
+ * Uppercase the first letter of a string
+ *
+ * @param  {String} string String to be uppercased
+ * @return {String}
+ * @private
+ * @method toTitleCase
+ */
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function toTitleCase(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+exports["default"] = toTitleCase;
+module.exports = exports["default"];
+},{}],35:[function(require,module,exports){
+(function (global){
+/**
+ * ! videojs-koment - v1.0.0 - 2016-02-15
+ * Copyright (c) 2015 benjipott
+ * Licensed under the Apache-2.0 license.
+ * @file videojs-koment.js
+ **/
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _xhr = require('xhr');
+
+var _xhr2 = _interopRequireDefault(_xhr);
+
+var _componentControlBarTrackControlsKomentButton = require('./component/control-bar/track-controls/koment-button');
+
+var _componentControlBarTrackControlsKomentButton2 = _interopRequireDefault(_componentControlBarTrackControlsKomentButton);
+
+var _componentControlBarTrackControlsKomentNewButton = require('./component/control-bar/track-controls/koment-new-button');
+
+var _componentControlBarTrackControlsKomentNewButton2 = _interopRequireDefault(_componentControlBarTrackControlsKomentNewButton);
+
+var _tracksKomentTrackDisplay = require('./tracks/koment-track-display');
+
+var _tracksKomentTrackDisplay2 = _interopRequireDefault(_tracksKomentTrackDisplay);
+
+var Component = _videoJs2['default'].getComponent('Component');
+
+var TRACK_ID = 'koment_track';
+exports.TRACK_ID = TRACK_ID;
+var COMMENT_SHOW_TIME = 5;
+exports.COMMENT_SHOW_TIME = COMMENT_SHOW_TIME;
+/**
+ * Initialize the plugin.
+ * @param options (optional) {object} configuration for the plugin
+ */
+
+var Koment = (function (_Component) {
+    _inherits(Koment, _Component);
+
+    function Koment(player, options) {
+        var _this = this;
+
+        _classCallCheck(this, Koment);
+
+        _get(Object.getPrototypeOf(Koment.prototype), 'constructor', this).call(this, player, options);
+
+        var defaults = {
+            label: 'Koment',
+            language: 'fr'
+        };
+
+        this.text_track = _videoJs2['default'].mergeOptions(defaults, options, {
+            'default': true,
+            kind: this.kind_,
+            id: TRACK_ID,
+            cues: [],
+            mode: 'showing'
+        });
+
+        var data = {
+            json: true,
+            uri: this.options_.url,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        (0, _xhr2['default'])(data, function (err, res) {
+            if (err) {
+                throw new Error(err.message);
+            }
+            //const addedTrack = player.addRemoteTextTrack(this.text_track).track
+            var addedTrack = player.addTextTrack(_this.text_track.kind, _this.text_track.label, _this.text_track.language);
+            addedTrack['default'] = true;
+
+            var listCues = res.body || [];
+            listCues.forEach(function (cue) {
+                addedTrack.addCue(new VTTCue(cue.timecode, cue.timecode + COMMENT_SHOW_TIME, cue.text));
+            });
+        });
+    }
+
+    /**
+     * Create the component's DOM element
+     *
+     * @return {Element}
+     * @method createEl
+     */
+
+    _createClass(Koment, [{
+        key: 'createEl',
+        value: function createEl() {
+            return _get(Object.getPrototypeOf(Koment.prototype), 'createEl', this).call(this, 'div', {
+                className: 'vjs-koment-bar',
+                dir: 'ltr'
+            }, {
+                // The control bar is a group, so it can contain menuitems
+                role: 'group'
+            });
+        }
+    }]);
+
+    return Koment;
+})(Component);
+
+Koment.prototype.kind_ = 'metadata';
+Koment.prototype.options_ = {
+    url: 'https://afr-api-v1-staging.herokuapp.com/api/videos/c1ee3b32-0bf8-4873-b173-09dc055b7bfe/comments',
+    children: {
+        'komentButton': {}
+    }
+};
+
+// register the plugin
+//'komentNewButton': {}
+_videoJs2['default'].options.children = _videoJs2['default'].options.children.concat(['koment', 'komentTrackDisplay']);
+
+Component.registerComponent('Koment', Koment);
+
+exports['default'] = Koment;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./component/control-bar/track-controls/koment-button":29,"./component/control-bar/track-controls/koment-new-button":30,"./tracks/koment-track-display":32,"xhr":36}],36:[function(require,module,exports){
+"use strict";
+var window = require("global/window")
+var isFunction = require("is-function")
+var parseHeaders = require("parse-headers")
+var xtend = require("xtend")
+
+module.exports = createXHR
+createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
+createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
+
+forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method) {
+    createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
+        options = initParams(uri, options, callback)
+        options.method = method.toUpperCase()
+        return _createXHR(options)
+    }
+})
+
+function forEachArray(array, iterator) {
+    for (var i = 0; i < array.length; i++) {
+        iterator(array[i])
+    }
+}
+
+function isEmpty(obj){
+    for(var i in obj){
+        if(obj.hasOwnProperty(i)) return false
+    }
+    return true
+}
+
+function initParams(uri, options, callback) {
+    var params = uri
+
+    if (isFunction(options)) {
+        callback = options
+        if (typeof uri === "string") {
+            params = {uri:uri}
+        }
+    } else {
+        params = xtend(options, {uri: uri})
+    }
+
+    params.callback = callback
+    return params
+}
+
+function createXHR(uri, options, callback) {
+    options = initParams(uri, options, callback)
+    return _createXHR(options)
+}
+
+function _createXHR(options) {
+    if(typeof options.callback === "undefined"){
+        throw new Error("callback argument missing")
+    }
+
+    var called = false
+    var callback = function cbOnce(err, response, body){
+        if(!called){
+            called = true
+            options.callback(err, response, body)
+        }
+    }
+
+    function readystatechange() {
+        if (xhr.readyState === 4) {
+            loadFunc()
+        }
+    }
+
+    function getBody() {
+        // Chrome with requestType=blob throws errors arround when even testing access to responseText
+        var body = undefined
+
+        if (xhr.response) {
+            body = xhr.response
+        } else {
+            body = xhr.responseText || getXml(xhr)
+        }
+
+        if (isJson) {
+            try {
+                body = JSON.parse(body)
+            } catch (e) {}
+        }
+
+        return body
+    }
+
+    var failureResponse = {
+                body: undefined,
+                headers: {},
+                statusCode: 0,
+                method: method,
+                url: uri,
+                rawRequest: xhr
+            }
+
+    function errorFunc(evt) {
+        clearTimeout(timeoutTimer)
+        if(!(evt instanceof Error)){
+            evt = new Error("" + (evt || "Unknown XMLHttpRequest Error") )
+        }
+        evt.statusCode = 0
+        return callback(evt, failureResponse)
+    }
+
+    // will load the data & process the response in a special response object
+    function loadFunc() {
+        if (aborted) return
+        var status
+        clearTimeout(timeoutTimer)
+        if(options.useXDR && xhr.status===undefined) {
+            //IE8 CORS GET successful response doesn't have a status field, but body is fine
+            status = 200
+        } else {
+            status = (xhr.status === 1223 ? 204 : xhr.status)
+        }
+        var response = failureResponse
+        var err = null
+
+        if (status !== 0){
+            response = {
+                body: getBody(),
+                statusCode: status,
+                method: method,
+                headers: {},
+                url: uri,
+                rawRequest: xhr
+            }
+            if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
+                response.headers = parseHeaders(xhr.getAllResponseHeaders())
+            }
+        } else {
+            err = new Error("Internal XMLHttpRequest Error")
+        }
+        return callback(err, response, response.body)
+    }
+
+    var xhr = options.xhr || null
+
+    if (!xhr) {
+        if (options.cors || options.useXDR) {
+            xhr = new createXHR.XDomainRequest()
+        }else{
+            xhr = new createXHR.XMLHttpRequest()
+        }
+    }
+
+    var key
+    var aborted
+    var uri = xhr.url = options.uri || options.url
+    var method = xhr.method = options.method || "GET"
+    var body = options.body || options.data || null
+    var headers = xhr.headers = options.headers || {}
+    var sync = !!options.sync
+    var isJson = false
+    var timeoutTimer
+
+    if ("json" in options) {
+        isJson = true
+        headers["accept"] || headers["Accept"] || (headers["Accept"] = "application/json") //Don't override existing accept header declared by user
+        if (method !== "GET" && method !== "HEAD") {
+            headers["content-type"] || headers["Content-Type"] || (headers["Content-Type"] = "application/json") //Don't override existing accept header declared by user
+            body = JSON.stringify(options.json)
+        }
+    }
+
+    xhr.onreadystatechange = readystatechange
+    xhr.onload = loadFunc
+    xhr.onerror = errorFunc
+    // IE9 must have onprogress be set to a unique function.
+    xhr.onprogress = function () {
+        // IE must die
+    }
+    xhr.ontimeout = errorFunc
+    xhr.open(method, uri, !sync, options.username, options.password)
+    //has to be after open
+    if(!sync) {
+        xhr.withCredentials = !!options.withCredentials
+    }
+    // Cannot set timeout with sync request
+    // not setting timeout on the xhr object, because of old webkits etc. not handling that correctly
+    // both npm's request and jquery 1.x use this kind of timeout, so this is being consistent
+    if (!sync && options.timeout > 0 ) {
+        timeoutTimer = setTimeout(function(){
+            aborted=true//IE9 may still call readystatechange
+            xhr.abort("timeout")
+            var e = new Error("XMLHttpRequest timeout")
+            e.code = "ETIMEDOUT"
+            errorFunc(e)
+        }, options.timeout )
+    }
+
+    if (xhr.setRequestHeader) {
+        for(key in headers){
+            if(headers.hasOwnProperty(key)){
+                xhr.setRequestHeader(key, headers[key])
+            }
+        }
+    } else if (options.headers && !isEmpty(options.headers)) {
+        throw new Error("Headers cannot be set on an XDomainRequest object")
+    }
+
+    if ("responseType" in options) {
+        xhr.responseType = options.responseType
+    }
+
+    if ("beforeSend" in options &&
+        typeof options.beforeSend === "function"
+    ) {
+        options.beforeSend(xhr)
+    }
+
+    xhr.send(body)
+
+    return xhr
+
+
+}
+
+function getXml(xhr) {
+    if (xhr.responseType === "document") {
+        return xhr.responseXML
+    }
+    var firefoxBugTakenEffect = xhr.status === 204 && xhr.responseXML && xhr.responseXML.documentElement.nodeName === "parsererror"
+    if (xhr.responseType === "" && !firefoxBugTakenEffect) {
+        return xhr.responseXML
+    }
+
+    return null
+}
+
+function noop() {}
+
+},{"global/window":20,"is-function":21,"parse-headers":22,"xtend":48}],37:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
@@ -4252,7 +5466,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":27,"global/document":18,"global/window":19,"xhr":29}],26:[function(require,module,exports){
+},{"./utils.js":39,"global/document":19,"global/window":20,"xhr":41}],38:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4285,7 +5499,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":25}],27:[function(require,module,exports){
+},{"./metrics":37}],39:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -4373,7 +5587,7 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":18,"global/window":19}],28:[function(require,module,exports){
+},{"global/document":19,"global/window":20}],40:[function(require,module,exports){
 (function (global){
 /**
  * @file Youtube.js
@@ -5094,7 +6308,7 @@ Tech.registerTech('Youtube', Youtube);
 exports['default'] = Youtube;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],29:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -5315,24 +6529,9 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":19,"is-function":30,"once":31,"parse-headers":34,"xtend":35}],30:[function(require,module,exports){
-module.exports = isFunction
-
-var toString = Object.prototype.toString
-
-function isFunction (fn) {
-  var string = toString.call(fn)
-  return string === '[object Function]' ||
-    (typeof fn === 'function' && string !== '[object RegExp]') ||
-    (typeof window !== 'undefined' &&
-     // IE8 and below
-     (fn === window.setTimeout ||
-      fn === window.alert ||
-      fn === window.confirm ||
-      fn === window.prompt))
-};
-
-},{}],31:[function(require,module,exports){
+},{"global/window":20,"is-function":42,"once":43,"parse-headers":46,"xtend":47}],42:[function(require,module,exports){
+arguments[4][21][0].apply(exports,arguments)
+},{"dup":21}],43:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -5353,103 +6552,13 @@ function once (fn) {
   }
 }
 
-},{}],32:[function(require,module,exports){
-var isFunction = require('is-function')
-
-module.exports = forEach
-
-var toString = Object.prototype.toString
-var hasOwnProperty = Object.prototype.hasOwnProperty
-
-function forEach(list, iterator, context) {
-    if (!isFunction(iterator)) {
-        throw new TypeError('iterator must be a function')
-    }
-
-    if (arguments.length < 3) {
-        context = this
-    }
-    
-    if (toString.call(list) === '[object Array]')
-        forEachArray(list, iterator, context)
-    else if (typeof list === 'string')
-        forEachString(list, iterator, context)
-    else
-        forEachObject(list, iterator, context)
-}
-
-function forEachArray(array, iterator, context) {
-    for (var i = 0, len = array.length; i < len; i++) {
-        if (hasOwnProperty.call(array, i)) {
-            iterator.call(context, array[i], i, array)
-        }
-    }
-}
-
-function forEachString(string, iterator, context) {
-    for (var i = 0, len = string.length; i < len; i++) {
-        // no such thing as a sparse string.
-        iterator.call(context, string.charAt(i), i, string)
-    }
-}
-
-function forEachObject(object, iterator, context) {
-    for (var k in object) {
-        if (hasOwnProperty.call(object, k)) {
-            iterator.call(context, object[k], k, object)
-        }
-    }
-}
-
-},{"is-function":30}],33:[function(require,module,exports){
-
-exports = module.exports = trim;
-
-function trim(str){
-  return str.replace(/^\s*|\s*$/g, '');
-}
-
-exports.left = function(str){
-  return str.replace(/^\s*/, '');
-};
-
-exports.right = function(str){
-  return str.replace(/\s*$/, '');
-};
-
-},{}],34:[function(require,module,exports){
-var trim = require('trim')
-  , forEach = require('for-each')
-  , isArray = function(arg) {
-      return Object.prototype.toString.call(arg) === '[object Array]';
-    }
-
-module.exports = function (headers) {
-  if (!headers)
-    return {}
-
-  var result = {}
-
-  forEach(
-      trim(headers).split('\n')
-    , function (row) {
-        var index = row.indexOf(':')
-          , key = trim(row.slice(0, index)).toLowerCase()
-          , value = trim(row.slice(index + 1))
-
-        if (typeof(result[key]) === 'undefined') {
-          result[key] = value
-        } else if (isArray(result[key])) {
-          result[key].push(value)
-        } else {
-          result[key] = [ result[key], value ]
-        }
-      }
-  )
-
-  return result
-}
-},{"for-each":32,"trim":33}],35:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
+arguments[4][18][0].apply(exports,arguments)
+},{"dup":18,"is-function":42}],45:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],46:[function(require,module,exports){
+arguments[4][22][0].apply(exports,arguments)
+},{"dup":22,"for-each":44,"trim":45}],47:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -5470,7 +6579,9 @@ function extend() {
     return target
 }
 
-},{}],36:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
+arguments[4][47][0].apply(exports,arguments)
+},{"dup":47}],49:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5503,6 +6614,8 @@ require('videojs-metrics');
 require('videojs-chromecast');
 
 require('videojs-youtube');
+
+require('videojs-koment');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5657,5 +6770,5 @@ ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.option
 Component.registerComponent('Afrostream', Afrostream);
 exports.default = Afrostream;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"videojs-chromecast":22,"videojs-metrics":26,"videojs-youtube":28}]},{},[36])(36)
+},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"videojs-chromecast":26,"videojs-koment":31,"videojs-metrics":38,"videojs-youtube":40}]},{},[49])(49)
 });

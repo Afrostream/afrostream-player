@@ -431,6 +431,9 @@ var Dash = function (_Html) {
             plTrack;
         for (var i = 0; i < l; i++) {
           track = tracks[i];
+          if (track.kind !== 'captions') {
+            continue;
+          }
           track.label = track.label || track.lang;
           plTrack = plTracks[i];
           track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
@@ -462,7 +465,7 @@ var Dash = function (_Html) {
 
       for (var i = 0; i < tracks.length; i++) {
         var track = tracks[i];
-        if (track['mode'] === 'showing') {
+        if (track.kind === 'captions' && track['mode'] === 'showing') {
           selected = true;
           this.mediaPlayer_.setTextTrack(i);
         }
