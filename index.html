@@ -27,6 +27,9 @@
   <link href="/node_modules/bootstrap-slider/dist/css/bootstrap-slider.css" rel="stylesheet">
   <script src="/node_modules/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
   <link href="/node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
+
+  <!--KOMENT.IO-->
+  <link href="https://www.koment.io/dist/koment.css" rel="stylesheet">
 </head>
 <body>
 <div class="row">
@@ -58,6 +61,9 @@
 <script src="/node_modules/dashjs/dist/dash.all.debug.js"></script>
 <script src="/node_modules/smoothie/smoothie.js"></script>
 <script src="/dist/afrostream-player.js"></script>
+<!--KOMENT.IO-->
+<script src="https://www.koment.io/dist/koment.js"></script>
+<link href="https://www.koment.io/dist/koment.css" rel="stylesheet">
 <script>
 
   var player = null;
@@ -212,6 +218,7 @@
       video.className = 'video-js vjs-afrostream-skin';
       video.crossOrigin = true;
       video.setAttribute('crossorigin', true);
+      video.setAttribute('data-setup', '{"controls":1}');
       var cp = [];
 
 //    if (captions) {
