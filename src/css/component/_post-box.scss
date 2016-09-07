@@ -1,24 +1,27 @@
-.koment .kmt-post-submit-button {
-  &:hover {
-    color: #FFFFFF !important;
-    &:before {
-      background-color: $color-indigo !important;
-    }
-  }
 
-  &:before {
-    background-color: #fbfbfb;
-  }
 
-  border: $color-indigo solid 4px !important;
-  background-color: #FFF;
-  color: $color-indigo !important;
-}
-
-.koment.koment-toggle-edit .kmt-post-box {
-
-  .kmt-post-box-comments {
-    background-color: rgba($color-indigo, 1) !important;
-    color: $primary-background-color;
-  }
-}
+//
+//.koment .kmt-post-submit-button {
+//  &:hover {
+//    color: #FFFFFF !important;
+//    &:before {
+//      background-color: $color-indigo !important;
+//    }
+//  }
+//
+//  &:before {
+//    background-color: #fbfbfb;
+//  }
+//
+//  border: $color-indigo solid 4px !important;
+//  background-color: #FFF;
+//  color: $color-indigo !important;
+//}
+//
+//.koment.koment-toggle-edit .kmt-post-box {
+//
+//  .kmt-post-box-comments {
+//    background-color: rgba($color-indigo, 1) !important;
+//    color: $primary-background-color;
+//  }
+//}

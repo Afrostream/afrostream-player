@@ -112,7 +112,7 @@
     "karma-ie-launcher": "^0.2.0",
     "karma-qunit": "^0.1.0",
     "karma-safari-launcher": "^0.1.0",
-    "koment-js": "git+https://github.com/koment-io/koment-js.git#master",
+    "koment-js": "git+https://github.com/Afrostream/koment-js.git#master",
     "lodash": "^4.13.1",
     "minimist": "^1.2.0",
     "node-sass": "^3.4.2",

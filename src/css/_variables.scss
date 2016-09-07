@@ -1,9 +1,9 @@
 // Text, icons, hover states
 $primary-foreground-color: #fff !default;
 $secondary-foreground-color: #ffc60b !default;
-$color-yellow: #ffc809;
-$color-indigo: #17071d;
-$color-purple: #663774;
+$color-yellow: #ffc809 !default;
+$color-indigo: #17071d !default;
+$color-purple: #663774 !default;
 // Control backgrounds (control bar, big play, menus)
 $primary-background-color: #000 !default;
 $primary-background-transparency: 0.7 !default;
@@ -30,3 +30,12 @@ $controls-margin: 15px;
 // for the slider background.
 $slider-bg-color: lighten($primary-background-color, 33%);
 $slider-load-bg-color: lighten($primary-foreground-color, 33%);
+
+//KOMENT VARS
+// Text, icons, hover states
+$kmt-primary-foreground-color: $color-indigo !default;
+// Control backgrounds (control bar, big play, menus)
+$kmt-primary-background-color: #fff !default;
+$kmt-primary-background-transparency: 0.9 !default;
+$kmt-primary-box-color: $color-indigo !default;
+
