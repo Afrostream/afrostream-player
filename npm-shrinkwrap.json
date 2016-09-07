@@ -9449,11 +9449,6 @@
       "from": "form-data@>=1.0.0-rc4 <1.1.0",
       "resolved": "https://registry.npmjs.org/form-data/-/form-data-1.0.1.tgz"
     },
-    "format-text": {
-      "version": "0.0.3",
-      "from": "azer/format-text",
-      "resolved": "git://github.com/azer/format-text.git#84d0f3ab339b6556e1782b360cc145cbf64f1daf"
-    },
     "from": {
       "version": "0.1.3",
       "from": "from@>=0.0.0 <1.0.0",
@@ -14383,8 +14378,8 @@
     },
     "koment-js": {
       "version": "0.0.0",
-      "from": "git+https://github.com/Afrostream/koment-js.git#master",
-      "resolved": "git+https://github.com/Afrostream/koment-js.git#9f4ad2e46f7f4a4bc6850427433743a3de311dbb",
+      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.0",
+      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#9f4ad2e46f7f4a4bc6850427433743a3de311dbb",
       "dependencies": {
         "babel": {
           "version": "5.8.38",
@@ -14768,7 +14763,14 @@
     "new-element": {
       "version": "1.0.0",
       "from": "new-element@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/new-element/-/new-element-1.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/new-element/-/new-element-1.0.0.tgz",
+      "dependencies": {
+        "format-text": {
+          "version": "0.0.3",
+          "from": "azer/format-text",
+          "resolved": "git://github.com/azer/format-text.git#84d0f3ab339b6556e1782b360cc145cbf64f1daf"
+        }
+      }
     },
     "node-gyp": {
       "version": "3.4.0",
