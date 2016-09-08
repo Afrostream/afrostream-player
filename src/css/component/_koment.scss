@@ -1,3 +1,7 @@
 .koment .koment-progress-control {
-  display: none;
+  display: none !default;
+}
+
+.koment.koment-toggle-menu .koment-progress-control {
+  display: none !default;
 }
