@@ -7478,9 +7478,9 @@
       "resolved": "https://registry.npmjs.org/breakable/-/breakable-1.0.0.tgz"
     },
     "brorand": {
-      "version": "1.0.5",
+      "version": "1.0.6",
       "from": "brorand@>=1.0.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/brorand/-/brorand-1.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/brorand/-/brorand-1.0.6.tgz"
     },
     "browser-pack": {
       "version": "5.0.1",
@@ -14390,8 +14390,8 @@
     },
     "koment-js": {
       "version": "0.0.0",
-      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
-      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#9809d0d7e63f31b9d84f3251c890df522831117f",
+      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
+      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#327a49494cd032d31bd29a97b0f9c0abf75cd4c8",
       "dependencies": {
         "babel": {
           "version": "5.8.38",

@@ -2949,7 +2949,7 @@ Component.registerComponent('Streamroot', Streamroot);
 Tech.registerTech('Streamroot', Streamroot);
 exports.default = Streamroot;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./dash":12,"streamroot-dashjs-p2p-wrapper":122}],17:[function(require,module,exports){
+},{"./dash":12,"streamroot-dashjs-p2p-wrapper":124}],17:[function(require,module,exports){
 
 },{}],18:[function(require,module,exports){
 var isFunction = require('is-function')
@@ -3201,7 +3201,7 @@ var Button = (function (_ClickableComponent) {
 _component2['default'].registerComponent('Button', Button);
 exports['default'] = Button;
 module.exports = exports['default'];
-},{"./clickable-component.js":23,"./component":24,"./utils/log.js":61,"object.assign":111}],23:[function(require,module,exports){
+},{"./clickable-component.js":23,"./component":24,"./utils/log.js":63,"object.assign":113}],23:[function(require,module,exports){
 /**
  * @file button.js
  */
@@ -3488,7 +3488,7 @@ var ClickableComponent = (function (_Component) {
 _component2['default'].registerComponent('ClickableComponent', ClickableComponent);
 exports['default'] = ClickableComponent;
 module.exports = exports['default'];
-},{"./component":24,"./utils/dom.js":56,"./utils/events.js":57,"./utils/fn.js":58,"./utils/log.js":61,"global/document":19,"object.assign":111}],24:[function(require,module,exports){
+},{"./component":24,"./utils/dom.js":58,"./utils/events.js":59,"./utils/fn.js":60,"./utils/log.js":63,"global/document":19,"object.assign":113}],24:[function(require,module,exports){
 /**
  * @file component.js
  *
@@ -5114,7 +5114,7 @@ var Component = (function () {
 Component.registerComponent('Component', Component);
 exports['default'] = Component;
 module.exports = exports['default'];
-},{"./utils/dom.js":56,"./utils/events.js":57,"./utils/fn.js":58,"./utils/guid.js":60,"./utils/log.js":61,"./utils/merge-options.js":62,"./utils/to-title-case.js":65,"global/window":20}],25:[function(require,module,exports){
+},{"./utils/dom.js":58,"./utils/events.js":59,"./utils/fn.js":60,"./utils/guid.js":62,"./utils/log.js":63,"./utils/merge-options.js":64,"./utils/to-title-case.js":67,"global/window":20}],25:[function(require,module,exports){
 /**
  * @file koment-display.js
  **/
@@ -5181,7 +5181,6 @@ var KomentDisplay = (function (_Component) {
       uri: this.player_.options_.api,
       method: 'GET',
       headers: {
-        'Access-Token': this.player_.options_.token,
         'Content-Type': 'application/json'
       }
     };
@@ -5197,7 +5196,7 @@ var KomentDisplay = (function (_Component) {
         if (item.user && item.user.facebook) {
           item.user = (0, _lodash.merge)(item.user, {
             picture: '//graph.facebook.com/' + item.user.facebook.id + '/picture',
-            name: item.user.facebook.nickname
+            nickname: item.user.facebook.nickname
           });
         }
       });
@@ -5205,6 +5204,7 @@ var KomentDisplay = (function (_Component) {
       kommentsList = (0, _lodash.sortBy)(kommentsList, ['timecode']);
 
       _this.player_.komentsList(kommentsList);
+      _this.player_.trigger('kmtlistfetched');
       _this.createChilds();
     });
   }
@@ -5219,6 +5219,7 @@ var KomentDisplay = (function (_Component) {
     key: 'handleClick',
     value: function handleClick() {
       this.player_.toggleEdit(false);
+      this.player_.toggleList(false);
     }
 
     /**
@@ -5247,7 +5248,13 @@ var KomentDisplay = (function (_Component) {
       this.requestTick(true);
       var json = (0, _lodash.pick)(item, ['timecode', 'text']);
 
-      (0, _xhr2['default'])((0, _lodash.merge)(this.data_, { method: 'POST', json: json }), function (err, res) {
+      (0, _xhr2['default'])((0, _lodash.merge)(this.data_, {
+        method: 'POST',
+        json: json,
+        headers: {
+          'Access-Token': this.player_.options_.token
+        }
+      }), function (err, res) {
         if (err) {
           throw new Error(err.message);
         }
@@ -5367,7 +5374,7 @@ KomentDisplay.prototype.options_ = {
 _component2['default'].registerComponent('KomentDisplay', KomentDisplay);
 exports['default'] = KomentDisplay;
 module.exports = exports['default'];
-},{"../component":24,"../utils/fn.js":58,"./koment-item":26,"lodash":67,"xhr":68}],26:[function(require,module,exports){
+},{"../component":24,"../utils/fn.js":60,"./koment-item":26,"lodash":69,"xhr":70}],26:[function(require,module,exports){
 /**
  * @file koment-item.js
  **/
@@ -5393,9 +5400,17 @@ var _utilsDom = require('../utils/dom');
 
 var Dom = _interopRequireWildcard(_utilsDom);
 
+var _clickableComponentJs = require('../clickable-component.js');
+
+var _clickableComponentJs2 = _interopRequireDefault(_clickableComponentJs);
+
 var _componentJs = require('../component.js');
 
 var _componentJs2 = _interopRequireDefault(_componentJs);
+
+var _utilsFormatTimeJs = require('../utils/format-time.js');
+
+var _utilsFormatTimeJs2 = _interopRequireDefault(_utilsFormatTimeJs);
 
 /**
  * Container of main controls
@@ -5404,8 +5419,8 @@ var _componentJs2 = _interopRequireDefault(_componentJs);
  * @class ControlBar
  */
 
-var KomentItem = (function (_Component) {
-  _inherits(KomentItem, _Component);
+var KomentItem = (function (_ClickableComponent) {
+  _inherits(KomentItem, _ClickableComponent);
 
   function KomentItem(player, options) {
     _classCallCheck(this, KomentItem);
@@ -5427,9 +5442,9 @@ var KomentItem = (function (_Component) {
     key: 'update',
     value: function update() {
       var url = this.options_.user.picture;
-
+      var timecode = (0, _utilsFormatTimeJs2['default'])(this.timecode, this.player_.duration());
       this.setSrc(url);
-
+      this.tcEl_.innerHTML = timecode + ' ' + (this.user.nickname ? '- ' + this.user.nickname : '');
       // If there's no poster source we should display:none on this component
       // so it's not still clickable or right-clickable
       if (url) {
@@ -5479,10 +5494,18 @@ var KomentItem = (function (_Component) {
         userName = '<div class="koment-item-user">' + profile.name + '</div>';
       }
       this.contentEl_ = Dom.createEl('div', {
-        className: 'koment-item-display',
-        innerHTML: userName + '<div class="koment-item-title">' + this.options_.text + '</div>'
+        className: 'koment-item-display'
       }, {
         'aria-live': 'off'
+      });
+
+      this.tcEl_ = Dom.createEl('div', {
+        className: 'koment-item-timecode'
+      });
+
+      this.textEl_ = Dom.createEl('div', {
+        className: 'koment-item-title',
+        innerHTML: this.options_.text
       });
 
       this.avatarEl_ = Dom.createEl('div', {
@@ -5491,9 +5514,16 @@ var KomentItem = (function (_Component) {
         'aria-live': 'off'
       });
 
+      this.contentEl_.appendChild(this.tcEl_);
+      this.contentEl_.appendChild(this.textEl_);
       el.appendChild(this.avatarEl_);
       el.appendChild(this.contentEl_);
       return el;
+    }
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      this.player_.currentTime(this.timecode);
     }
   }, {
     key: 'hide',
@@ -5514,7 +5544,7 @@ var KomentItem = (function (_Component) {
   }]);
 
   return KomentItem;
-})(_componentJs2['default']);
+})(_clickableComponentJs2['default']);
 
 KomentItem.prototype.timecode = 0;
 KomentItem.prototype.options_ = {
@@ -5529,7 +5559,108 @@ KomentItem.prototype.options_ = {
 _componentJs2['default'].registerComponent('KomentItem', KomentItem);
 exports['default'] = KomentItem;
 module.exports = exports['default'];
-},{"../component.js":24,"../utils/dom":56}],27:[function(require,module,exports){
+},{"../clickable-component.js":23,"../component.js":24,"../utils/dom":58,"../utils/format-time.js":61}],27:[function(require,module,exports){
+/**
+ * @file koment-list.js
+ **/
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _component = require('../component');
+
+var _component2 = _interopRequireDefault(_component);
+
+var _komentItem = require('./koment-item');
+
+var _komentItem2 = _interopRequireDefault(_komentItem);
+
+/**
+ * Container of comment list
+ *
+ * @extends Component
+ * @class KomentList
+ */
+
+var KomentList = (function (_Component) {
+  _inherits(KomentList, _Component);
+
+  function KomentList(player, options) {
+    _classCallCheck(this, KomentList);
+
+    _get(Object.getPrototypeOf(KomentList.prototype), 'constructor', this).call(this, player, options);
+    this.on(this.player_, 'kmtlistfetched', this.createChilds);
+  }
+
+  /**
+   * Create the component's DOM element
+   *
+   * @return {Element}
+   * @method createEl
+   */
+
+  _createClass(KomentList, [{
+    key: 'createEl',
+    value: function createEl() {
+      return _get(Object.getPrototypeOf(KomentList.prototype), 'createEl', this).call(this, 'div', {
+        className: 'koment-list',
+        dir: 'ltr'
+      }, {
+        role: 'group'
+      });
+    }
+  }, {
+    key: 'update',
+    value: function update(e) {
+      var item = e.data;
+      var mi = new _komentItem2['default'](this.player_, item);
+      this.items.unshift(mi);
+      this.addChild(mi);
+    }
+
+    /**
+     * Create menu from chapter buttons
+     *
+     * @return {Menu} Menu of chapter buttons
+     * @method createMenu
+     */
+  }, {
+    key: 'createChilds',
+    value: function createChilds() {
+      var items = this.player_.komentsList();
+      this.items = [];
+      for (var i = 0, l = items.length; i < l; i++) {
+        var item = items[i];
+        var mi = new _komentItem2['default'](this.player_, item);
+        this.items.push(mi);
+        this.addChild(mi);
+      }
+
+      this.on(this.player_, 'komentsupdated', this.update);
+    }
+  }]);
+
+  return KomentList;
+})(_component2['default']);
+
+KomentList.prototype.options_ = {};
+
+_component2['default'].registerComponent('KomentList', KomentList);
+exports['default'] = KomentList;
+module.exports = exports['default'];
+},{"../component":24,"./koment-item":26}],28:[function(require,module,exports){
 /**
  * @file control-bar.js
  */
@@ -5560,6 +5691,8 @@ require('./koment-toggle');
 require('./like-button');
 
 require('./edit-button');
+
+require('./list-button');
 
 require('./post-box/post-box');
 
@@ -5603,18 +5736,17 @@ var ControlBar = (function (_Component) {
 })(_component2['default']);
 
 ControlBar.prototype.options_ = {
-  children: ['komentToggle',
-  //'likeButton',
-  'editButton', 'postBox']
+  children: ['komentToggle', 'editButton', 'listButton', 'postBox']
 };
 
 _component2['default'].registerComponent('ControlBar', ControlBar);
 exports['default'] = ControlBar;
 module.exports = exports['default'];
-},{"../component":24,"./edit-button":28,"./koment-toggle":29,"./like-button":30,"./post-box/post-box":31}],28:[function(require,module,exports){
+},{"../component":24,"./edit-button":29,"./koment-toggle":30,"./like-button":31,"./list-button":32,"./post-box/post-box":33}],29:[function(require,module,exports){
 /**
- * @file koment-toggle.js
+ * @file edit-button.js
  */
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -5625,21 +5757,11 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _utilsToTitleCase = require('../utils/to-title-case');
-
-var _utilsToTitleCase2 = _interopRequireDefault(_utilsToTitleCase);
-
-var _utilsDom = require('../utils/dom');
-
-var Dom = _interopRequireWildcard(_utilsDom);
 
 var _componentJs = require('../component.js');
 
@@ -5718,7 +5840,7 @@ EditButton.prototype.controlText_ = 'Edit';
 _componentJs2['default'].registerComponent('EditButton', EditButton);
 exports['default'] = EditButton;
 module.exports = exports['default'];
-},{"../button.js":22,"../component.js":24,"../utils/dom":56,"../utils/to-title-case":65}],29:[function(require,module,exports){
+},{"../button.js":22,"../component.js":24}],30:[function(require,module,exports){
 /**
  * @file koment-toggle.js
  */
@@ -5811,7 +5933,7 @@ KomentToggle.prototype.controlText_ = 'Koment';
 _componentJs2['default'].registerComponent('KomentToggle', KomentToggle);
 exports['default'] = KomentToggle;
 module.exports = exports['default'];
-},{"../button.js":22,"../component.js":24,"../utils/dom":56,"../utils/to-title-case":65}],30:[function(require,module,exports){
+},{"../button.js":22,"../component.js":24,"../utils/dom":58,"../utils/to-title-case":67}],31:[function(require,module,exports){
 /**
  * @file koment-toggle.js
  */
@@ -5917,7 +6039,98 @@ LikeButton.prototype.controlText_ = 'Like';
 _componentJs2['default'].registerComponent('LikeButton', LikeButton);
 exports['default'] = LikeButton;
 module.exports = exports['default'];
-},{"../button.js":22,"../component.js":24,"../utils/dom":56,"../utils/to-title-case":65}],31:[function(require,module,exports){
+},{"../button.js":22,"../component.js":24,"../utils/dom":58,"../utils/to-title-case":67}],32:[function(require,module,exports){
+/**
+ * @file list-button.js
+ */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _componentJs = require('../component.js');
+
+var _componentJs2 = _interopRequireDefault(_componentJs);
+
+var _buttonJs = require('../button.js');
+
+var _buttonJs2 = _interopRequireDefault(_buttonJs);
+
+/**
+ * The button component for toggling and selecting koment
+ * Chapters act much differently than other text tracks
+ * Cues are navigation vs. other tracks of alternative languages
+ *
+ * @param {Object} player  Player object
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready    Ready callback function
+ * @extends Button
+ * @class ListButton
+ */
+
+var ListButton = (function (_Button) {
+  _inherits(ListButton, _Button);
+
+  function ListButton(player, options, ready) {
+    _classCallCheck(this, ListButton);
+
+    _get(Object.getPrototypeOf(ListButton.prototype), 'constructor', this).call(this, player, options, ready);
+  }
+
+  /**
+   * Allow sub components to stack CSS class names
+   *
+   * @return {String} The constructed class name
+   * @method buildCSSClass
+   */
+
+  _createClass(ListButton, [{
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'list-button ' + _get(Object.getPrototypeOf(ListButton.prototype), 'buildCSSClass', this).call(this);
+    }
+
+    /**
+     * Handle click on text track
+     *
+     * @method handleClick
+     */
+  }, {
+    key: 'handleClick',
+    value: function handleClick(event) {
+      _get(Object.getPrototypeOf(ListButton.prototype), 'handleClick', this).call(this, event);
+      this.addClass('active');
+      this.setTimeout(this.disable, 300);
+      this.player_.toggleList();
+    }
+  }, {
+    key: 'disable',
+    value: function disable() {
+      this.removeClass('active');
+    }
+  }]);
+
+  return ListButton;
+})(_buttonJs2['default']);
+
+ListButton.prototype.controlText_ = 'List';
+
+_componentJs2['default'].registerComponent('ListButton', ListButton);
+exports['default'] = ListButton;
+module.exports = exports['default'];
+},{"../button.js":22,"../component.js":24}],33:[function(require,module,exports){
 /**
  * @file post-box.js
  */
@@ -5988,7 +6201,7 @@ PostBox.prototype.options_ = {
 _componentJs2['default'].registerComponent('PostBox', PostBox);
 exports['default'] = PostBox;
 module.exports = exports['default'];
-},{"../../component.js":24,"./post-comment-box":32,"./post-submit-button":33,"./post-user-box":34}],32:[function(require,module,exports){
+},{"../../component.js":24,"./post-comment-box":34,"./post-submit-button":35,"./post-user-box":36}],34:[function(require,module,exports){
 /**
  * @file koment-toggle.js
  */
@@ -6283,7 +6496,7 @@ PostCommentBox.prototype.options_ = {
 _componentJs2['default'].registerComponent('PostCommentBox', PostCommentBox);
 exports['default'] = PostCommentBox;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/to-title-case":65,"./post-comment-box":32,"global/document":19}],33:[function(require,module,exports){
+},{"../../component.js":24,"../../utils/to-title-case":67,"./post-comment-box":34,"global/document":19}],35:[function(require,module,exports){
 /**
  * @file post-submit-button.js
  */
@@ -6367,7 +6580,7 @@ PostSubmitButton.prototype.controlText_ = 'Send';
 _componentJs2['default'].registerComponent('PostSubmitButton', PostSubmitButton);
 exports['default'] = PostSubmitButton;
 module.exports = exports['default'];
-},{"../../button.js":22,"../../component.js":24}],34:[function(require,module,exports){
+},{"../../button.js":22,"../../component.js":24}],36:[function(require,module,exports){
 /**
  * @file koment-toggle.js
  */
@@ -6480,7 +6693,7 @@ var PostUserBox = (function (_Component) {
 _componentJs2['default'].registerComponent('PostUserBox', PostUserBox);
 exports['default'] = PostUserBox;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/to-title-case":65,"./post-comment-box":32}],35:[function(require,module,exports){
+},{"../../component.js":24,"../../utils/to-title-case":67,"./post-comment-box":34}],37:[function(require,module,exports){
 /**
  * @file load-progress-bar.js
  */
@@ -6597,7 +6810,7 @@ var LoadProgressBar = (function (_Component) {
 _componentJs2['default'].registerComponent('LoadProgressBar', LoadProgressBar);
 exports['default'] = LoadProgressBar;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/dom.js":56}],36:[function(require,module,exports){
+},{"../../component.js":24,"../../utils/dom.js":58}],38:[function(require,module,exports){
 /**
  * @file mouse-time-display.js
  */
@@ -6765,7 +6978,7 @@ var MouseTimeDisplay = (function (_Component) {
 _componentJs2['default'].registerComponent('MouseTimeDisplay', MouseTimeDisplay);
 exports['default'] = MouseTimeDisplay;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/dom.js":56,"../../utils/fn.js":58,"../../utils/format-time.js":59,"global/window":20,"lodash-compat/function/throttle":73}],37:[function(require,module,exports){
+},{"../../component.js":24,"../../utils/dom.js":58,"../../utils/fn.js":60,"../../utils/format-time.js":61,"global/window":20,"lodash-compat/function/throttle":75}],39:[function(require,module,exports){
 /**
  * @file play-progress-bar.js
  */
@@ -6858,7 +7071,7 @@ var PlayProgressBar = (function (_Component) {
 _componentJs2['default'].registerComponent('PlayProgressBar', PlayProgressBar);
 exports['default'] = PlayProgressBar;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/fn.js":58,"../../utils/format-time.js":59}],38:[function(require,module,exports){
+},{"../../component.js":24,"../../utils/fn.js":60,"../../utils/format-time.js":61}],40:[function(require,module,exports){
 /**
  * @file progress-control.js
  */
@@ -6931,7 +7144,7 @@ ProgressControl.prototype.options_ = {
 _componentJs2['default'].registerComponent('ProgressControl', ProgressControl);
 exports['default'] = ProgressControl;
 module.exports = exports['default'];
-},{"../../component.js":24,"./mouse-time-display.js":36,"./seek-bar.js":39}],39:[function(require,module,exports){
+},{"../../component.js":24,"./mouse-time-display.js":38,"./seek-bar.js":41}],41:[function(require,module,exports){
 /**
  * @file seek-bar.js
  */
@@ -7169,7 +7382,7 @@ SeekBar.prototype.playerEvent = 'timeupdate';
 _componentJs2['default'].registerComponent('SeekBar', SeekBar);
 exports['default'] = SeekBar;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../slider/slider.js":49,"../../utils/fn.js":58,"../../utils/format-time.js":59,"./load-progress-bar.js":35,"./play-progress-bar.js":37,"./timeline-progress-bar.js":40,"./tooltip-progress-bar.js":42,"global/window":20}],40:[function(require,module,exports){
+},{"../../component.js":24,"../../slider/slider.js":51,"../../utils/fn.js":60,"../../utils/format-time.js":61,"./load-progress-bar.js":37,"./play-progress-bar.js":39,"./timeline-progress-bar.js":42,"./tooltip-progress-bar.js":44,"global/window":20}],42:[function(require,module,exports){
 /**
  * @file timeline-progress-bar.js
  */
@@ -7304,7 +7517,7 @@ var TimelineProgressBar = (function (_Component) {
 _componentJs2['default'].registerComponent('TimelineProgressBar', TimelineProgressBar);
 exports['default'] = TimelineProgressBar;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/dom.js":56,"./timeline-progress-item.js":41,"lodash":67}],41:[function(require,module,exports){
+},{"../../component.js":24,"../../utils/dom.js":58,"./timeline-progress-item.js":43,"lodash":69}],43:[function(require,module,exports){
 /**
  * @file timeline-progress-item.js
  **/
@@ -7330,6 +7543,10 @@ var _utilsDom = require('../../utils/dom');
 
 var Dom = _interopRequireWildcard(_utilsDom);
 
+var _clickableComponentJs = require('../../clickable-component.js');
+
+var _clickableComponentJs2 = _interopRequireDefault(_clickableComponentJs);
+
 var _componentJs = require('../../component.js');
 
 var _componentJs2 = _interopRequireDefault(_componentJs);
@@ -7341,8 +7558,8 @@ var _componentJs2 = _interopRequireDefault(_componentJs);
  * @class ControlBar
  */
 
-var TimelineProgressItem = (function (_Component) {
-  _inherits(TimelineProgressItem, _Component);
+var TimelineProgressItem = (function (_ClickableComponent) {
+  _inherits(TimelineProgressItem, _ClickableComponent);
 
   function TimelineProgressItem(player, options) {
     _classCallCheck(this, TimelineProgressItem);
@@ -7434,10 +7651,15 @@ var TimelineProgressItem = (function (_Component) {
         _this.addClass('koment-hidden');
       }, 500);
     }
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      this.player_.currentTime(this.timecode);
+    }
   }]);
 
   return TimelineProgressItem;
-})(_componentJs2['default']);
+})(_clickableComponentJs2['default']);
 
 TimelineProgressItem.prototype.timecode = 0;
 TimelineProgressItem.prototype.options_ = {
@@ -7450,7 +7672,7 @@ TimelineProgressItem.prototype.options_ = {
 _componentJs2['default'].registerComponent('TimelineProgressItem', TimelineProgressItem);
 exports['default'] = TimelineProgressItem;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/dom":56}],42:[function(require,module,exports){
+},{"../../clickable-component.js":23,"../../component.js":24,"../../utils/dom":58}],44:[function(require,module,exports){
 /**
  * @file play-progress-bar.js
  */
@@ -7541,7 +7763,7 @@ var TooltipProgressBar = (function (_Component) {
 _componentJs2['default'].registerComponent('TooltipProgressBar', TooltipProgressBar);
 exports['default'] = TooltipProgressBar;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/fn.js":58,"../../utils/format-time.js":59}],43:[function(require,module,exports){
+},{"../../component.js":24,"../../utils/fn.js":60,"../../utils/format-time.js":61}],45:[function(require,module,exports){
 /**
  * @file fullscreen-api.js
  */
@@ -7599,7 +7821,7 @@ if (browserApi) {
 
 exports['default'] = FullscreenApi;
 module.exports = exports['default'];
-},{"global/document":19}],44:[function(require,module,exports){
+},{"global/document":19}],46:[function(require,module,exports){
 /**
  * @file koment.js
  */
@@ -7918,7 +8140,7 @@ if (!_globalWindow2['default'].requestAnimationFrame) {
 
 exports['default'] = koment;
 module.exports = exports['default'];
-},{"../../package.json":69,"./player":47,"./setup":48,"./utils/browser.js":54,"./utils/dom.js":56,"./utils/events.js":57,"./utils/log.js":61,"./utils/stylesheet.js":63,"./utils/url.js":66,"global/document":19,"global/window":20,"lodash-compat/object/merge":106}],45:[function(require,module,exports){
+},{"../../package.json":71,"./player":49,"./setup":50,"./utils/browser.js":56,"./utils/dom.js":58,"./utils/events.js":59,"./utils/log.js":63,"./utils/stylesheet.js":65,"./utils/url.js":68,"global/document":19,"global/window":20,"lodash-compat/object/merge":108}],47:[function(require,module,exports){
 /**
  * @file media-error.js
  */
@@ -8026,7 +8248,7 @@ for (var errNum = 0; errNum < MediaError.errorTypes.length; errNum++) {
 
 exports['default'] = MediaError;
 module.exports = exports['default'];
-},{"object.assign":111}],46:[function(require,module,exports){
+},{"object.assign":113}],48:[function(require,module,exports){
 /**
  * @file modal-dialog.js
  */
@@ -8458,7 +8680,7 @@ ModalDialog.prototype.options_ = {
 _component2['default'].registerComponent('ModalDialog', ModalDialog);
 exports['default'] = ModalDialog;
 module.exports = exports['default'];
-},{"./component":24,"./utils/dom":56,"./utils/fn":58}],47:[function(require,module,exports){
+},{"./component":24,"./utils/dom":58,"./utils/fn":60}],49:[function(require,module,exports){
 /**
  * @file player.js
  */
@@ -8564,6 +8786,8 @@ require('./control-bar/control-bar');
 require('./control-bar/progress-control/progress-control');
 
 require('./component/koment-display');
+
+require('./component/koment-list');
 
 require('./tech/videojs');
 
@@ -9996,6 +10220,23 @@ var Player = (function (_Component) {
       return this;
     }
   }, {
+    key: 'toggleList',
+    value: function toggleList(toggle) {
+      if (toggle !== undefined) {
+        this.toggleList_ = !!toggle;
+      } else {
+        this.toggleList_ = !this.toggleList_;
+      }
+
+      if (this.toggleList_) {
+        this.addClass('koment-toggle-list');
+      } else {
+        this.removeClass('koment-toggle-list');
+      }
+
+      return this;
+    }
+  }, {
     key: 'sendKoment',
     value: function sendKoment(kmt) {
       if (!kmt || !kmt.text) {
@@ -11014,7 +11255,7 @@ var navigator = _globalWindow2['default'].navigator;
 Player.prototype.options_ = {
   // default inactivity timeout
   inactivityTimeout: 2000,
-  children: ['komentDisplay', 'progressControl', 'controlBar'],
+  children: ['komentDisplay', 'komentList', 'progressControl', 'controlBar'],
 
   user: {},
 
@@ -11029,6 +11270,7 @@ Player.prototype.options_ = {
 
 // The following no-op expressions are here only for purposes of documentation.
 
+Player.prototype.komentsList_ = []; // eslint-disable-line
 /**
  * Fired when the user agent begins looking for media data
  *
@@ -11115,7 +11357,7 @@ _component2['default'].registerComponent('Player', Player);
 exports['default'] = Player;
 module.exports = exports['default'];
 // If empty string, make it a parsable json object.
-},{"./component":24,"./component/koment-display":25,"./control-bar/control-bar":27,"./control-bar/progress-control/progress-control":38,"./fullscreen-api":43,"./media-error":45,"./modal-dialog":46,"./tech/html5":50,"./tech/tech":51,"./tech/videojs":52,"./tech/youtube":53,"./utils/browser":54,"./utils/dom":56,"./utils/events":57,"./utils/fn":58,"./utils/guid":60,"./utils/log":61,"./utils/merge-options":62,"./utils/stylesheet":63,"./utils/time-ranges.js":64,"global/document":19,"global/window":20,"lodash":67,"object.assign":111,"safe-json-parse/tuple":121}],48:[function(require,module,exports){
+},{"./component":24,"./component/koment-display":25,"./component/koment-list":27,"./control-bar/control-bar":28,"./control-bar/progress-control/progress-control":40,"./fullscreen-api":45,"./media-error":47,"./modal-dialog":48,"./tech/html5":52,"./tech/tech":53,"./tech/videojs":54,"./tech/youtube":55,"./utils/browser":56,"./utils/dom":58,"./utils/events":59,"./utils/fn":60,"./utils/guid":62,"./utils/log":63,"./utils/merge-options":64,"./utils/stylesheet":65,"./utils/time-ranges.js":66,"global/document":19,"global/window":20,"lodash":69,"object.assign":113,"safe-json-parse/tuple":123}],50:[function(require,module,exports){
 /**
  * @file setup.js
  *
@@ -11236,7 +11478,7 @@ var hasLoaded = function hasLoaded() {
 exports.autoSetup = autoSetup;
 exports.autoSetupTimeout = autoSetupTimeout;
 exports.hasLoaded = hasLoaded;
-},{"./utils/events.js":57,"global/document":19,"global/window":20,"lodash":67}],49:[function(require,module,exports){
+},{"./utils/events.js":59,"global/document":19,"global/window":20,"lodash":69}],51:[function(require,module,exports){
 /**
  * @file slider.js
  */
@@ -11539,7 +11781,7 @@ var Slider = (function (_Component) {
 _componentJs2['default'].registerComponent('Slider', Slider);
 exports['default'] = Slider;
 module.exports = exports['default'];
-},{"../component.js":24,"../utils/dom.js":56,"object.assign":111}],50:[function(require,module,exports){
+},{"../component.js":24,"../utils/dom.js":58,"object.assign":113}],52:[function(require,module,exports){
 /**
  * @file html5.js
  * HTML5 Media Controller - Wrapper for HTML5 Media API
@@ -12489,7 +12731,7 @@ _component2['default'].registerComponent('Html5', Html5);
 _techJs2['default'].registerTech('Html5', Html5);
 exports['default'] = Html5;
 module.exports = exports['default'];
-},{"../component":24,"../utils/browser.js":54,"../utils/dom.js":56,"../utils/fn.js":58,"../utils/log.js":61,"../utils/merge-options.js":62,"../utils/to-title-case.js":65,"../utils/url.js":66,"./tech.js":51,"global/document":19,"global/window":20,"object.assign":111,"tsml":124}],51:[function(require,module,exports){
+},{"../component":24,"../utils/browser.js":56,"../utils/dom.js":58,"../utils/fn.js":60,"../utils/log.js":63,"../utils/merge-options.js":64,"../utils/to-title-case.js":67,"../utils/url.js":68,"./tech.js":53,"global/document":19,"global/window":20,"object.assign":113,"tsml":126}],53:[function(require,module,exports){
 /**
  * @file tech.js
  * Media Technology Controller - Base class for media playback
@@ -12893,7 +13135,7 @@ _component2['default'].registerComponent('Tech', Tech);
 Tech.registerTech('Tech', Tech);
 exports['default'] = Tech;
 module.exports = exports['default'];
-},{"../component":24,"../media-error.js":45,"../utils/buffer.js":55,"../utils/fn.js":58,"../utils/log.js":61,"../utils/time-ranges.js":64,"global/window":20}],52:[function(require,module,exports){
+},{"../component":24,"../media-error.js":47,"../utils/buffer.js":57,"../utils/fn.js":60,"../utils/log.js":63,"../utils/time-ranges.js":66,"global/window":20}],54:[function(require,module,exports){
 /**
  * @file Videojs.js
  * Videojs Media Controller - Wrapper for Videojs Media API
@@ -12963,7 +13205,7 @@ _component2['default'].registerComponent('Videojs', Videojs);
 _techJs2['default'].registerTech('Videojs', Videojs);
 exports['default'] = Videojs;
 module.exports = exports['default'];
-},{"../component":24,"../utils/fn.js":58,"./html5.js":50,"./tech.js":51,"global/document":19}],53:[function(require,module,exports){
+},{"../component":24,"../utils/fn.js":60,"./html5.js":52,"./tech.js":53,"global/document":19}],55:[function(require,module,exports){
 /**
  * @file Youtube.js
  * Youtube Media Controller - Wrapper for Youtube Media API
@@ -13405,7 +13647,7 @@ _component2['default'].registerComponent('Youtube', Youtube);
 _techJs2['default'].registerTech('Youtube', Youtube);
 exports['default'] = Youtube;
 module.exports = exports['default'];
-},{"../component":24,"../utils/fn.js":58,"./tech.js":51,"global/document":19}],54:[function(require,module,exports){
+},{"../component":24,"../utils/fn.js":60,"./tech.js":53,"global/document":19}],56:[function(require,module,exports){
 /**
  * @file browser.js
  */
@@ -13505,7 +13747,7 @@ var TOUCH_ENABLED = !!('ontouchstart' in _globalWindow2['default'] || _globalWin
 exports.TOUCH_ENABLED = TOUCH_ENABLED;
 var BACKGROUND_SIZE_SUPPORTED = ('backgroundSize' in _globalDocument2['default'].createElement('video').style);
 exports.BACKGROUND_SIZE_SUPPORTED = BACKGROUND_SIZE_SUPPORTED;
-},{"global/document":19,"global/window":20}],55:[function(require,module,exports){
+},{"global/document":19,"global/window":20}],57:[function(require,module,exports){
 /**
  * @file buffer.js
  */
@@ -13555,7 +13797,7 @@ function bufferedPercent(buffered, duration) {
 
   return bufferedDuration / duration;
 }
-},{"./time-ranges.js":64}],56:[function(require,module,exports){
+},{"./time-ranges.js":66}],58:[function(require,module,exports){
 /**
  * @file dom.js
  */
@@ -14285,7 +14527,7 @@ exports.$ = $;
  */
 var $$ = createQuerier('querySelectorAll');
 exports.$$ = $$;
-},{"./guid.js":60,"./log.js":61,"global/document":19,"global/window":20,"tsml":124}],57:[function(require,module,exports){
+},{"./guid.js":62,"./log.js":63,"global/document":19,"global/window":20,"tsml":126}],59:[function(require,module,exports){
 /**
  * @file events.js
  *
@@ -14725,7 +14967,7 @@ function one(elem, type, fn) {
   func.guid = fn.guid = fn.guid || Guid.newGUID();
   on(elem, type, func);
 }
-},{"./dom.js":56,"./guid.js":60,"./log.js":61,"global/document":19,"global/window":20}],58:[function(require,module,exports){
+},{"./dom.js":58,"./guid.js":62,"./log.js":63,"global/document":19,"global/window":20}],60:[function(require,module,exports){
 /**
  * @file fn.js
  */
@@ -14770,7 +15012,7 @@ var bind = function bind(context, fn, uid) {
   return ret;
 };
 exports.bind = bind;
-},{"./guid.js":60}],59:[function(require,module,exports){
+},{"./guid.js":62}],61:[function(require,module,exports){
 /**
  * @file format-time.js
  *
@@ -14822,7 +15064,7 @@ function formatTime(seconds) {
 
 exports['default'] = formatTime;
 module.exports = exports['default'];
-},{}],60:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 /**
  * @file guid.js
  *
@@ -14848,7 +15090,7 @@ var _guid = 1;
 function newGUID() {
   return _guid++;
 }
-},{}],61:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 /**
  * @file log.js
  */
@@ -14977,7 +15219,7 @@ log.warn = function () {
 };
 
 exports['default'] = log;
-},{"./browser":54,"global/window":20}],62:[function(require,module,exports){
+},{"./browser":56,"global/window":20}],64:[function(require,module,exports){
 /**
  * @file merge-options.js
  */
@@ -15045,7 +15287,7 @@ function mergeOptions() {
 }
 
 module.exports = exports['default'];
-},{"lodash":67}],63:[function(require,module,exports){
+},{"lodash":69}],65:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -15075,7 +15317,7 @@ var setTextContent = function setTextContent(el, content) {
   }
 };
 exports.setTextContent = setTextContent;
-},{"global/document":19}],64:[function(require,module,exports){
+},{"global/document":19}],66:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -15147,7 +15389,7 @@ function createTimeRanges(start, end) {
 }
 
 exports.createTimeRange = createTimeRanges;
-},{"./log.js":61}],65:[function(require,module,exports){
+},{"./log.js":63}],67:[function(require,module,exports){
 /**
  * @file to-title-case.js
  *
@@ -15169,7 +15411,7 @@ function toTitleCase(string) {
 
 exports["default"] = toTitleCase;
 module.exports = exports["default"];
-},{}],66:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 /**
  * @file url.js
  */
@@ -15311,7 +15553,7 @@ var isCrossOrigin = function isCrossOrigin(url) {
   return crossOrigin;
 };
 exports.isCrossOrigin = isCrossOrigin;
-},{"global/document":19,"global/window":20}],67:[function(require,module,exports){
+},{"global/document":19,"global/window":20}],69:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -32048,7 +32290,7 @@ exports.isCrossOrigin = isCrossOrigin;
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],68:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var isFunction = require("is-function")
@@ -32285,32 +32527,32 @@ function getXml(xhr) {
 
 function noop() {}
 
-},{"global/window":20,"is-function":21,"parse-headers":120,"xtend":140}],69:[function(require,module,exports){
+},{"global/window":20,"is-function":21,"parse-headers":122,"xtend":142}],71:[function(require,module,exports){
 module.exports={
   "_args": [
     [
       {
-        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
+        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
         "scope": null,
         "escapedName": null,
         "name": null,
-        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
-        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
+        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
+        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
         "type": "hosted",
         "hosted": {
           "type": "github",
-          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.1",
-          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.1",
-          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
-          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
-          "shortcut": "github:Afrostream/koment-js#1.0.1",
-          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.1/package.json"
+          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.2",
+          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.2",
+          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
+          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
+          "shortcut": "github:Afrostream/koment-js#1.0.2",
+          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.2/package.json"
         }
       },
       "/Users/benjipott/Documents/projects/afrostream/afrostream-player"
     ]
   ],
-  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
+  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
   "_id": "koment-js@0.0.0",
   "_inCache": true,
   "_installable": true,
@@ -32407,31 +32649,31 @@ module.exports={
     "xtend": "4.0.1"
   },
   "_requested": {
-    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
+    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
     "scope": null,
     "escapedName": null,
     "name": null,
-    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
-    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
+    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
+    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
     "type": "hosted",
     "hosted": {
       "type": "github",
-      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.1",
-      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.1",
-      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
-      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
-      "shortcut": "github:Afrostream/koment-js#1.0.1",
-      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.1/package.json"
+      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.2",
+      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.2",
+      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
+      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
+      "shortcut": "github:Afrostream/koment-js#1.0.2",
+      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.2/package.json"
     }
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#9809d0d7e63f31b9d84f3251c890df522831117f",
-  "_shasum": "88607d6d0a045b3b8a2004e0052814023d01b363",
+  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#327a49494cd032d31bd29a97b0f9c0abf75cd4c8",
+  "_shasum": "e9537b56825f5776480f3b9a4d36e367bf60c2ab",
   "_shrinkwrap": null,
-  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.1",
+  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.2",
   "_where": "/Users/benjipott/Documents/projects/afrostream/afrostream-player",
   "author": {
     "name": "Benjipott"
@@ -32505,7 +32747,7 @@ module.exports={
     "src/",
     "test/"
   ],
-  "gitHead": "9809d0d7e63f31b9d84f3251c890df522831117f",
+  "gitHead": "327a49494cd032d31bd29a97b0f9c0abf75cd4c8",
   "homepage": "https://github.com/komentio/koment-js#readme",
   "keywords": [
     "koment.io",
@@ -32571,7 +32813,7 @@ module.exports={
   }
 }
 
-},{}],70:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 var getNative = require('../internal/getNative');
 
 /* Native method references for those with the same name as other `lodash` methods. */
@@ -32597,7 +32839,7 @@ var now = nativeNow || function() {
 
 module.exports = now;
 
-},{"../internal/getNative":86}],71:[function(require,module,exports){
+},{"../internal/getNative":88}],73:[function(require,module,exports){
 var isObject = require('../lang/isObject'),
     now = require('../date/now');
 
@@ -32780,7 +33022,7 @@ function debounce(func, wait, options) {
 
 module.exports = debounce;
 
-},{"../date/now":70,"../lang/isObject":99}],72:[function(require,module,exports){
+},{"../date/now":72,"../lang/isObject":101}],74:[function(require,module,exports){
 /** Used as the `TypeError` message for "Functions" methods. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
@@ -32840,7 +33082,7 @@ function restParam(func, start) {
 
 module.exports = restParam;
 
-},{}],73:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 var debounce = require('./debounce'),
     isObject = require('../lang/isObject');
 
@@ -32904,7 +33146,7 @@ function throttle(func, wait, options) {
 
 module.exports = throttle;
 
-},{"../lang/isObject":99,"./debounce":71}],74:[function(require,module,exports){
+},{"../lang/isObject":101,"./debounce":73}],76:[function(require,module,exports){
 /**
  * Copies the values of `source` to `array`.
  *
@@ -32926,7 +33168,7 @@ function arrayCopy(source, array) {
 
 module.exports = arrayCopy;
 
-},{}],75:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 /**
  * A specialized version of `_.forEach` for arrays without support for callback
  * shorthands and `this` binding.
@@ -32950,7 +33192,7 @@ function arrayEach(array, iteratee) {
 
 module.exports = arrayEach;
 
-},{}],76:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 /**
  * Copies properties of `source` to `object`.
  *
@@ -32975,7 +33217,7 @@ function baseCopy(source, props, object) {
 
 module.exports = baseCopy;
 
-},{}],77:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 var createBaseFor = require('./createBaseFor');
 
 /**
@@ -32994,7 +33236,7 @@ var baseFor = createBaseFor();
 
 module.exports = baseFor;
 
-},{"./createBaseFor":84}],78:[function(require,module,exports){
+},{"./createBaseFor":86}],80:[function(require,module,exports){
 var baseFor = require('./baseFor'),
     keysIn = require('../object/keysIn');
 
@@ -33013,7 +33255,7 @@ function baseForIn(object, iteratee) {
 
 module.exports = baseForIn;
 
-},{"../object/keysIn":105,"./baseFor":77}],79:[function(require,module,exports){
+},{"../object/keysIn":107,"./baseFor":79}],81:[function(require,module,exports){
 var arrayEach = require('./arrayEach'),
     baseMergeDeep = require('./baseMergeDeep'),
     isArray = require('../lang/isArray'),
@@ -33071,7 +33313,7 @@ function baseMerge(object, source, customizer, stackA, stackB) {
 
 module.exports = baseMerge;
 
-},{"../lang/isArray":96,"../lang/isObject":99,"../lang/isTypedArray":102,"../object/keys":104,"./arrayEach":75,"./baseMergeDeep":80,"./isArrayLike":87,"./isObjectLike":92}],80:[function(require,module,exports){
+},{"../lang/isArray":98,"../lang/isObject":101,"../lang/isTypedArray":104,"../object/keys":106,"./arrayEach":77,"./baseMergeDeep":82,"./isArrayLike":89,"./isObjectLike":94}],82:[function(require,module,exports){
 var arrayCopy = require('./arrayCopy'),
     isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
@@ -33140,7 +33382,7 @@ function baseMergeDeep(object, source, key, mergeFunc, customizer, stackA, stack
 
 module.exports = baseMergeDeep;
 
-},{"../lang/isArguments":95,"../lang/isArray":96,"../lang/isPlainObject":100,"../lang/isTypedArray":102,"../lang/toPlainObject":103,"./arrayCopy":74,"./isArrayLike":87}],81:[function(require,module,exports){
+},{"../lang/isArguments":97,"../lang/isArray":98,"../lang/isPlainObject":102,"../lang/isTypedArray":104,"../lang/toPlainObject":105,"./arrayCopy":76,"./isArrayLike":89}],83:[function(require,module,exports){
 var toObject = require('./toObject');
 
 /**
@@ -33158,7 +33400,7 @@ function baseProperty(key) {
 
 module.exports = baseProperty;
 
-},{"./toObject":94}],82:[function(require,module,exports){
+},{"./toObject":96}],84:[function(require,module,exports){
 var identity = require('../utility/identity');
 
 /**
@@ -33199,7 +33441,7 @@ function bindCallback(func, thisArg, argCount) {
 
 module.exports = bindCallback;
 
-},{"../utility/identity":108}],83:[function(require,module,exports){
+},{"../utility/identity":110}],85:[function(require,module,exports){
 var bindCallback = require('./bindCallback'),
     isIterateeCall = require('./isIterateeCall'),
     restParam = require('../function/restParam');
@@ -33242,7 +33484,7 @@ function createAssigner(assigner) {
 
 module.exports = createAssigner;
 
-},{"../function/restParam":72,"./bindCallback":82,"./isIterateeCall":90}],84:[function(require,module,exports){
+},{"../function/restParam":74,"./bindCallback":84,"./isIterateeCall":92}],86:[function(require,module,exports){
 var toObject = require('./toObject');
 
 /**
@@ -33271,7 +33513,7 @@ function createBaseFor(fromRight) {
 
 module.exports = createBaseFor;
 
-},{"./toObject":94}],85:[function(require,module,exports){
+},{"./toObject":96}],87:[function(require,module,exports){
 var baseProperty = require('./baseProperty');
 
 /**
@@ -33288,7 +33530,7 @@ var getLength = baseProperty('length');
 
 module.exports = getLength;
 
-},{"./baseProperty":81}],86:[function(require,module,exports){
+},{"./baseProperty":83}],88:[function(require,module,exports){
 var isNative = require('../lang/isNative');
 
 /**
@@ -33306,7 +33548,7 @@ function getNative(object, key) {
 
 module.exports = getNative;
 
-},{"../lang/isNative":98}],87:[function(require,module,exports){
+},{"../lang/isNative":100}],89:[function(require,module,exports){
 var getLength = require('./getLength'),
     isLength = require('./isLength');
 
@@ -33323,7 +33565,7 @@ function isArrayLike(value) {
 
 module.exports = isArrayLike;
 
-},{"./getLength":85,"./isLength":91}],88:[function(require,module,exports){
+},{"./getLength":87,"./isLength":93}],90:[function(require,module,exports){
 /**
  * Checks if `value` is a host object in IE < 9.
  *
@@ -33346,7 +33588,7 @@ var isHostObject = (function() {
 
 module.exports = isHostObject;
 
-},{}],89:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 /** Used to detect unsigned integer values. */
 var reIsUint = /^\d+$/;
 
@@ -33372,7 +33614,7 @@ function isIndex(value, length) {
 
 module.exports = isIndex;
 
-},{}],90:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 var isArrayLike = require('./isArrayLike'),
     isIndex = require('./isIndex'),
     isObject = require('../lang/isObject');
@@ -33402,7 +33644,7 @@ function isIterateeCall(value, index, object) {
 
 module.exports = isIterateeCall;
 
-},{"../lang/isObject":99,"./isArrayLike":87,"./isIndex":89}],91:[function(require,module,exports){
+},{"../lang/isObject":101,"./isArrayLike":89,"./isIndex":91}],93:[function(require,module,exports){
 /**
  * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
@@ -33424,7 +33666,7 @@ function isLength(value) {
 
 module.exports = isLength;
 
-},{}],92:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -33438,7 +33680,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],93:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 var isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
     isIndex = require('./isIndex'),
@@ -33482,7 +33724,7 @@ function shimKeys(object) {
 
 module.exports = shimKeys;
 
-},{"../lang/isArguments":95,"../lang/isArray":96,"../lang/isString":101,"../object/keysIn":105,"./isIndex":89,"./isLength":91}],94:[function(require,module,exports){
+},{"../lang/isArguments":97,"../lang/isArray":98,"../lang/isString":103,"../object/keysIn":107,"./isIndex":91,"./isLength":93}],96:[function(require,module,exports){
 var isObject = require('../lang/isObject'),
     isString = require('../lang/isString'),
     support = require('../support');
@@ -33510,7 +33752,7 @@ function toObject(value) {
 
 module.exports = toObject;
 
-},{"../lang/isObject":99,"../lang/isString":101,"../support":107}],95:[function(require,module,exports){
+},{"../lang/isObject":101,"../lang/isString":103,"../support":109}],97:[function(require,module,exports){
 var isArrayLike = require('../internal/isArrayLike'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -33546,7 +33788,7 @@ function isArguments(value) {
 
 module.exports = isArguments;
 
-},{"../internal/isArrayLike":87,"../internal/isObjectLike":92}],96:[function(require,module,exports){
+},{"../internal/isArrayLike":89,"../internal/isObjectLike":94}],98:[function(require,module,exports){
 var getNative = require('../internal/getNative'),
     isLength = require('../internal/isLength'),
     isObjectLike = require('../internal/isObjectLike');
@@ -33588,7 +33830,7 @@ var isArray = nativeIsArray || function(value) {
 
 module.exports = isArray;
 
-},{"../internal/getNative":86,"../internal/isLength":91,"../internal/isObjectLike":92}],97:[function(require,module,exports){
+},{"../internal/getNative":88,"../internal/isLength":93,"../internal/isObjectLike":94}],99:[function(require,module,exports){
 var isObject = require('./isObject');
 
 /** `Object#toString` result references. */
@@ -33628,7 +33870,7 @@ function isFunction(value) {
 
 module.exports = isFunction;
 
-},{"./isObject":99}],98:[function(require,module,exports){
+},{"./isObject":101}],100:[function(require,module,exports){
 var isFunction = require('./isFunction'),
     isHostObject = require('../internal/isHostObject'),
     isObjectLike = require('../internal/isObjectLike');
@@ -33679,7 +33921,7 @@ function isNative(value) {
 
 module.exports = isNative;
 
-},{"../internal/isHostObject":88,"../internal/isObjectLike":92,"./isFunction":97}],99:[function(require,module,exports){
+},{"../internal/isHostObject":90,"../internal/isObjectLike":94,"./isFunction":99}],101:[function(require,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -33709,7 +33951,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],100:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 var baseForIn = require('../internal/baseForIn'),
     isArguments = require('./isArguments'),
     isHostObject = require('../internal/isHostObject'),
@@ -33791,7 +34033,7 @@ function isPlainObject(value) {
 
 module.exports = isPlainObject;
 
-},{"../internal/baseForIn":78,"../internal/isHostObject":88,"../internal/isObjectLike":92,"../support":107,"./isArguments":95}],101:[function(require,module,exports){
+},{"../internal/baseForIn":80,"../internal/isHostObject":90,"../internal/isObjectLike":94,"../support":109,"./isArguments":97}],103:[function(require,module,exports){
 var isObjectLike = require('../internal/isObjectLike');
 
 /** `Object#toString` result references. */
@@ -33828,7 +34070,7 @@ function isString(value) {
 
 module.exports = isString;
 
-},{"../internal/isObjectLike":92}],102:[function(require,module,exports){
+},{"../internal/isObjectLike":94}],104:[function(require,module,exports){
 var isLength = require('../internal/isLength'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -33904,7 +34146,7 @@ function isTypedArray(value) {
 
 module.exports = isTypedArray;
 
-},{"../internal/isLength":91,"../internal/isObjectLike":92}],103:[function(require,module,exports){
+},{"../internal/isLength":93,"../internal/isObjectLike":94}],105:[function(require,module,exports){
 var baseCopy = require('../internal/baseCopy'),
     keysIn = require('../object/keysIn');
 
@@ -33937,7 +34179,7 @@ function toPlainObject(value) {
 
 module.exports = toPlainObject;
 
-},{"../internal/baseCopy":76,"../object/keysIn":105}],104:[function(require,module,exports){
+},{"../internal/baseCopy":78,"../object/keysIn":107}],106:[function(require,module,exports){
 var getNative = require('../internal/getNative'),
     isArrayLike = require('../internal/isArrayLike'),
     isObject = require('../lang/isObject'),
@@ -33985,7 +34227,7 @@ var keys = !nativeKeys ? shimKeys : function(object) {
 
 module.exports = keys;
 
-},{"../internal/getNative":86,"../internal/isArrayLike":87,"../internal/shimKeys":93,"../lang/isObject":99,"../support":107}],105:[function(require,module,exports){
+},{"../internal/getNative":88,"../internal/isArrayLike":89,"../internal/shimKeys":95,"../lang/isObject":101,"../support":109}],107:[function(require,module,exports){
 var arrayEach = require('../internal/arrayEach'),
     isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
@@ -34123,7 +34365,7 @@ function keysIn(object) {
 
 module.exports = keysIn;
 
-},{"../internal/arrayEach":75,"../internal/isIndex":89,"../internal/isLength":91,"../lang/isArguments":95,"../lang/isArray":96,"../lang/isFunction":97,"../lang/isObject":99,"../lang/isString":101,"../support":107}],106:[function(require,module,exports){
+},{"../internal/arrayEach":77,"../internal/isIndex":91,"../internal/isLength":93,"../lang/isArguments":97,"../lang/isArray":98,"../lang/isFunction":99,"../lang/isObject":101,"../lang/isString":103,"../support":109}],108:[function(require,module,exports){
 var baseMerge = require('../internal/baseMerge'),
     createAssigner = require('../internal/createAssigner');
 
@@ -34179,7 +34421,7 @@ var merge = createAssigner(baseMerge);
 
 module.exports = merge;
 
-},{"../internal/baseMerge":79,"../internal/createAssigner":83}],107:[function(require,module,exports){
+},{"../internal/baseMerge":81,"../internal/createAssigner":85}],109:[function(require,module,exports){
 /** Used for native method references. */
 var arrayProto = Array.prototype,
     errorProto = Error.prototype,
@@ -34277,7 +34519,7 @@ var support = {};
 
 module.exports = support;
 
-},{}],108:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 /**
  * This method returns the first argument provided to it.
  *
@@ -34299,7 +34541,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],109:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 'use strict';
 
 var keys = require('object-keys');
@@ -34338,7 +34580,7 @@ module.exports = function hasSymbols() {
 	return true;
 };
 
-},{"object-keys":116}],110:[function(require,module,exports){
+},{"object-keys":118}],112:[function(require,module,exports){
 'use strict';
 
 // modified from https://github.com/es-shims/es6-shim
@@ -34379,7 +34621,7 @@ module.exports = function assign(target, source1) {
 	return objTarget;
 };
 
-},{"./hasSymbols":109,"function-bind":115,"object-keys":116}],111:[function(require,module,exports){
+},{"./hasSymbols":111,"function-bind":117,"object-keys":118}],113:[function(require,module,exports){
 'use strict';
 
 var defineProperties = require('define-properties');
@@ -34396,7 +34638,7 @@ defineProperties(implementation, {
 
 module.exports = implementation;
 
-},{"./implementation":110,"./polyfill":118,"./shim":119,"define-properties":112}],112:[function(require,module,exports){
+},{"./implementation":112,"./polyfill":120,"./shim":121,"define-properties":114}],114:[function(require,module,exports){
 'use strict';
 
 var keys = require('object-keys');
@@ -34454,7 +34696,7 @@ defineProperties.supportsDescriptors = !!supportsDescriptors;
 
 module.exports = defineProperties;
 
-},{"foreach":113,"object-keys":116}],113:[function(require,module,exports){
+},{"foreach":115,"object-keys":118}],115:[function(require,module,exports){
 
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
@@ -34478,7 +34720,7 @@ module.exports = function forEach (obj, fn, ctx) {
 };
 
 
-},{}],114:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
 var slice = Array.prototype.slice;
 var toStr = Object.prototype.toString;
@@ -34528,12 +34770,12 @@ module.exports = function bind(that) {
     return bound;
 };
 
-},{}],115:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 var implementation = require('./implementation');
 
 module.exports = Function.prototype.bind || implementation;
 
-},{"./implementation":114}],116:[function(require,module,exports){
+},{"./implementation":116}],118:[function(require,module,exports){
 'use strict';
 
 // modified from https://github.com/es-shims/es5-shim
@@ -34663,7 +34905,7 @@ keysShim.shim = function shimObjectKeys() {
 
 module.exports = keysShim;
 
-},{"./isArguments":117}],117:[function(require,module,exports){
+},{"./isArguments":119}],119:[function(require,module,exports){
 'use strict';
 
 var toStr = Object.prototype.toString;
@@ -34682,7 +34924,7 @@ module.exports = function isArguments(value) {
 	return isArgs;
 };
 
-},{}],118:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 'use strict';
 
 var implementation = require('./implementation');
@@ -34734,7 +34976,7 @@ module.exports = function getPolyfill() {
 	return Object.assign;
 };
 
-},{"./implementation":110}],119:[function(require,module,exports){
+},{"./implementation":112}],121:[function(require,module,exports){
 'use strict';
 
 var define = require('define-properties');
@@ -34750,7 +34992,7 @@ module.exports = function shimAssign() {
 	return polyfill;
 };
 
-},{"./polyfill":118,"define-properties":112}],120:[function(require,module,exports){
+},{"./polyfill":120,"define-properties":114}],122:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -34782,7 +35024,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":18,"trim":123}],121:[function(require,module,exports){
+},{"for-each":18,"trim":125}],123:[function(require,module,exports){
 module.exports = SafeParseTuple
 
 function SafeParseTuple(obj, reviver) {
@@ -34798,7 +35040,7 @@ function SafeParseTuple(obj, reviver) {
     return [error, json]
 }
 
-},{}],122:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 (function (global){
 /**
  * streamroot-dashjs-p2p-wrapper
@@ -34822,7 +35064,7 @@ i:"O"+ ++s,w:{}}})},f=function(e,t){if(!i(e))return"symbol"==typeof e?e:("string
 r=w(t,n)):(i=M(arguments,!1,!1,1),r=function(e,t,n){return t in n},o=Object(o));for(var s=0,u=i.length;s<u;s++){var l=i[s],c=o[l];r(c,l,o)&&(a[l]=c)}return a},C.omit=function(e,t,n){if(C.isFunction(t))t=C.negate(t);else{var r=C.map(M(arguments,!1,!1,1),String);t=function(e,t){return!C.contains(r,t)}}return C.pick(e,t,n)},C.defaults=E(C.allKeys,!0),C.create=function(e,t){var n=T(e);return t&&C.extendOwn(n,t),n},C.clone=function(e){return C.isObject(e)?C.isArray(e)?e.slice():C.extend({},e):e},C.tap=function(e,t){return t(e),e},C.isMatch=function(e,t){var n=C.keys(t),r=n.length;if(null==e)return!r;for(var i=Object(e),a=0;a<r;a++){var o=n[a];if(t[o]!==i[o]||!(o in i))return!1}return!0};var x=function(e,t,n,r){if(e===t)return 0!==e||1/e===1/t;if(null==e||null==t)return e===t;e instanceof C&&(e=e._wrapped),t instanceof C&&(t=t._wrapped);var i=p.call(e);if(i!==p.call(t))return!1;switch(i){case"[object RegExp]":case"[object String]":return""+e==""+t;case"[object Number]":return+e!==+e?+t!==+t:0===+e?1/+e===1/t:+e===+t;case"[object Date]":case"[object Boolean]":return+e===+t}var a="[object Array]"===i;if(!a){if("object"!=typeof e||"object"!=typeof t)return!1;var o=e.constructor,s=t.constructor;if(o!==s&&!(C.isFunction(o)&&o instanceof o&&C.isFunction(s)&&s instanceof s)&&"constructor"in e&&"constructor"in t)return!1}n=n||[],r=r||[];for(var u=n.length;u--;)if(n[u]===e)return r[u]===t;if(n.push(e),r.push(t),a){if(u=e.length,u!==t.length)return!1;for(;u--;)if(!x(e[u],t[u],n,r))return!1}else{var l,c=C.keys(e);if(u=c.length,C.keys(t).length!==u)return!1;for(;u--;)if(l=c[u],!C.has(t,l)||!x(e[l],t[l],n,r))return!1}return n.pop(),r.pop(),!0};C.isEqual=function(e,t){return x(e,t)},C.isEmpty=function(e){return null==e||(I(e)&&(C.isArray(e)||C.isString(e)||C.isArguments(e))?0===e.length:0===C.keys(e).length)},C.isElement=function(e){return!(!e||1!==e.nodeType)},C.isArray=_||function(e){return"[object Array]"===p.call(e)},C.isObject=function(e){var t=typeof e;return"function"===t||"object"===t&&!!e},C.each(["Arguments","Function","String","Number","Date","RegExp","Error"],function(e){C["is"+e]=function(t){return p.call(t)==="[object "+e+"]"}}),C.isArguments(arguments)||(C.isArguments=function(e){return C.has(e,"callee")}),"function"!=typeof/./&&"object"!=typeof Int8Array&&(C.isFunction=function(e){return"function"==typeof e||!1}),C.isFinite=function(e){return isFinite(e)&&!isNaN(parseFloat(e))},C.isNaN=function(e){return C.isNumber(e)&&e!==+e},C.isBoolean=function(e){return e===!0||e===!1||"[object Boolean]"===p.call(e)},C.isNull=function(e){return null===e},C.isUndefined=function(e){return void 0===e},C.has=function(e,t){return null!=e&&m.call(e,t)},C.noConflict=function(){return s._=u,this},C.identity=function(e){return e},C.constant=function(e){return function(){return e}},C.noop=function(){},C.property=k,C.propertyOf=function(e){return null==e?function(){}:function(t){return e[t]}},C.matcher=C.matches=function(e){return e=C.extendOwn({},e),function(t){return C.isMatch(t,e)}},C.times=function(e,t,n){var r=Array(Math.max(0,e));t=w(t,n,1);for(var i=0;i<e;i++)r[i]=t(i);return r},C.random=function(e,t){return null==t&&(t=e,e=0),e+Math.floor(Math.random()*(t-e+1))},C.now=Date.now||function(){return(new Date).getTime()};var N={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&#x60;"},L=C.invert(N),U=function(e){var t=function(t){return e[t]},n="(?:"+C.keys(e).join("|")+")",r=RegExp(n),i=RegExp(n,"g");return function(e){return e=null==e?"":""+e,r.test(e)?e.replace(i,t):e}};C.escape=U(N),C.unescape=U(L),C.result=function(e,t,n){var r=null==e?void 0:e[t];return void 0===r&&(r=n),C.isFunction(r)?r.call(e):r};var $=0;C.uniqueId=function(e){var t=++$+"";return e?e+t:t},C.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var F=/(.)^/,H={"'":"'","\\":"\\","\r":"r","\n":"n","\u2028":"u2028","\u2029":"u2029"},B=/\\|'|\r|\n|\u2028|\u2029/g,q=function(e){return"\\"+H[e]};C.template=function(e,t,n){!t&&n&&(t=n),t=C.defaults({},t,C.templateSettings);var r=RegExp([(t.escape||F).source,(t.interpolate||F).source,(t.evaluate||F).source].join("|")+"|$","g"),i=0,a="__p+='";e.replace(r,function(t,n,r,o,s){return a+=e.slice(i,s).replace(B,q),i=s+t.length,n?a+="'+\n((__t=("+n+"))==null?'':_.escape(__t))+\n'":r?a+="'+\n((__t=("+r+"))==null?'':__t)+\n'":o&&(a+="';\n"+o+"\n__p+='"),t}),a+="';\n",t.variable||(a="with(obj||{}){\n"+a+"}\n"),a="var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n"+a+"return __p;\n";try{var o=new Function(t.variable||"obj","_",a)}catch(e){throw e.source=a,e}var s=function(e){return o.call(this,e,C)},u=t.variable||"obj";return s.source="function("+u+"){\n"+a+"}",s},C.chain=function(e){var t=C(e);return t._chain=!0,t};var G=function(e,t){return e._chain?C(t).chain():t};C.mixin=function(e){C.each(C.functions(e),function(t){var n=C[t]=e[t];C.prototype[t]=function(){var e=[this._wrapped];return d.apply(e,arguments),G(this,n.apply(C,e))}})},C.mixin(C),C.each(["pop","push","reverse","shift","sort","splice","unshift"],function(e){var t=l[e];C.prototype[e]=function(){var n=this._wrapped;return t.apply(n,arguments),"shift"!==e&&"splice"!==e||0!==n.length||delete n[0],G(this,n)}}),C.each(["concat","join","slice"],function(e){var t=l[e];C.prototype[e]=function(){return G(this,t.apply(this._wrapped,arguments))}}),C.prototype.value=function(){return this._wrapped},C.prototype.valueOf=C.prototype.toJSON=C.prototype.value,C.prototype.toString=function(){return""+this._wrapped},"function"==typeof e&&e.amd&&e("underscore",[],function(){return C})}).call(this)},{}],227:[function(e,t,n){"use strict";function r(){this.protocol=null,this.slashes=null,this.auth=null,this.host=null,this.port=null,this.hostname=null,this.hash=null,this.search=null,this.query=null,this.pathname=null,this.path=null,this.href=null}function i(e,t,n){if(e&&l.isObject(e)&&e instanceof r)return e;var i=new r;return i.parse(e,t,n),i}function a(e){return l.isString(e)&&(e=i(e)),e instanceof r?e.format():r.prototype.format.call(e)}function o(e,t){return i(e,!1,!0).resolve(t)}function s(e,t){return e?i(e,!1,!0).resolveObject(t):t}var u=e("punycode"),l=e("./util");n.parse=i,n.resolve=o,n.resolveObject=s,n.format=a,n.Url=r;var c=/^([a-z0-9.+-]+:)/i,f=/:[0-9]*$/,d=/^(\/\/?(?!\/)[^\?\s]*)(\?[^\s]*)?$/,h=["<",">",'"',"`"," ","\r","\n","\t"],p=["{","}","|","\\","^","`"].concat(h),m=["'"].concat(p),_=["%","/","?",";","#"].concat(m),v=["/","?","#"],g=255,b=/^[+a-z0-9A-Z_-]{0,63}$/,y=/^([+a-z0-9A-Z_-]{0,63})(.*)$/,C={javascript:!0,"javascript:":!0},w={javascript:!0,"javascript:":!0},S={http:!0,https:!0,ftp:!0,gopher:!0,file:!0,"http:":!0,"https:":!0,"ftp:":!0,"gopher:":!0,"file:":!0},E=e("querystring");r.prototype.parse=function(e,t,n){if(!l.isString(e))throw new TypeError("Parameter 'url' must be a string, not "+typeof e);var r=e.indexOf("?"),i=r!==-1&&r<e.indexOf("#")?"?":"#",a=e.split(i),o=/\\/g;a[0]=a[0].replace(o,"/"),e=a.join(i);var s=e;if(s=s.trim(),!n&&1===e.split("#").length){var f=d.exec(s);if(f)return this.path=s,this.href=s,this.pathname=f[1],f[2]?(this.search=f[2],t?this.query=E.parse(this.search.substr(1)):this.query=this.search.substr(1)):t&&(this.search="",this.query={}),this}var h=c.exec(s);if(h){h=h[0];var p=h.toLowerCase();this.protocol=p,s=s.substr(h.length)}if(n||h||s.match(/^\/\/[^@\/]+@[^@\/]+/)){var T="//"===s.substr(0,2);!T||h&&w[h]||(s=s.substr(2),this.slashes=!0)}if(!w[h]&&(T||h&&!S[h])){for(var k=-1,D=0;D<v.length;D++){var P=s.indexOf(v[D]);P!==-1&&(k===-1||P<k)&&(k=P)}var I,A;A=k===-1?s.lastIndexOf("@"):s.lastIndexOf("@",k),A!==-1&&(I=s.slice(0,A),s=s.slice(A+1),this.auth=decodeURIComponent(I)),k=-1;for(var D=0;D<_.length;D++){var P=s.indexOf(_[D]);P!==-1&&(k===-1||P<k)&&(k=P)}k===-1&&(k=s.length),this.host=s.slice(0,k),s=s.slice(k),this.parseHost(),this.hostname=this.hostname||"";var M="["===this.hostname[0]&&"]"===this.hostname[this.hostname.length-1];if(!M)for(var R=this.hostname.split(/\./),D=0,j=R.length;D<j;D++){var O=R[D];if(O&&!O.match(b)){for(var x="",N=0,L=O.length;N<L;N++)x+=O.charCodeAt(N)>127?"x":O[N];if(!x.match(b)){var U=R.slice(0,D),$=R.slice(D+1),F=O.match(y);F&&(U.push(F[1]),$.unshift(F[2])),$.length&&(s="/"+$.join(".")+s),this.hostname=U.join(".");break}}}this.hostname.length>g?this.hostname="":this.hostname=this.hostname.toLowerCase(),M||(this.hostname=u.toASCII(this.hostname));var H=this.port?":"+this.port:"",B=this.hostname||"";this.host=B+H,this.href+=this.host,M&&(this.hostname=this.hostname.substr(1,this.hostname.length-2),"/"!==s[0]&&(s="/"+s))}if(!C[p])for(var D=0,j=m.length;D<j;D++){var q=m[D];if(s.indexOf(q)!==-1){var G=encodeURIComponent(q);G===q&&(G=escape(q)),s=s.split(q).join(G)}}var V=s.indexOf("#");V!==-1&&(this.hash=s.substr(V),s=s.slice(0,V));var K=s.indexOf("?");if(K!==-1?(this.search=s.substr(K),this.query=s.substr(K+1),t&&(this.query=E.parse(this.query)),s=s.slice(0,K)):t&&(this.search="",this.query={}),s&&(this.pathname=s),S[p]&&this.hostname&&!this.pathname&&(this.pathname="/"),this.pathname||this.search){var H=this.pathname||"",Y=this.search||"";this.path=H+Y}return this.href=this.format(),this},r.prototype.format=function(){var e=this.auth||"";e&&(e=encodeURIComponent(e),e=e.replace(/%3A/i,":"),e+="@");var t=this.protocol||"",n=this.pathname||"",r=this.hash||"",i=!1,a="";this.host?i=e+this.host:this.hostname&&(i=e+(this.hostname.indexOf(":")===-1?this.hostname:"["+this.hostname+"]"),this.port&&(i+=":"+this.port)),this.query&&l.isObject(this.query)&&Object.keys(this.query).length&&(a=E.stringify(this.query));var o=this.search||a&&"?"+a||"";return t&&":"!==t.substr(-1)&&(t+=":"),this.slashes||(!t||S[t])&&i!==!1?(i="//"+(i||""),n&&"/"!==n.charAt(0)&&(n="/"+n)):i||(i=""),r&&"#"!==r.charAt(0)&&(r="#"+r),o&&"?"!==o.charAt(0)&&(o="?"+o),n=n.replace(/[?#]/g,function(e){return encodeURIComponent(e)}),o=o.replace("#","%23"),t+i+n+o+r},r.prototype.resolve=function(e){return this.resolveObject(i(e,!1,!0)).format()},r.prototype.resolveObject=function(e){if(l.isString(e)){var t=new r;t.parse(e,!1,!0),e=t}for(var n=new r,i=Object.keys(this),a=0;a<i.length;a++){var o=i[a];n[o]=this[o]}if(n.hash=e.hash,""===e.href)return n.href=n.format(),n;if(e.slashes&&!e.protocol){for(var s=Object.keys(e),u=0;u<s.length;u++){var c=s[u];"protocol"!==c&&(n[c]=e[c])}return S[n.protocol]&&n.hostname&&!n.pathname&&(n.path=n.pathname="/"),n.href=n.format(),n}if(e.protocol&&e.protocol!==n.protocol){if(!S[e.protocol]){for(var f=Object.keys(e),d=0;d<f.length;d++){var h=f[d];n[h]=e[h]}return n.href=n.format(),n}if(n.protocol=e.protocol,e.host||w[e.protocol])n.pathname=e.pathname;else{for(var p=(e.pathname||"").split("/");p.length&&!(e.host=p.shift()););e.host||(e.host=""),e.hostname||(e.hostname=""),""!==p[0]&&p.unshift(""),p.length<2&&p.unshift(""),n.pathname=p.join("/")}if(n.search=e.search,n.query=e.query,n.host=e.host||"",n.auth=e.auth,n.hostname=e.hostname||e.host,n.port=e.port,n.pathname||n.search){var m=n.pathname||"",_=n.search||"";n.path=m+_}return n.slashes=n.slashes||e.slashes,n.href=n.format(),n}var v=n.pathname&&"/"===n.pathname.charAt(0),g=e.host||e.pathname&&"/"===e.pathname.charAt(0),b=g||v||n.host&&e.pathname,y=b,C=n.pathname&&n.pathname.split("/")||[],p=e.pathname&&e.pathname.split("/")||[],E=n.protocol&&!S[n.protocol];if(E&&(n.hostname="",n.port=null,n.host&&(""===C[0]?C[0]=n.host:C.unshift(n.host)),n.host="",e.protocol&&(e.hostname=null,e.port=null,e.host&&(""===p[0]?p[0]=e.host:p.unshift(e.host)),e.host=null),b=b&&(""===p[0]||""===C[0])),g)n.host=e.host||""===e.host?e.host:n.host,n.hostname=e.hostname||""===e.hostname?e.hostname:n.hostname,n.search=e.search,n.query=e.query,C=p;else if(p.length)C||(C=[]),C.pop(),C=C.concat(p),n.search=e.search,n.query=e.query;else if(!l.isNullOrUndefined(e.search)){if(E){n.hostname=n.host=C.shift();var T=!!(n.host&&n.host.indexOf("@")>0)&&n.host.split("@");T&&(n.auth=T.shift(),n.host=n.hostname=T.shift())}return n.search=e.search,n.query=e.query,l.isNull(n.pathname)&&l.isNull(n.search)||(n.path=(n.pathname?n.pathname:"")+(n.search?n.search:"")),n.href=n.format(),n}if(!C.length)return n.pathname=null,n.search?n.path="/"+n.search:n.path=null,n.href=n.format(),n;for(var k=C.slice(-1)[0],D=(n.host||e.host||C.length>1)&&("."===k||".."===k)||""===k,P=0,I=C.length;I>=0;I--)k=C[I],"."===k?C.splice(I,1):".."===k?(C.splice(I,1),P++):P&&(C.splice(I,1),P--);if(!b&&!y)for(;P--;P)C.unshift("..");!b||""===C[0]||C[0]&&"/"===C[0].charAt(0)||C.unshift(""),D&&"/"!==C.join("/").substr(-1)&&C.push("");var A=""===C[0]||C[0]&&"/"===C[0].charAt(0);if(E){n.hostname=n.host=A?"":C.length?C.shift():"";var T=!!(n.host&&n.host.indexOf("@")>0)&&n.host.split("@");T&&(n.auth=T.shift(),n.host=n.hostname=T.shift())}return b=b||n.host&&C.length,b&&!A&&C.unshift(""),C.length?n.pathname=C.join("/"):(n.pathname=null,n.path=null),l.isNull(n.pathname)&&l.isNull(n.search)||(n.path=(n.pathname?n.pathname:"")+(n.search?n.search:"")),n.auth=e.auth||n.auth,n.slashes=n.slashes||e.slashes,n.href=n.format(),n},r.prototype.parseHost=function(){var e=this.host,t=f.exec(e);t&&(t=t[0],":"!==t&&(this.port=t.substr(1)),e=e.substr(0,e.length-t.length)),e&&(this.hostname=e)}},{"./util":228,punycode:220,querystring:223}],228:[function(e,t,n){"use strict";t.exports={isString:function(e){return"string"==typeof e},isObject:function(e){return"object"==typeof e&&null!==e},isNull:function(e){return null===e},isNullOrUndefined:function(e){return null==e}}},{}],229:[function(e,t,n){(function(e){var n;if(e.crypto&&crypto.getRandomValues){var r=new Uint8Array(16);n=function(){return crypto.getRandomValues(r),r}}if(!n){var i=new Array(16);n=function(){for(var e,t=0;t<16;t++)0===(3&t)&&(e=4294967296*Math.random()),i[t]=e>>>((3&t)<<3)&255;return i}}t.exports=n}).call(this,"undefined"!=typeof i?i:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],230:[function(e,t,n){function r(e,t,n){var r=t&&n||0,i=0;for(t=t||[],e.toLowerCase().replace(/[0-9a-f]{2}/g,function(e){i<16&&(t[r+i++]=l[e])});i<16;)t[r+i++]=0;return t}function i(e,t){var n=t||0,r=u;return r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+"-"+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]+r[e[n++]]}function a(e,t,n){var r=t&&n||0,a=t||[];e=e||{};var o=void 0!==e.clockseq?e.clockseq:h,s=void 0!==e.msecs?e.msecs:(new Date).getTime(),u=void 0!==e.nsecs?e.nsecs:m+1,l=s-p+(u-m)/1e4;if(l<0&&void 0===e.clockseq&&(o=o+1&16383),(l<0||s>p)&&void 0===e.nsecs&&(u=0),u>=1e4)throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");p=s,m=u,h=o,s+=122192928e5;var c=(1e4*(268435455&s)+u)%4294967296;a[r++]=c>>>24&255,a[r++]=c>>>16&255,a[r++]=c>>>8&255,a[r++]=255&c;var f=s/4294967296*1e4&268435455;a[r++]=f>>>8&255,a[r++]=255&f,a[r++]=f>>>24&15|16,a[r++]=f>>>16&255,a[r++]=o>>>8|128,a[r++]=255&o;for(var _=e.node||d,v=0;v<6;v++)a[r+v]=_[v];return t?t:i(a)}function o(e,t,n){var r=t&&n||0;"string"==typeof e&&(t="binary"==e?new Array(16):null,e=null),e=e||{};var a=e.random||(e.rng||s)();if(a[6]=15&a[6]|64,a[8]=63&a[8]|128,t)for(var o=0;o<16;o++)t[r+o]=a[o];return t||i(a)}for(var s=e("./rng"),u=[],l={},c=0;c<256;c++)u[c]=(c+256).toString(16).substr(1),l[u[c]]=c;var f=s(),d=[1|f[0],f[1],f[2],f[3],f[4],f[5]],h=16383&(f[6]<<8|f[7]),p=0,m=0,_=o;_.v1=a,_.v4=o,_.parse=r,_.unparse=i,t.exports=_},{"./rng":229}]},{},[37])(37)})}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}]},{},[17])(17)});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],123:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -34838,7 +35080,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],124:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 function clean (s) {
   return s.replace(/\n\r?\s*/g, '')
 }
@@ -34853,7 +35095,7 @@ module.exports = function tsml (sa) {
 
   return s
 }
-},{}],125:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast-button.js
@@ -35180,7 +35422,7 @@ Component.registerComponent('ChromeCastButton', ChromeCastButton);
 exports['default'] = ChromeCastButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],126:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -35213,7 +35455,7 @@ _videoJs2['default'].plugin('chromecast', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./videojs-chromecast":128}],127:[function(require,module,exports){
+},{"./videojs-chromecast":130}],129:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast.js
@@ -35734,7 +35976,7 @@ Tech.registerTech('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],128:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-chromecast - v1.0.0 - 2016-02-15
@@ -35816,7 +36058,7 @@ Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/chromecast-button":125,"./tech/chromecast":127}],129:[function(require,module,exports){
+},{"./component/control-bar/chromecast-button":127,"./tech/chromecast":129}],131:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
@@ -36099,7 +36341,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":131,"global/document":19,"global/window":20,"xhr":133}],130:[function(require,module,exports){
+},{"./utils.js":133,"global/document":19,"global/window":20,"xhr":135}],132:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -36132,7 +36374,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":129}],131:[function(require,module,exports){
+},{"./metrics":131}],133:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -36220,7 +36462,7 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":19,"global/window":20}],132:[function(require,module,exports){
+},{"global/document":19,"global/window":20}],134:[function(require,module,exports){
 (function (global){
 /**
  * @file Youtube.js
@@ -36941,7 +37183,7 @@ Tech.registerTech('Youtube', Youtube);
 exports['default'] = Youtube;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],133:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -37162,9 +37404,9 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":20,"is-function":134,"once":135,"parse-headers":138,"xtend":139}],134:[function(require,module,exports){
+},{"global/window":20,"is-function":136,"once":137,"parse-headers":140,"xtend":141}],136:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
-},{"dup":21}],135:[function(require,module,exports){
+},{"dup":21}],137:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -37185,13 +37427,13 @@ function once (fn) {
   }
 }
 
-},{}],136:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 arguments[4][18][0].apply(exports,arguments)
-},{"dup":18,"is-function":134}],137:[function(require,module,exports){
-arguments[4][123][0].apply(exports,arguments)
-},{"dup":123}],138:[function(require,module,exports){
-arguments[4][120][0].apply(exports,arguments)
-},{"dup":120,"for-each":136,"trim":137}],139:[function(require,module,exports){
+},{"dup":18,"is-function":136}],139:[function(require,module,exports){
+arguments[4][125][0].apply(exports,arguments)
+},{"dup":125}],140:[function(require,module,exports){
+arguments[4][122][0].apply(exports,arguments)
+},{"dup":122,"for-each":138,"trim":139}],141:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -37212,9 +37454,9 @@ function extend() {
     return target
 }
 
-},{}],140:[function(require,module,exports){
-arguments[4][139][0].apply(exports,arguments)
-},{"dup":139}],141:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
+arguments[4][141][0].apply(exports,arguments)
+},{"dup":141}],143:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -37403,5 +37645,5 @@ ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.option
 Component.registerComponent('Afrostream', Afrostream);
 exports.default = Afrostream;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"koment-js":44,"videojs-chromecast":126,"videojs-metrics":130,"videojs-youtube":132}]},{},[141])(141)
+},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"koment-js":46,"videojs-chromecast":128,"videojs-metrics":132,"videojs-youtube":134}]},{},[143])(143)
 });
