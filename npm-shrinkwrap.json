@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.3",
+  "version": "2.2.6",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -14390,8 +14390,8 @@
     },
     "koment-js": {
       "version": "1.0.8",
-      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.9",
-      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#fac64d68e46c74bf31cb4d974dda08c1a60cdd1a",
+      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.10",
+      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#c3ae20884b62741571b62a62cdec087e0e0f8367",
       "dependencies": {
         "babel": {
           "version": "5.8.38",
