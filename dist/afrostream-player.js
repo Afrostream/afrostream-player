@@ -5165,8 +5165,6 @@ var KomentDisplay = (function (_Component) {
   _inherits(KomentDisplay, _Component);
 
   function KomentDisplay(player, options) {
-    var _this = this;
-
     _classCallCheck(this, KomentDisplay);
 
     _get(Object.getPrototypeOf(KomentDisplay.prototype), 'constructor', this).call(this, player, options);
@@ -5175,47 +5173,82 @@ var KomentDisplay = (function (_Component) {
 
     this.on('tap', this.handleClick);
     this.on('click', this.handleClick);
-
-    this.data_ = {
-      json: true,
-      uri: this.player_.options_.api,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    var kommentsList = [];
-    (0, _xhr2['default'])(this.data_, function (err, res) {
-      if (err) {
-        throw new Error(err.message);
-      }
-      kommentsList = res.body || [];
-
-      (0, _lodash.forEach)(kommentsList, function (item) {
-        if (item.user && item.user.facebook) {
-          item.user = (0, _lodash.merge)(item.user, {
-            picture: '//graph.facebook.com/' + item.user.facebook.id + '/picture',
-            nickname: item.user.facebook.nickname
-          });
-        }
-      });
-
-      kommentsList = (0, _lodash.sortBy)(kommentsList, ['timecode']);
-
-      _this.player_.komentsList(kommentsList);
-      _this.player_.trigger('kmtlistfetched');
-      _this.createChilds();
-    });
+    this.on(player, 'loadedmetadata', this.initKoment);
   }
 
-  /**
-   * Handle Click - Override with specific functionality for component
-   *
-   * @method handleClick
-   */
-
   _createClass(KomentDisplay, [{
+    key: 'videoId',
+    value: function videoId() {
+      return this.player_.options_.videoId || this.player_.currentSrc();
+    }
+  }, {
+    key: 'initKoment',
+    value: function initKoment() {
+      var _this = this;
+
+      var videoId_ = this.videoId();
+      this.data_ = {
+        json: true,
+        uri: this.player_.options_.api + '?video=' + videoId_,
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      var kommentsList = [];
+      (0, _xhr2['default'])(this.data_, function (err, res) {
+        if (err) {
+          throw new Error(err.message);
+        }
+        kommentsList = res.body || [];
+
+        (0, _lodash.forEach)(kommentsList, function (item) {
+          if (item.user && item.user.facebook) {
+            item.user = (0, _lodash.merge)(item.user, {
+              avatar: '//graph.facebook.com/' + item.user.facebook.id + '/picture',
+              nickname: item.user.facebook.nickname
+            });
+          }
+        });
+
+        kommentsList = (0, _lodash.sortBy)(kommentsList, ['timecode']);
+
+        _this.player_.komentsList(kommentsList);
+        _this.player_.trigger('kmtlistfetched');
+        _this.createChilds();
+      });
+    }
+  }, {
+    key: 'update',
+    value: function update(e) {
+      var item = e.data;
+      var mi = new _komentItem2['default'](this.player_, item);
+      this.items.unshift(mi);
+      this.addChild(mi);
+      this.requestTick(true);
+      var json = (0, _lodash.pick)(item, ['timecode', 'message', 'user']);
+      var videoId_ = this.videoId();
+      json.video = videoId_;
+      (0, _xhr2['default'])((0, _lodash.merge)(this.data_, {
+        method: 'POST',
+        video: this.videoId_,
+        uri: '' + this.player_.options_.api,
+        json: json
+      }), function (err, res) {
+        if (err) {
+          throw new Error(err.message);
+        }
+        console.log('koment posted', res);
+      });
+    }
+
+    /**
+     * Handle Click - Override with specific functionality for component
+     *
+     * @method handleClick
+     */
+  }, {
     key: 'handleClick',
     value: function handleClick() {
       this.player_.toggleEdit(false);
@@ -5236,29 +5269,6 @@ var KomentDisplay = (function (_Component) {
         dir: 'ltr'
       }, {
         role: 'group'
-      });
-    }
-  }, {
-    key: 'update',
-    value: function update(e) {
-      var item = e.data;
-      var mi = new _komentItem2['default'](this.player_, item);
-      this.items.unshift(mi);
-      this.addChild(mi);
-      this.requestTick(true);
-      var json = (0, _lodash.pick)(item, ['timecode', 'text']);
-
-      (0, _xhr2['default'])((0, _lodash.merge)(this.data_, {
-        method: 'POST',
-        json: json,
-        headers: {
-          'Access-Token': this.player_.options_.token
-        }
-      }), function (err, res) {
-        if (err) {
-          throw new Error(err.message);
-        }
-        console.log('koment posted', res);
       });
     }
 
@@ -5427,7 +5437,7 @@ var KomentItem = (function (_ClickableComponent) {
 
     _get(Object.getPrototypeOf(KomentItem.prototype), 'constructor', this).call(this, player, options);
     this.timecode = this.options_.timecode;
-    this.text = this.options_.text;
+    this.message = this.options_.message;
     this.user = this.options_.user;
     this.update();
   }
@@ -5441,7 +5451,7 @@ var KomentItem = (function (_ClickableComponent) {
   _createClass(KomentItem, [{
     key: 'update',
     value: function update() {
-      var url = this.options_.user.picture;
+      var url = this.options_.user.avatar;
       var timecode = (0, _utilsFormatTimeJs2['default'])(this.timecode, this.player_.duration());
       this.setSrc(url);
       this.tcEl_.innerHTML = timecode + ' ' + (this.user.nickname ? '- ' + this.user.nickname : '');
@@ -5487,12 +5497,7 @@ var KomentItem = (function (_ClickableComponent) {
       var el = _get(Object.getPrototypeOf(KomentItem.prototype), 'createEl', this).call(this, 'div', {
         className: 'koment-item koment-hidden'
       });
-      var userName = '';
 
-      var profile = this.options_.user && this.options_.user;
-      if (profile && profile.name) {
-        userName = '<div class="koment-item-user">' + profile.name + '</div>';
-      }
       this.contentEl_ = Dom.createEl('div', {
         className: 'koment-item-display'
       }, {
@@ -5505,7 +5510,7 @@ var KomentItem = (function (_ClickableComponent) {
 
       this.textEl_ = Dom.createEl('div', {
         className: 'koment-item-title',
-        innerHTML: this.options_.text
+        innerHTML: this.options_.message
       });
 
       this.avatarEl_ = Dom.createEl('div', {
@@ -5548,11 +5553,11 @@ var KomentItem = (function (_ClickableComponent) {
 
 KomentItem.prototype.timecode = 0;
 KomentItem.prototype.options_ = {
-  text: '',
+  message: '',
   timecode: 0,
   user: {
-    name: '',
-    picture: ''
+    nickname: '',
+    avatar: ''
   }
 };
 
@@ -6470,11 +6475,11 @@ var PostCommentBox = (function (_Component) {
   }, {
     key: 'onSubmit',
     value: function onSubmit() {
-      var text = this.value();
+      var message = this.value();
       var timecode = Math.round(this.player_.currentTime());
       var user = this.player_.options_.user;
       this.clear();
-      this.player_.sendKoment({ text: text, timecode: timecode, user: user });
+      this.player_.sendKoment({ message: message, timecode: timecode, user: user });
     }
   }, {
     key: 'createEl',
@@ -6659,7 +6664,7 @@ var PostUserBox = (function (_Component) {
   _createClass(PostUserBox, [{
     key: 'update',
     value: function update() {
-      var url = this.player_.options_.user.picture;
+      var url = this.player_.options_.user.avatar;
 
       this.setSrc(url);
 
@@ -7597,7 +7602,7 @@ var TimelineProgressItem = (function (_ClickableComponent) {
   _createClass(TimelineProgressItem, [{
     key: 'update',
     value: function update() {
-      var url = this.user.picture;
+      var url = this.user.avatar;
 
       this.setSrc(url);
 
@@ -7683,7 +7688,7 @@ TimelineProgressItem.prototype.timecode = 0;
 TimelineProgressItem.prototype.options_ = {
   timecode: 0,
   user: {
-    picture: ''
+    avatar: ''
   }
 };
 
@@ -9564,12 +9569,10 @@ var Player = (function (_Component) {
     key: 'handleTechReady_',
     value: function handleTechReady_() {
       this.triggerReady();
-
       // Keep the same volume as before
       if (this.cache_.volume) {
         this.techCall_('setVolume', this.cache_.volume);
       }
-
       // Update the duration if available
       this.handleTechDurationChange_();
     }
@@ -10263,7 +10266,7 @@ var Player = (function (_Component) {
   }, {
     key: 'sendKoment',
     value: function sendKoment(kmt) {
-      if (!kmt || !kmt.text) {
+      if (!kmt || !kmt.message) {
         return;
       }
       console.log('koment send ', kmt);
@@ -11280,6 +11283,8 @@ Player.prototype.options_ = {
   inactivityTimeout: 2000,
   children: ['komentDisplay', 'komentList', 'progressControl', 'controlBar'],
 
+  api: 'https://koment-api.herokuapp.com/api/koments',
+
   user: {},
 
   language: navigator && (navigator.languages && navigator.languages[0] || navigator.userLanguage || navigator.language) || 'en',
@@ -12286,9 +12291,6 @@ var Html5 = (function (_Tech) {
   }, {
     key: 'currentSrc',
     value: function currentSrc() {
-      if (this.currentSource_) {
-        return this.currentSource_.src;
-      }
       return this.el_.currentSrc;
     }
 
@@ -32555,28 +32557,28 @@ module.exports={
   "_args": [
     [
       {
-        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
+        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
         "scope": null,
         "escapedName": null,
         "name": null,
-        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
-        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
+        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
+        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
         "type": "hosted",
         "hosted": {
           "type": "github",
-          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.6",
-          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.6",
-          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
-          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
-          "shortcut": "github:Afrostream/koment-js#1.0.6",
-          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.6/package.json"
+          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.8",
+          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.8",
+          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
+          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
+          "shortcut": "github:Afrostream/koment-js#1.0.8",
+          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.8/package.json"
         }
       },
       "/Users/benjipott/Documents/projects/afrostream/afrostream-player"
     ]
   ],
-  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
-  "_id": "koment-js@0.0.0",
+  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
+  "_id": "koment-js@1.0.0",
   "_inCache": true,
   "_installable": true,
   "_location": "/koment-js",
@@ -32672,31 +32674,31 @@ module.exports={
     "xtend": "4.0.1"
   },
   "_requested": {
-    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
+    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
     "scope": null,
     "escapedName": null,
     "name": null,
-    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
-    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
+    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
+    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
     "type": "hosted",
     "hosted": {
       "type": "github",
-      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.6",
-      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.6",
-      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
-      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
-      "shortcut": "github:Afrostream/koment-js#1.0.6",
-      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.6/package.json"
+      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.8",
+      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.8",
+      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
+      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
+      "shortcut": "github:Afrostream/koment-js#1.0.8",
+      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.8/package.json"
     }
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#61a74818d8356092ae206c2bab7ced541d5efe9a",
-  "_shasum": "9b8ef4151366241705503fe1905cd7673424832b",
+  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#f84549bf7111658351e6a1a225ebb975f8e59ea0",
+  "_shasum": "d2d951a9e219d7ac6bc3e0da06c8f6ae9c2199af",
   "_shrinkwrap": null,
-  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.6",
+  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.8",
   "_where": "/Users/benjipott/Documents/projects/afrostream/afrostream-player",
   "author": {
     "name": "Benjipott"
@@ -32770,7 +32772,7 @@ module.exports={
     "src/",
     "test/"
   ],
-  "gitHead": "61a74818d8356092ae206c2bab7ced541d5efe9a",
+  "gitHead": "f84549bf7111658351e6a1a225ebb975f8e59ea0",
   "homepage": "https://github.com/komentio/koment-js#readme",
   "keywords": [
     "koment.io",
@@ -32823,7 +32825,7 @@ module.exports={
     "watch:js": "watchify src/js/koment -t babelify -v -o dist/koment.js",
     "watch:test": "watchify `find test -name '*.test.js'` -t babelify -o dist-test/koment.js"
   },
-  "version": "0.0.0",
+  "version": "1.0.0",
   "vjsstandard": {
     "ignore": [
       "dist",
