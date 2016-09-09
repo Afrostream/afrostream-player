@@ -30,7 +30,9 @@ require('videojs-chromecast');
 
 require('videojs-youtube');
 
-require('koment-js');
+var _komentJs = require('koment-js');
+
+var _komentJs2 = _interopRequireDefault(_komentJs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -179,6 +181,8 @@ _video2.default.browser.IS_SAFARI = /safari/i.test(USER_AGENT);
  * @type {{}}
  */
 _video2.default.options.children.push('afrostream');
+
+_video2.default.koment = _komentJs2.default;
 
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
 
