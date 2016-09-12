@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "Player afrostream",
   "main": "es5/js/afrostream.js",
   "scripts": {
@@ -113,7 +113,7 @@
     "karma-ie-launcher": "^0.2.0",
     "karma-qunit": "^0.1.0",
     "karma-safari-launcher": "^0.1.0",
-    "koment-js": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.10",
+    "koment-js": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.11",
     "lodash": "^4.13.1",
     "minimist": "^1.2.0",
     "node-sass": "^3.4.2",

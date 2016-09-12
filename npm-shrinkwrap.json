@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -14390,8 +14390,8 @@
     },
     "koment-js": {
       "version": "1.0.8",
-      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.10",
-      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#c3ae20884b62741571b62a62cdec087e0e0f8367",
+      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.11",
+      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#910ad821c0a51ec773dee4cf47788ffd0a722e64",
       "dependencies": {
         "babel": {
           "version": "5.8.38",
@@ -16651,9 +16651,9 @@
       "resolved": "https://registry.npmjs.org/pause-stream/-/pause-stream-0.0.11.tgz"
     },
     "pbkdf2": {
-      "version": "3.0.4",
+      "version": "3.0.5",
       "from": "pbkdf2@>=3.0.3 <4.0.0",
-      "resolved": "https://registry.npmjs.org/pbkdf2/-/pbkdf2-3.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/pbkdf2/-/pbkdf2-3.0.5.tgz"
     },
     "pify": {
       "version": "2.3.0",
