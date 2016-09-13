@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.8
+ * @version 2.2.9
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -11955,53 +11955,7 @@ var Html5 = (function (_Tech) {
   }, {
     key: 'createEl',
     value: function createEl() {
-      var el = this.options_.tag;
-
-      // Check if this browser supports moving the element into the box.
-      // On the iPhone video will break if you move the element,
-      // So we have to create a brand new element.
-      if (!el || this.movingMediaElementInDOM === false) {
-
-        // If the original tag is still there, clone and remove it.
-        if (el) {
-          var clone = el.cloneNode(true);
-
-          el.parentNode.insertBefore(clone, el);
-          Html5.disposeMediaElement(el);
-          el = clone;
-        } else {
-          el = _globalDocument2['default'].createElement('video');
-
-          // determine if native controls should be used
-          var tagAttributes = this.options_.tag && Dom.getElAttributes(this.options_.tag);
-          var attributes = (0, _utilsMergeOptionsJs2['default'])({}, tagAttributes);
-
-          if (!browser.TOUCH_ENABLED || this.options_.nativeControlsForTouch !== true) {
-            delete attributes.controls;
-          }
-
-          Dom.setElAttributes(el, (0, _objectAssign2['default'])(attributes, {
-            id: this.options_.techId,
-            'class': 'koment-tech'
-          }));
-        }
-      }
-
-      // Update specific tag settings, in case they were overridden
-      var settingsAttrs = ['autoplay', 'preload', 'loop', 'muted'];
-
-      for (var i = settingsAttrs.length - 1; i >= 0; i--) {
-        var attr = settingsAttrs[i];
-        var overwriteAttrs = {};
-
-        if (typeof this.options_[attr] !== 'undefined') {
-          overwriteAttrs[attr] = this.options_[attr];
-        }
-        Dom.setElAttributes(el, overwriteAttrs);
-      }
-
-      return el;
-      // jenniisawesome = true;
+      return this.options_.tag;
     }
 
     /**
@@ -32571,27 +32525,27 @@ module.exports={
   "_args": [
     [
       {
-        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
+        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
         "scope": null,
         "escapedName": null,
         "name": null,
-        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
-        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
+        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
+        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
         "type": "hosted",
         "hosted": {
           "type": "github",
-          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.12",
-          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.12",
-          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
-          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
-          "shortcut": "github:Afrostream/koment-js#1.0.12",
-          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.12/package.json"
+          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.13",
+          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.13",
+          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
+          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
+          "shortcut": "github:Afrostream/koment-js#1.0.13",
+          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.13/package.json"
         }
       },
       "/Users/benjipott/Documents/projects/afrostream/afrostream-player"
     ]
   ],
-  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
+  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
   "_id": "koment-js@1.0.8",
   "_inCache": true,
   "_installable": true,
@@ -32688,31 +32642,31 @@ module.exports={
     "xtend": "4.0.1"
   },
   "_requested": {
-    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
+    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
     "scope": null,
     "escapedName": null,
     "name": null,
-    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
-    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
+    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
+    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
     "type": "hosted",
     "hosted": {
       "type": "github",
-      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.12",
-      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.12",
-      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
-      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
-      "shortcut": "github:Afrostream/koment-js#1.0.12",
-      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.12/package.json"
+      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.13",
+      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.13",
+      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
+      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
+      "shortcut": "github:Afrostream/koment-js#1.0.13",
+      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.13/package.json"
     }
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#b6bde0eda798deb0460c643dc6534a50caee46e4",
-  "_shasum": "0faca5900054f8ad1a99294a147d96935ae54642",
+  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#fe4cc89bf648c56ee7abb12e63c2941db8409de1",
+  "_shasum": "c70a154ac45ed1c91ec71e433cd88258e4e53ede",
   "_shrinkwrap": null,
-  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
+  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
   "_where": "/Users/benjipott/Documents/projects/afrostream/afrostream-player",
   "author": {
     "name": "Benjipott"
@@ -32786,7 +32740,7 @@ module.exports={
     "src/",
     "test/"
   ],
-  "gitHead": "b6bde0eda798deb0460c643dc6534a50caee46e4",
+  "gitHead": "fe4cc89bf648c56ee7abb12e63c2941db8409de1",
   "homepage": "https://github.com/komentio/koment-js#readme",
   "keywords": [
     "koment.io",

@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -8824,9 +8824,9 @@
       "resolved": "https://registry.npmjs.org/chokidar/-/chokidar-1.6.0.tgz"
     },
     "cipher-base": {
-      "version": "1.0.2",
+      "version": "1.0.3",
       "from": "cipher-base@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/cipher-base/-/cipher-base-1.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/cipher-base/-/cipher-base-1.0.3.tgz"
     },
     "cliui": {
       "version": "2.1.0",
@@ -14390,8 +14390,8 @@
     },
     "koment-js": {
       "version": "1.0.8",
-      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.12",
-      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#b6bde0eda798deb0460c643dc6534a50caee46e4",
+      "from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.13",
+      "resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#fe4cc89bf648c56ee7abb12e63c2941db8409de1",
       "dependencies": {
         "babel": {
           "version": "5.8.38",

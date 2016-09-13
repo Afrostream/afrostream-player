@@ -236,7 +236,7 @@
     video.className = 'video-js vjs-afrostream-skin';
     video.crossOrigin = true;
     video.setAttribute('crossorigin', true);
-    //video.setAttribute('data-setup', JSON.stringify(komentData));
+    video.setAttribute('data-setup', JSON.stringify(komentData));
 
     var cp = [];
 
@@ -282,10 +282,10 @@
     var mergedOpts = videojs.mergeOptions(options || {}, opts || {});
 
     player = videojs('player', mergedOpts).ready(function () {
-      initMetrics();
+      //initMetrics();
     });
 
-    //videojs.koment(player.tech_.el_);
+    videojs.koment(player.tech_.el_);
 
     player.on('loadedmetadata', resizePlayer);
     return player;
@@ -565,7 +565,7 @@
   setTimeout(function () {
 
     initPlayer();
-    initInputs();
+    //initInputs();
   }, 3000)
 
   var smoothieConfig = {
