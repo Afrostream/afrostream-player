@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -9089,9 +9089,9 @@
       }
     },
     "dashjs": {
-      "version": "2.2.0",
-      "from": "dashjs@>=2.2.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/dashjs/-/dashjs-2.2.0.tgz"
+      "version": "2.3.0",
+      "from": "dashjs@latest",
+      "resolved": "https://registry.npmjs.org/dashjs/-/dashjs-2.3.0.tgz"
     },
     "date-now": {
       "version": "0.1.4",
