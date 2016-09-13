@@ -236,7 +236,7 @@
     video.className = 'video-js vjs-afrostream-skin';
     video.crossOrigin = true;
     video.setAttribute('crossorigin', true);
-    video.setAttribute('data-setup', JSON.stringify(komentData));
+    //video.setAttribute('data-setup', JSON.stringify(komentData));
 
     var cp = [];
 
@@ -285,7 +285,7 @@
       initMetrics();
     });
 
-    videojs.koment(player.tech_.el_);
+    //videojs.koment(player.tech_.el_);
 
     player.on('loadedmetadata', resizePlayer);
     return player;
