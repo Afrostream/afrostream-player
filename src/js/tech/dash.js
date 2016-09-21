@@ -452,7 +452,7 @@ class Dash extends Html5 {
   handleVideoTracksChange () {
     const tracks = this.videoTracks()
 
-    if (!tracks || !this.playbackInitialized || !this.options_.autoSwitch) {
+    if (!tracks || !this.playbackInitialized/* || !this.options_.autoSwitch*/) {
       return
     }
     var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && (tracks.selectedIndex % 1 === 0)

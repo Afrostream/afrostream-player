@@ -1809,9 +1809,9 @@ var Dash = function (_Html) {
     value: function handleVideoTracksChange() {
       var tracks = this.videoTracks();
 
-      if (!tracks || !this.playbackInitialized || !this.options_.autoSwitch) {
-        return;
-      }
+      if (!tracks || !this.playbackInitialized /* || !this.options_.autoSwitch*/) {
+          return;
+        }
       var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && tracks.selectedIndex % 1 === 0;
       this.mediaPlayer_.setAutoSwitchQuality(!isInt);
       if (isInt) {
