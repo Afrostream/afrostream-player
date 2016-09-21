@@ -189,10 +189,10 @@ class Dash extends Html5 {
       let track = videoDashTracks[i]
       let bitrateList = track.bitrateList
       for (let j = 0; j < bitrateList.length; j++) {
-        let bitRateInfo = bitrateList[j] / 1000
-        let label = Dash.qualityLabels[j] || bitRateInfo
-        let bitRateTrack = this.addVideoTrack('main', label, bitRateInfo)
-        bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo
+        let bandwidth = bitrateList[j].bandwidth / 1000
+        let label = Dash.qualityLabels[j] || bandwidth
+        let bitRateTrack = this.addVideoTrack('main', label, bandwidth)
+        bitRateTrack.selected = !autoSwitch && (bandwidth > initialVideoBitrate - 400) && (bandwidth < initialVideoBitrate + 400)
       }
     }
 

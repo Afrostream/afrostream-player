@@ -233,10 +233,10 @@ var Dash = function (_Html) {
         var _track = videoDashTracks[i];
         var bitrateList = _track.bitrateList;
         for (var j = 0; j < bitrateList.length; j++) {
-          var bitRateInfo = bitrateList[j] / 1000;
-          var label = Dash.qualityLabels[j] || bitRateInfo;
-          var bitRateTrack = this.addVideoTrack('main', label, bitRateInfo);
-          bitRateTrack.selected = !autoSwitch && initialVideoBitrate === bitRateInfo;
+          var bandwidth = bitrateList[j].bandwidth / 1000;
+          var label = Dash.qualityLabels[j] || bandwidth;
+          var bitRateTrack = this.addVideoTrack('main', label, bandwidth);
+          bitRateTrack.selected = !autoSwitch && bandwidth > initialVideoBitrate - 400 && bandwidth < initialVideoBitrate + 400;
         }
       }
     }
