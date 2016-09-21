@@ -1544,7 +1544,7 @@ var Dash = function (_Html) {
           var bandwidth = bitrateList[j].bandwidth / 1000;
           var label = Dash.qualityLabels[j] || bandwidth;
           var bitRateTrack = this.addVideoTrack('main', label, bandwidth);
-          bitRateTrack.selected = !autoSwitch && bandwidth > initialVideoBitrate - 400 && bandwidth < initialVideoBitrate + 400;
+          bitRateTrack.selected = !autoSwitch && bandwidth > initialVideoBitrate - 350 && bandwidth < initialVideoBitrate + 350;
         }
       }
     }

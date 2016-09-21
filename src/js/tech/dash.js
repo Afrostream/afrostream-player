@@ -192,7 +192,7 @@ class Dash extends Html5 {
         let bandwidth = bitrateList[j].bandwidth / 1000
         let label = Dash.qualityLabels[j] || bandwidth
         let bitRateTrack = this.addVideoTrack('main', label, bandwidth)
-        bitRateTrack.selected = !autoSwitch && (bandwidth > initialVideoBitrate - 400) && (bandwidth < initialVideoBitrate + 400)
+        bitRateTrack.selected = !autoSwitch && (bandwidth > initialVideoBitrate - 350) && (bandwidth < initialVideoBitrate + 350)
       }
     }
 
