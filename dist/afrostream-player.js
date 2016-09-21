@@ -6105,6 +6105,7 @@ var ListButton = (function (_Button) {
     _classCallCheck(this, ListButton);
 
     _get(Object.getPrototypeOf(ListButton.prototype), 'constructor', this).call(this, player, options, ready);
+    this.on(player, 'kmtlistfetched', this.update);
     this.on(player, 'komentsupdated', this.update);
   }
 
@@ -32706,27 +32707,27 @@ module.exports={
   "_args": [
     [
       {
-        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
+        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
         "scope": null,
         "escapedName": null,
         "name": null,
-        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
-        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
+        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
+        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
         "type": "hosted",
         "hosted": {
           "type": "github",
-          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.15",
-          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.15",
-          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
-          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
-          "shortcut": "github:Afrostream/koment-js#1.0.15",
-          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.15/package.json"
+          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.16",
+          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.16",
+          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
+          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
+          "shortcut": "github:Afrostream/koment-js#1.0.16",
+          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.16/package.json"
         }
       },
       "/Users/benjipott/Documents/projects/afrostream/afrostream-player"
     ]
   ],
-  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
+  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
   "_id": "koment-js@1.0.8",
   "_inCache": true,
   "_installable": true,
@@ -32824,31 +32825,31 @@ module.exports={
     "xtend": "4.0.1"
   },
   "_requested": {
-    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
+    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
     "scope": null,
     "escapedName": null,
     "name": null,
-    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
-    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
+    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
+    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
     "type": "hosted",
     "hosted": {
       "type": "github",
-      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.15",
-      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.15",
-      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
-      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
-      "shortcut": "github:Afrostream/koment-js#1.0.15",
-      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.15/package.json"
+      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.16",
+      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.16",
+      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
+      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
+      "shortcut": "github:Afrostream/koment-js#1.0.16",
+      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.16/package.json"
     }
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#a03887e18d773698719c1cb7ed2a92c06b7d2887",
-  "_shasum": "05bf8cd2110e22513ca689f89a33a155ca428790",
+  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#9921c31c58ddffa3b3398e4d3c1d67b321c07184",
+  "_shasum": "3a280e4f28c543c4b07ae05274cc521e71a9c884",
   "_shrinkwrap": null,
-  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.15",
+  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.16",
   "_where": "/Users/benjipott/Documents/projects/afrostream/afrostream-player",
   "author": {
     "name": "Benjipott"
@@ -32922,7 +32923,7 @@ module.exports={
     "src/",
     "test/"
   ],
-  "gitHead": "a03887e18d773698719c1cb7ed2a92c06b7d2887",
+  "gitHead": "9921c31c58ddffa3b3398e4d3c1d67b321c07184",
   "homepage": "https://github.com/komentio/koment-js#readme",
   "keywords": [
     "koment.io",
