@@ -56,6 +56,13 @@ class Dash extends Html5 {
 
   }
 
+  currentSrc () {
+    if (this.mediaPlayer_) {
+      return this.mediaPlayer_.getSource()
+    }
+
+    return super.currentSrc()
+  }
 
   /**
    * Detect if source is Live

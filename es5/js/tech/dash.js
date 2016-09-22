@@ -89,13 +89,22 @@ var Dash = function (_Html) {
     return _this;
   }
 
-  /**
-   * Detect if source is Live
-   * @returns {boolean}
-   */
-
-
   _createClass(Dash, [{
+    key: 'currentSrc',
+    value: function currentSrc() {
+      if (this.mediaPlayer_) {
+        return this.mediaPlayer_.getSource();
+      }
+
+      return _get(Object.getPrototypeOf(Dash.prototype), 'currentSrc', this).call(this);
+    }
+
+    /**
+     * Detect if source is Live
+     * @returns {boolean}
+     */
+
+  }, {
     key: 'isDynamic',
     value: function isDynamic(dynamic) {
       if (dynamic !== undefined) {
