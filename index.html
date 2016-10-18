@@ -383,9 +383,14 @@
 //      type: "application/dash+xml"
 //    }
     //WWWEST
+//    {
+//      src: "https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd",
+//      type: "application/dash+xml"
+//    }
+    //VIMEO
     {
-      src: "https://hw.cdn.afrostream.net/vod/WILDWILDWEST_FILMLM_16020931/3d14bbf03db5f0b5.ism/3d14bbf03db5f0b5.mpd",
-      type: "application/dash+xml"
+      src: "https://vimeo.com/153979733",
+      type: "video/vimeo"
     }
     //24HOURLOVE
 //    {
@@ -484,7 +489,7 @@
     //}
   ];
 
-  techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas', 'youtube'];
+  techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas', 'youtube', 'vimeo'];
   muted = qs.muted ? qs.muted : false;
   drm = qs.drm ? qs.drm : false;
   url = qs.url ? qs.url : false;

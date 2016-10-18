@@ -5,7 +5,7 @@ import portscanner from 'portscanner';
 import serveStatic from 'serve-static';
 
 // Configuration for the server.
-const PORT = process.env.PORT || 9999;
+const PORT = process.env.PORT || 9998;
 const MAX_PORT = PORT + 100;
 const HOST = 'localhost';
 

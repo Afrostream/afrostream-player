@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.12",
+  "version": "2.2.14",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -17759,9 +17759,9 @@
       "resolved": "https://registry.npmjs.org/verror/-/verror-1.3.6.tgz"
     },
     "video.js": {
-      "version": "5.11.6",
+      "version": "5.11.7",
       "from": "video.js@latest",
-      "resolved": "https://registry.npmjs.org/video.js/-/video.js-5.11.6.tgz"
+      "resolved": "https://registry.npmjs.org/video.js/-/video.js-5.11.7.tgz"
     },
     "videojs-chromecast": {
       "version": "2.0.0",

@@ -16,6 +16,8 @@ import './component/control-bar/'
 import 'videojs-metrics'
 import 'videojs-chromecast'
 import 'videojs-youtube'
+//import 'videojs-soundcloud'
+import 'videojs-vimeo'
 import koment from 'koment-js'
 
 const Component = videojs.getComponent('Component')
