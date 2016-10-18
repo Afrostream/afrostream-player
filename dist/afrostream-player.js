@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.14
+ * @version 2.2.15
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -32716,22 +32716,22 @@ module.exports={
   "_args": [
     [
       {
-        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-        "scope": null,
         "escapedName": null,
-        "name": null,
-        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-        "type": "hosted",
         "hosted": {
-          "type": "github",
+          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.17/package.json",
+          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+          "shortcut": "github:Afrostream/koment-js#1.0.17",
           "ssh": "git@github.com:Afrostream/koment-js.git#1.0.17",
           "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.17",
-          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-          "shortcut": "github:Afrostream/koment-js#1.0.17",
-          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.17/package.json"
-        }
+          "type": "github"
+        },
+        "name": null,
+        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+        "scope": null,
+        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+        "type": "hosted"
       },
       "/Users/benjipott/Documents/projects/afrostream/afrostream-player"
     ]
@@ -32834,22 +32834,22 @@ module.exports={
     "xtend": "4.0.1"
   },
   "_requested": {
-    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-    "scope": null,
     "escapedName": null,
-    "name": null,
-    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-    "type": "hosted",
     "hosted": {
-      "type": "github",
+      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.17/package.json",
+      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+      "shortcut": "github:Afrostream/koment-js#1.0.17",
       "ssh": "git@github.com:Afrostream/koment-js.git#1.0.17",
       "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.17",
-      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-      "shortcut": "github:Afrostream/koment-js#1.0.17",
-      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.17/package.json"
-    }
+      "type": "github"
+    },
+    "name": null,
+    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+    "scope": null,
+    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+    "type": "hosted"
   },
   "_requiredBy": [
     "#USER",
@@ -32917,8 +32917,8 @@ module.exports={
   "description": "Post comments on all video players",
   "devDependencies": {},
   "eslintConfig": {
-    "parser": "babel-eslint",
-    "extends": "airbnb/base"
+    "extends": "airbnb/base",
+    "parser": "babel-eslint"
   },
   "files": [
     "CONTRIBUTING.md",
@@ -35327,6 +35327,7 @@ var ChromeCastButton = (function (_Button) {
         _get(Object.getPrototypeOf(ChromeCastButton.prototype), 'constructor', this).call(this, player, options);
         this.hide();
         this.initializeApi();
+        options.appId = player.options_.chromecast.appId;
         player.chromecast = this;
     }
 
@@ -35632,7 +35633,8 @@ var _videojsChromecast2 = _interopRequireDefault(_videojsChromecast);
  * @param {Array} list
  */
 var plugin = function plugin(options) {
-  (0, _videojsChromecast2['default'])(this, options);
+  var player = this;
+  player.addChild('Chromecast', options);
 };
 
 _videoJs2['default'].plugin('chromecast', plugin);
@@ -35691,8 +35693,19 @@ var Chromecast = (function (_Tech) {
         this.apiSession = this.options_.source.apiSession;
         this.receiver = this.apiSession.receiver.friendlyName;
 
-        this.apiMedia.addUpdateListener(this.onMediaStatusUpdate.bind(this));
-        this.apiSession.addUpdateListener(this.onSessionUpdate.bind(this));
+        var mediaStatusUpdateHandler = this.onMediaStatusUpdate.bind(this);
+        var sessionUpdateHanlder = this.onSessionUpdate.bind(this);
+
+        this.apiMedia.addUpdateListener(mediaStatusUpdateHandler);
+        this.apiSession.addUpdateListener(sessionUpdateHanlder);
+
+        this.on('dispose', function () {
+            _this.apiMedia.removeUpdateListener(mediaStatusUpdateHandler);
+            _this.apiSession.removeUpdateListener(sessionUpdateHanlder);
+            _this.onMediaStatusUpdate();
+            _this.onSessionUpdate(false);
+        });
+
         var tracks = this.textTracks();
         if (tracks) {
             (function () {
@@ -36172,7 +36185,7 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-  value: true
+    value: true
 });
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -36203,36 +36216,36 @@ var Component = _videoJs2['default'].getComponent('Component');
  */
 
 var Chromecast = (function (_Component) {
-  _inherits(Chromecast, _Component);
+    _inherits(Chromecast, _Component);
 
-  function Chromecast(player, options) {
-    _classCallCheck(this, Chromecast);
+    function Chromecast(player, options) {
+        _classCallCheck(this, Chromecast);
 
-    _get(Object.getPrototypeOf(Chromecast.prototype), 'constructor', this).call(this, player, options);
-  }
+        _get(Object.getPrototypeOf(Chromecast.prototype), 'constructor', this).call(this, player, options);
+    }
 
-  return Chromecast;
+    return Chromecast;
 })(Component);
 
 Chromecast.prototype.options_ = {};
 
 // register the plugin
-_videoJs2['default'].options.children.chromecast = {};
+_videoJs2['default'].options.children.push('chromecast');
 
 _videoJs2['default'].addLanguage('en', {
-  'CASTING TO': 'WIEDERGABE AUF'
+    'CASTING TO': 'WIEDERGABE AUF'
 });
 
 _videoJs2['default'].addLanguage('de', {
-  'CASTING TO': 'WIEDERGABE AUF'
+    'CASTING TO': 'WIEDERGABE AUF'
 });
 
 _videoJs2['default'].addLanguage('it', {
-  'CASTING TO': 'PLAYBACK SU'
+    'CASTING TO': 'PLAYBACK SU'
 });
 
 _videoJs2['default'].addLanguage('fr', {
-  'CASTING TO': 'CAST EN COURS SUR'
+    'CASTING TO': 'CAST EN COURS SUR'
 });
 
 var USER_AGENT = window.navigator.userAgent;
