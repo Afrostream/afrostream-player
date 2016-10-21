@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.15
+ * @version 2.2.16
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -15591,13 +15591,14 @@ exports.isCrossOrigin = isCrossOrigin;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.16.1';
+  var VERSION = '4.16.4';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
 
-  /** Used as the `TypeError` message for "Functions" methods. */
-  var FUNC_ERROR_TEXT = 'Expected a function';
+  /** Error message constants. */
+  var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://github.com/es-shims.',
+      FUNC_ERROR_TEXT = 'Expected a function';
 
   /** Used to stand-in for `undefined` hash values. */
   var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -15673,6 +15674,7 @@ exports.isCrossOrigin = isCrossOrigin;
       numberTag = '[object Number]',
       objectTag = '[object Object]',
       promiseTag = '[object Promise]',
+      proxyTag = '[object Proxy]',
       regexpTag = '[object RegExp]',
       setTag = '[object Set]',
       stringTag = '[object String]',
@@ -17046,13 +17048,21 @@ exports.isCrossOrigin = isCrossOrigin;
     var Buffer = moduleExports ? context.Buffer : undefined,
         Symbol = context.Symbol,
         Uint8Array = context.Uint8Array,
-        defineProperty = Object.defineProperty,
+        allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined,
         getPrototype = overArg(Object.getPrototypeOf, Object),
         iteratorSymbol = Symbol ? Symbol.iterator : undefined,
         objectCreate = Object.create,
         propertyIsEnumerable = objectProto.propertyIsEnumerable,
         splice = arrayProto.splice,
         spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined;
+
+    var defineProperty = (function() {
+      try {
+        var func = getNative(Object, 'defineProperty');
+        func({}, '', {});
+        return func;
+      } catch (e) {}
+    }());
 
     /** Mocked built-ins. */
     var ctxClearTimeout = context.clearTimeout !== root.clearTimeout && context.clearTimeout,
@@ -17080,8 +17090,7 @@ exports.isCrossOrigin = isCrossOrigin;
         Promise = getNative(context, 'Promise'),
         Set = getNative(context, 'Set'),
         WeakMap = getNative(context, 'WeakMap'),
-        nativeCreate = getNative(Object, 'create'),
-        nativeDefineProperty = getNative(Object, 'defineProperty');
+        nativeCreate = getNative(Object, 'create');
 
     /** Used to store function metadata. */
     var metaMap = WeakMap && new WeakMap;
@@ -17231,6 +17240,30 @@ exports.isCrossOrigin = isCrossOrigin;
       }
       return new LodashWrapper(value);
     }
+
+    /**
+     * The base implementation of `_.create` without support for assigning
+     * properties to the created object.
+     *
+     * @private
+     * @param {Object} proto The object to inherit from.
+     * @returns {Object} Returns the new object.
+     */
+    var baseCreate = (function() {
+      function object() {}
+      return function(proto) {
+        if (!isObject(proto)) {
+          return {};
+        }
+        if (objectCreate) {
+          return objectCreate(proto);
+        }
+        object.prototype = proto;
+        var result = new object;
+        object.prototype = undefined;
+        return result;
+      };
+    }());
 
     /**
      * The function whose prototype chain sequence wrappers inherit from.
@@ -17933,18 +17966,26 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Array} Returns the array of property names.
      */
     function arrayLikeKeys(value, inherited) {
-      // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-      // Safari 9 makes `arguments.length` enumerable in strict mode.
-      var result = (isArray(value) || isArguments(value))
-        ? baseTimes(value.length, String)
-        : [];
-
-      var length = result.length,
-          skipIndexes = !!length;
+      var isArr = isArray(value),
+          isArg = !isArr && isArguments(value),
+          isBuff = !isArr && !isArg && isBuffer(value),
+          isType = !isArr && !isArg && !isBuff && isTypedArray(value),
+          skipIndexes = isArr || isArg || isBuff || isType,
+          result = skipIndexes ? baseTimes(value.length, String) : [],
+          length = result.length;
 
       for (var key in value) {
         if ((inherited || hasOwnProperty.call(value, key)) &&
-            !(skipIndexes && (key == 'length' || isIndex(key, length)))) {
+            !(skipIndexes && (
+               // Safari 9 has enumerable `arguments.length` in strict mode.
+               key == 'length' ||
+               // Node.js 0.10 has enumerable non-index properties on buffers.
+               (isBuff && (key == 'offset' || key == 'parent')) ||
+               // PhantomJS 2 has enumerable non-index properties on typed arrays.
+               (isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset')) ||
+               // Skip index properties.
+               isIndex(key, length)
+            ))) {
           result.push(key);
         }
       }
@@ -17952,8 +17993,7 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
-     * A specialized version of `_.sample` for arrays without support for iteratee
-     * shorthands.
+     * A specialized version of `_.sample` for arrays.
      *
      * @private
      * @param {Array} array The array to sample.
@@ -17973,9 +18013,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Array} Returns the random elements.
      */
     function arraySampleSize(array, n) {
-      var result = arrayShuffle(array);
-      result.length = baseClamp(n, 0, result.length);
-      return result;
+      return shuffleSelf(copyArray(array), baseClamp(n, 0, array.length));
     }
 
     /**
@@ -18018,7 +18056,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function assignMergeValue(object, key, value) {
       if ((value !== undefined && !eq(object[key], value)) ||
-          (typeof key == 'number' && value === undefined && !(key in object))) {
+          (value === undefined && !(key in object))) {
         baseAssignValue(object, key, value);
       }
     }
@@ -18211,9 +18249,7 @@ exports.isCrossOrigin = isCrossOrigin;
       }
       stack.set(value, result);
 
-      if (!isArr) {
-        var props = isFull ? getAllKeys(value) : keys(value);
-      }
+      var props = isArr ? undefined : (isFull ? getAllKeys : keys)(value);
       arrayEach(props || value, function(subValue, key) {
         if (props) {
           key = subValue;
@@ -18263,18 +18299,6 @@ exports.isCrossOrigin = isCrossOrigin;
         }
       }
       return true;
-    }
-
-    /**
-     * The base implementation of `_.create` without support for assigning
-     * properties to the created object.
-     *
-     * @private
-     * @param {Object} prototype The object to inherit from.
-     * @returns {Object} Returns the new object.
-     */
-    function baseCreate(proto) {
-      return isObject(proto) ? objectCreate(proto) : {};
     }
 
     /**
@@ -18760,6 +18784,17 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
+     * The base implementation of `_.isArguments`.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+     */
+    function baseIsArguments(value) {
+      return isObjectLike(value) && objectToString.call(value) == argsTag;
+    }
+
+    /**
      * The base implementation of `_.isArrayBuffer` without Node.js optimizations.
      *
      * @private
@@ -18839,6 +18874,13 @@ exports.isCrossOrigin = isCrossOrigin;
           othIsObj = othTag == objectTag,
           isSameTag = objTag == othTag;
 
+      if (isSameTag && isBuffer(object)) {
+        if (!isBuffer(other)) {
+          return false;
+        }
+        objIsArr = true;
+        objIsObj = false;
+      }
       if (isSameTag && !objIsObj) {
         stack || (stack = new Stack);
         return (objIsArr || isTypedArray(object))
@@ -19128,14 +19170,7 @@ exports.isCrossOrigin = isCrossOrigin;
       if (object === source) {
         return;
       }
-      if (!(isArray(source) || isTypedArray(source))) {
-        var props = baseKeysIn(source);
-      }
-      arrayEach(props || source, function(srcValue, key) {
-        if (props) {
-          key = srcValue;
-          srcValue = source[key];
-        }
+      baseFor(source, function(srcValue, key) {
         if (isObject(srcValue)) {
           stack || (stack = new Stack);
           baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
@@ -19150,7 +19185,7 @@ exports.isCrossOrigin = isCrossOrigin;
           }
           assignMergeValue(object, key, newValue);
         }
-      });
+      }, keysIn);
     }
 
     /**
@@ -19184,29 +19219,37 @@ exports.isCrossOrigin = isCrossOrigin;
       var isCommon = newValue === undefined;
 
       if (isCommon) {
+        var isArr = isArray(srcValue),
+            isBuff = !isArr && isBuffer(srcValue),
+            isTyped = !isArr && !isBuff && isTypedArray(srcValue);
+
         newValue = srcValue;
-        if (isArray(srcValue) || isTypedArray(srcValue)) {
+        if (isArr || isBuff || isTyped) {
           if (isArray(objValue)) {
             newValue = objValue;
           }
           else if (isArrayLikeObject(objValue)) {
             newValue = copyArray(objValue);
           }
-          else {
+          else if (isBuff) {
             isCommon = false;
-            newValue = baseClone(srcValue, true);
+            newValue = cloneBuffer(srcValue, true);
+          }
+          else if (isTyped) {
+            isCommon = false;
+            newValue = cloneTypedArray(srcValue, true);
+          }
+          else {
+            newValue = [];
           }
         }
         else if (isPlainObject(srcValue) || isArguments(srcValue)) {
+          newValue = objValue;
           if (isArguments(objValue)) {
             newValue = toPlainObject(objValue);
           }
           else if (!isObject(objValue) || (srcIndex && isFunction(objValue))) {
-            isCommon = false;
-            newValue = baseClone(srcValue, true);
-          }
-          else {
-            newValue = objValue;
+            newValue = initCloneObject(srcValue);
           }
         }
         else {
@@ -19469,6 +19512,30 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
+     * The base implementation of `_.sample`.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to sample.
+     * @returns {*} Returns the random element.
+     */
+    function baseSample(collection) {
+      return arraySample(values(collection));
+    }
+
+    /**
+     * The base implementation of `_.sampleSize` without param guards.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to sample.
+     * @param {number} n The number of elements to sample.
+     * @returns {Array} Returns the random elements.
+     */
+    function baseSampleSize(collection, n) {
+      var array = values(collection);
+      return shuffleSelf(array, baseClamp(n, 0, array.length));
+    }
+
+    /**
      * The base implementation of `_.set`.
      *
      * @private
@@ -19529,14 +19596,25 @@ exports.isCrossOrigin = isCrossOrigin;
      * @param {Function} string The `toString` result.
      * @returns {Function} Returns `func`.
      */
-    var baseSetToString = !nativeDefineProperty ? identity : function(func, string) {
-      return nativeDefineProperty(func, 'toString', {
+    var baseSetToString = !defineProperty ? identity : function(func, string) {
+      return defineProperty(func, 'toString', {
         'configurable': true,
         'enumerable': false,
         'value': constant(string),
         'writable': true
       });
     };
+
+    /**
+     * The base implementation of `_.shuffle`.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to shuffle.
+     * @returns {Array} Returns the new shuffled array.
+     */
+    function baseShuffle(collection) {
+      return shuffleSelf(values(collection));
+    }
 
     /**
      * The base implementation of `_.slice` without an iteratee call guard.
@@ -19730,6 +19808,10 @@ exports.isCrossOrigin = isCrossOrigin;
       // Exit early for strings to avoid a performance hit in some environments.
       if (typeof value == 'string') {
         return value;
+      }
+      if (isArray(value)) {
+        // Recursively convert values (susceptible to call stack limits).
+        return arrayMap(value, baseToString) + '';
       }
       if (isSymbol(value)) {
         return symbolToString ? symbolToString.call(value) : '';
@@ -20000,7 +20082,9 @@ exports.isCrossOrigin = isCrossOrigin;
       if (isDeep) {
         return buffer.slice();
       }
-      var result = new buffer.constructor(buffer.length);
+      var length = buffer.length,
+          result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+
       buffer.copy(result);
       return result;
     }
@@ -22112,24 +22196,27 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
-     * A specialized version of `arrayShuffle` which mutates `array`.
+     * A specialized version of `_.shuffle` which mutates and sets the size of `array`.
      *
      * @private
      * @param {Array} array The array to shuffle.
+     * @param {number} [size=array.length] The size of `array`.
      * @returns {Array} Returns `array`.
      */
-    function shuffleSelf(array) {
+    function shuffleSelf(array, size) {
       var index = -1,
           length = array.length,
           lastIndex = length - 1;
 
-      while (++index < length) {
+      size = size === undefined ? length : size;
+      while (++index < size) {
         var rand = baseRandom(index, lastIndex),
             value = array[rand];
 
         array[rand] = array[index];
         array[index] = value;
       }
+      array.length = size;
       return array;
     }
 
@@ -25207,7 +25294,8 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => 2
      */
     function sample(collection) {
-      return arraySample(isArrayLike(collection) ? collection : values(collection));
+      var func = isArray(collection) ? arraySample : baseSample;
+      return func(collection);
     }
 
     /**
@@ -25236,7 +25324,8 @@ exports.isCrossOrigin = isCrossOrigin;
       } else {
         n = toInteger(n);
       }
-      return arraySampleSize(isArrayLike(collection) ? collection : values(collection), n);
+      var func = isArray(collection) ? arraySampleSize : baseSampleSize;
+      return func(collection, n);
     }
 
     /**
@@ -25255,10 +25344,8 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => [4, 1, 3, 2]
      */
     function shuffle(collection) {
-      return shuffleSelf(isArrayLike(collection)
-        ? copyArray(collection)
-        : values(collection)
-      );
+      var func = isArray(collection) ? arrayShuffle : baseShuffle;
+      return func(collection);
     }
 
     /**
@@ -26694,11 +26781,10 @@ exports.isCrossOrigin = isCrossOrigin;
      * _.isArguments([1, 2, 3]);
      * // => false
      */
-    function isArguments(value) {
-      // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-      return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
-        (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
-    }
+    var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
+      return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&
+        !propertyIsEnumerable.call(value, 'callee');
+    };
 
     /**
      * Checks if `value` is classified as an `Array` object.
@@ -26918,8 +27004,8 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function isEmpty(value) {
       if (isArrayLike(value) &&
-          (isArray(value) || typeof value == 'string' ||
-            typeof value.splice == 'function' || isBuffer(value) || isArguments(value))) {
+          (isArray(value) || typeof value == 'string' || typeof value.splice == 'function' ||
+            isBuffer(value) || isTypedArray(value) || isArguments(value))) {
         return !value.length;
       }
       var tag = getTag(value);
@@ -26927,7 +27013,7 @@ exports.isCrossOrigin = isCrossOrigin;
         return !value.size;
       }
       if (isPrototype(value)) {
-        return !nativeKeys(value).length;
+        return !baseKeys(value).length;
       }
       for (var key in value) {
         if (hasOwnProperty.call(value, key)) {
@@ -27082,9 +27168,9 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function isFunction(value) {
       // The use of `Object#toString` avoids issues with the `typeof` operator
-      // in Safari 8-9 which returns 'object' for typed array and other constructors.
+      // in Safari 9 which returns 'object' for typed array and other constructors.
       var tag = isObject(value) ? objectToString.call(value) : '';
-      return tag == funcTag || tag == genTag;
+      return tag == funcTag || tag == genTag || tag == proxyTag;
     }
 
     /**
@@ -27357,7 +27443,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function isNative(value) {
       if (isMaskable(value)) {
-        throw new Error('This method is not supported with core-js. Try https://github.com/es-shims.');
+        throw new Error(CORE_ERROR_TEXT);
       }
       return baseIsNative(value);
     }
@@ -27972,8 +28058,8 @@ exports.isCrossOrigin = isCrossOrigin;
      * @memberOf _
      * @since 4.0.0
      * @category Lang
-     * @param {*} value The value to process.
-     * @returns {string} Returns the string.
+     * @param {*} value The value to convert.
+     * @returns {string} Returns the converted string.
      * @example
      *
      * _.toString(null);
@@ -29157,22 +29243,23 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => { '1': ['a', 'c'], '2': ['b'] }
      */
     function transform(object, iteratee, accumulator) {
-      var isArr = isArray(object) || isTypedArray(object);
-      iteratee = getIteratee(iteratee, 4);
+      var isArr = isArray(object),
+          isArrLike = isArr || isBuffer(object) || isTypedArray(object);
 
+      iteratee = getIteratee(iteratee, 4);
       if (accumulator == null) {
-        if (isArr || isObject(object)) {
-          var Ctor = object.constructor;
-          if (isArr) {
-            accumulator = isArray(object) ? new Ctor : [];
-          } else {
-            accumulator = isFunction(Ctor) ? baseCreate(getPrototype(object)) : {};
-          }
-        } else {
+        var Ctor = object && object.constructor;
+        if (isArrLike) {
+          accumulator = isArr ? new Ctor : [];
+        }
+        else if (isObject(object)) {
+          accumulator = isFunction(Ctor) ? baseCreate(getPrototype(object)) : {};
+        }
+        else {
           accumulator = {};
         }
       }
-      (isArr ? arrayEach : baseForOwn)(object, function(value, index, object) {
+      (isArrLike ? arrayEach : baseForOwn)(object, function(value, index, object) {
         return iteratee(accumulator, value, index, object);
       });
       return accumulator;
@@ -29850,7 +29937,7 @@ exports.isCrossOrigin = isCrossOrigin;
       } else if (radix) {
         radix = +radix;
       }
-      return nativeParseInt(toString(string), radix || 0);
+      return nativeParseInt(toString(string).replace(reTrimStart, ''), radix || 0);
     }
 
     /**
@@ -32716,33 +32803,33 @@ module.exports={
   "_args": [
     [
       {
-        "escapedName": null,
-        "hosted": {
-          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.17/package.json",
-          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-          "shortcut": "github:Afrostream/koment-js#1.0.17",
-          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.17",
-          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.17",
-          "type": "github"
-        },
-        "name": null,
-        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
         "scope": null,
-        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-        "type": "hosted"
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.18",
+          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.18",
+          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+          "shortcut": "github:Afrostream/koment-js#1.0.18",
+          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.18/package.json"
+        }
       },
       "/Users/benjipott/Documents/projects/afrostream/afrostream-player"
     ]
   ],
-  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
   "_id": "koment-js@1.0.8",
   "_inCache": true,
   "_installable": true,
   "_location": "/koment-js",
   "_phantomChildren": {
-    "JSONStream": "1.1.4",
+    "JSONStream": "1.2.1",
     "assert": "1.3.0",
     "async-foreach": "0.1.3",
     "babel-core": "5.8.38",
@@ -32753,7 +32840,7 @@ module.exports={
     "buffer": "3.6.0",
     "builtins": "0.0.7",
     "chalk": "1.1.3",
-    "chokidar": "1.6.0",
+    "chokidar": "1.6.1",
     "commander": "2.9.0",
     "commondir": "0.0.1",
     "console-browserify": "1.1.0",
@@ -32834,31 +32921,31 @@ module.exports={
     "xtend": "4.0.1"
   },
   "_requested": {
-    "escapedName": null,
-    "hosted": {
-      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.17/package.json",
-      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-      "shortcut": "github:Afrostream/koment-js#1.0.17",
-      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.17",
-      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.17",
-      "type": "github"
-    },
-    "name": null,
-    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
     "scope": null,
-    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
-    "type": "hosted"
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.18",
+      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.18",
+      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+      "shortcut": "github:Afrostream/koment-js#1.0.18",
+      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.18/package.json"
+    }
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#6a0500e481e168e8719d14d6034d90189e27d76b",
-  "_shasum": "ae59884f6ce7c9884a3812eea480abb4798e4d10",
+  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1a3f2df13b4eecf28ae9898e2242f3e9f11f7308",
+  "_shasum": "2330912e0b26e2066c629909933c3d9d0b0c094a",
   "_shrinkwrap": null,
-  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.17",
+  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
   "_where": "/Users/benjipott/Documents/projects/afrostream/afrostream-player",
   "author": {
     "name": "Benjipott"
@@ -32898,7 +32985,6 @@ module.exports={
     "lodash": "^4.15.0",
     "lodash-compat": "^3.10.2",
     "minimist": "^1.2.0",
-    "new-element": "^1.0.0",
     "node-sass": "^3.8.0",
     "node.extend": "^1.1.5",
     "nodemon": "^1.10.2",
@@ -32917,8 +33003,8 @@ module.exports={
   "description": "Post comments on all video players",
   "devDependencies": {},
   "eslintConfig": {
-    "extends": "airbnb/base",
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "extends": "airbnb/base"
   },
   "files": [
     "CONTRIBUTING.md",
@@ -32932,7 +33018,7 @@ module.exports={
     "src/",
     "test/"
   ],
-  "gitHead": "6a0500e481e168e8719d14d6034d90189e27d76b",
+  "gitHead": "1a3f2df13b4eecf28ae9898e2242f3e9f11f7308",
   "homepage": "https://github.com/komentio/koment-js#readme",
   "keywords": [
     "koment.io",
