@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.16",
+  "version": "2.2.17",
   "description": "Player afrostream",
   "main": "es5/js/afrostream.js",
   "scripts": {
@@ -131,6 +131,7 @@
     "uglify-js": "^2.5.0",
     "video.js": "^5.11.6",
     "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.8",
+    "videojs-externals": "git+https://github.com/Afrostream/videojs-externals.git#master",
     "videojs-font": "^2.0.0",
     "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#2.0.1",
     "videojs-standard": "^4.0.0",

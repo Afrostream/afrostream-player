@@ -30,6 +30,8 @@ require('videojs-chromecast');
 
 require('videojs-youtube');
 
+require('videojs-externals');
+
 var _komentJs = require('koment-js');
 
 var _komentJs2 = _interopRequireDefault(_komentJs);

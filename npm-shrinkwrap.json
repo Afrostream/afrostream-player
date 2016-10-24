@@ -17753,6 +17753,11 @@
       "from": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.8",
       "resolved": "git+https://github.com/benjipott/video.js-chromecast.git#680b46d47d5621e9724c5c7d492f3c0060ddcabe"
     },
+    "videojs-externals": {
+      "version": "1.0.1",
+      "from": "git+https://github.com/Afrostream/videojs-externals.git#master",
+      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#6f1c4fb236b4b466769ccec1d917ca326578129d"
+    },
     "videojs-font": {
       "version": "2.0.0",
       "from": "https://registry.npmjs.org/videojs-font/-/videojs-font-2.0.0.tgz",

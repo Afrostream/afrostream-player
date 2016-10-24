@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.16
+ * @version 2.2.17
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -32798,27 +32798,27 @@ function getXml(xhr) {
 
 function noop() {}
 
-},{"global/window":20,"is-function":21,"parse-headers":122,"xtend":142}],71:[function(require,module,exports){
+},{"global/window":20,"is-function":21,"parse-headers":122,"xtend":145}],71:[function(require,module,exports){
 module.exports={
   "_args": [
     [
       {
-        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-        "scope": null,
         "escapedName": null,
-        "name": null,
-        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-        "type": "hosted",
         "hosted": {
-          "type": "github",
+          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.18/package.json",
+          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+          "shortcut": "github:Afrostream/koment-js#1.0.18",
           "ssh": "git@github.com:Afrostream/koment-js.git#1.0.18",
           "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.18",
-          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-          "shortcut": "github:Afrostream/koment-js#1.0.18",
-          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.18/package.json"
-        }
+          "type": "github"
+        },
+        "name": null,
+        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+        "scope": null,
+        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+        "type": "hosted"
       },
       "/Users/benjipott/Documents/projects/afrostream/afrostream-player"
     ]
@@ -32921,22 +32921,22 @@ module.exports={
     "xtend": "4.0.1"
   },
   "_requested": {
-    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-    "scope": null,
     "escapedName": null,
-    "name": null,
-    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-    "type": "hosted",
     "hosted": {
-      "type": "github",
+      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.18/package.json",
+      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+      "shortcut": "github:Afrostream/koment-js#1.0.18",
       "ssh": "git@github.com:Afrostream/koment-js.git#1.0.18",
       "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.18",
-      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
-      "shortcut": "github:Afrostream/koment-js#1.0.18",
-      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.18/package.json"
-    }
+      "type": "github"
+    },
+    "name": null,
+    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+    "scope": null,
+    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.18",
+    "type": "hosted"
   },
   "_requiredBy": [
     "#USER",
@@ -33003,8 +33003,8 @@ module.exports={
   "description": "Post comments on all video players",
   "devDependencies": {},
   "eslintConfig": {
-    "parser": "babel-eslint",
-    "extends": "airbnb/base"
+    "extends": "airbnb/base",
+    "parser": "babel-eslint"
   },
   "files": [
     "CONTRIBUTING.md",
@@ -36345,6 +36345,867 @@ module.exports = exports['default'];
 },{"./component/control-bar/chromecast-button":127,"./tech/chromecast":129}],131:[function(require,module,exports){
 (function (global){
 /**
+ * @file videojs-externals.js
+ * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Tech = _videoJs2['default'].getComponent('Tech');
+
+/**
+ * Externals Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Tech
+ * @class Externals
+ */
+
+var Externals = (function (_Tech) {
+  _inherits(Externals, _Tech);
+
+  function Externals(options, ready) {
+    _classCallCheck(this, Externals);
+
+    _get(Object.getPrototypeOf(Externals.prototype), 'constructor', this).call(this, options, ready);
+    this.params = {
+      id: this.options_.techId,
+      autoplay: parseInt(options.autoplay),
+      chromeless: parseInt(options.controls),
+      html: 1,
+      info: 1,
+      logo: 1,
+      controls: 'html',
+      wmode: 'opaque',
+      format: 'json',
+      url: options.source.src
+    };
+
+    // If we are not on a server, don't specify the origin (it will crash)
+    if (window.location.protocol !== 'file:') {
+      this.params.origin = window.location.protocol + '//' + window.location.hostname;
+    }
+
+    this.videoId = this.parseSrc(options.source.src);
+    //if (Externals.isApiReady) {
+    this.loadApi();
+
+    //} else {
+    //   Add to the queue because the Externals API is not ready
+    //Externals.apiReadyQueue.push(this);
+    //}
+  }
+
+  _createClass(Externals, [{
+    key: 'parseSrc',
+    value: function parseSrc(src) {
+      return src;
+    }
+  }, {
+    key: 'createEl',
+    value: function createEl(options) {
+
+      var el = _videoJs2['default'].createEl('div', {
+        id: 'vjs-tech' + this.options_.techId,
+        className: 'vjs-tech vjs-tech-' + this.className_
+      });
+
+      var iframeContainer = _videoJs2['default'].createEl('iframe', _videoJs2['default'].mergeOptions({
+        id: this.options_.techId,
+        scrolling: 'no',
+        marginWidth: 0,
+        marginHeight: 0,
+        frameBorder: 0,
+        webkitAllowFullScreen: '',
+        mozallowfullscreen: '',
+        allowFullScreen: ''
+      }, options));
+
+      el.appendChild(iframeContainer);
+
+      if (/MSIE (\d+\.\d+);/.test(navigator.userAgent) || !/(iPad|iPhone|iPod|Android)/g.test(navigator.userAgent)) {
+        var divBlocker = _videoJs2['default'].createEl('div', {
+          className: 'vjs-iframe-blocker',
+          style: 'position:absolute;top:0;left:0;width:100%;height:100%'
+        });
+
+        // In case the blocker is still there and we want to pause
+        divBlocker.onclick = (function () {
+          this.pause();
+        }).bind(this);
+
+        el.appendChild(divBlocker);
+      }
+
+      return el;
+    }
+  }, {
+    key: 'addScriptTag',
+    value: function addScriptTag() {
+      var r = false,
+          self = this,
+          d = document,
+          s = d.getElementsByTagName('head')[0] || d.documentElement;
+      var js = d.createElement('script');
+      js.async = true;
+      js.type = 'text/javascript';
+      js.onload = js.onreadystatechange = function () {
+        var rs = this.readyState;
+        if (!r && (!rs || /loaded|complete/.test(rs))) {
+          r = true;
+          // Handle memory leak in IE
+          js.onload = js.onreadystatechange = null;
+          self.setupTriggers();
+        }
+      };
+
+      js.src = this.options_.api;
+      s.insertBefore(js, s.firstChild);
+    }
+  }, {
+    key: 'loadApi',
+    value: function loadApi() {
+      this.addScriptTag();
+    }
+  }, {
+    key: 'setupTriggers',
+    value: function setupTriggers() {
+      this.widgetPlayer.vjsTech = this;
+      this.widgetPlayer.listeners = [];
+      for (var i = Externals.Events.length - 1; i >= 0; i--) {
+        var listener = _videoJs2['default'].bind(this, this.eventHandler);
+        this.widgetPlayer.listeners.push({ event: Externals.Events[i], func: listener });
+        this.widgetPlayer.addEventListener(Externals.Events[i], listener);
+      }
+    }
+  }, {
+    key: 'eventHandler',
+    value: function eventHandler(e) {
+      if (!e) {
+        return;
+      }
+      this.onStateChange(e);
+      this.trigger(e);
+    }
+  }, {
+    key: 'onStateChange',
+    value: function onStateChange(event) {
+      var state = event.type;
+      if (state !== this.lastState) {
+        this.lastState = state;
+      }
+    }
+  }, {
+    key: 'onReady',
+    value: function onReady() {
+      this.triggerReady();
+    }
+  }, {
+    key: 'poster',
+    value: function poster() {
+      return this.poster_;
+    }
+  }, {
+    key: 'setPoster',
+    value: function setPoster(poster) {
+      this.poster_ = poster;
+      this.trigger('posterchange');
+    }
+
+    /**
+     * Set video
+     *
+     * @param {Object=} src Source object
+     * @method setSrc
+     */
+  }, {
+    key: 'src',
+    value: function src(_src) {
+      if (typeof _src !== 'undefined') {
+        this.src_ = this.parseSrc(_src);
+      }
+      return this.src_;
+    }
+  }, {
+    key: 'currentSrc',
+    value: function currentSrc() {
+      return this.src_;
+    }
+  }, {
+    key: 'play',
+    value: function play() {}
+  }, {
+    key: 'ended',
+    value: function ended() {
+      if (this.isReady_) {
+        return this.lastState === 0;
+      } else {
+        // We will play it when the API will be ready
+        return false;
+      }
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {}
+  }, {
+    key: 'paused',
+    value: function paused() {
+      return false;
+    }
+  }, {
+    key: 'currentTime',
+    value: function currentTime() {
+      return 0;
+    }
+  }, {
+    key: 'setCurrentTime',
+    value: function setCurrentTime(position) {
+      this.currentTime = position;
+    }
+  }, {
+    key: 'duration',
+    value: function duration() {
+      return 0;
+    }
+  }, {
+    key: 'volume',
+    value: function volume() {
+      return this.volume_;
+    }
+
+    /**
+     * Request to enter fullscreen
+     *
+     * @method enterFullScreen
+     */
+  }, {
+    key: 'enterFullScreen',
+    value: function enterFullScreen() {}
+
+    /**
+     * Request to exit fullscreen
+     *
+     * @method exitFullScreen
+     */
+  }, {
+    key: 'exitFullScreen',
+    value: function exitFullScreen() {}
+  }, {
+    key: 'setVolume',
+    value: function setVolume(percentAsDecimal) {
+      if (typeof percentAsDecimal !== 'undefined' && percentAsDecimal !== this.volume_) {
+        this.volume_ = percentAsDecimal;
+        this.trigger('volumechange');
+      }
+    }
+  }, {
+    key: 'buffered',
+    value: function buffered() {
+      return [];
+    }
+  }, {
+    key: 'controls',
+    value: function controls() {
+      return false;
+    }
+  }, {
+    key: 'muted',
+    value: function muted() {
+      return this.muted_;
+    }
+  }, {
+    key: 'setMuted',
+    value: function setMuted(muted) {
+      this.muted_ = muted;
+    }
+  }, {
+    key: 'supportsFullScreen',
+    value: function supportsFullScreen() {
+      return true;
+    }
+  }, {
+    key: 'resetSrc_',
+    value: function resetSrc_(callback) {
+      callback();
+    }
+  }, {
+    key: 'dispose',
+    value: function dispose() {
+      this.resetSrc_(Function.prototype);
+      _get(Object.getPrototypeOf(Externals.prototype), 'dispose', this).call(this, this);
+    }
+  }, {
+    key: 'onPlayerError',
+    value: function onPlayerError(e) {
+      this.errorNumber = e.data;
+      this.trigger('error');
+    }
+  }, {
+    key: 'error',
+    value: function error() {
+      return { code: 'External unknown error (' + this.errorNumber + ')' };
+    }
+  }]);
+
+  return Externals;
+})(Tech);
+
+Externals.prototype.className_ = ' vjs-externals';
+
+Externals.prototype.options_ = {
+  visibility: 'hidden'
+};
+
+Externals.apiReadyQueue = [];
+
+/* Externals Support Testing -------------------------------------------------------- */
+
+Externals.isSupported = function () {
+  return true;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Externals);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Externals.nativeSourceHandler = {};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Externals.nativeSourceHandler.canPlayType = function (source) {
+
+  var dashExtRE = /^video\/(externals)/i;
+
+  if (dashExtRE.test(source)) {
+    return 'maybe';
+  } else {
+    return '';
+  }
+};
+
+/*
+ * Check Flash can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Externals.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Externals.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Externals.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+/*
+ * Pass the source to the flash object
+ * Adaptive source handlers will have more complicated workflows before passing
+ * video data to the video element
+ *
+ * @param  {Object} source    The source object
+ * @param  {Flash} tech   The instance of the Flash tech
+ */
+Externals.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Externals.nativeSourceHandler.dispose = function () {};
+
+// Register the native source handler
+Externals.registerSourceHandler(Externals.nativeSourceHandler);
+
+/*
+ * Set the tech's volume control support status
+ *
+ * @type {Boolean}
+ */
+Externals.prototype['featuresVolumeControl'] = true;
+
+/*
+ * Set the tech's playbackRate support status
+ *
+ * @type {Boolean}
+ */
+Externals.prototype['featuresPlaybackRate'] = false;
+
+/*
+ * Set the tech's status on moving the video element.
+ * In iOS, if you move a video element in the DOM, it breaks video playback.
+ *
+ * @type {Boolean}
+ */
+Externals.prototype['movingMediaElementInDOM'] = false;
+
+/*
+ * Set the the tech's fullscreen resize support status.
+ * HTML video is able to automatically resize when going to fullscreen.
+ * (No longer appears to be used. Can probably be removed.)
+ */
+Externals.prototype['featuresFullscreenResize'] = false;
+
+/*
+ * Set the tech's timeupdate event support status
+ * (this disables the manual timeupdate events of the Tech)
+ */
+Externals.prototype['featuresTimeupdateEvents'] = false;
+
+/*
+ * Set the tech's progress event support status
+ * (this disables the manual progress events of the Tech)
+ */
+Externals.prototype['featuresProgressEvents'] = false;
+
+/*
+ * Sets the tech's status on native text track support
+ *
+ * @type {Boolean}
+ */
+Externals.prototype['featuresNativeTextTracks'] = true;
+
+/*
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
+ */
+Externals.prototype['featuresNativeAudioTracks'] = true;
+
+/*
+ * Sets the tech's status on native video track support
+ *
+ * @type {Boolean}
+ */
+Externals.prototype['featuresNativeVideoTracks'] = false;
+
+Externals.Events = 'apiready,ad_play,ad_start,ad_timeupdate,ad_pause,ad_end,video_start,' + 'video_end,play,playing,pause,ended,canplay,canplaythrough,timeupdate,progress,seeking,' + 'seeked,volumechange,durationchange,fullscreenchange,error'.split(',');
+
+Component.registerComponent('Externals', Externals);
+
+Tech.registerTech('Externals', Externals);
+
+exports['default'] = Externals;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],132:[function(require,module,exports){
+(function (global){
+/**
+ * @file Soundcloud.js
+ * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _Externals2 = require('./Externals');
+
+var _Externals3 = _interopRequireDefault(_Externals2);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Tech = _videoJs2['default'].getComponent('Tech');
+
+/**
+ * Externals Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Tech
+ * @class Soundcloud
+ */
+
+var Soundcloud = (function (_Externals) {
+  _inherits(Soundcloud, _Externals);
+
+  function Soundcloud(options, ready) {
+    _classCallCheck(this, Soundcloud);
+
+    _get(Object.getPrototypeOf(Soundcloud.prototype), 'constructor', this).call(this, options, ready);
+  }
+
+  _createClass(Soundcloud, [{
+    key: 'createEl',
+    value: function createEl() {
+      var soundcloudSource = null;
+      if ('string' === typeof this.options_.source) {
+        soundcloudSource = this.options_.source;
+      } else if ('object' === typeof this.options_.source) {
+        soundcloudSource = this.options_.source.src;
+      }
+
+      var el_ = _get(Object.getPrototypeOf(Soundcloud.prototype), 'createEl', this).call(this, {
+        width: '100%',
+        height: '100%',
+        src: 'https://w.soundcloud.com/player/?url=' + soundcloudSource + '&auto_play=' + this.options_.autoplay + '\n      &buying=false&liking=false&sharing=false&show_comments=false&show_playcount=false&show_user=false'
+      });
+
+      el_.style.visibility = this.options_.visibility;
+
+      return el_;
+    }
+  }, {
+    key: 'onStateChange',
+    value: function onStateChange(event) {
+      var state = event.type;
+      switch (state) {
+        case -1:
+          break;
+
+        case SC.Widget.Events.READY:
+          this.updatePause();
+          this.onReady();
+          break;
+
+        case SC.Widget.Events.FINISH:
+          this.updatePause();
+          this.trigger('ended');
+          break;
+
+        case SC.Widget.Events.PLAY:
+          this.updatePause();
+          this.trigger('play');
+          break;
+
+        case SC.Widget.Events.PLAY_PROGRESS:
+          this.trigger('playing');
+          this.currentTime_ = this.duration_ * 1000 * event.relativePosition / 1000;
+          //this.trigger('timeupdate');
+          break;
+
+        case SC.Widget.Events.PAUSE:
+          this.updatePause();
+          this.trigger('pause');
+          break;
+
+        case SC.Widget.Events.SEEK:
+          this.trigger('seeked');
+          break;
+
+        case SC.Widget.Events.LOAD_PROGRESS:
+          this.trigger('timeupdate');
+          break;
+
+        case SC.Widget.Events.ERROR:
+          this.onPlayerError();
+          break;
+      }
+    }
+  }, {
+    key: 'parseSrc',
+    value: function parseSrc(src) {
+      if (src) {
+        // Regex that parse the video ID for any Dailymotion URL
+        var regExp = /^(https?:\/\/)?(www.|api.)?soundcloud.com\//i;
+        var match = src.match(regExp);
+
+        return match ? match[5] || match[3] : null;
+      }
+    }
+  }, {
+    key: 'onReady',
+    value: function onReady() {
+      _get(Object.getPrototypeOf(Soundcloud.prototype), 'onReady', this).call(this);
+      this.updateDuration();
+      this.updateVolume();
+      this.updatePoster();
+    }
+  }, {
+    key: 'setupTriggers',
+    value: function setupTriggers() {
+      var _this = this;
+
+      this.widgetPlayer = SC.Widget(this.options_.techId);
+      this.widgetPlayer.vjsTech = this;
+
+      var _loop = function () {
+        var eventName = Soundcloud.Events[i];
+        /*jshint loopfunc: true */
+        _this.widgetPlayer.bind(eventName, function (data) {
+          _this.eventHandler(_videoJs2['default'].mergeOptions({ type: eventName }, data));
+        });
+      };
+
+      for (var i = Soundcloud.Events.length - 1; i >= 0; i--) {
+        _loop();
+      }
+    }
+
+    /**
+     * Request to enter fullscreen
+     *
+     * @method enterFullScreen
+     */
+  }, {
+    key: 'enterFullScreen',
+    value: function enterFullScreen() {
+      this.widgetPlayer.webkitEnterFullScreen();
+    }
+
+    /**
+     * Request to exit fullscreen
+     *
+     * @method exitFullScreen
+     */
+  }, {
+    key: 'exitFullScreen',
+    value: function exitFullScreen() {
+      this.widgetPlayer.webkitExitFullScreen();
+    }
+  }, {
+    key: 'updatePause',
+    value: function updatePause() {
+      var _this2 = this;
+
+      this.widgetPlayer.isPaused(function (paused) {
+        _this2.paused_ = paused;
+      });
+    }
+  }, {
+    key: 'updateDuration',
+    value: function updateDuration() {
+      var _this3 = this;
+
+      this.widgetPlayer.getDuration(function (duration) {
+        _this3.duration_ = duration / 1000;
+        _this3.trigger('durationchange');
+      });
+    }
+  }, {
+    key: 'updateVolume',
+    value: function updateVolume() {
+      var _this4 = this;
+
+      this.widgetPlayer.getVolume(function (volume) {
+        _this4.volume_ = volume;
+        _this4.trigger('volumechange');
+      });
+    }
+  }, {
+    key: 'updatePoster',
+    value: function updatePoster() {
+      var _this5 = this;
+
+      try {
+        this.widgetPlayer.getSounds(function (sounds) {
+          if (!sounds) {
+            return;
+          }
+          var sound = sounds[0];
+          _this5.setPoster(sound['artwork_url'].replace('large.jpg', 't500x500.jpg'));
+        });
+      } catch (e) {
+        console.log('unable to set poster', e);
+      }
+    }
+  }, {
+    key: 'src',
+    value: function src(_src) {
+      this.widgetPlayer.load(_src, this.onReady.bind(this));
+    }
+  }, {
+    key: 'duration',
+    value: function duration() {
+      return this.duration_;
+    }
+  }, {
+    key: 'currentTime',
+    value: function currentTime() {
+      return this.currentTime_;
+    }
+  }, {
+    key: 'setCurrentTime',
+    value: function setCurrentTime(position) {
+      this.trigger('seeking');
+      this.widgetPlayer.seekTo(position * 1000);
+    }
+  }, {
+    key: 'play',
+    value: function play() {
+      this.widgetPlayer.play();
+      this.updatePause();
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      this.widgetPlayer.pause();
+      this.updatePause();
+    }
+  }, {
+    key: 'paused',
+    value: function paused() {
+      return this.paused_;
+    }
+  }, {
+    key: 'muted',
+    value: function muted() {
+      return this.muted_;
+    }
+  }, {
+    key: 'volume',
+    value: function volume() {
+      return this.volume_;
+    }
+  }, {
+    key: 'setVolume',
+    value: function setVolume(percentAsDecimal) {
+      if (percentAsDecimal !== this.volume_) {
+        this.volume_ = percentAsDecimal;
+        this.muted_ = !this.volume_;
+        this.widgetPlayer.setVolume(this.volume_);
+        this.updateVolume();
+      }
+    }
+  }, {
+    key: 'setMuted',
+    value: function setMuted(muted) {
+      this.muted_ = muted;
+      this.widgetPlayer.setVolume(this.muted_ ? 0 : this.volume_);
+      this.updateVolume();
+    }
+  }]);
+
+  return Soundcloud;
+})(_Externals3['default']);
+
+Soundcloud.prototype.options_ = {
+  api: '//w.soundcloud.com/player/api.js',
+  visibility: 'hidden'
+  //children: ['posterImage'],
+};
+
+Soundcloud.apiReadyQueue = [];
+
+/* Soundcloud Support Testing -------------------------------------------------------- */
+
+Soundcloud.isSupported = function () {
+  return true;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Soundcloud);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Soundcloud.nativeSourceHandler = {};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Soundcloud.nativeSourceHandler.canPlayType = function (source) {
+  return source.indexOf('soundcloud') !== -1;
+};
+
+/*
+ * Check Soundcloud can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Soundcloud.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Soundcloud.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Soundcloud.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+Soundcloud.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Soundcloud.nativeSourceHandler.dispose = function () {};
+
+Soundcloud.Events = 'ready,play,playProgress,loadProgress,pause,seek,finish,error'.split(',');
+
+// Register the native source handler
+Soundcloud.registerSourceHandler(Soundcloud.nativeSourceHandler);
+
+Component.registerComponent('Soundcloud', Soundcloud);
+
+Tech.registerTech('Soundcloud', Soundcloud);
+
+exports['default'] = Soundcloud;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Externals":131}],133:[function(require,module,exports){
+/**
+ * @file videojs-externals.js
+ * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
+ */
+'use strict';
+
+require('./media/Externals');
+
+//import './media/Youtube';
+
+require('./media/Soundcloud');
+},{"./media/Externals":131,"./media/Soundcloud":132}],134:[function(require,module,exports){
+(function (global){
+/**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
  * Copyright (c) 2015 benjipott
  * Licensed under the Apache-2.0 license.
@@ -36625,7 +37486,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":133,"global/document":19,"global/window":20,"xhr":135}],132:[function(require,module,exports){
+},{"./utils.js":136,"global/document":19,"global/window":20,"xhr":138}],135:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -36658,7 +37519,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":131}],133:[function(require,module,exports){
+},{"./metrics":134}],136:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -36746,7 +37607,7 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":19,"global/window":20}],134:[function(require,module,exports){
+},{"global/document":19,"global/window":20}],137:[function(require,module,exports){
 (function (global){
 /**
  * @file Youtube.js
@@ -37467,7 +38328,7 @@ Tech.registerTech('Youtube', Youtube);
 exports['default'] = Youtube;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],135:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -37688,9 +38549,9 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":20,"is-function":136,"once":137,"parse-headers":140,"xtend":141}],136:[function(require,module,exports){
+},{"global/window":20,"is-function":139,"once":140,"parse-headers":143,"xtend":144}],139:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
-},{"dup":21}],137:[function(require,module,exports){
+},{"dup":21}],140:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -37711,13 +38572,13 @@ function once (fn) {
   }
 }
 
-},{}],138:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 arguments[4][18][0].apply(exports,arguments)
-},{"dup":18,"is-function":136}],139:[function(require,module,exports){
+},{"dup":18,"is-function":139}],142:[function(require,module,exports){
 arguments[4][125][0].apply(exports,arguments)
-},{"dup":125}],140:[function(require,module,exports){
+},{"dup":125}],143:[function(require,module,exports){
 arguments[4][122][0].apply(exports,arguments)
-},{"dup":122,"for-each":138,"trim":139}],141:[function(require,module,exports){
+},{"dup":122,"for-each":141,"trim":142}],144:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -37738,9 +38599,9 @@ function extend() {
     return target
 }
 
-},{}],142:[function(require,module,exports){
-arguments[4][141][0].apply(exports,arguments)
-},{"dup":141}],143:[function(require,module,exports){
+},{}],145:[function(require,module,exports){
+arguments[4][144][0].apply(exports,arguments)
+},{"dup":144}],146:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -37773,6 +38634,8 @@ require('videojs-metrics');
 require('videojs-chromecast');
 
 require('videojs-youtube');
+
+require('videojs-externals');
 
 var _komentJs = require('koment-js');
 
@@ -37933,5 +38796,5 @@ ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.option
 Component.registerComponent('Afrostream', Afrostream);
 exports.default = Afrostream;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"koment-js":46,"videojs-chromecast":128,"videojs-metrics":132,"videojs-youtube":134}]},{},[143])(143)
+},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"koment-js":46,"videojs-chromecast":128,"videojs-externals":133,"videojs-metrics":135,"videojs-youtube":137}]},{},[146])(146)
 });
