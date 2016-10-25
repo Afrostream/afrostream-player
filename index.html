@@ -236,7 +236,7 @@
     video.className = 'video-js vjs-afrostream-skin';
     video.crossOrigin = true;
     video.setAttribute('crossorigin', true);
-    video.setAttribute('data-setup', JSON.stringify(komentData));
+
 
     var cp = [];
 
@@ -277,6 +277,8 @@
       video.appendChild(track);
     }
 
+//    video.setAttribute('data-setup', JSON.stringify(komentData));
+
     container.appendChild(video);
 
     var mergedOpts = videojs.mergeOptions(options || {}, opts || {});
@@ -285,7 +287,7 @@
       //initMetrics();
     });
 
-    videojs.koment(player.tech_.el_);
+//    videojs.koment(player.tech_.el_);
 
     player.on('loadedmetadata', resizePlayer);
     return player;
@@ -535,8 +537,8 @@
   }
 
   options = {
-    controls: true,
-    autoplay: true,
+    controls: 1,
+    autoplay: 1,
     sources: sources,
     muted: muted,
     starttime: 700,
