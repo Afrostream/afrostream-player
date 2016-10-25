@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.17",
+  "version": "2.2.18",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -17754,9 +17754,9 @@
       "resolved": "git+https://github.com/benjipott/video.js-chromecast.git#680b46d47d5621e9724c5c7d492f3c0060ddcabe"
     },
     "videojs-externals": {
-      "version": "1.0.1",
-      "from": "git+https://github.com/Afrostream/videojs-externals.git#master",
-      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#6f1c4fb236b4b466769ccec1d917ca326578129d"
+      "version": "1.0.2",
+      "from": "git+https://github.com/Afrostream/videojs-externals.git#1.0.2",
+      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#663728447983a7e2efecb1b895153fa118e84fc6"
     },
     "videojs-font": {
       "version": "2.0.0",
@@ -19077,11 +19077,6 @@
       "version": "0.12.1",
       "from": "videojs-vtt.js@>=0.12.1 <0.13.0",
       "resolved": "https://registry.npmjs.org/videojs-vtt.js/-/videojs-vtt.js-0.12.1.tgz"
-    },
-    "videojs-youtube": {
-      "version": "2.0.8",
-      "from": "git+https://github.com/Afrostream/videojs-externals.git#1.0.2",
-      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#2b88658d1927af6d14b30361b187bf61efe7745a"
     },
     "vm-browserify": {
       "version": "0.0.4",
