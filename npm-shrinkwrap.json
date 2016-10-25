@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.16",
+  "version": "2.2.17",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -19080,8 +19080,8 @@
     },
     "videojs-youtube": {
       "version": "2.0.8",
-      "from": "git+https://github.com/benjipott/videojs-youtube.git#es6",
-      "resolved": "git+https://github.com/benjipott/videojs-youtube.git#1a387e2c6335932c35e6322ab638319ccaa9302a"
+      "from": "git+https://github.com/Afrostream/videojs-externals.git#1.0.2",
+      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#2b88658d1927af6d14b30361b187bf61efe7745a"
     },
     "vm-browserify": {
       "version": "0.0.4",

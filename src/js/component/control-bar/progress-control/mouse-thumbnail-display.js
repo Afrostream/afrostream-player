@@ -97,6 +97,11 @@ class MouseThumbnailDisplay extends MouseTimeDisplay {
 
   update (newTime, position) {
     super.update(newTime, position);
+
+    if (!~this.player_.techName_.indexOf('Html5|Dash')) {
+      return
+    }
+
     if (this.error) {
       return;
     }

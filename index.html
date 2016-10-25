@@ -285,7 +285,7 @@
       //initMetrics();
     });
 
-    videojs.koment(player.tech_.el_);
+//    videojs.koment(player.tech_.el_);
 
     player.on('loadedmetadata', resizePlayer);
     return player;
@@ -390,7 +390,7 @@
     //SOUNDCLOUD
     {
       src: 'https://soundcloud.com/yozzie-b/rhiana-where-have-u-been-ukg',
-      type: 'audio/soundcloud'
+      type: 'video/soundcloud'
     }
     //24HOURLOVE
 //    {
@@ -489,7 +489,7 @@
     //}
   ];
 
-  techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas', 'youtube','soundcloud'];
+  techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas', 'youtube', 'soundcloud'];
   muted = qs.muted ? qs.muted : false;
   drm = qs.drm ? qs.drm : false;
   url = qs.url ? qs.url : false;

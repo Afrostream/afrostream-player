@@ -15,8 +15,8 @@ import './tech/streamroot'
 import './component/control-bar/'
 import 'videojs-metrics'
 import 'videojs-chromecast'
-import 'videojs-youtube'
 import 'videojs-externals'
+
 import koment from 'koment-js'
 
 const Component = videojs.getComponent('Component')

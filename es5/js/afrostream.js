@@ -28,8 +28,6 @@ require('videojs-metrics');
 
 require('videojs-chromecast');
 
-require('videojs-youtube');
-
 require('videojs-externals');
 
 var _komentJs = require('koment-js');
