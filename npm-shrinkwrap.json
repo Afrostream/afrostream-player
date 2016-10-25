@@ -17758,7 +17758,7 @@
     "videojs-externals": {
       "version": "1.0.4",
       "from": "git+https://github.com/Afrostream/videojs-externals.git#1.0.4",
-      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#1e547e45124292bd3a0c96063545c5c1cac9424b"
+      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#180c467a9767fa9e06a5822daeae226b0e0facab"
     },
     "videojs-font": {
       "version": "2.0.0",

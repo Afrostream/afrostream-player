@@ -17,7 +17,7 @@ import 'videojs-metrics'
 import 'videojs-chromecast'
 import 'videojs-externals'
 
-import koment from 'koment-js'
+//import koment from 'koment-js'
 
 const Component = videojs.getComponent('Component')
 const ControlBar = videojs.getComponent('ControlBar')
@@ -137,7 +137,7 @@ videojs.browser.IS_SAFARI = (/safari/i).test(USER_AGENT)
  */
 videojs.options.children.push('afrostream')
 
-videojs.koment = koment
+//videojs.koment = koment
 
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0])
 
