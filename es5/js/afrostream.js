@@ -18,10 +18,6 @@ require('./tech/dash');
 
 require('./tech/dashas');
 
-require('./tech/easy-broadcast');
-
-require('./tech/streamroot');
-
 require('./component/control-bar/');
 
 require('videojs-metrics');
@@ -42,6 +38,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * Licensed under the Apache-2.0 license.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @file afrostream.js
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 **/
+
+//import './tech/easy-broadcast'
+//import './tech/streamroot'
+
 
 //import koment from 'koment-js'
 
