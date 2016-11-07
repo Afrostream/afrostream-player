@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.21
+ * @version 2.2.22
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -4075,6 +4075,420 @@ module.exports = exports['default'];
 },{}],26:[function(require,module,exports){
 (function (global){
 /**
+ * @file Deezer.js
+ * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _Externals2 = require('./Externals');
+
+var _Externals3 = _interopRequireDefault(_Externals2);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Tech = _videoJs2['default'].getComponent('Tech');
+
+/**
+ * Externals Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Tech
+ * @class Deezer
+ */
+
+var Deezer = (function (_Externals) {
+  _inherits(Deezer, _Externals);
+
+  function Deezer(options, ready) {
+    _classCallCheck(this, Deezer);
+
+    _get(Object.getPrototypeOf(Deezer.prototype), 'constructor', this).call(this, options, ready);
+  }
+
+  _createClass(Deezer, [{
+    key: 'injectCss',
+    value: function injectCss() {
+      var css = '.vjs-' + this.className_ + ' > .vjs-poster { display:block; width:50%; background-size:contain; background-position: 0 50%; background-color: #000; }\n    .vjs-' + this.className_ + ' .vjs-tech > .vjs-poster {  display:block; background-color: rgba(76, 50, 65, 0.35);}\n    .vjs-deezer-info{position:absolute;padding:3em 1em 1em 1em;left:50%;top:0;right:0;bottom:0;\n      text-align: center; pointer-events: none; text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.69);}';
+      _get(Object.getPrototypeOf(Deezer.prototype), 'injectCss', this).call(this, css);
+    }
+  }, {
+    key: 'createEl',
+    value: function createEl() {
+
+      var source = null;
+      if ('string' === typeof this.options_.source) {
+        source = this.options_.source;
+      } else if ('object' === typeof this.options_.source) {
+        source = this.options_.source.src;
+      }
+
+      source = this.parseSrc(source);
+
+      var el_ = _get(Object.getPrototypeOf(Deezer.prototype), 'createEl', this).call(this, 'div', {
+        width: '100%',
+        height: '100%',
+        src: '//www.deezer.com/plugins/player?type=tracks&id=' + source + '\n      &format=classic&color=007FEB&autoplay=' + this.options_.autoplay + '\n      &playlist=' + this.options_.playList + '&width=100%&height=100%'
+      });
+
+      this.infosEl_ = _videoJs2['default'].createEl('div', {
+        className: 'vjs-deezer-info'
+      });
+
+      var deezerEl = _videoJs2['default'].createEl('div', {
+        id: 'dz-root'
+      });
+
+      el_.firstChild.style.visibility = this.options_.visibility;
+      el_.appendChild(this.infosEl_);
+      el_.appendChild(deezerEl);
+
+      return el_;
+    }
+  }, {
+    key: 'isApiReady',
+    value: function isApiReady() {
+      return window['DZ'] && window['DZ']['player'];
+    }
+  }, {
+    key: 'onStateChange',
+    value: function onStateChange(event) {
+      var state = event.type;
+      switch (state) {
+        case -1:
+          this.trigger('loadstart');
+          this.trigger('loadedmetadata');
+          this.trigger('durationchange');
+          break;
+
+        case 'player_loaded':
+          this.onReady();
+          this.updatePause();
+          break;
+
+        case 'track_end':
+          this.updatePause();
+          this.trigger('ended');
+          break;
+
+        case 'player_play':
+          this.updateDuration();
+          this.updatePause();
+          this.trigger('play');
+          break;
+
+        case 'player_position':
+          this.trigger('playing');
+          this.currentTime_ = event[0];
+          this.duration_ = event[1];
+          this.trigger('timeupdate');
+          break;
+
+        case 'player_paused':
+          this.updatePause();
+          this.trigger('pause');
+          break;
+
+      }
+    }
+  }, {
+    key: 'parseSrc',
+    value: function parseSrc(src) {
+      if (src) {
+        // Regex that parse the video ID for any Dailymotion URL
+        var regExp = /^https?:\/\/(?:www\.)?deezer\.com\/(track|album|playlist)\/(\d+)$/;
+        var match = src.match(regExp);
+
+        return match ? match[2] || match[2] : null;
+      }
+    }
+  }, {
+    key: 'onReady',
+    value: function onReady() {
+      _get(Object.getPrototypeOf(Deezer.prototype), 'onReady', this).call(this);
+      this.updateDuration();
+      this.updateVolume();
+      this.updatePoster();
+    }
+  }, {
+    key: 'initTech',
+    value: function initTech() {
+      DZ.init({
+        channelUrl: window.location.protocol + '//' + window.location.hostname,
+        appId: this.options_.appId,
+        player: {
+          container: this.options_.techId,
+          width: 800,
+          height: 300,
+          onload: this.onReady.bind(this)
+        }
+      });
+      this.widgetPlayer = DZ.player;
+      _get(Object.getPrototypeOf(Deezer.prototype), 'initTech', this).call(this);
+      this.onStateChange({ type: -1 });
+    }
+  }, {
+    key: 'setupTriggers',
+    value: function setupTriggers() {
+      var _this = this;
+
+      this.widgetPlayer.vjsTech = this;
+      for (var i = Deezer.Events.length - 1; i >= 0; i--) {
+        var eventName = Deezer.Events[i];
+        /*jshint loopfunc: true */
+        DZ.Event.subscribe(eventName, function (data, event) {
+          _this.eventHandler(_videoJs2['default'].mergeOptions({ type: event || data }, data));
+        });
+      }
+    }
+  }, {
+    key: 'ended',
+    value: function ended() {
+      return this.duration() === this.currentTime();
+    }
+
+    /**
+     * Request to enter fullscreen
+     *
+     * @method enterFullScreen
+     */
+  }, {
+    key: 'enterFullScreen',
+    value: function enterFullScreen() {}
+
+    /**
+     * Request to exit fullscreen
+     *
+     * @method exitFullScreen
+     */
+  }, {
+    key: 'exitFullScreen',
+    value: function exitFullScreen() {}
+  }, {
+    key: 'updatePause',
+    value: function updatePause() {
+      this.paused_ = !this.widgetPlayer.isPlaying();
+    }
+  }, {
+    key: 'updateDuration',
+    value: function updateDuration() {
+      var track = this.widgetPlayer.getCurrentTrack();
+      this.duration_ = track && track.duration || 0;
+      this.trigger('durationchange');
+    }
+  }, {
+    key: 'updateVolume',
+    value: function updateVolume() {
+      this.volume_ = this.widgetPlayer.getVolume();
+      this.trigger('volumechange');
+    }
+  }, {
+    key: 'updatePoster',
+    value: function updatePoster() {
+      var _this2 = this;
+
+      try {
+        //const track = this.widgetPlayer.getCurrentTrack();
+        var track = {};
+        if ('string' === typeof this.options_.source) {
+          track.id = this.options_.source;
+        } else if ('object' === typeof this.options_.source) {
+          track.id = this.options_.source.src;
+        }
+
+        track.id = this.parseSrc(track.id);
+
+        DZ.api('/track/' + track.id, function (response) {
+          _this2.setPoster('' + response.album['cover_big']);
+          _this2.update(response);
+        });
+      } catch (e) {
+        console.log('unable to set poster', e);
+      }
+    }
+  }, {
+    key: 'update',
+    value: function update(sound) {
+      this.infosEl_.innerHTML = sound.title;
+    }
+  }, {
+    key: 'src',
+    value: function src(source) {
+
+      if (!source || !source.src) {
+        if ('string' === typeof this.options_.source) {
+          source = this.options_.source;
+        } else if ('object' === typeof this.options_.source) {
+          source = this.options_.source.src;
+        }
+
+        source = this.parseSrc(source);
+      }
+
+      this.widgetPlayer.playTracks([source]);
+    }
+  }, {
+    key: 'duration',
+    value: function duration() {
+      return this.duration_;
+    }
+  }, {
+    key: 'currentTime',
+    value: function currentTime() {
+      return this.currentTime_;
+    }
+  }, {
+    key: 'setCurrentTime',
+    value: function setCurrentTime(position) {
+      this.trigger('seeking');
+      this.widgetPlayer.seekTo(position * 1000);
+    }
+  }, {
+    key: 'play',
+    value: function play() {
+      this.widgetPlayer.play();
+      this.updatePause();
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      this.widgetPlayer.pause();
+      this.updatePause();
+    }
+  }, {
+    key: 'paused',
+    value: function paused() {
+      return this.paused_;
+    }
+  }, {
+    key: 'muted',
+    value: function muted() {
+      return this.muted_;
+    }
+  }, {
+    key: 'volume',
+    value: function volume() {
+      return this.volume_;
+    }
+  }, {
+    key: 'setVolume',
+    value: function setVolume(percentAsDecimal) {
+      if (percentAsDecimal !== this.volume_) {
+        this.volume_ = percentAsDecimal;
+        this.muted_ = !this.volume_;
+        this.widgetPlayer.setVolume(this.volume_);
+        this.updateVolume();
+      }
+    }
+  }, {
+    key: 'setMuted',
+    value: function setMuted(muted) {
+      this.muted_ = muted;
+      this.widgetPlayer.setMute(this.muted_);
+      this.updateVolume();
+    }
+  }]);
+
+  return Deezer;
+})(_Externals3['default']);
+
+Deezer.prototype.className_ = 'deezer';
+
+Deezer.prototype.options_ = {
+  api: 'https://cdns-files.dzcdn.net/js/min/dz.js',
+  appId: 213642,
+  playList: false,
+  visibility: 'hidden',
+  children: ['subPosterImage']
+};
+
+/* Deezer Support Testing -------------------------------------------------------- */
+
+Deezer.isSupported = function () {
+  return true;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Deezer);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Deezer.nativeSourceHandler = {};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Deezer.nativeSourceHandler.canPlayType = function (source) {
+  return source.indexOf('deezer') !== -1;
+};
+
+/*
+ * Check Deezer can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Deezer.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Deezer.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Deezer.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+Deezer.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Deezer.nativeSourceHandler.dispose = function () {};
+
+Deezer.Events = 'player_loaded,player_play,player_paused,player_position,player_buffering,volume_changed,shuffle_changed,mute_changed,track_end,'.split(',');
+
+// Register the native source handler
+Deezer.registerSourceHandler(Deezer.nativeSourceHandler);
+
+Component.registerComponent('Deezer', Deezer);
+
+Tech.registerTech('Deezer', Deezer);
+
+exports['default'] = Deezer;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Externals":27}],27:[function(require,module,exports){
+(function (global){
+/**
  * @file videojs-externals.js
  * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
  */
@@ -4099,6 +4513,7 @@ var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof globa
 var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var Component = _videoJs2['default'].getComponent('Component');
+//const ClickableComponent = videojs.getComponent('ClickableComponent');
 var Tech = _videoJs2['default'].getComponent('Tech');
 
 /**
@@ -4173,7 +4588,7 @@ var Externals = (function (_Tech) {
     }
   }, {
     key: 'createEl',
-    value: function createEl(type, options) {
+    value: function createEl(type, options, blocker) {
 
       var el = _videoJs2['default'].createEl('div', {
         id: 'vjs-tech' + this.options_.techId,
@@ -4193,16 +4608,21 @@ var Externals = (function (_Tech) {
 
       el.appendChild(iframeContainer);
       var isOnMobile = this.isOnMobile();
-      if (!isOnMobile) {
+      if (!isOnMobile && blocker !== false || blocker) {
+        //let divBlocker = ClickableComponent.create();
+        //let divBlocker = this.addChild('clickableComponent');
+        //divBlocker.onClick = ()=> {
+        //  this.togglePlayPause();
+        //}
         var divBlocker = _videoJs2['default'].createEl('div', {
           className: 'vjs-iframe-blocker',
           style: 'position:absolute;top:0;left:0;width:100%;height:100%'
         });
 
         // In case the blocker is still there and we want to pause
-        divBlocker.onclick = (function () {
-          this.pause();
-        }).bind(this);
+        _videoJs2['default'].on(divBlocker, 'click', _videoJs2['default'].bind(this, this.togglePlayPause));
+        _videoJs2['default'].on(divBlocker, 'tap', _videoJs2['default'].bind(this, this.togglePlayPause));
+        _videoJs2['default'].on(divBlocker, 'touchend', _videoJs2['default'].bind(this, this.togglePlayPause));
 
         el.appendChild(divBlocker);
       }
@@ -4211,6 +4631,15 @@ var Externals = (function (_Tech) {
       tagPlayer.addClass('vjs-' + this.className_ + (isOnMobile ? '-mobile' : ''));
 
       return el;
+    }
+  }, {
+    key: 'togglePlayPause',
+    value: function togglePlayPause() {
+      if (this.paused()) {
+        this.play();
+      } else {
+        this.pause();
+      }
     }
   }, {
     key: 'isOnMobile',
@@ -4266,10 +4695,8 @@ var Externals = (function (_Tech) {
     key: 'setupTriggers',
     value: function setupTriggers() {
       this.widgetPlayer.vjsTech = this;
-      this.widgetPlayer.listeners = [];
       for (var i = Externals.Events.length - 1; i >= 0; i--) {
         var listener = _videoJs2['default'].bind(this, this.eventHandler);
-        this.widgetPlayer.listeners.push({ event: Externals.Events[i], func: listener });
         this.widgetPlayer.addEventListener(Externals.Events[i], listener);
       }
     }
@@ -4286,8 +4713,37 @@ var Externals = (function (_Tech) {
     key: 'onStateChange',
     value: function onStateChange(event) {
       var state = event.type;
-      if (state !== this.lastState) {
-        this.lastState = state;
+      this.lastState = state;
+      switch (state) {
+        case -1:
+          this.trigger('loadstart');
+          break;
+
+        case 'apiready':
+          this.trigger('loadedmetadata');
+          this.onReady();
+          this.trigger('durationchange');
+          break;
+
+        case 'ended':
+          break;
+
+        case 'play':
+          this.trigger('playing');
+          break;
+
+        case 'pause':
+          break;
+
+        case 'seeked':
+          break;
+
+        case 'timeupdate':
+          break;
+
+        case 'error':
+          this.onPlayerError();
+          break;
       }
     }
   }, {
@@ -4426,8 +4882,11 @@ var Externals = (function (_Tech) {
   }, {
     key: 'dispose',
     value: function dispose() {
+      var isOnMobile = this.isOnMobile();
+      var tagPlayer = (0, _videoJs2['default'])(this.options_.playerId);
+      tagPlayer.removeClass('vjs-' + this.className_ + (isOnMobile ? '-mobile' : ''));
       this.resetSrc_(Function.prototype);
-      _get(Object.getPrototypeOf(Externals.prototype), 'dispose', this).call(this, this);
+      _get(Object.getPrototypeOf(Externals.prototype), 'dispose', this).call(this);
     }
   }, {
     key: 'onPlayerError',
@@ -4446,6 +4905,7 @@ var Externals = (function (_Tech) {
 })(Tech);
 
 Externals.prototype.className_ = ' vjs-externals';
+Externals.prototype.widgetPlayer = {};
 
 Externals.prototype.options_ = {
   visibility: 'hidden'
@@ -4517,7 +4977,7 @@ Externals.prototype['featuresNativeAudioTracks'] = true;
  */
 Externals.prototype['featuresNativeVideoTracks'] = false;
 
-Externals.Events = 'apiready,ad_play,ad_start,ad_timeupdate,ad_pause,ad_end,video_start,' + 'video_end,play,playing,pause,ended,canplay,canplaythrough,timeupdate,progress,seeking,' + 'seeked,volumechange,durationchange,fullscreenchange,error'.split(',');
+Externals.Events = 'apiready,ad_play,ad_start,ad_timeupdate,ad_pause,ad_end,video_start,\n  \'video_end,play,playing,pause,ended,canplay,canplaythrough,timeupdate,progress,seeking,\n  \'seeked,volumechange,durationchange,fullscreenchange,error'.split(',');
 
 Component.registerComponent('Externals', Externals);
 
@@ -4526,7 +4986,7 @@ Tech.registerTech('Externals', Externals);
 exports['default'] = Externals;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (global){
 /**
  * @file Soundcloud.js
@@ -4580,7 +5040,7 @@ var Soundcloud = (function (_Externals) {
   _createClass(Soundcloud, [{
     key: 'injectCss',
     value: function injectCss() {
-      var css = '.vjs-' + this.className_ + ' > .vjs-poster { display:block; width:50%; background-size:contain; background-position: 0 50%; background-color: transparent; }\n    .vjs-' + this.className_ + ' .vjs-tech > .vjs-poster {  display:block; background-color: rgba(76, 50, 65, 0.35);}\n    .vjs-soundcloud-info{position:absolute;padding:3em 1em 1em 1em;left:50%;top:0;right:0;bottom:0; text-align: center; pointer-events: none; text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.69);}';
+      var css = '.vjs-' + this.className_ + ' > .vjs-poster { display:block; width:50%; background-size:contain; background-position: 0 50%; background-color: transparent; }\n    .vjs-' + this.className_ + ' .vjs-tech > .vjs-poster {  display:block; background-color: rgba(76, 50, 65, 0.35);}\n    .vjs-soundcloud-info{position:absolute;padding:3em 1em 1em 1em;left:50%;top:0;right:0;bottom:0;\n      text-align: center; pointer-events: none; text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.69);}';
       _get(Object.getPrototypeOf(Soundcloud.prototype), 'injectCss', this).call(this, css);
     }
   }, {
@@ -4931,10 +5391,10 @@ Tech.registerTech('Soundcloud', Soundcloud);
 exports['default'] = Soundcloud;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Externals":26}],28:[function(require,module,exports){
+},{"./Externals":27}],29:[function(require,module,exports){
 (function (global){
 /**
- * @file Youtube.js
+ * @file spotify.js
  * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
  */
 'use strict';
@@ -4970,6 +5430,576 @@ var Tech = _videoJs2['default'].getComponent('Tech');
  * @param {Object=} options Object of option names and values
  * @param {Function=} ready Ready callback function
  * @extends Tech
+ * @class Spotify
+ */
+
+var Spotify = (function (_Externals) {
+  _inherits(Spotify, _Externals);
+
+  function Spotify(options, ready) {
+    _classCallCheck(this, Spotify);
+
+    _get(Object.getPrototypeOf(Spotify.prototype), 'constructor', this).call(this, options, ready);
+  }
+
+  _createClass(Spotify, [{
+    key: 'createEl',
+    value: function createEl() {
+      var source = null;
+      if ('string' === typeof this.options_.source) {
+        source = this.options_.source;
+      } else if ('object' === typeof this.options_.source) {
+        source = this.options_.source.src;
+      }
+
+      var el_ = _get(Object.getPrototypeOf(Spotify.prototype), 'createEl', this).call(this, 'iframe', {
+        width: '100%',
+        height: '100%',
+        src: 'https://embed.spotify.com/?uri=' + source
+      }, false);
+
+      el_.firstChild.style.visibility = this.options_.visibility;
+
+      var tagPlayer = (0, _videoJs2['default'])(this.options_.playerId);
+      tagPlayer.controls(false);
+
+      return el_;
+    }
+  }, {
+    key: 'addScriptTag',
+    value: function addScriptTag() {
+      this.initTech();
+    }
+  }, {
+    key: 'isApiReady',
+    value: function isApiReady() {
+      return true;
+    }
+  }, {
+    key: 'parseSrc',
+    value: function parseSrc(src) {
+      return src;
+    }
+  }, {
+    key: 'setupTriggers',
+    value: function setupTriggers() {
+      //SPOTIFY don't have embed api
+    }
+  }, {
+    key: 'ended',
+    value: function ended() {
+      return false;
+    }
+  }, {
+    key: 'play',
+    value: function play() {}
+  }, {
+    key: 'pause',
+    value: function pause() {}
+
+    /**
+     * Request to enter fullscreen
+     *
+     * @method enterFullScreen
+     */
+  }, {
+    key: 'enterFullScreen',
+    value: function enterFullScreen() {}
+
+    /**
+     * Request to exit fullscreen
+     *
+     * @method exitFullScreen
+     */
+  }, {
+    key: 'exitFullScreen',
+    value: function exitFullScreen() {}
+  }, {
+    key: 'src',
+    value: function src(_src) {
+      this.el_.src(_src);
+    }
+  }]);
+
+  return Spotify;
+})(_Externals3['default']);
+
+Spotify.prototype.className_ = 'spotify';
+
+Spotify.prototype.options_ = {
+  api: '',
+  visibility: 'show'
+};
+
+/* Spotify Support Testing -------------------------------------------------------- */
+
+Spotify.isSupported = function () {
+  return true;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Spotify);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Spotify.nativeSourceHandler = {};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Spotify.nativeSourceHandler.canPlayType = function (source) {
+  return source.indexOf('spotify') !== -1;
+};
+
+/*
+ * Check Spotify can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Spotify.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Spotify.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Spotify.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+Spotify.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Spotify.nativeSourceHandler.dispose = function () {};
+
+Spotify.Events = ''.split(',');
+
+// Register the native source handler
+Spotify.registerSourceHandler(Spotify.nativeSourceHandler);
+
+Component.registerComponent('Spotify', Spotify);
+
+Tech.registerTech('Spotify', Spotify);
+
+exports['default'] = Spotify;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Externals":27}],30:[function(require,module,exports){
+(function (global){
+/**
+ * @file Vimeo.js
+ * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _Externals2 = require('./Externals');
+
+var _Externals3 = _interopRequireDefault(_Externals2);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Tech = _videoJs2['default'].getComponent('Tech');
+
+/**
+ * Externals Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Tech
+ * @class Vimeo
+ */
+
+var Vimeo = (function (_Externals) {
+  _inherits(Vimeo, _Externals);
+
+  function Vimeo(options, ready) {
+    _classCallCheck(this, Vimeo);
+
+    _get(Object.getPrototypeOf(Vimeo.prototype), 'constructor', this).call(this, options, ready);
+  }
+
+  _createClass(Vimeo, [{
+    key: 'createEl',
+    value: function createEl() {
+
+      var vimeoSource = null;
+      if ('string' === typeof this.options_.source) {
+        vimeoSource = this.options_.source;
+      } else if ('object' === typeof this.options_.source) {
+        vimeoSource = this.options_.source.src;
+      }
+
+      vimeoSource = this.parseSrc(vimeoSource);
+
+      var el_ = _get(Object.getPrototypeOf(Vimeo.prototype), 'createEl', this).call(this, 'iframe', {
+        id: this.options_.techId,
+        style: 'width:100%;height:100%;top:0;left:0;position:absolute',
+        src: this.options_.embed + '/' + vimeoSource + '??api=1&player_id=' + this.options_.techId + '&fullscreen=1&autoplay=' + this.options_.autoplay
+      });
+
+      var tagPlayer = (0, _videoJs2['default'])(this.options_.playerId);
+      tagPlayer.controls(false);
+      return el_;
+    }
+  }, {
+    key: 'parseSrc',
+    value: function parseSrc(src) {
+      if (src) {
+        // Regex that parse the video ID for any Vimeo URL
+        var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+        var match = src.match(regExp);
+
+        if (match && match[5]) {
+          return match[5];
+        }
+      }
+    }
+  }, {
+    key: 'isApiReady',
+    value: function isApiReady() {
+      return window['Vimeo'] && window['Vimeo']['Player'];
+    }
+  }, {
+    key: 'initTech',
+    value: function initTech() {
+      if (!this.isApiReady()) {
+        return;
+      }
+      var source = null;
+      if ('string' === typeof this.options_.source) {
+        source = this.options_.source;
+      } else if ('object' === typeof this.options_.source) {
+        source = this.options_.source.src;
+      }
+
+      source = this.parseSrc(source);
+
+      var vimOpts = _videoJs2['default'].mergeOptions(this.options_, {
+        id: source,
+        byline: 0,
+        color: '#00adef',
+        portrait: 0,
+        controls: 0,
+        fullscreen: 1
+      });
+
+      this.widgetPlayer = new window.Vimeo.Player(this.options_.techId, vimOpts);
+      this.widgetPlayer.ready().then(_videoJs2['default'].bind(this, this.onReady));
+      _get(Object.getPrototypeOf(Vimeo.prototype), 'initTech', this).call(this);
+      this.onStateChange({ type: -1 });
+    }
+  }, {
+    key: 'setupTriggers',
+    value: function setupTriggers() {
+      var _this = this;
+
+      this.widgetPlayer.vjsTech = this;
+
+      var _loop = function () {
+        var eventName = Vimeo.Events[i];
+        /*jshint loopfunc: true */
+        _this.widgetPlayer.on(eventName, function (data) {
+          _this.eventHandler(_videoJs2['default'].mergeOptions({ type: eventName }, data));
+        });
+      };
+
+      for (var i = Vimeo.Events.length - 1; i >= 0; i--) {
+        _loop();
+      }
+    }
+  }, {
+    key: 'onStateChange',
+    value: function onStateChange(event) {
+      var state = event.type;
+      this.lastState = state;
+      _get(Object.getPrototypeOf(Vimeo.prototype), 'onStateChange', this).call(this, event);
+      if (event.volume) {
+        this.volume_ = event.volume;
+      }
+      if (event.duration) {
+        this.duration_ = event.duration;
+      }
+      if (event.seconds) {
+        this.currentTime_ = event.seconds;
+      }
+      if (event.percent) {
+        this.buffered_ = event.percent;
+      }
+      switch (state) {
+        case 'onLoadProgress':
+          this.trigger('progress');
+          this.trigger('durationchange');
+          break;
+        case 'playProgress':
+          this.trigger('timeupdate');
+          break;
+      }
+    }
+  }, {
+    key: 'updateVolume',
+    value: function updateVolume() {
+      var _this2 = this;
+
+      this.widgetPlayer.getVolume().then(function (volume) {
+        _this2.volume_ = volume;
+        _this2.trigger('volumechange');
+      });
+    }
+  }, {
+    key: 'updateEnded',
+    value: function updateEnded() {
+      var _this3 = this;
+
+      this.widgetPlayer.getEnded().then(function (ended) {
+        _this3.ended_ = ended;
+      });
+    }
+  }, {
+    key: 'updatePaused',
+    value: function updatePaused() {
+      var _this4 = this;
+
+      this.widgetPlayer.getPaused().then(function (paused) {
+        _this4.paused_ = paused;
+      });
+    }
+  }, {
+    key: 'updateDuration',
+    value: function updateDuration() {
+      var _this5 = this;
+
+      this.widgetPlayer.getDuration().then(function (duration) {
+        _this5.duration_ = duration;
+      });
+    }
+  }, {
+    key: 'buffered',
+    value: function buffered() {
+      return _videoJs2['default'].createTimeRange(0, this.buffered_ * this.duration_ || 0);
+    }
+  }, {
+    key: 'ended',
+    value: function ended() {
+      return this.ended_;
+    }
+  }, {
+    key: 'duration',
+    value: function duration() {
+      return this.duration_;
+    }
+  }, {
+    key: 'currentTime',
+    value: function currentTime() {
+      return this.currentTime_;
+    }
+  }, {
+    key: 'setCurrentTime',
+    value: function setCurrentTime(seconds) {
+      var _this6 = this;
+
+      this.widgetPlayer.setCurrentTime(seconds).then(function (seconds) {
+        _this6.currentTime_ = seconds;
+      });
+    }
+  }, {
+    key: 'play',
+    value: function play() {
+      this.widgetPlayer.play();
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      this.widgetPlayer.pause();
+    }
+  }, {
+    key: 'paused',
+    value: function paused() {
+      return this.paused_;
+    }
+  }, {
+    key: 'muted',
+    value: function muted() {
+      return this.muted_;
+    }
+  }, {
+    key: 'volume',
+    value: function volume() {
+      return this.volume_;
+    }
+  }, {
+    key: 'setVolume',
+    value: function setVolume(percentAsDecimal) {
+      var _this7 = this;
+
+      if (percentAsDecimal !== this.volume_) {
+        this.widgetPlayer.setVolume(percentAsDecimal).then(function () {
+          _this7.updateVolume();
+        });
+      }
+    }
+  }, {
+    key: 'setMuted',
+    value: function setMuted(muted) {
+      this.muted_ = muted;
+      if (muted) {
+        this.volumeBefore_ = this.volume_;
+      }
+      this.setVolume(muted ? 0 : this.volumeBefore_);
+    }
+  }]);
+
+  return Vimeo;
+})(_Externals3['default']);
+
+Vimeo.prototype.options_ = {
+  api: '//player.vimeo.com/api/player.js',
+  embed: '//player.vimeo.com/video',
+  visibility: 'visible'
+};
+
+Vimeo.prototype.className_ = 'Vimeo';
+
+/* Vimeo Support Testing -------------------------------------------------------- */
+
+Vimeo.isSupported = function () {
+  return true;
+};
+
+// Add Source Handler pattern functions to this tech
+Tech.withSourceHandlers(Vimeo);
+
+/*
+ * The default native source handler.
+ * This simply passes the source to the video element. Nothing fancy.
+ *
+ * @param  {Object} source   The source object
+ * @param  {Flash} tech  The instance of the Flash tech
+ */
+Vimeo.nativeSourceHandler = {};
+
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Vimeo.nativeSourceHandler.canPlayType = function (source) {
+  return source.indexOf('vimeo') !== -1;
+};
+
+/*
+ * Check Vimeo can handle the source natively
+ *
+ * @param  {Object} source  The source object
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Vimeo.nativeSourceHandler.canHandleSource = function (source) {
+
+  // If a type was provided we should rely on that
+  if (source.type) {
+    return Vimeo.nativeSourceHandler.canPlayType(source.type);
+  } else if (source.src) {
+    return Vimeo.nativeSourceHandler.canPlayType(source.src);
+  }
+
+  return '';
+};
+
+Vimeo.nativeSourceHandler.handleSource = function (source, tech) {
+  tech.src(source.src);
+};
+
+/*
+ * Clean up the source handler when disposing the player or switching sources..
+ * (no cleanup is needed when supporting the format natively)
+ */
+Vimeo.nativeSourceHandler.dispose = function () {};
+
+// Register the native source handler
+Vimeo.registerSourceHandler(Vimeo.nativeSourceHandler);
+
+Vimeo.Events = 'loaded,play,ended,timeupdate,progress,seeked,texttrackchange,cuechange,volumechange,error'.split(',');
+
+Component.registerComponent('Vimeo', Vimeo);
+
+Tech.registerTech('Vimeo', Vimeo);
+
+exports['default'] = Vimeo;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Externals":27}],31:[function(require,module,exports){
+(function (global){
+/**
+ * @file Youtube.js
+ * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _Externals2 = require('./Externals');
+
+var _Externals3 = _interopRequireDefault(_Externals2);
+
+var _globalWindow = require('global/window');
+
+var _globalWindow2 = _interopRequireDefault(_globalWindow);
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Tech = _videoJs2['default'].getComponent('Tech');
+
+/**
+ * Externals Media Controller - Wrapper for HTML5 Media API
+ *
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready Ready callback function
+ * @extends Tech
  * @class Youtube
  */
 
@@ -4985,19 +6015,10 @@ var Youtube = (function (_Externals) {
   _createClass(Youtube, [{
     key: 'createEl',
     value: function createEl() {
-      var youtubeSource = null;
-      if ('string' === typeof this.options_.source) {
-        youtubeSource = this.options_.source;
-      } else if ('object' === typeof this.options_.source) {
-        youtubeSource = this.options_.source.src;
-      }
-
-      youtubeSource = this.parseSrc(youtubeSource);
 
       var el_ = _get(Object.getPrototypeOf(Youtube.prototype), 'createEl', this).call(this, 'div', {
         id: this.options_.techId,
-        style: 'width:100%;height:100%;top:0;left:0;position:absolute',
-        src: 'http://www.youtube.com/embed/' + youtubeSource + '?enablejsapi=1&origin=http://127.0.0.1:9999'
+        style: 'width:100%;height:100%;top:0;left:0;position:absolute'
       });
 
       el_.style.visibility = this.options_.visibility;
@@ -5008,7 +6029,7 @@ var Youtube = (function (_Externals) {
     key: 'loadApi',
     value: function loadApi() {
       _get(Object.getPrototypeOf(Youtube.prototype), 'loadApi', this).call(this);
-      window.onYouTubeIframeAPIReady = this.onYoutubeReady.bind(this);
+      _globalWindow2['default'].onYouTubeIframeAPIReady = this.onYoutubeReady.bind(this);
     }
   }, {
     key: 'onStateChange',
@@ -5056,7 +6077,7 @@ var Youtube = (function (_Externals) {
     key: 'parseSrc',
     value: function parseSrc(src) {
       if (src) {
-        // Regex that parse the video ID for any Dailymotion URL
+        // Regex that parse the video ID for any Youtube URL
         var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         var match = src.match(regExp);
 
@@ -5074,7 +6095,7 @@ var Youtube = (function (_Externals) {
   }, {
     key: 'isApiReady',
     value: function isApiReady() {
-      return window['YT'] && window['YT']['Player'];
+      return _globalWindow2['default']['YT'] && _globalWindow2['default']['YT']['Player'];
     }
   }, {
     key: 'onYoutubeReady',
@@ -5102,12 +6123,13 @@ var Youtube = (function (_Externals) {
 
       var ytOpts = _videoJs2['default'].mergeOptions(this.options_, {
         controls: 0,
-        modestbranding: 1,
+        playsinline: 1,
         rel: 0,
         showinfo: 0,
         autohide: 1,
         disablekb: 1,
         end: 0,
+        modestbranding: 1,
         fs: 1
       });
 
@@ -5143,7 +6165,7 @@ var Youtube = (function (_Externals) {
       if (!this.options_.poster) {
         if (this.url) {
           // Set the low resolution first
-          this.setPoster('https://img.youtube.com/vi/' + this.url + '/0.jpg');
+          this.setPoster('//img.youtube.com/vi/' + this.url + '/0.jpg');
         }
       }
     }
@@ -5335,7 +6357,7 @@ Tech.registerTech('Youtube', Youtube);
 exports['default'] = Youtube;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Externals":26}],29:[function(require,module,exports){
+},{"./Externals":27,"global/window":19}],32:[function(require,module,exports){
 /**
  * @file videojs-externals.js
  * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
@@ -5346,10 +6368,16 @@ require('./tech/Externals');
 
 require('./tech/Youtube');
 
+require('./tech/Deezer');
+
+require('./tech/Spotify');
+
+require('./tech/Vimeo');
+
 require('./tech/Soundcloud');
 
 require('./component/sub-poster-image');
-},{"./component/sub-poster-image":25,"./tech/Externals":26,"./tech/Soundcloud":27,"./tech/Youtube":28}],30:[function(require,module,exports){
+},{"./component/sub-poster-image":25,"./tech/Deezer":26,"./tech/Externals":27,"./tech/Soundcloud":28,"./tech/Spotify":29,"./tech/Vimeo":30,"./tech/Youtube":31}],33:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
@@ -5632,7 +6660,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":32,"global/document":18,"global/window":19,"xhr":33}],31:[function(require,module,exports){
+},{"./utils.js":35,"global/document":18,"global/window":19,"xhr":36}],34:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5665,7 +6693,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":30}],32:[function(require,module,exports){
+},{"./metrics":33}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -5753,7 +6781,7 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":18,"global/window":19}],33:[function(require,module,exports){
+},{"global/document":18,"global/window":19}],36:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -5974,7 +7002,7 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":19,"is-function":34,"once":35,"parse-headers":38,"xtend":39}],34:[function(require,module,exports){
+},{"global/window":19,"is-function":37,"once":38,"parse-headers":41,"xtend":42}],37:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -5991,7 +7019,7 @@ function isFunction (fn) {
       fn === window.prompt))
 };
 
-},{}],35:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -6012,7 +7040,7 @@ function once (fn) {
   }
 }
 
-},{}],36:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var isFunction = require('is-function')
 
 module.exports = forEach
@@ -6060,7 +7088,7 @@ function forEachObject(object, iterator, context) {
     }
 }
 
-},{"is-function":34}],37:[function(require,module,exports){
+},{"is-function":37}],40:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -6076,7 +7104,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],38:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -6108,7 +7136,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":36,"trim":37}],39:[function(require,module,exports){
+},{"for-each":39,"trim":40}],42:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -6129,7 +7157,7 @@ function extend() {
     return target
 }
 
-},{}],40:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -6320,5 +7348,5 @@ ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.option
 Component.registerComponent('Afrostream', Afrostream);
 exports.default = Afrostream;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"videojs-chromecast":22,"videojs-externals":29,"videojs-metrics":31}]},{},[40])(40)
+},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"videojs-chromecast":22,"videojs-externals":32,"videojs-metrics":34}]},{},[43])(43)
 });
