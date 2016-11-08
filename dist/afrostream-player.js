@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.23
+ * @version 2.2.24
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -4206,7 +4206,7 @@ var Externals = (function (_Tech) {
     key: 'injectCss',
     value: function injectCss(overrideStyle) {
       var css = // iframe blocker to catch mouse events
-      '.vjs-' + this.className_ + ' .vjs-iframe-blocker { display: none; }\n      .vjs-' + this.className_ + '.vjs-user-inactive .vjs-iframe-blocker { display: block; }\n      .vjs-' + this.className_ + ' .vjs-poster { background-size: cover; }\n      .vjs-' + this.className_ + '-mobile .vjs-big-play-button { display: none; }';
+      '.vjs-' + this.className_ + ' .vjs-iframe-blocker { display: none; }\n      .vjs-' + this.className_ + '.vjs-user-inactive .vjs-iframe-blocker { display: block; }\n      .vjs-' + this.className_ + ' .vjs-poster { background-size: cover; }';
 
       if (overrideStyle) {
         css += overrideStyle;
@@ -4272,7 +4272,11 @@ var Externals = (function (_Tech) {
       }
 
       var tagPlayer = (0, _videoJs2['default'])(this.options_.playerId);
-      tagPlayer.addClass('vjs-' + this.className_ + (isOnMobile ? '-mobile' : ''));
+
+      tagPlayer.addClass('vjs-' + this.className_);
+      if (isOnMobile) {
+        tagPlayer.addClass('vjs-' + this.className_ + '-mobile');
+      }
 
       return el;
     }
@@ -4519,20 +4523,6 @@ var Externals = (function (_Tech) {
       return true;
     }
   }, {
-    key: 'resetSrc_',
-    value: function resetSrc_(callback) {
-      callback();
-    }
-  }, {
-    key: 'dispose',
-    value: function dispose() {
-      var isOnMobile = this.isOnMobile();
-      var tagPlayer = (0, _videoJs2['default'])(this.options_.playerId);
-      tagPlayer.removeClass('vjs-' + this.className_ + (isOnMobile ? '-mobile' : ''));
-      this.resetSrc_(Function.prototype);
-      _get(Object.getPrototypeOf(Externals.prototype), 'dispose', this).call(this);
-    }
-  }, {
     key: 'onPlayerError',
     value: function onPlayerError(e) {
       this.errorNumber = e.data;
@@ -4684,7 +4674,7 @@ var Soundcloud = (function (_Externals) {
   _createClass(Soundcloud, [{
     key: 'injectCss',
     value: function injectCss() {
-      var css = '.vjs-' + this.className_ + ' > .vjs-poster { display:block; width:50%; background-size:contain; background-position: 0 50%; background-color: transparent; }\n    .vjs-' + this.className_ + ' .vjs-tech > .vjs-poster {  display:block; background-color: rgba(76, 50, 65, 0.35);}\n    .vjs-soundcloud-info{position:absolute;padding:3em 1em 1em 1em;left:50%;top:0;right:0;bottom:0;\n      text-align: center; pointer-events: none; text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.69);}';
+      var css = '.vjs-' + this.className_ + ' > .vjs-poster { display:block; width:50%; background-size:contain; background-position: 0 50%; }\n    .vjs-' + this.className_ + ' .vjs-tech > .vjs-poster {  display:block; background-color: rgba(76, 50, 65, 0.35);}\n    .vjs-has-started .vjs-poster {display:block;}\n    .vjs-soundcloud-info{position:absolute;display: flex;justify-content: center;align-items: center;left:50%;top:0;right:0;bottom:0;\n      text-align: center; pointer-events: none; text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.69);}';
       _get(Object.getPrototypeOf(Soundcloud.prototype), 'injectCss', this).call(this, css);
     }
   }, {
@@ -4893,7 +4883,9 @@ var Soundcloud = (function (_Externals) {
   }, {
     key: 'src',
     value: function src(_src) {
-      this.widgetPlayer.load(_src, this.onReady.bind(this));
+      this.widgetPlayer.load(_src, {
+        'auto_play': this.options_.autoplay
+      }, this.onReady.bind(this));
     }
   }, {
     key: 'duration',
@@ -5668,6 +5660,12 @@ var Youtube = (function (_Externals) {
       el_.style.visibility = this.options_.visibility;
 
       return el_;
+    }
+  }, {
+    key: 'injectCss',
+    value: function injectCss() {
+      var css = '.vjs-' + this.className_ + ' .vjs-big-play-button { display: none; }';
+      _get(Object.getPrototypeOf(Youtube.prototype), 'injectCss', this).call(this, css);
     }
   }, {
     key: 'loadApi',
