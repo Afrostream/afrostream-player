@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.24",
+  "version": "2.2.25",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -18228,9 +18228,9 @@
       "resolved": "git+https://github.com/benjipott/video.js-chromecast.git#680b46d47d5621e9724c5c7d492f3c0060ddcabe"
     },
     "videojs-externals": {
-      "version": "1.0.10",
-      "from": "git+https://github.com/Afrostream/videojs-externals.git#1.0.10",
-      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#84d62ce4e732dc1d63cfc156b68e4d547533df57"
+      "version": "1.0.11",
+      "from": "git+https://github.com/Afrostream/videojs-externals.git#1.0.11",
+      "resolved": "git+https://github.com/Afrostream/videojs-externals.git#1fa43e344a2aba980ef7f9cfa9dcbc1427a700dc"
     },
     "videojs-font": {
       "version": "2.0.0",
