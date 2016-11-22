@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.25
+ * @version 2.2.26
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -3820,10 +3820,13 @@ var Deezer = (function (_Externals) {
           this.trigger('loadstart');
           this.trigger('loadedmetadata');
           this.trigger('durationchange');
+          this.trigger('waiting');
           break;
 
         case 'player_loaded':
-          this.onReady();
+          this.trigger('loadedmetadata');
+          this.trigger('durationchange');
+          this.trigger('canplay');
           this.updatePause();
           break;
 
@@ -4250,14 +4253,16 @@ var Externals = (function (_Tech) {
         allowFullScreen: ''
       }, options));
 
+      iframeContainer.style.visibility = this.options_.visibility;
+      iframeContainer.style.width = '100%';
+      iframeContainer.style.height = '100%';
+      iframeContainer.style.top = '0';
+      iframeContainer.style.left = '0';
+      iframeContainer.style.position = 'absolute';
+
       el.appendChild(iframeContainer);
       var isOnMobile = this.isOnMobile();
       if (!isOnMobile && blocker !== false || blocker) {
-        //let divBlocker = ClickableComponent.create();
-        //let divBlocker = this.addChild('clickableComponent');
-        //divBlocker.onClick = ()=> {
-        //  this.togglePlayPause();
-        //}
         var divBlocker = _videoJs2['default'].createEl('div', {
           className: 'vjs-iframe-blocker',
           style: 'position:absolute;top:0;left:0;width:100%;height:100%'
@@ -4365,6 +4370,7 @@ var Externals = (function (_Tech) {
       switch (state) {
         case -1:
           this.trigger('loadstart');
+          this.trigger('waiting');
           break;
 
         case 'apiready':
@@ -4674,7 +4680,7 @@ var Soundcloud = (function (_Externals) {
   _createClass(Soundcloud, [{
     key: 'injectCss',
     value: function injectCss() {
-      var css = '.vjs-' + this.className_ + ' > .vjs-poster { display:block; width:50%; background-size:contain; background-position: 0 50%; }\n    .vjs-' + this.className_ + ' .vjs-tech > .vjs-poster {  display:block; background-color: rgba(76, 50, 65, 0.35);}\n    .vjs-' + this.className_ + '.vjs-has-started .vjs-poster {display:block;}\n    .vjs-soundcloud-info{position:absolute;display: flex;justify-content: center;align-items: center;left:50%;top:0;right:0;bottom:0;\n      text-align: center; pointer-events: none; text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.69);}';
+      var css = '.vjs-' + this.className_ + ' > .vjs-poster { display:block; width:50%; }\n    .vjs-' + this.className_ + ' .vjs-tech { }\n    .vjs-' + this.className_ + ' .vjs-tech > .vjs-poster {  display:block; }\n    .vjs-' + this.className_ + '.vjs-has-started .vjs-poster {display:block;}\n    .vjs-soundcloud-info{position:absolute;display: flex;justify-content: center;align-items: center;left:50%;top:0;right:0;bottom:0;\n      text-align: center; pointer-events: none; text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.69);}';
       _get(Object.getPrototypeOf(Soundcloud.prototype), 'injectCss', this).call(this, css);
     }
   }, {
@@ -4714,12 +4720,13 @@ var Soundcloud = (function (_Externals) {
       switch (state) {
         case -1:
           this.trigger('loadstart');
-          this.trigger('loadedmetadata');
-          this.trigger('durationchange');
+          this.trigger('waiting');
           break;
 
         case SC.Widget.Events.READY:
-          this.updatePause();
+          this.trigger('loadedmetadata');
+          this.trigger('durationchange');
+          this.trigger('canplay');
           this.onReady();
           break;
 
@@ -4731,9 +4738,11 @@ var Soundcloud = (function (_Externals) {
         case SC.Widget.Events.PLAY:
           this.updatePause();
           this.trigger('play');
+          this.trigger('waiting');
           break;
 
         case SC.Widget.Events.PLAY_PROGRESS:
+          this.trigger('canplay');
           this.trigger('playing');
           this.currentTime_ = this.duration_ * 1000 * event.relativePosition / 1000;
           //this.trigger('timeupdate');
@@ -4772,6 +4781,7 @@ var Soundcloud = (function (_Externals) {
     key: 'onReady',
     value: function onReady() {
       _get(Object.getPrototypeOf(Soundcloud.prototype), 'onReady', this).call(this);
+      this.updatePause();
       this.updateDuration();
       this.updateVolume();
       this.updatePoster();
@@ -4781,6 +4791,7 @@ var Soundcloud = (function (_Externals) {
     value: function initTech() {
       this.widgetPlayer = SC.Widget(this.options_.techId);
       _get(Object.getPrototypeOf(Soundcloud.prototype), 'initTech', this).call(this);
+      this.onStateChange({ type: -1 });
     }
   }, {
     key: 'setupTriggers',
@@ -4885,7 +4896,7 @@ var Soundcloud = (function (_Externals) {
     value: function src(_src) {
       this.widgetPlayer.load(_src, {
         'auto_play': this.options_.autoplay
-      }, this.onReady.bind(this));
+      });
     }
   }, {
     key: 'duration',
@@ -5300,7 +5311,6 @@ var Vimeo = (function (_Externals) {
 
       var el_ = _get(Object.getPrototypeOf(Vimeo.prototype), 'createEl', this).call(this, 'iframe', {
         id: this.options_.techId,
-        style: 'width:100%;height:100%;top:0;left:0;position:absolute',
         src: this.options_.embed + '/' + vimeoSource + '??api=1&player_id=' + this.options_.techId + '&fullscreen=1&autoplay=' + this.options_.autoplay
       });
 
@@ -5393,6 +5403,11 @@ var Vimeo = (function (_Externals) {
         this.buffered_ = event.percent;
       }
       switch (state) {
+        case 'loaded':
+          this.trigger('loadedmetadata');
+          this.trigger('durationchange');
+          this.trigger('canplay');
+          break;
         case 'onLoadProgress':
           this.trigger('progress');
           this.trigger('durationchange');
@@ -5653,11 +5668,8 @@ var Youtube = (function (_Externals) {
     value: function createEl() {
 
       var el_ = _get(Object.getPrototypeOf(Youtube.prototype), 'createEl', this).call(this, 'div', {
-        id: this.options_.techId,
-        style: 'width:100%;height:100%;top:0;left:0;position:absolute'
+        id: this.options_.techId
       });
-
-      el_.style.visibility = this.options_.visibility;
 
       return el_;
     }
@@ -5709,8 +5721,8 @@ var Youtube = (function (_Externals) {
           break;
 
         case YT.PlayerState.BUFFERING:
-          this.player_.trigger('timeupdate');
-          this.player_.trigger('waiting');
+          this.trigger('timeupdate');
+          this.trigger('waiting');
           break;
       }
       this.lastState = state;
