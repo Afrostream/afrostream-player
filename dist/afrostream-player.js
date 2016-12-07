@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.28
+ * @version 2.2.29
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -1479,7 +1479,12 @@ var Dash = function (_Html) {
       if (!this.mediaPlayer_) {
         // But make a fresh MediaPlayer each time the sourceHandler is used
         this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-
+        //init youbora
+        // Plugin initialization must come right after the player initialization
+        if ($YB) {
+          // if youbora is correctly loaded
+          var youbora = new $YB.plugins.Dashjs(this.options_.youbora);
+        }
         // Must run controller before these two lines or else there is no
         // element to bind to.
         this.mediaPlayer_.initialize();
