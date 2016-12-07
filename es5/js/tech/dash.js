@@ -440,7 +440,6 @@ var Dash = function (_Html) {
     key: 'onTextTracksAdded',
     value: function onTextTracksAdded(e) {
       var tracks = e.tracks;
-      return;
       if (tracks) {
         var plTracks = this.textTracks();
         var l = tracks.length,

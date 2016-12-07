@@ -134,7 +134,7 @@ var MouseThumbnailDisplay = function (_MouseTimeDisplay) {
     value: function update(newTime, position) {
       _get(Object.getPrototypeOf(MouseThumbnailDisplay.prototype), 'update', this).call(this, newTime, position);
 
-      if (!~this.player_.techName_.indexOf('Html5|Dash')) {
+      if (this.player_.techName_ && !~this.player_.techName_.indexOf('Html5|Dash|Streamroot|EasyBroadcast')) {
         return;
       }
 
