@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.27
+ * @version 2.2.28
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -2957,7 +2957,7 @@ Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prot
     streamrootKey: 'none',
     debug: true
   },
-  limitBitrateByPortal: true
+  limitBitrateByPortal: false
 });
 
 /* Streamroot Support Testing -------------------------------------------------------- */

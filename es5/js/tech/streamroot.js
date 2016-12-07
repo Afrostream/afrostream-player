@@ -113,7 +113,7 @@ Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prot
     streamrootKey: 'none',
     debug: true
   },
-  limitBitrateByPortal: true
+  limitBitrateByPortal: false
 });
 
 /* Streamroot Support Testing -------------------------------------------------------- */
