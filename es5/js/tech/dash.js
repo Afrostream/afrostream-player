@@ -122,12 +122,21 @@ var Dash = function (_Html) {
   }, {
     key: 'setCurrentTime',
     value: function setCurrentTime(seconds) {
+      var _this2 = this;
+
       if (this.playbackInitialized && this.mediaPlayer_) {
-        // this.mediaPlayer_.enableBufferOccupancyABR(false)
-        this.mediaPlayer_.setQualityFor('video', 0);
-        // this.one('seeked', ()=> {
-        //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled)
-        // })
+        (function () {
+          var beforeSeekQuality = _this2.mediaPlayer_.getQualityFor('video');
+          var beforeAutoSwitch = _this2.mediaPlayer_.getAutoSwitchQualityFor('video');
+
+          _this2.mediaPlayer_.setAutoSwitchQualityFor('video', false);
+          _this2.mediaPlayer_.setQualityFor('video', 0);
+
+          _this2.one('seeked', function () {
+            _this2.mediaPlayer_.setQualityFor('video', beforeSeekQuality);
+            _this2.mediaPlayer_.setAutoSwitchQualityFor('video', beforeAutoSwitch);
+          });
+        })();
       }
       _get(Object.getPrototypeOf(Dash.prototype), 'setCurrentTime', this).call(this, seconds);
     }
@@ -178,8 +187,9 @@ var Dash = function (_Html) {
       this.mediaPlayer_.setTrackSwitchModeFor('video', this.options_.trackSwitchMode); //alwaysReplace
 
       this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused);
-      this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch);
+      this.mediaPlayer_.setAutoSwitchQualityFor('video', this.options_.autoSwitch);
       this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled);
+      this.mediaPlayer_.setFastSwitchEnabled(this.options_.bolaFastSwitchEnabled);
 
       this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount);
       this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate);
@@ -220,10 +230,10 @@ var Dash = function (_Html) {
       // this.streamInfo = streamInfo
       this.isDynamic(isDynamic);
       this.trigger(_dashjs.MediaPlayer.events.STREAM_INITIALIZED);
-      //let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
+      var bitrates = this.mediaPlayer_.getBitrateInfoListFor('video');
       var audioDashTracks = this.mediaPlayer_.getTracksFor('audio');
       var videoDashTracks = this.mediaPlayer_.getTracksFor('video');
-      var autoSwitch = this.mediaPlayer_.getAutoSwitchQuality();
+      var autoSwitch = this.mediaPlayer_.getAutoSwitchQualityFor('video');
 
       var defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio');
       //let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video')
@@ -238,15 +248,13 @@ var Dash = function (_Html) {
         plTrack.enabled = plTrack['language'] === (defaultAudio && defaultAudio.lang.indexOf(this.options_.inititalMediaSettings.audio.lang) && defaultAudio.lang || this.options_.inititalMediaSettings.audio.lang);
       }
 
-      for (i = 0; i < videoDashTracks.length; i++) {
-        var _track = videoDashTracks[i];
-        var bitrateList = _track.bitrateList;
-        for (var j = 0; j < bitrateList.length; j++) {
-          var bandwidth = bitrateList[j].bandwidth / 1000;
-          var label = Dash.qualityLabels[j] || bandwidth;
-          var bitRateTrack = this.addVideoTrack('main', label, bandwidth);
-          bitRateTrack.selected = !autoSwitch && bandwidth > initialVideoBitrate - 350 && bandwidth < initialVideoBitrate + 350;
-        }
+      for (i = 0; i < bitrates.length; i++) {
+        var bitrate = bitrates[i];
+        var bandwidth = bitrate.bitrate;
+        var qualityIndex = bitrate.qualityIndex;
+        var label = Dash.qualityLabels[qualityIndex] || bandwidth;
+        var bitRateTrack = this.addVideoTrack('main', label, bandwidth);
+        bitRateTrack.selected = !autoSwitch && bandwidth > initialVideoBitrate - 350 && bandwidth < initialVideoBitrate + 350;
       }
     }
   }, {
@@ -432,7 +440,7 @@ var Dash = function (_Html) {
     key: 'onTextTracksAdded',
     value: function onTextTracksAdded(e) {
       var tracks = e.tracks;
-
+      return;
       if (tracks) {
         var plTracks = this.textTracks();
         var l = tracks.length,
@@ -513,9 +521,12 @@ var Dash = function (_Html) {
       if (!tracks || !this.playbackInitialized /* || !this.options_.autoSwitch*/) {
           return;
         }
-      var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && tracks.selectedIndex % 1 === 0;
-      this.mediaPlayer_.setAutoSwitchQuality(!isInt);
+      var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && tracks.selectedIndex % 1 === 0 && tracks.selectedIndex !== -1;
+      var autoSwitch = this.mediaPlayer_.getAutoSwitchQualityFor('video');
+      this.mediaPlayer_.setAutoSwitchQualityFor('video', !isInt);
+      //this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled && !isInt)
       if (isInt) {
+        var quality = this.mediaPlayer_.getQualityFor('video');
         this.mediaPlayer_.setQualityFor('video', tracks.selectedIndex);
       }
     }
@@ -533,14 +544,14 @@ var Dash = function (_Html) {
   }, {
     key: 'showErrors',
     value: function showErrors() {
-      var _this2 = this;
+      var _this3 = this;
 
       // The video element's src is set asynchronously so we have to wait a while
       // before we unhide any errors
       // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
       // in my testing
       this.setTimeout(function () {
-        _this2.player_.removeClass('vjs-dashjs-hide-errors');
+        _this3.player_.removeClass('vjs-dashjs-hide-errors');
       }, 250);
     }
   }, {
@@ -580,6 +591,8 @@ Dash.prototype.options_ = {
   trackSwitchMode: 'neverReplace', //alwaysReplace
   //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
   bolaEnabled: true,
+  //When enabled, The maximum time to render a higher quality is current time + (1.5 * fragment duration).
+  bolaFastSwitchEnabled: true,
   //Set to true if you would like dash.js to keep downloading fragments in the background
   scheduleWhilePaused: false,
   //A value of the initial bitrate, kbps
@@ -726,7 +739,7 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
   return '';
 };
 
-Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD'];
+Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD', 'Full HD'];
 
 /*
  * Pass the source to the flash object

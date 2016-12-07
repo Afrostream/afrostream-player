@@ -18,6 +18,10 @@ require('./tech/dash');
 
 require('./tech/dashas');
 
+require('./tech/easy-broadcast');
+
+require('./tech/streamroot');
+
 require('./component/control-bar/');
 
 require('videojs-metrics');
@@ -26,6 +30,10 @@ require('videojs-chromecast');
 
 require('videojs-externals');
 
+var _komentJs = require('koment-js');
+
+var _komentJs2 = _interopRequireDefault(_komentJs);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -33,17 +41,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * ! afrostrream-player - v2.0.0 - 2016-02-15
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 benjipott
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 Afrostream (benjipott)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * Licensed under the Apache-2.0 license.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @file afrostream.js
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 **/
-
-//import './tech/easy-broadcast'
-//import './tech/streamroot'
-
-
-//import koment from 'koment-js'
 
 var Component = _video2.default.getComponent('Component');
 var ControlBar = _video2.default.getComponent('ControlBar');
@@ -180,7 +181,7 @@ _video2.default.browser.IS_SAFARI = /safari/i.test(USER_AGENT);
  */
 _video2.default.options.children.push('afrostream');
 
-//videojs.koment = koment
+_video2.default.koment = _komentJs2.default;
 
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
 

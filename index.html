@@ -41,13 +41,14 @@
   </tr>
 </div>
 <div class="container">
-  <div class="row" id="slider-container"></div>
   Seconds behind live: <span id="video_delay"></span><br/>
+  Bitrate Video: <span id="video_bitrate"></span><br/>
   Buffer length: <span id="video_buffer"></span><br/>
   Wall clock time
   <div class="clock">
     <span id="min"> </span>:<span id="sec"></span>
   </div>
+  <div class="row" id="slider-container"></div>
   <ul>
     <li><a href="/test/">Run unit tests in browser.</a></li>
   </ul>
@@ -196,6 +197,9 @@
   };
 
   var initInputs = function (opts) {
+    if (!player) {
+      return null;
+    }
     var values = opts || player.tech_.options_;
     var keys = Object.keys(values);
     for (var i = 0; i < keys.length; i++) {
@@ -240,26 +244,26 @@
 
     var cp = [];
 
-//    if (captions) {
-    cp = [{
-      _id: "84fe17d5-6ce8-4627-9ea3-00fd2a99f7e7",
-      src: "https://s3-eu-west-1.amazonaws.com/tracks.afrostream.tv/production/caption/2015/09/6f287a7f284ea2f4c9c7-vimeocom138655523.fr.vtt",
-      kind: "captions",
-      lang: {
-        label: "Français",
-        lang: "fr"
-      }
-    },
-      {
-        _id: "aace21ac-20ba-4ea0-b4cb-6ca3d235950c",
-        src: "https://s3-eu-west-1.amazonaws.com/tracks.afrostream.tv/production/caption/2015/09/6bae0f56828f350758b6-vimeocom138655523.en.vtt",
+    if (captions) {
+      cp = [{
+        _id: "84fe17d5-6ce8-4627-9ea3-00fd2a99f7e7",
+        src: "https://s3-eu-west-1.amazonaws.com/tracks.afrostream.tv/production/caption/2015/09/6f287a7f284ea2f4c9c7-vimeocom138655523.fr.vtt",
         kind: "captions",
         lang: {
-          label: "Anglais",
-          lang: "en"
+          label: "Français",
+          lang: "fr"
         }
-      }];
-    //    }
+      },
+        {
+          _id: "aace21ac-20ba-4ea0-b4cb-6ca3d235950c",
+          src: "https://s3-eu-west-1.amazonaws.com/tracks.afrostream.tv/production/caption/2015/09/6bae0f56828f350758b6-vimeocom138655523.en.vtt",
+          kind: "captions",
+          lang: {
+            label: "Anglais",
+            lang: "en"
+          }
+        }];
+    }
 
     for (var i = 0; i < cp.length; i++) {
       var caption = cp[i];
@@ -284,7 +288,7 @@
     var mergedOpts = videojs.mergeOptions(options || {}, opts || {});
 
     player = videojs('player', mergedOpts).ready(function () {
-      //initMetrics();
+      initMetrics();
     });
 
 //    videojs.koment(player.tech_.el_);
@@ -358,6 +362,7 @@
 
       document.querySelector('#video_delay').innerHTML = Math.round((d.getTime() / 1000) - Number(startupTime));
       document.querySelector('#video_buffer').innerHTML = buffVid + 's';
+      document.querySelector('#video_bitrate').innerHTML = dlVidBitrate + 'kbs';
 
     }, 500);
   };
@@ -577,7 +582,7 @@
   setTimeout(function () {
 
     initPlayer();
-    //initInputs();
+    initInputs();
   }, 3000)
 
   var smoothieConfig = {

@@ -1,6 +1,5 @@
 /**
- * ! afrostrream-player - v2.0.0 - 2016-02-15
- * Copyright (c) 2015 benjipott
+ * Copyright (c) 2015 Afrostream (benjipott)
  * Licensed under the Apache-2.0 license.
  * @file afrostream.js
  **/
@@ -10,14 +9,14 @@ import { MediaPlayer } from 'dashjs'
 import './tech/media'
 import './tech/dash'
 import './tech/dashas'
-//import './tech/easy-broadcast'
-//import './tech/streamroot'
+import './tech/easy-broadcast'
+import './tech/streamroot'
 import './component/control-bar/'
 import 'videojs-metrics'
 import 'videojs-chromecast'
 import 'videojs-externals'
 
-//import koment from 'koment-js'
+import koment from 'koment-js'
 
 const Component = videojs.getComponent('Component')
 const ControlBar = videojs.getComponent('ControlBar')
@@ -137,7 +136,7 @@ videojs.browser.IS_SAFARI = (/safari/i).test(USER_AGENT)
  */
 videojs.options.children.push('afrostream')
 
-//videojs.koment = koment
+videojs.koment = koment
 
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0])
 

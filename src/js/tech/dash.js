@@ -38,7 +38,7 @@ class Dash extends Html5 {
       let aTracksChangeHandler = ::this.handleAudioTracksChange
 
       aTracks.addEventListener('change', aTracksChangeHandler)
-      this.on('dispose', ()=> {
+      this.on('dispose', () => {
         aTracks.removeEventListener('change', aTracksChangeHandler)
       })
     }
@@ -83,11 +83,16 @@ class Dash extends Html5 {
 
   setCurrentTime (seconds) {
     if (this.playbackInitialized && this.mediaPlayer_) {
-      // this.mediaPlayer_.enableBufferOccupancyABR(false)
+      const beforeSeekQuality = this.mediaPlayer_.getQualityFor('video')
+      const beforeAutoSwitch = this.mediaPlayer_.getAutoSwitchQualityFor('video')
+
+      this.mediaPlayer_.setAutoSwitchQualityFor('video', false)
       this.mediaPlayer_.setQualityFor('video', 0)
-      // this.one('seeked', ()=> {
-      //   this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled)
-      // })
+
+      this.one('seeked', () => {
+        this.mediaPlayer_.setQualityFor('video', beforeSeekQuality)
+        this.mediaPlayer_.setAutoSwitchQualityFor('video', beforeAutoSwitch)
+      })
     }
     super.setCurrentTime(seconds)
   }
@@ -135,8 +140,9 @@ class Dash extends Html5 {
     this.mediaPlayer_.setTrackSwitchModeFor('video', this.options_.trackSwitchMode)//alwaysReplace
 
     this.mediaPlayer_.setScheduleWhilePaused(this.options_.scheduleWhilePaused)
-    this.mediaPlayer_.setAutoSwitchQuality(this.options_.autoSwitch)
+    this.mediaPlayer_.setAutoSwitchQualityFor('video', this.options_.autoSwitch)
     this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled)
+    this.mediaPlayer_.setFastSwitchEnabled(this.options_.bolaFastSwitchEnabled)
 
     this.mediaPlayer_.setLiveDelayFragmentCount(this.options_.liveFragmentCount)
     this.mediaPlayer_.setInitialBitrateFor('video', this.options_.initialBitrate)
@@ -174,10 +180,10 @@ class Dash extends Html5 {
     // this.streamInfo = streamInfo
     this.isDynamic(isDynamic)
     this.trigger(MediaPlayer.events.STREAM_INITIALIZED)
-    //let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
+    let bitrates = this.mediaPlayer_.getBitrateInfoListFor('video')
     let audioDashTracks = this.mediaPlayer_.getTracksFor('audio')
     let videoDashTracks = this.mediaPlayer_.getTracksFor('video')
-    let autoSwitch = this.mediaPlayer_.getAutoSwitchQuality()
+    let autoSwitch = this.mediaPlayer_.getAutoSwitchQualityFor('video')
 
     let defaultAudio = this.mediaPlayer_.getInitialMediaSettingsFor('audio')
     //let defaultVideo = this.mediaPlayer_.getInitialMediaSettingsFor('video')
@@ -192,15 +198,13 @@ class Dash extends Html5 {
       plTrack.enabled = plTrack['language'] === ((defaultAudio && defaultAudio.lang.indexOf(this.options_.inititalMediaSettings.audio.lang) && defaultAudio.lang) || this.options_.inititalMediaSettings.audio.lang)
     }
 
-    for (i = 0; i < videoDashTracks.length; i++) {
-      let track = videoDashTracks[i]
-      let bitrateList = track.bitrateList
-      for (let j = 0; j < bitrateList.length; j++) {
-        let bandwidth = bitrateList[j].bandwidth / 1000
-        let label = Dash.qualityLabels[j] || bandwidth
-        let bitRateTrack = this.addVideoTrack('main', label, bandwidth)
-        bitRateTrack.selected = !autoSwitch && (bandwidth > initialVideoBitrate - 350) && (bandwidth < initialVideoBitrate + 350)
-      }
+    for (i = 0; i < bitrates.length; i++) {
+      let bitrate = bitrates[i]
+      let bandwidth = bitrate.bitrate
+      let qualityIndex = bitrate.qualityIndex
+      let label = Dash.qualityLabels[qualityIndex] || bandwidth
+      let bitRateTrack = this.addVideoTrack('main', label, bandwidth)
+      bitRateTrack.selected = !autoSwitch && (bandwidth > initialVideoBitrate - 350) && (bandwidth < initialVideoBitrate + 350)
     }
 
   }
@@ -376,7 +380,7 @@ class Dash extends Html5 {
       return output
     }
 
-    Object.keys(keySystemOptions).forEach((key, data)=> {
+    Object.keys(keySystemOptions).forEach((key, data) => {
       if (data.licenseUrl) {
         data.laURL = data.licenseUrl
         delete data.licenseUrl
@@ -388,7 +392,6 @@ class Dash extends Html5 {
 
   onTextTracksAdded (e) {
     const tracks = e.tracks
-
     if (tracks) {
       const plTracks = this.textTracks()
       var l = tracks.length, track, plTrack
@@ -462,9 +465,12 @@ class Dash extends Html5 {
     if (!tracks || !this.playbackInitialized/* || !this.options_.autoSwitch*/) {
       return
     }
-    var isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && (tracks.selectedIndex % 1 === 0)
-    this.mediaPlayer_.setAutoSwitchQuality(!isInt)
+    let isInt = tracks.selectedIndex !== null && !isNaN(tracks.selectedIndex) && (tracks.selectedIndex % 1 === 0) && (tracks.selectedIndex !== -1)
+    const autoSwitch = this.mediaPlayer_.getAutoSwitchQualityFor('video')
+    this.mediaPlayer_.setAutoSwitchQualityFor('video', !isInt)
+    //this.mediaPlayer_.enableBufferOccupancyABR(this.options_.bolaEnabled && !isInt)
     if (isInt) {
+      const quality = this.mediaPlayer_.getQualityFor('video')
       this.mediaPlayer_.setQualityFor('video', tracks.selectedIndex)
     }
   }
@@ -484,7 +490,7 @@ class Dash extends Html5 {
     // before we unhide any errors
     // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
     // in my testing
-    this.setTimeout(()=> {
+    this.setTimeout(() => {
       this.player_.removeClass('vjs-dashjs-hide-errors')
     }, 250)
   }
@@ -522,6 +528,8 @@ Dash.prototype.options_ = {
   trackSwitchMode: 'neverReplace',//alwaysReplace
   //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
   bolaEnabled: true,
+  //When enabled, The maximum time to render a higher quality is current time + (1.5 * fragment duration).
+  bolaFastSwitchEnabled: true,
   //Set to true if you would like dash.js to keep downloading fragments in the background
   scheduleWhilePaused: false,
   //A value of the initial bitrate, kbps
@@ -669,7 +677,7 @@ Dash.nativeSourceHandler.canHandleSource = function (source) {
   return ''
 }
 
-Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD']
+Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD', 'Full HD']
 
 /*
  * Pass the source to the flash object

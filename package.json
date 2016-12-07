@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.26",
+  "version": "2.2.27",
   "description": "Player afrostream",
   "main": "es5/js/afrostream.js",
   "scripts": {
@@ -39,12 +39,17 @@
     "watch": "npm run mkdirs && npm-run-all -p watch:*",
     "watch:css": "nodemon -e scss -x \"npm run build:css\"",
     "watch:js": "watchify src/js/afrostream.js -t babelify -v -o dist/afrostream-player.js",
-    "watch:test": "watchify `find test -name '*.test.js'` -t babelify -o dist-test/afrostream-player.js"
+    "watch:test": "watchify `find test -name '*.test.js'` -t babelify -o dist-test/afrostream-player.js",
+    "shrink": "shrinkwarp --ignore fsevents",
+    "postshrinkwrap": "npm run shrink"
   },
   "keywords": [
     "afrostream",
     "videojs",
     "player"
+  ],
+  "shrinkwrapIgnore": [
+    "fsevents"
   ],
   "author": "Afrostream, Inc.",
   "license": "Apache-2.0",
@@ -66,7 +71,9 @@
     "src/",
     "test/"
   ],
-  "devDependencies": {},
+  "devDependencies": {
+    "shrinkwarp": "^2.0.0"
+  },
   "browserify": {
     "transform": [
       "browserify-shim"
@@ -127,9 +134,9 @@
     "serve-static": "^1.10.0",
     "sinon": "1.14.1",
     "smoothie": "^1.27.0",
-    "streamroot-dashjs-p2p-wrapper": "^1.4.5",
+    "streamroot-dashjs-p2p-wrapper": "^1.8.4",
     "uglify-js": "^2.5.0",
-    "video.js": "^5.11.6",
+    "video.js": "^5.12.6",
     "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.8",
     "videojs-externals": "git+https://github.com/Afrostream/videojs-externals.git#1.0.12",
     "videojs-font": "^2.0.0",
