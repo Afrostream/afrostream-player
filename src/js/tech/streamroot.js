@@ -74,7 +74,7 @@ Streamroot.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
     streamrootKey: 'none',
     debug: true
   },
-  limitBitrateByPortal: true
+  limitBitrateByPortal: false
 })
 
 /* Streamroot Support Testing -------------------------------------------------------- */
