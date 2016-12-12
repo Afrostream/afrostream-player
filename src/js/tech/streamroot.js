@@ -35,8 +35,8 @@ class Streamroot extends Dash {
     }
     // But make a fresh MediaPlayer each time the sourceHandler is used
     this.mediaPlayer_ = MediaPlayer(this.context_).create()
-    this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30)
     this.initYoubora()
+    this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30)
     // Apply any options that are set
     this.mediaPlayer_.initialize()
     this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);

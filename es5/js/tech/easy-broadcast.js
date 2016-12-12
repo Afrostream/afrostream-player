@@ -77,6 +77,7 @@ var EasyBroadcast = function (_Dash) {
         return this.injectJs(_src);
       } else {
         this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
+        this.initYoubora();
         _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
       }
     }

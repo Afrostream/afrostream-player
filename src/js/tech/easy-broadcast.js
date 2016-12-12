@@ -42,6 +42,7 @@ class EasyBroadcast extends Dash {
       return this.injectJs(src)
     } else {
       this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, src, true)
+      this.initYoubora()
       super.src(src)
     }
 
