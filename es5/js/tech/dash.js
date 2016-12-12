@@ -170,7 +170,7 @@ var Dash = function (_Html) {
         // Plugin initialization must come right after the player initialization
         if ($YB) {
           // if youbora is correctly loaded
-          var youbora = new $YB.plugins.Dashjs(this.options_.youbora);
+          var youbora = new $YB.plugins.Dashjs(this.mediaPlayer_, this.options_.youbora);
         }
         // Must run controller before these two lines or else there is no
         // element to bind to.
