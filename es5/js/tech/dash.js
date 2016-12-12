@@ -140,6 +140,20 @@ var Dash = function (_Html) {
       }
       _get(Object.getPrototypeOf(Dash.prototype), 'setCurrentTime', this).call(this, seconds);
     }
+  }, {
+    key: 'initYoubora',
+    value: function initYoubora() {
+      //init youbora
+      // Plugin initialization must come right after the player initialization
+      if ($YB) {
+        // if youbora is correctly loaded
+        try {
+          var youbora = new $YB.plugins.Dashjs(this.mediaPlayer_, this.options_.youbora);
+        } catch (err) {
+          console.log('Youbora init plugin error', err);
+        }
+      }
+    }
 
     /**
      * Set video
@@ -166,12 +180,8 @@ var Dash = function (_Html) {
       if (!this.mediaPlayer_) {
         // But make a fresh MediaPlayer each time the sourceHandler is used
         this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-        //init youbora
-        // Plugin initialization must come right after the player initialization
-        if ($YB) {
-          // if youbora is correctly loaded
-          var youbora = new $YB.plugins.Dashjs(this.mediaPlayer_, this.options_.youbora);
-        }
+
+        this.initYoubora();
         // Must run controller before these two lines or else there is no
         // element to bind to.
         this.mediaPlayer_.initialize();

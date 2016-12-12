@@ -72,6 +72,7 @@ var Streamroot = function (_Dash) {
       // But make a fresh MediaPlayer each time the sourceHandler is used
       this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
       this.dashjsWrapper_ = new _streamrootDashjsP2pWrapper2.default(this.mediaPlayer_, this.options_.p2pConfig, 30);
+      this.initYoubora();
       // Apply any options that are set
       this.mediaPlayer_.initialize();
       this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
