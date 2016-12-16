@@ -605,7 +605,7 @@
 
   if (drm) {
 
-    var protUser = window.atob(JSON.stringify({
+    var protUser = window.btoa(JSON.stringify({
       userId: userId,
       sessionId: token,
       merchant: 'afrostream'
