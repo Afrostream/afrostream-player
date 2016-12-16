@@ -605,11 +605,11 @@
 
   if (drm) {
 
-    var protUser = {
+    var protUser = window.atob(JSON.stringify({
       userId: userId,
       sessionId: token,
       merchant: 'afrostream'
-    }
+    })
 
     dashOpts.protData = {
       'com.widevine.alpha': {
