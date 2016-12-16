@@ -132,7 +132,7 @@ class Dash extends Html5 {
       // But make a fresh MediaPlayer each time the sourceHandler is used
       this.mediaPlayer_ = MediaPlayer(this.context_).create()
 
-      this.initYoubora()
+      //this.initYoubora()
       // Must run controller before these two lines or else there is no
       // element to bind to.
       this.mediaPlayer_.initialize()

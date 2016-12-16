@@ -597,6 +597,46 @@
     chromecast: {},
     techOrder: techOrder
   };
+
+
+  if (drm) {
+
+    var protUser = {
+      userId: '224',
+      sessionId: 'b28b513ae5e0b4155c260cd25628b7d47c8d2a15',
+      merchant: 'afrostream'
+    }
+
+    dashOpts.protData = {
+      'com.widevine.alpha': {
+        'drmtoday': true,
+        'serverURL': 'https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/',
+        'httpRequestHeaders': {
+          'dt-custom-data': protUser
+        }
+      },
+      'com.microsoft.playready': {
+        'drmtoday': true,
+        'serverURL': 'https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx',
+        'httpRequestHeaders': {
+          'http-header-CustomData': protUser
+        }
+      },
+      'com.adobe.flashaccess': {
+        'drmtoday': true,
+        'serverURL': 'https://lic.staging.drmtoday.com/flashaccess/LicenseTrigger/v1',
+        'httpRequestHeaders': {
+          'customData': protUser
+        }
+      },
+      'org.w3.clearkey': {
+        'clearkeys': {
+          '21920416600048BC8DBB9A45FD4A3B9E': '0001020304050607'
+        }
+      }
+    }
+  }
+
   setTimeout(function () {
 
     initPlayer();

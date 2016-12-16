@@ -181,7 +181,7 @@ var Dash = function (_Html) {
         // But make a fresh MediaPlayer each time the sourceHandler is used
         this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
 
-        this.initYoubora();
+        //this.initYoubora()
         // Must run controller before these two lines or else there is no
         // element to bind to.
         this.mediaPlayer_.initialize();
