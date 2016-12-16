@@ -70,6 +70,8 @@
   var techOrder;
   var muted;
   var drm;
+  var userId;
+  var token;
   var url;
   var bola;
   var captions;
@@ -505,6 +507,8 @@
   techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas', 'youtube', 'soundcloud'];
   muted = qs.muted ? qs.muted : false;
   drm = qs.drm ? qs.drm : false;
+  userId = qs.userId ? qs.userId : 12345;
+  token = qs.token ? qs.token : 'faketoken';
   url = qs.url ? qs.url : false;
   captions = qs.captions ? qs.captions : false;
   bola = qs.bola ? qs.bola : false;
@@ -602,8 +606,8 @@
   if (drm) {
 
     var protUser = {
-      userId: '224',
-      sessionId: 'b28b513ae5e0b4155c260cd25628b7d47c8d2a15',
+      userId: userId,
+      sessionId: token,
       merchant: 'afrostream'
     }
 
