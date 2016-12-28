@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.32
+ * @version 2.2.33
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -2992,7 +2992,7 @@ Component.registerComponent('Streamroot', Streamroot);
 Tech.registerTech('Streamroot', Streamroot);
 exports.default = Streamroot;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./dash":12,"streamroot-dashjs-p2p-wrapper":123}],17:[function(require,module,exports){
+},{"./dash":12,"streamroot-dashjs-p2p-wrapper":59}],17:[function(require,module,exports){
 
 },{}],18:[function(require,module,exports){
 var isFunction = require('is-function')
@@ -3092,159 +3092,7 @@ function isFunction (fn) {
 };
 
 },{}],22:[function(require,module,exports){
-/**
- * @file button.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x5, _x6, _x7) { var _again = true; _function: while (_again) { var object = _x5, property = _x6, receiver = _x7; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x5 = parent; _x6 = property; _x7 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _clickableComponentJs = require('./clickable-component.js');
-
-var _clickableComponentJs2 = _interopRequireDefault(_clickableComponentJs);
-
-var _component = require('./component');
-
-var _component2 = _interopRequireDefault(_component);
-
-var _utilsLogJs = require('./utils/log.js');
-
-var _utilsLogJs2 = _interopRequireDefault(_utilsLogJs);
-
-var _objectAssign = require('object.assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
-
-/**
- * Base class for all buttons
- *
- * @param {Object} player  Main Player
- * @param {Object=} options Object of option names and values
- * @extends ClickableComponent
- * @class Button
- */
-
-var Button = (function (_ClickableComponent) {
-  _inherits(Button, _ClickableComponent);
-
-  function Button(player, options) {
-    _classCallCheck(this, Button);
-
-    _get(Object.getPrototypeOf(Button.prototype), 'constructor', this).call(this, player, options);
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @param {String=} type Element's node type. e.g. 'div'
-   * @param {Object=} props An object of properties that should be set on the element
-   * @param {Object=} attributes An object of attributes that should be set on the element
-   * @return {Element}
-   * @method createEl
-   */
-
-  _createClass(Button, [{
-    key: 'createEl',
-    value: function createEl() {
-      var tag = arguments.length <= 0 || arguments[0] === undefined ? 'button' : arguments[0];
-      var props = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-      var attributes = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-      props = (0, _objectAssign2['default'])({
-        className: this.buildCSSClass()
-      }, props);
-
-      if (tag !== 'button') {
-        _utilsLogJs2['default'].warn('Creating a Button with an HTML element of ' + tag + ' is deprecated; use ClickableComponent instead.');
-
-        // Add properties for clickable element which is not a native HTML button
-        props = (0, _objectAssign2['default'])({
-          tabIndex: 0
-        }, props);
-
-        // Add ARIA attributes for clickable element which is not a native HTML button
-        attributes = (0, _objectAssign2['default'])({
-          role: 'button'
-        }, attributes);
-      }
-
-      // Add attributes for button element
-      attributes = (0, _objectAssign2['default'])({
-
-        // Necessary since the default button type is "submit"
-        'type': 'button',
-
-        // let the screen reader user know that the text of the button may change
-        'aria-live': 'polite'
-      }, attributes);
-
-      var el = _component2['default'].prototype.createEl.call(this, tag, props, attributes);
-
-      this.createControlTextEl(el);
-
-      return el;
-    }
-
-    /**
-     * Adds a child component inside this button
-     *
-     * @param {String|Component} child The class name or instance of a child to add
-     * @param {Object=} options Options, including options to be passed to children of the child.
-     * @return {Component} The child component (created by this process if a string was used)
-     * @deprecated
-     * @method addChild
-     */
-  }, {
-    key: 'addChild',
-    value: function addChild(child) {
-      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-      var className = this.constructor.name;
-
-      _utilsLogJs2['default'].warn('Adding an actionable (user controllable) child to a Button (' + className + ') is not supported; use a ClickableComponent instead.');
-
-      // Avoid the error message generated by ClickableComponent's addChild method
-      return _component2['default'].prototype.addChild.call(this, child, options);
-    }
-
-    /**
-     * Handle KeyPress (document level) - Extend with specific functionality for button
-     *
-     * @method handleKeyPress
-     */
-  }, {
-    key: 'handleKeyPress',
-    value: function handleKeyPress(event) {
-
-      // Ignore Space (32) or Enter (13) key operation, which is handled by the browser for a button.
-      if (event.which === 32 || event.which === 13) {
-        return;
-      }
-
-      // Pass keypress handling up for unsupported keys
-      _get(Object.getPrototypeOf(Button.prototype), 'handleKeyPress', this).call(this, event);
-    }
-  }]);
-
-  return Button;
-})(_clickableComponentJs2['default']);
-
-_component2['default'].registerComponent('Button', Button);
-exports['default'] = Button;
-module.exports = exports['default'];
-},{"./clickable-component.js":23,"./component":24,"./utils/log.js":62,"object.assign":112}],23:[function(require,module,exports){
+(function (global){
 /**
  * @file button.js
  */
@@ -3266,17 +3114,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _component = require('./component');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _component2 = _interopRequireDefault(_component);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _utilsDomJs = require('./utils/dom.js');
 
 var Dom = _interopRequireWildcard(_utilsDomJs);
-
-var _utilsEventsJs = require('./utils/events.js');
-
-var Events = _interopRequireWildcard(_utilsEventsJs);
 
 var _utilsFnJs = require('./utils/fn.js');
 
@@ -3302,6 +3146,8 @@ var _objectAssign2 = _interopRequireDefault(_objectAssign);
  * @extends Component
  * @class ClickableComponent
  */
+
+var Component = _videoJs2['default'].getComponent('Component');
 
 var ClickableComponent = (function (_Component) {
   _inherits(ClickableComponent, _Component);
@@ -3526,1638 +3372,14 @@ var ClickableComponent = (function (_Component) {
   }]);
 
   return ClickableComponent;
-})(_component2['default']);
+})(Component);
 
-_component2['default'].registerComponent('ClickableComponent', ClickableComponent);
+Component.registerComponent('ClickableComponent', ClickableComponent);
 exports['default'] = ClickableComponent;
 module.exports = exports['default'];
-},{"./component":24,"./utils/dom.js":57,"./utils/events.js":58,"./utils/fn.js":59,"./utils/log.js":62,"global/document":19,"object.assign":112}],24:[function(require,module,exports){
-/**
- * @file component.js
- *
- * Player Component - Base class for all UI objects
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
-var _utilsDomJs = require('./utils/dom.js');
-
-var Dom = _interopRequireWildcard(_utilsDomJs);
-
-var _utilsFnJs = require('./utils/fn.js');
-
-var Fn = _interopRequireWildcard(_utilsFnJs);
-
-var _utilsGuidJs = require('./utils/guid.js');
-
-var Guid = _interopRequireWildcard(_utilsGuidJs);
-
-var _utilsEventsJs = require('./utils/events.js');
-
-var Events = _interopRequireWildcard(_utilsEventsJs);
-
-var _utilsLogJs = require('./utils/log.js');
-
-var _utilsLogJs2 = _interopRequireDefault(_utilsLogJs);
-
-var _utilsToTitleCaseJs = require('./utils/to-title-case.js');
-
-var _utilsToTitleCaseJs2 = _interopRequireDefault(_utilsToTitleCaseJs);
-
-var _utilsMergeOptionsJs = require('./utils/merge-options.js');
-
-var _utilsMergeOptionsJs2 = _interopRequireDefault(_utilsMergeOptionsJs);
-
-/**
- * Base UI Component class
- * Components are embeddable UI objects that are represented by both a
- * javascript object and an element in the DOM. They can be children of other
- * components, and can have many children themselves.
- * ```js
- *     // adding a button to the player
- *     var button = player.addChild('button');
- *     button.el(); // -> button element
- * ```
- * ```html
- *     <div class="video-js">
- *       <div class="koment-button">Button</div>
- *     </div>
- * ```
- * Components are also event targets.
- * ```js
- *     button.on('click', function() {
- *       console.log('Button Clicked!');
- *     });
- *     button.trigger('customevent');
- * ```
- *
- * @param {Object} player  Main Player
- * @param {Object=} options Object of option names and values
- * @param {Function=} ready    Ready callback function
- * @class Component
- */
-
-var Component = (function () {
-  function Component(player, options, ready) {
-    _classCallCheck(this, Component);
-
-    // The component might be the player itself and we can't pass `this` to super
-    if (!player && this.play) {
-      this.player_ = player = this; // eslint-disable-line
-    } else {
-        this.player_ = player;
-      }
-
-    // Make a copy of prototype.options_ to protect against overriding defaults
-    this.options_ = (0, _utilsMergeOptionsJs2['default'])({}, this.options_);
-
-    // Updated options with supplied options
-    options = this.options_ = (0, _utilsMergeOptionsJs2['default'])(this.options_, options);
-
-    // Get ID from options or options element if one is supplied
-    this.id_ = options.id || options.el && options.el.id;
-
-    // If there was no ID from the options, generate one
-    if (!this.id_) {
-      // Don't require the player ID function in the case of mock players
-      var id = player && player.id && player.id() || 'no_player';
-
-      this.id_ = id + '_component_' + Guid.newGUID();
-    }
-
-    this.name_ = options.name || null;
-
-    // Create element if one wasn't provided in options
-    if (options.el) {
-      this.el_ = options.el;
-    } else if (options.createEl !== false) {
-      this.el_ = this.createEl();
-    }
-
-    this.children_ = [];
-    this.childIndex_ = {};
-    this.childNameIndex_ = {};
-
-    // Add any child components in options
-    if (options.initChildren !== false) {
-      this.initChildren();
-    }
-
-    this.ready(ready);
-    // Don't want to trigger ready here or it will before init is actually
-    // finished for all children that run this constructor
-
-    if (options.reportTouchActivity !== false) {
-      this.enableTouchActivity();
-    }
-  }
-
-  /**
-   * Dispose of the component and all child components
-   *
-   * @method dispose
-   */
-
-  _createClass(Component, [{
-    key: 'dispose',
-    value: function dispose() {
-      this.trigger({ type: 'dispose', bubbles: false });
-
-      // Dispose all children.
-      if (this.children_) {
-        for (var i = this.children_.length - 1; i >= 0; i--) {
-          if (this.children_[i].dispose) {
-            this.children_[i].dispose();
-          }
-        }
-      }
-
-      // Delete child references
-      this.children_ = null;
-      this.childIndex_ = null;
-      this.childNameIndex_ = null;
-
-      // Remove all event listeners.
-      this.off();
-
-      // Remove element from DOM
-      if (this.el_.parentNode) {
-        this.el_.parentNode.removeChild(this.el_);
-      }
-
-      Dom.removeElData(this.el_);
-      this.el_ = null;
-    }
-
-    /**
-     * Return the component's player
-     *
-     * @return {Player}
-     * @method player
-     */
-  }, {
-    key: 'player',
-    value: function player() {
-      return this.player_;
-    }
-
-    /**
-     * Deep merge of options objects
-     * Whenever a property is an object on both options objects
-     * the two properties will be merged using mergeOptions.
-     *
-     * ```js
-     *     Parent.prototype.options_ = {
-     *       optionSet: {
-     *         'childOne': { 'foo': 'bar', 'asdf': 'fdsa' },
-     *         'childTwo': {},
-     *         'childThree': {}
-     *       }
-     *     }
-     *     newOptions = {
-     *       optionSet: {
-     *         'childOne': { 'foo': 'baz', 'abc': '123' }
-     *         'childTwo': null,
-     *         'childFour': {}
-     *       }
-     *     }
-     *
-     *     this.options(newOptions);
-     * ```
-     * RESULT
-     * ```js
-     *     {
-     *       optionSet: {
-     *         'childOne': { 'foo': 'baz', 'asdf': 'fdsa', 'abc': '123' },
-     *         'childTwo': null, // Disabled. Won't be initialized.
-     *         'childThree': {},
-     *         'childFour': {}
-     *       }
-     *     }
-     * ```
-     *
-     * @param  {Object} obj Object of new option values
-     * @return {Object}     A NEW object of this.options_ and obj merged
-     * @method options
-     */
-  }, {
-    key: 'options',
-    value: function options(obj) {
-      _utilsLogJs2['default'].warn('this.options() has been deprecated and will be moved to the constructor in 6.0');
-
-      if (!obj) {
-        return this.options_;
-      }
-
-      this.options_ = (0, _utilsMergeOptionsJs2['default'])(this.options_, obj);
-      return this.options_;
-    }
-
-    /**
-     * Get the component's DOM element
-     * ```js
-     *     var domEl = myComponent.el();
-     * ```
-     *
-     * @return {Element}
-     * @method el
-     */
-  }, {
-    key: 'el',
-    value: function el() {
-      return this.el_;
-    }
-
-    /**
-     * Create the component's DOM element
-     *
-     * @param  {String=} tagName  Element's node type. e.g. 'div'
-     * @param  {Object=} properties An object of properties that should be set
-     * @param  {Object=} attributes An object of attributes that should be set
-     * @return {Element}
-     * @method createEl
-     */
-  }, {
-    key: 'createEl',
-    value: function createEl(tagName, properties, attributes) {
-      return Dom.createEl(tagName, properties, attributes);
-    }
-  }, {
-    key: 'localize',
-    value: function localize(string) {
-      var code = this.player_.language && this.player_.language();
-      var languages = this.player_.languages && this.player_.languages();
-
-      if (!code || !languages) {
-        return string;
-      }
-
-      var language = languages[code];
-
-      if (language && language[string]) {
-        return language[string];
-      }
-
-      var primaryCode = code.split('-')[0];
-      var primaryLang = languages[primaryCode];
-
-      if (primaryLang && primaryLang[string]) {
-        return primaryLang[string];
-      }
-
-      return string;
-    }
-
-    /**
-     * Return the component's DOM element where children are inserted.
-     * Will either be the same as el() or a new element defined in createEl().
-     *
-     * @return {Element}
-     * @method contentEl
-     */
-  }, {
-    key: 'contentEl',
-    value: function contentEl() {
-      return this.contentEl_ || this.el_;
-    }
-
-    /**
-     * Get the component's ID
-     * ```js
-     *     var id = myComponent.id();
-     * ```
-     *
-     * @return {String}
-     * @method id
-     */
-  }, {
-    key: 'id',
-    value: function id() {
-      return this.id_;
-    }
-
-    /**
-     * Get the component's name. The name is often used to reference the component.
-     * ```js
-     *     var name = myComponent.name();
-     * ```
-     *
-     * @return {String}
-     * @method name
-     */
-  }, {
-    key: 'name',
-    value: function name() {
-      return this.name_;
-    }
-
-    /**
-     * Get an array of all child components
-     * ```js
-     *     var kids = myComponent.children();
-     * ```
-     *
-     * @return {Array} The children
-     * @method children
-     */
-  }, {
-    key: 'children',
-    value: function children() {
-      return this.children_;
-    }
-
-    /**
-     * Returns a child component with the provided ID
-     *
-     * @return {Component}
-     * @method getChildById
-     */
-  }, {
-    key: 'getChildById',
-    value: function getChildById(id) {
-      return this.childIndex_[id];
-    }
-
-    /**
-     * Returns a child component with the provided name
-     *
-     * @return {Component}
-     * @method getChild
-     */
-  }, {
-    key: 'getChild',
-    value: function getChild(name) {
-      return this.childNameIndex_[name];
-    }
-
-    /**
-     * Adds a child component inside this component
-     * ```js
-     *     myComponent.el();
-     *     // -> <div class='my-component'></div>
-     *     myComponent.children();
-     *     // [empty array]
-     *
-     *     var myButton = myComponent.addChild('MyButton');
-     *     // -> <div class='my-component'><div class="my-button">myButton<div></div>
-     *     // -> myButton === myComponent.children()[0];
-     * ```
-     * Pass in options for child constructors and options for children of the child
-     * ```js
-     *     var myButton = myComponent.addChild('MyButton', {
-     *       text: 'Press Me',
-     *       buttonChildExample: {
-     *         buttonChildOption: true
-     *       }
-     *     });
-     * ```
-     *
-     * @param {String|Component} child The class name or instance of a child to add
-     * @param {Object=} options Options, including options to be passed to children of the child.
-     * @param {Number} index into our children array to attempt to add the child
-     * @return {Component} The child component (created by this process if a string was used)
-     * @method addChild
-     */
-  }, {
-    key: 'addChild',
-    value: function addChild(child) {
-      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-      var index = arguments.length <= 2 || arguments[2] === undefined ? this.children_.length : arguments[2];
-
-      var component = undefined;
-      var componentName = undefined;
-
-      // If child is a string, create nt with options
-      if (typeof child === 'string') {
-        componentName = child;
-
-        // Options can also be specified as a boolean, so convert to an empty object if false.
-        if (!options) {
-          options = {};
-        }
-
-        // Same as above, but true is deprecated so show a warning.
-        if (options === true) {
-          _utilsLogJs2['default'].warn('Initializing a child component with `true` is deprecated. Children should be defined in an array when possible, but if necessary use an object instead of `true`.');
-          options = {};
-        }
-
-        // If no componentClass in options, assume componentClass is the name lowercased
-        // (e.g. playButton)
-        var componentClassName = options.componentClass || (0, _utilsToTitleCaseJs2['default'])(componentName);
-
-        // Set name through options
-        options.name = componentName;
-
-        // Create a new object & element for this controls set
-        // If there's no .player_, this is a player
-        var ComponentClass = Component.getComponent(componentClassName);
-
-        if (!ComponentClass) {
-          throw new Error('Component ' + componentClassName + ' does not exist');
-        }
-
-        // data stored directly on the koment object may be
-        // misidentified as a component to retain
-        // backwards-compatibility with 4.x. check to make sure the
-        // component class can be instantiated.
-        if (typeof ComponentClass !== 'function') {
-          return null;
-        }
-
-        component = new ComponentClass(this.player_ || this, options);
-
-        // child is a component instance
-      } else {
-          component = child;
-        }
-
-      this.children_.splice(index, 0, component);
-
-      if (typeof component.id === 'function') {
-        this.childIndex_[component.id()] = component;
-      }
-
-      // If a name wasn't used to create the component, check if we can use the
-      // name function of the component
-      componentName = componentName || component.name && component.name();
-
-      if (componentName) {
-        this.childNameIndex_[componentName] = component;
-      }
-
-      // Add the UI object's element to the container div (box)
-      // Having an element is not required
-      if (typeof component.el === 'function' && component.el()) {
-        var childNodes = this.contentEl().children;
-        var refNode = childNodes[index] || null;
-
-        this.contentEl().insertBefore(component.el(), refNode);
-      }
-
-      // Return so it can stored on parent object if desired.
-      return component;
-    }
-
-    /**
-     * Remove a child component from this component's list of children, and the
-     * child component's element from this component's element
-     *
-     * @param  {Component} component Component to remove
-     * @method removeChild
-     */
-  }, {
-    key: 'removeChild',
-    value: function removeChild(component) {
-      if (typeof component === 'string') {
-        component = this.getChild(component);
-      }
-
-      if (!component || !this.children_) {
-        return;
-      }
-
-      var childFound = false;
-
-      for (var i = this.children_.length - 1; i >= 0; i--) {
-        if (this.children_[i] === component) {
-          childFound = true;
-          this.children_.splice(i, 1);
-          break;
-        }
-      }
-
-      if (!childFound) {
-        return;
-      }
-
-      this.childIndex_[component.id()] = null;
-      this.childNameIndex_[component.name()] = null;
-
-      var compEl = component.el();
-
-      if (compEl && compEl.parentNode === this.contentEl()) {
-        this.contentEl().removeChild(component.el());
-      }
-    }
-
-    /**
-     * Add and initialize default child components from options
-     * ```js
-     *     // when an instance of MyComponent is created, all children in options
-     *     // will be added to the instance by their name strings and options
-     *     MyComponent.prototype.options_ = {
-     *       children: [
-     *         'myChildComponent'
-     *       ],
-     *       myChildComponent: {
-     *         myChildOption: true
-     *       }
-     *     };
-     *
-     *     // Or when creating the component
-     *     var myComp = new MyComponent(player, {
-     *       children: [
-     *         'myChildComponent'
-     *       ],
-     *       myChildComponent: {
-     *         myChildOption: true
-     *       }
-     *     });
-     * ```
-     * The children option can also be an array of
-     * child options objects (that also include a 'name' key).
-     * This can be used if you have two child components of the
-     * same type that need different options.
-     * ```js
-     *     var myComp = new MyComponent(player, {
-     *       children: [
-     *         'button',
-     *         {
-     *           name: 'button',
-     *           someOtherOption: true
-     *         },
-     *         {
-     *           name: 'button',
-     *           someOtherOption: false
-     *         }
-     *       ]
-     *     });
-     * ```
-     *
-     * @method initChildren
-     */
-  }, {
-    key: 'initChildren',
-    value: function initChildren() {
-      var _this = this;
-
-      var children = this.options_.children;
-
-      if (children) {
-        (function () {
-          // `this` is `parent`
-          var parentOptions = _this.options_;
-
-          var handleAdd = function handleAdd(child) {
-            var name = child.name;
-            var opts = child.opts;
-
-            // Allow options for children to be set at the parent options
-            // e.g. koment(id, { controlBar: false });
-            // instead of koment(id, { children: { controlBar: false });
-            if (parentOptions[name] !== undefined) {
-              opts = parentOptions[name];
-            }
-
-            // Allow for disabling default components
-            // e.g. options['children']['posterImage'] = false
-            if (opts === false) {
-              return;
-            }
-
-            // Allow options to be passed as a simple boolean if no configuration
-            // is necessary.
-            if (opts === true) {
-              opts = {};
-            }
-
-            // We also want to pass the original player options to each component as well so they don't need to
-            // reach back into the player for options later.
-            opts.playerOptions = _this.options_.playerOptions;
-
-            // Create and add the child component.
-            // Add a direct reference to the child by name on the parent instance.
-            // If two of the same component are used, different names should be supplied
-            // for each
-            var newChild = _this.addChild(name, opts);
-
-            if (newChild) {
-              _this[name] = newChild;
-            }
-          };
-
-          // Allow for an array of children details to passed in the options
-          var workingChildren = undefined;
-          var Tech = Component.getComponent('Tech');
-
-          if (Array.isArray(children)) {
-            workingChildren = children;
-          } else {
-            workingChildren = Object.keys(children);
-          }
-
-          workingChildren
-          // children that are in this.options_ but also in workingChildren  would
-          // give us extra children we do not want. So, we want to filter them out.
-          .concat(Object.keys(_this.options_).filter(function (child) {
-            return !workingChildren.some(function (wchild) {
-              if (typeof wchild === 'string') {
-                return child === wchild;
-              }
-              return child === wchild.name;
-            });
-          })).map(function (child) {
-            var name = undefined;
-            var opts = undefined;
-
-            if (typeof child === 'string') {
-              name = child;
-              opts = children[name] || _this.options_[name] || {};
-            } else {
-              name = child.name;
-              opts = child;
-            }
-
-            return { name: name, opts: opts };
-          }).filter(function (child) {
-            // we have to make sure that child.name isn't in the techOrder since
-            // techs are registerd as Components but can't aren't compatible
-            // See https://github.com/koment/video.js/issues/2772
-            var c = Component.getComponent(child.opts.componentClass || (0, _utilsToTitleCaseJs2['default'])(child.name));
-
-            return c && !Tech.isTech(c);
-          }).forEach(handleAdd);
-        })();
-      }
-    }
-
-    /**
-     * Allows sub components to stack CSS class names
-     *
-     * @return {String} The constructed class name
-     * @method buildCSSClass
-     */
-  }, {
-    key: 'buildCSSClass',
-    value: function buildCSSClass() {
-      // Child classes can include a function that does:
-      // return 'CLASS NAME' + this._super();
-      return '';
-    }
-
-    /**
-     * Add an event listener to this component's element
-     * ```js
-     *     var myFunc = function() {
-     *       var myComponent = this;
-     *       // Do something when the event is fired
-     *     };
-     *
-     *     myComponent.on('eventType', myFunc);
-     * ```
-     * The context of myFunc will be myComponent unless previously bound.
-     * Alternatively, you can add a listener to another element or component.
-     * ```js
-     *     myComponent.on(otherElement, 'eventName', myFunc);
-     *     myComponent.on(otherComponent, 'eventName', myFunc);
-     * ```
-     * The benefit of using this over `VjsEvents.on(otherElement, 'eventName', myFunc)`
-     * and `otherComponent.on('eventName', myFunc)` is that this way the listeners
-     * will be automatically cleaned up when either component is disposed.
-     * It will also bind myComponent as the context of myFunc.
-     * **NOTE**: When using this on elements in the page other than window
-     * and document (both permanent), if you remove the element from the DOM
-     * you need to call `myComponent.trigger(el, 'dispose')` on it to clean up
-     * references to it and allow the browser to garbage collect it.
-     *
-     * @param  {String|Component} first   The event type or other component
-     * @param  {Function|String}      second  The event handler or event type
-     * @param  {Function}             third   The event handler
-     * @return {Component}
-     * @method on
-     */
-  }, {
-    key: 'on',
-    value: function on(first, second, third) {
-      var _this2 = this;
-
-      if (typeof first === 'string' || Array.isArray(first)) {
-        Events.on(this.el_, first, Fn.bind(this, second));
-
-        // Targeting another component or element
-      } else {
-          (function () {
-            var target = first;
-            var type = second;
-            var fn = Fn.bind(_this2, third);
-
-            // When this component is disposed, remove the listener from the other component
-            var removeOnDispose = function removeOnDispose() {
-              return _this2.off(target, type, fn);
-            };
-
-            // Use the same function ID so we can remove it later it using the ID
-            // of the original listener
-            removeOnDispose.guid = fn.guid;
-            _this2.on('dispose', removeOnDispose);
-
-            // If the other component is disposed first we need to clean the reference
-            // to the other component in this component's removeOnDispose listener
-            // Otherwise we create a memory leak.
-            var cleanRemover = function cleanRemover() {
-              return _this2.off('dispose', removeOnDispose);
-            };
-
-            // Add the same function ID so we can easily remove it later
-            cleanRemover.guid = fn.guid;
-
-            // Check if this is a DOM node
-            if (first.nodeName) {
-              // Add the listener to the other element
-              Events.on(target, type, fn);
-              Events.on(target, 'dispose', cleanRemover);
-
-              // Should be a component
-              // Not using `instanceof Component` because it makes mock players difficult
-            } else if (typeof first.on === 'function') {
-                // Add the listener to the other component
-                target.on(type, fn);
-                target.on('dispose', cleanRemover);
-              }
-          })();
-        }
-
-      return this;
-    }
-
-    /**
-     * Remove an event listener from this component's element
-     * ```js
-     *     myComponent.off('eventType', myFunc);
-     * ```
-     * If myFunc is excluded, ALL listeners for the event type will be removed.
-     * If eventType is excluded, ALL listeners will be removed from the component.
-     * Alternatively you can use `off` to remove listeners that were added to other
-     * elements or components using `myComponent.on(otherComponent...`.
-     * In this case both the event type and listener function are REQUIRED.
-     * ```js
-     *     myComponent.off(otherElement, 'eventType', myFunc);
-     *     myComponent.off(otherComponent, 'eventType', myFunc);
-     * ```
-     *
-     * @param  {String=|Component}  first  The event type or other component
-     * @param  {Function=|String}       second The listener function or event type
-     * @param  {Function=}              third  The listener for other component
-     * @return {Component}
-     * @method off
-     */
-  }, {
-    key: 'off',
-    value: function off(first, second, third) {
-      if (!first || typeof first === 'string' || Array.isArray(first)) {
-        Events.off(this.el_, first, second);
-      } else {
-        var target = first;
-        var type = second;
-        // Ensure there's at least a guid, even if the function hasn't been used
-        var fn = Fn.bind(this, third);
-
-        // Remove the dispose listener on this component,
-        // which was given the same guid as the event listener
-        this.off('dispose', fn);
-
-        if (first.nodeName) {
-          // Remove the listener
-          Events.off(target, type, fn);
-          // Remove the listener for cleaning the dispose listener
-          Events.off(target, 'dispose', fn);
-        } else {
-          target.off(type, fn);
-          target.off('dispose', fn);
-        }
-      }
-
-      return this;
-    }
-
-    /**
-     * Add an event listener to be triggered only once and then removed
-     * ```js
-     *     myComponent.one('eventName', myFunc);
-     * ```
-     * Alternatively you can add a listener to another element or component
-     * that will be triggered only once.
-     * ```js
-     *     myComponent.one(otherElement, 'eventName', myFunc);
-     *     myComponent.one(otherComponent, 'eventName', myFunc);
-     * ```
-     *
-     * @param  {String|Component}  first   The event type or other component
-     * @param  {Function|String}       second  The listener function or event type
-     * @param  {Function=}             third   The listener function for other component
-     * @return {Component}
-     * @method one
-     */
-  }, {
-    key: 'one',
-    value: function one(first, second, third) {
-      var _this3 = this,
-          _arguments = arguments;
-
-      if (typeof first === 'string' || Array.isArray(first)) {
-        Events.one(this.el_, first, Fn.bind(this, second));
-      } else {
-        (function () {
-          var target = first;
-          var type = second;
-          var fn = Fn.bind(_this3, third);
-
-          var newFunc = function newFunc() {
-            _this3.off(target, type, newFunc);
-            fn.apply(null, _arguments);
-          };
-
-          // Keep the same function ID so we can remove it later
-          newFunc.guid = fn.guid;
-
-          _this3.on(target, type, newFunc);
-        })();
-      }
-
-      return this;
-    }
-
-    /**
-     * Trigger an event on an element
-     * ```js
-     *     myComponent.trigger('eventName');
-     *     myComponent.trigger({'type':'eventName'});
-     *     myComponent.trigger('eventName', {data: 'some data'});
-     *     myComponent.trigger({'type':'eventName'}, {data: 'some data'});
-     * ```
-     *
-     * @param  {Event|Object|String} event  A string (the type) or an event object with a type attribute
-     * @param  {Object} [hash] data hash to pass along with the event
-     * @return {Component}       self
-     * @method trigger
-     */
-  }, {
-    key: 'trigger',
-    value: function trigger(event, hash) {
-      Events.trigger(this.el_, event, hash);
-      return this;
-    }
-
-    /**
-     * Bind a listener to the component's ready state.
-     * Different from event listeners in that if the ready event has already happened
-     * it will trigger the function immediately.
-     *
-     * @param  {Function} fn Ready listener
-     * @param  {Boolean} sync Exec the listener synchronously if component is ready
-     * @return {Component}
-     * @method ready
-     */
-  }, {
-    key: 'ready',
-    value: function ready(fn) {
-      var sync = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-
-      if (fn) {
-        if (this.isReady_) {
-          if (sync) {
-            fn.call(this);
-          } else {
-            // Call the function asynchronously by default for consistency
-            this.setTimeout(fn, 1);
-          }
-        } else {
-          this.readyQueue_ = this.readyQueue_ || [];
-          this.readyQueue_.push(fn);
-        }
-      }
-      return this;
-    }
-
-    /**
-     * Trigger the ready listeners
-     *
-     * @return {Component}
-     * @method triggerReady
-     */
-  }, {
-    key: 'triggerReady',
-    value: function triggerReady() {
-      this.isReady_ = true;
-
-      // Ensure ready is triggerd asynchronously
-      this.setTimeout(function () {
-        var readyQueue = this.readyQueue_;
-
-        // Reset Ready Queue
-        this.readyQueue_ = [];
-
-        if (readyQueue && readyQueue.length > 0) {
-          readyQueue.forEach(function (fn) {
-            fn.call(this);
-          }, this);
-        }
-
-        // Allow for using event listeners also
-        this.trigger('ready');
-      }, 1);
-    }
-
-    /**
-     * Finds a single DOM element matching `selector` within the component's
-     * `contentEl` or another custom context.
-     *
-     * @method $
-     * @param  {String} selector
-     *         A valid CSS selector, which will be passed to `querySelector`.
-     *
-     * @param  {Element|String} [context=document]
-     *         A DOM element within which to query. Can also be a selector
-     *         string in which case the first matching element will be used
-     *         as context. If missing (or no element matches selector), falls
-     *         back to `document`.
-     *
-     * @return {Element|null}
-     */
-  }, {
-    key: '$',
-    value: function $(selector, context) {
-      return Dom.$(selector, context || this.contentEl());
-    }
-
-    /**
-     * Finds a all DOM elements matching `selector` within the component's
-     * `contentEl` or another custom context.
-     *
-     * @method $$
-     * @param  {String} selector
-     *         A valid CSS selector, which will be passed to `querySelectorAll`.
-     *
-     * @param  {Element|String} [context=document]
-     *         A DOM element within which to query. Can also be a selector
-     *         string in which case the first matching element will be used
-     *         as context. If missing (or no element matches selector), falls
-     *         back to `document`.
-     *
-     * @return {NodeList}
-     */
-  }, {
-    key: '$$',
-    value: function $$(selector, context) {
-      return Dom.$$(selector, context || this.contentEl());
-    }
-
-    /**
-     * Check if a component's element has a CSS class name
-     *
-     * @param {String} classToCheck Classname to check
-     * @return {Component}
-     * @method hasClass
-     */
-  }, {
-    key: 'hasClass',
-    value: function hasClass(classToCheck) {
-      return Dom.hasElClass(this.el_, classToCheck);
-    }
-
-    /**
-     * Add a CSS class name to the component's element
-     *
-     * @param {String} classToAdd Classname to add
-     * @return {Component}
-     * @method addClass
-     */
-  }, {
-    key: 'addClass',
-    value: function addClass(classToAdd) {
-      Dom.addElClass(this.el_, classToAdd);
-      return this;
-    }
-
-    /**
-     * Remove a CSS class name from the component's element
-     *
-     * @param {String} classToRemove Classname to remove
-     * @return {Component}
-     * @method removeClass
-     */
-  }, {
-    key: 'removeClass',
-    value: function removeClass(classToRemove) {
-      Dom.removeElClass(this.el_, classToRemove);
-      return this;
-    }
-
-    /**
-     * Add or remove a CSS class name from the component's element
-     *
-     * @param  {String} classToToggle
-     * @param  {Boolean|Function} [predicate]
-     *         Can be a function that returns a Boolean. If `true`, the class
-     *         will be added; if `false`, the class will be removed. If not
-     *         given, the class will be added if not present and vice versa.
-     *
-     * @return {Component}
-     * @method toggleClass
-     */
-  }, {
-    key: 'toggleClass',
-    value: function toggleClass(classToToggle, predicate) {
-      Dom.toggleElClass(this.el_, classToToggle, predicate);
-      return this;
-    }
-
-    /**
-     * Show the component element if hidden
-     *
-     * @return {Component}
-     * @method show
-     */
-  }, {
-    key: 'show',
-    value: function show() {
-      this.removeClass('koment-hidden');
-      return this;
-    }
-
-    /**
-     * Hide the component element if currently showing
-     *
-     * @return {Component}
-     * @method hide
-     */
-  }, {
-    key: 'hide',
-    value: function hide() {
-      this.addClass('koment-hidden');
-      return this;
-    }
-
-    /**
-     * Lock an item in its visible state
-     * To be used with fadeIn/fadeOut.
-     *
-     * @return {Component}
-     * @private
-     * @method lockShowing
-     */
-  }, {
-    key: 'lockShowing',
-    value: function lockShowing() {
-      this.addClass('koment-lock-showing');
-      return this;
-    }
-
-    /**
-     * Unlock an item to be hidden
-     * To be used with fadeIn/fadeOut.
-     *
-     * @return {Component}
-     * @private
-     * @method unlockShowing
-     */
-  }, {
-    key: 'unlockShowing',
-    value: function unlockShowing() {
-      this.removeClass('koment-lock-showing');
-      return this;
-    }
-
-    /**
-     * Set or get the width of the component (CSS values)
-     * Setting the video tag dimension values only works with values in pixels.
-     * Percent values will not work.
-     * Some percents can be used, but width()/height() will return the number + %,
-     * not the actual computed width/height.
-     *
-     * @param  {Number|String=} num   Optional width number
-     * @param  {Boolean} skipListeners Skip the 'resize' event trigger
-     * @return {Component} This component, when setting the width
-     * @return {Number|String} The width, when getting
-     * @method width
-     */
-  }, {
-    key: 'width',
-    value: function width(num, skipListeners) {
-      return this.dimension('width', num, skipListeners);
-    }
-
-    /**
-     * Get or set the height of the component (CSS values)
-     * Setting the video tag dimension values only works with values in pixels.
-     * Percent values will not work.
-     * Some percents can be used, but width()/height() will return the number + %,
-     * not the actual computed width/height.
-     *
-     * @param  {Number|String=} num     New component height
-     * @param  {Boolean=} skipListeners Skip the resize event trigger
-     * @return {Component} This component, when setting the height
-     * @return {Number|String} The height, when getting
-     * @method height
-     */
-  }, {
-    key: 'height',
-    value: function height(num, skipListeners) {
-      return this.dimension('height', num, skipListeners);
-    }
-
-    /**
-     * Set both width and height at the same time
-     *
-     * @param  {Number|String} width Width of player
-     * @param  {Number|String} height Height of player
-     * @return {Component} The component
-     * @method dimensions
-     */
-  }, {
-    key: 'dimensions',
-    value: function dimensions(width, height) {
-      // Skip resize listeners on width for optimization
-      return this.width(width, true).height(height);
-    }
-
-    /**
-     * Get or set width or height
-     * This is the shared code for the width() and height() methods.
-     * All for an integer, integer + 'px' or integer + '%';
-     * Known issue: Hidden elements officially have a width of 0. We're defaulting
-     * to the style.width value and falling back to computedStyle which has the
-     * hidden element issue. Info, but probably not an efficient fix:
-     * http://www.foliotek.com/devblog/getting-the-width-of-a-hidden-element-with-jquery-using-width/
-     *
-     * @param  {String} widthOrHeight  'width' or 'height'
-     * @param  {Number|String=} num     New dimension
-     * @param  {Boolean=} skipListeners Skip resize event trigger
-     * @return {Component} The component if a dimension was set
-     * @return {Number|String} The dimension if nothing was set
-     * @private
-     * @method dimension
-     */
-  }, {
-    key: 'dimension',
-    value: function dimension(widthOrHeight, num, skipListeners) {
-      if (num !== undefined) {
-        // Set to zero if null or literally NaN (NaN !== NaN)
-        if (num === null || num !== num) {
-          num = 0;
-        }
-
-        // Check if using css width/height (% or px) and adjust
-        if (('' + num).indexOf('%') !== -1 || ('' + num).indexOf('px') !== -1) {
-          this.el_.style[widthOrHeight] = num;
-        } else if (num === 'auto') {
-          this.el_.style[widthOrHeight] = '';
-        } else {
-          this.el_.style[widthOrHeight] = num + 'px';
-        }
-
-        // skipListeners allows us to avoid triggering the resize event when setting both width and height
-        if (!skipListeners) {
-          this.trigger('resize');
-        }
-
-        // Return component
-        return this;
-      }
-
-      // Not setting a value, so getting it
-      // Make sure element exists
-      if (!this.el_) {
-        return 0;
-      }
-
-      // Get dimension value from style
-      var val = this.el_.style[widthOrHeight];
-      var pxIndex = val.indexOf('px');
-
-      if (pxIndex !== -1) {
-        // Return the pixel value with no 'px'
-        return parseInt(val.slice(0, pxIndex), 10);
-      }
-
-      // No px so using % or no style was set, so falling back to offsetWidth/height
-      // If component has display:none, offset will return 0
-      // TODO: handle display:none and no dimension style using px
-      return parseInt(this.el_['offset' + (0, _utilsToTitleCaseJs2['default'])(widthOrHeight)], 10);
-    }
-
-    /**
-     * Get width or height of computed style
-     * @param  {String} widthOrHeight  'width' or 'height'
-     * @return {Number|Boolean} The bolean false if nothing was set
-     * @method currentDimension
-     */
-  }, {
-    key: 'currentDimension',
-    value: function currentDimension(widthOrHeight) {
-      var computedWidthOrHeight = 0;
-
-      if (widthOrHeight !== 'width' && widthOrHeight !== 'height') {
-        throw new Error('currentDimension only accepts width or height value');
-      }
-
-      if (typeof _globalWindow2['default'].getComputedStyle === 'function') {
-        var computedStyle = _globalWindow2['default'].getComputedStyle(this.el_);
-
-        computedWidthOrHeight = computedStyle.getPropertyValue(widthOrHeight) || computedStyle[widthOrHeight];
-      } else if (this.el_.currentStyle) {
-        // ie 8 doesn't support computed style, shim it
-        // return clientWidth or clientHeight instead for better accuracy
-        var rule = 'offset' + (0, _utilsToTitleCaseJs2['default'])(widthOrHeight);
-
-        computedWidthOrHeight = this.el_[rule];
-      }
-
-      // remove 'px' from variable and parse as integer
-      computedWidthOrHeight = parseFloat(computedWidthOrHeight);
-      return computedWidthOrHeight;
-    }
-
-    /**
-     * Get an object which contains width and height values of computed style
-     * @return {Object} The dimensions of element
-     * @method currentDimensions
-     */
-  }, {
-    key: 'currentDimensions',
-    value: function currentDimensions() {
-      return {
-        width: this.currentDimension('width'),
-        height: this.currentDimension('height')
-      };
-    }
-
-    /**
-     * Get width of computed style
-     * @return {Integer}
-     * @method currentWidth
-     */
-  }, {
-    key: 'currentWidth',
-    value: function currentWidth() {
-      return this.currentDimension('width');
-    }
-
-    /**
-     * Get height of computed style
-     * @return {Integer}
-     * @method currentHeight
-     */
-  }, {
-    key: 'currentHeight',
-    value: function currentHeight() {
-      return this.currentDimension('height');
-    }
-
-    /**
-     * Emit 'tap' events when touch events are supported
-     * This is used to support toggling the controls through a tap on the video.
-     * We're requiring them to be enabled because otherwise every component would
-     * have this extra overhead unnecessarily, on mobile devices where extra
-     * overhead is especially bad.
-     *
-     * @private
-     * @method emitTapEvents
-     */
-  }, {
-    key: 'emitTapEvents',
-    value: function emitTapEvents() {
-      // Track the start time so we can determine how long the touch lasted
-      var touchStart = 0;
-      var firstTouch = null;
-
-      // Maximum movement allowed during a touch event to still be considered a tap
-      // Other popular libs use anywhere from 2 (hammer.js) to 15, so 10 seems like a nice, round number.
-      var tapMovementThreshold = 10;
-
-      // The maximum length a touch can be while still being considered a tap
-      var touchTimeThreshold = 200;
-
-      var couldBeTap = undefined;
-
-      this.on('touchstart', function (event) {
-        // If more than one finger, don't consider treating this as a click
-        if (event.touches.length === 1) {
-          // Copy pageX/pageY from the object
-          firstTouch = {
-            pageX: event.touches[0].pageX,
-            pageY: event.touches[0].pageY
-          };
-          // Record start time so we can detect a tap vs. "touch and hold"
-          touchStart = new Date().getTime();
-          // Reset couldBeTap tracking
-          couldBeTap = true;
-        }
-      });
-
-      this.on('touchmove', function (event) {
-        // If more than one finger, don't consider treating this as a click
-        if (event.touches.length > 1) {
-          couldBeTap = false;
-        } else if (firstTouch) {
-          // Some devices will throw touchmoves for all but the slightest of taps.
-          // So, if we moved only a small distance, this could still be a tap
-          var xdiff = event.touches[0].pageX - firstTouch.pageX;
-          var ydiff = event.touches[0].pageY - firstTouch.pageY;
-          var touchDistance = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
-
-          if (touchDistance > tapMovementThreshold) {
-            couldBeTap = false;
-          }
-        }
-      });
-
-      var noTap = function noTap() {
-        couldBeTap = false;
-      };
-
-      // TODO: Listen to the original target. http://youtu.be/DujfpXOKUp8?t=13m8s
-      this.on('touchleave', noTap);
-      this.on('touchcancel', noTap);
-
-      // When the touch ends, measure how long it took and trigger the appropriate
-      // event
-      this.on('touchend', function (event) {
-        firstTouch = null;
-        // Proceed only if the touchmove/leave/cancel event didn't happen
-        if (couldBeTap === true) {
-          // Measure how long the touch lasted
-          var touchTime = new Date().getTime() - touchStart;
-
-          // Make sure the touch was less than the threshold to be considered a tap
-          if (touchTime < touchTimeThreshold) {
-            // Don't let browser turn this into a click
-            event.preventDefault();
-            this.trigger('tap');
-            // It may be good to copy the touchend event object and change the
-            // type to tap, if the other event properties aren't exact after
-            // Events.fixEvent runs (e.g. event.target)
-          }
-        }
-      });
-    }
-
-    /**
-     * Report user touch activity when touch events occur
-     * User activity is used to determine when controls should show/hide. It's
-     * relatively simple when it comes to mouse events, because any mouse event
-     * should show the controls. So we capture mouse events that bubble up to the
-     * player and report activity when that happens.
-     * With touch events it isn't as easy. We can't rely on touch events at the
-     * player level, because a tap (touchstart + touchend) on the video itself on
-     * mobile devices is meant to turn controls off (and on). User activity is
-     * checked asynchronously, so what could happen is a tap event on the video
-     * turns the controls off, then the touchend event bubbles up to the player,
-     * which if it reported user activity, would turn the controls right back on.
-     * (We also don't want to completely block touch events from bubbling up)
-     * Also a touchmove, touch+hold, and anything other than a tap is not supposed
-     * to turn the controls back on on a mobile device.
-     * Here we're setting the default component behavior to report user activity
-     * whenever touch events happen, and this can be turned off by components that
-     * want touch events to act differently.
-     *
-     * @method enableTouchActivity
-     */
-  }, {
-    key: 'enableTouchActivity',
-    value: function enableTouchActivity() {
-      // Don't continue if the root player doesn't support reporting user activity
-      if (!this.player() || !this.player().reportUserActivity) {
-        return;
-      }
-
-      // listener for reporting that the user is active
-      var report = Fn.bind(this.player(), this.player().reportUserActivity);
-
-      var touchHolding = undefined;
-
-      this.on('touchstart', function () {
-        report();
-        // For as long as the they are touching the device or have their mouse down,
-        // we consider them active even if they're not moving their finger or mouse.
-        // So we want to continue to update that they are active
-        this.clearInterval(touchHolding);
-        // report at the same interval as activityCheck
-        touchHolding = this.setInterval(report, 250);
-      });
-
-      var touchEnd = function touchEnd(event) {
-        report();
-        // stop the interval that maintains activity if the touch is holding
-        this.clearInterval(touchHolding);
-      };
-
-      this.on('touchmove', report);
-      this.on('touchend', touchEnd);
-      this.on('touchcancel', touchEnd);
-    }
-
-    /**
-     * Creates timeout and sets up disposal automatically.
-     *
-     * @param {Function} fn The function to run after the timeout.
-     * @param {Number} timeout Number of ms to delay before executing specified function.
-     * @return {Number} Returns the timeout ID
-     * @method setTimeout
-     */
-  }, {
-    key: 'setTimeout',
-    value: function setTimeout(fn, timeout) {
-      fn = Fn.bind(this, fn);
-
-      // window.setTimeout would be preferable here, but due to some bizarre issue with Sinon and/or Phantomjs, we can't.
-      var timeoutId = _globalWindow2['default'].setTimeout(fn, timeout);
-
-      var disposeFn = function disposeFn() {
-        this.clearTimeout(timeoutId);
-      };
-
-      disposeFn.guid = 'koment-timeout-' + timeoutId;
-
-      this.on('dispose', disposeFn);
-
-      return timeoutId;
-    }
-
-    /**
-     * Clears a timeout and removes the associated dispose listener
-     *
-     * @param {Number} timeoutId The id of the timeout to clear
-     * @return {Number} Returns the timeout ID
-     * @method clearTimeout
-     */
-  }, {
-    key: 'clearTimeout',
-    value: function clearTimeout(timeoutId) {
-      _globalWindow2['default'].clearTimeout(timeoutId);
-
-      var disposeFn = function disposeFn() {};
-
-      disposeFn.guid = 'koment-timeout-' + timeoutId;
-
-      this.off('dispose', disposeFn);
-
-      return timeoutId;
-    }
-
-    /**
-     * Creates an interval and sets up disposal automatically.
-     *
-     * @param {Function} fn The function to run every N seconds.
-     * @param {Number} interval Number of ms to delay before executing specified function.
-     * @return {Number} Returns the interval ID
-     * @method setInterval
-     */
-  }, {
-    key: 'setInterval',
-    value: function setInterval(fn, interval) {
-      fn = Fn.bind(this, fn);
-
-      var intervalId = _globalWindow2['default'].setInterval(fn, interval);
-
-      var disposeFn = function disposeFn() {
-        this.clearInterval(intervalId);
-      };
-
-      disposeFn.guid = 'koment-interval-' + intervalId;
-
-      this.on('dispose', disposeFn);
-
-      return intervalId;
-    }
-
-    /**
-     * Clears an interval and removes the associated dispose listener
-     *
-     * @param {Number} intervalId The id of the interval to clear
-     * @return {Number} Returns the interval ID
-     * @method clearInterval
-     */
-  }, {
-    key: 'clearInterval',
-    value: function clearInterval(intervalId) {
-      _globalWindow2['default'].clearInterval(intervalId);
-
-      var disposeFn = function disposeFn() {};
-
-      disposeFn.guid = 'koment-interval-' + intervalId;
-
-      this.off('dispose', disposeFn);
-
-      return intervalId;
-    }
-
-    /**
-     * Registers a component
-     *
-     * @param {String} name Name of the component to register
-     * @param {Object} comp The component to register
-     * @static
-     * @method registerComponent
-     */
-  }], [{
-    key: 'registerComponent',
-    value: function registerComponent(name, comp) {
-      if (!Component.components_) {
-        Component.components_ = {};
-      }
-
-      Component.components_[name] = comp;
-      return comp;
-    }
-
-    /**
-     * Gets a component by name
-     *
-     * @param {String} name Name of the component to get
-     * @return {Component}
-     * @static
-     * @method getComponent
-     */
-  }, {
-    key: 'getComponent',
-    value: function getComponent(name) {
-      if (Component.components_ && Component.components_[name]) {
-        return Component.components_[name];
-      }
-
-      if (_globalWindow2['default'] && _globalWindow2['default'].koment && _globalWindow2['default'].koment[name]) {
-        _utilsLogJs2['default'].warn('The ' + name + ' component was added to the koment object when it should be registered using koment.registerComponent(name, component)');
-        return _globalWindow2['default'].koment[name];
-      }
-    }
-
-    /**
-     * Sets up the constructor using the supplied init method
-     * or uses the init of the parent object
-     *
-     * @param {Object} props An object of properties
-     * @static
-     * @deprecated
-     * @method extend
-     */
-  }, {
-    key: 'extend',
-    value: function extend(props) {
-      props = props || {};
-
-      _utilsLogJs2['default'].warn('Component.extend({}) has been deprecated, use koment.extend(Component, {}) instead');
-
-      // Set up the constructor using the supplied init method
-      // or using the init of the parent object
-      // Make sure to check the unobfuscated version for external libs
-      var init = props.init || props.init || this.prototype.init || this.prototype.init || function () {};
-      // In Resig's simple class inheritance (previously used) the constructor
-      //  is a function that calls `this.init.apply(arguments)`
-      // However that would prevent us from using `ParentObject.call(this);`
-      //  in a Child constructor because the `this` in `this.init`
-      //  would still refer to the Child and cause an infinite loop.
-      // We would instead have to do
-      //    `ParentObject.prototype.init.apply(this, arguments);`
-      //  Bleh. We're not creating a _super() function, so it's good to keep
-      //  the parent constructor reference simple.
-      var subObj = function subObj() {
-        init.apply(this, arguments);
-      };
-
-      // Inherit from this object's prototype
-      subObj.prototype = Object.create(this.prototype);
-      // Reset the constructor property for subObj otherwise
-      // instances of subObj would have the constructor of the parent Object
-      subObj.prototype.constructor = subObj;
-
-      // Make the class extendable
-      subObj.extend = Component.extend;
-
-      // Extend subObj's prototype with functions and other properties from props
-      for (var _name in props) {
-        if (props.hasOwnProperty(_name)) {
-          subObj.prototype[_name] = props[_name];
-        }
-      }
-
-      return subObj;
-    }
-  }]);
-
-  return Component;
-})();
-
-Component.registerComponent('Component', Component);
-exports['default'] = Component;
-module.exports = exports['default'];
-},{"./utils/dom.js":57,"./utils/events.js":58,"./utils/fn.js":59,"./utils/guid.js":61,"./utils/log.js":62,"./utils/merge-options.js":63,"./utils/to-title-case.js":66,"global/window":20}],25:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./utils/dom.js":38,"./utils/fn.js":39,"./utils/log.js":42,"global/document":19,"object.assign":49}],23:[function(require,module,exports){
+(function (global){
 /**
  * @file koment-display.js
  **/
@@ -5179,9 +3401,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _component = require('../component');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _component2 = _interopRequireDefault(_component);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _utilsFnJs = require('../utils/fn.js');
 
@@ -5203,6 +3425,8 @@ var _komentItem2 = _interopRequireDefault(_komentItem);
  * @extends Component
  * @class KomentDisplay
  */
+
+var Component = _videoJs2['default'].getComponent('Component');
 
 var KomentDisplay = (function (_Component) {
   _inherits(KomentDisplay, _Component);
@@ -5232,7 +3456,7 @@ var KomentDisplay = (function (_Component) {
       var videoId_ = this.videoId();
       this.data_ = {
         json: true,
-        uri: this.player_.options_.api + '?video=' + videoId_,
+        uri: this.player_.koment.options_.api + '?video=' + encodeURIComponent(videoId_),
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -5257,7 +3481,7 @@ var KomentDisplay = (function (_Component) {
 
         kommentsList = (0, _lodash.sortBy)(kommentsList, ['timecode']);
 
-        _this.player_.komentsList(kommentsList);
+        _this.player_.koment.komentsList(kommentsList);
         _this.player_.trigger('kmtlistfetched');
         _this.createChilds();
       });
@@ -5276,7 +3500,7 @@ var KomentDisplay = (function (_Component) {
       (0, _xhr2['default'])((0, _lodash.merge)(this.data_, {
         method: 'POST',
         video: this.videoId_,
-        uri: '' + this.player_.options_.api,
+        uri: '' + this.player_.koment.options_.api,
         json: json
       }), function (err, res) {
         if (err) {
@@ -5294,8 +3518,8 @@ var KomentDisplay = (function (_Component) {
   }, {
     key: 'handleClick',
     value: function handleClick() {
-      this.player_.toggleEdit(false);
-      this.player_.toggleList(false);
+      this.player_.koment.toggleEdit(false);
+      this.player_.koment.toggleList(false);
     }
 
     /**
@@ -5324,7 +3548,7 @@ var KomentDisplay = (function (_Component) {
   }, {
     key: 'createChilds',
     value: function createChilds() {
-      var items = this.player_.komentsList();
+      var items = this.player_.koment.komentsList();
       this.items = [];
       for (var i = 0, l = items.length; i < l; i++) {
         var item = items[i];
@@ -5416,7 +3640,7 @@ var KomentDisplay = (function (_Component) {
   }]);
 
   return KomentDisplay;
-})(_component2['default']);
+})(Component);
 
 KomentDisplay.prototype.options_ = {
   tte: 5,
@@ -5424,10 +3648,12 @@ KomentDisplay.prototype.options_ = {
   template: 'viki'
 };
 
-_component2['default'].registerComponent('KomentDisplay', KomentDisplay);
+Component.registerComponent('KomentDisplay', KomentDisplay);
 exports['default'] = KomentDisplay;
 module.exports = exports['default'];
-},{"../component":24,"../utils/fn.js":59,"./koment-item":26,"lodash":68,"xhr":69}],26:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../utils/fn.js":39,"./koment-item":24,"lodash":45,"xhr":46}],24:[function(require,module,exports){
+(function (global){
 /**
  * @file koment-item.js
  **/
@@ -5441,13 +3667,17 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _utilsDom = require('../utils/dom');
 
@@ -5456,10 +3686,6 @@ var Dom = _interopRequireWildcard(_utilsDom);
 var _clickableComponentJs = require('../clickable-component.js');
 
 var _clickableComponentJs2 = _interopRequireDefault(_clickableComponentJs);
-
-var _componentJs = require('../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
 
 var _utilsFormatTimeJs = require('../utils/format-time.js');
 
@@ -5471,6 +3697,8 @@ var _utilsFormatTimeJs2 = _interopRequireDefault(_utilsFormatTimeJs);
  * @extends Component
  * @class ControlBar
  */
+
+var Component = _videoJs2['default'].getComponent('Component');
 
 var KomentItem = (function (_ClickableComponent) {
   _inherits(KomentItem, _ClickableComponent);
@@ -5538,7 +3766,7 @@ var KomentItem = (function (_ClickableComponent) {
     value: function createEl() {
 
       var el = _get(Object.getPrototypeOf(KomentItem.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-item koment-hidden'
+        className: 'koment-item vjs-hidden'
       });
 
       this.contentEl_ = Dom.createEl('div', {
@@ -5586,7 +3814,7 @@ var KomentItem = (function (_ClickableComponent) {
         if (_this.hasClass('koment-mask')) {
           _this.removeClass('koment-mask');
         }
-        _this.addClass('koment-hidden');
+        _this.addClass('vjs-hidden');
       }, 500);
     }
   }]);
@@ -5604,10 +3832,12 @@ KomentItem.prototype.options_ = {
   }
 };
 
-_componentJs2['default'].registerComponent('KomentItem', KomentItem);
+Component.registerComponent('KomentItem', KomentItem);
 exports['default'] = KomentItem;
 module.exports = exports['default'];
-},{"../clickable-component.js":23,"../component.js":24,"../utils/dom":57,"../utils/format-time.js":60}],27:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../clickable-component.js":22,"../utils/dom":38,"../utils/format-time.js":40}],25:[function(require,module,exports){
+(function (global){
 /**
  * @file koment-list.js
  **/
@@ -5627,14 +3857,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _component = require('../component');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _component2 = _interopRequireDefault(_component);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
 var _komentItem = require('./koment-item');
 
 var _komentItem2 = _interopRequireDefault(_komentItem);
 
+var Component = _videoJs2['default'].getComponent('Component');
 /**
  * Container of comment list
  *
@@ -5687,7 +3918,7 @@ var KomentList = (function (_Component) {
   }, {
     key: 'createChilds',
     value: function createChilds() {
-      var items = this.player_.komentsList();
+      var items = this.player_.koment.komentsList();
       this.items = [];
       for (var i = 0, l = items.length; i < l; i++) {
         var item = items[i];
@@ -5701,96 +3932,16 @@ var KomentList = (function (_Component) {
   }]);
 
   return KomentList;
-})(_component2['default']);
+})(Component);
 
 KomentList.prototype.options_ = {};
 
-_component2['default'].registerComponent('KomentList', KomentList);
+Component.registerComponent('KomentList', KomentList);
 exports['default'] = KomentList;
 module.exports = exports['default'];
-},{"../component":24,"./koment-item":26}],28:[function(require,module,exports){
-/**
- * @file control-bar.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _component = require('../component');
-
-var _component2 = _interopRequireDefault(_component);
-
-// Required children
-
-require('./koment-toggle');
-
-require('./like-button');
-
-require('./edit-button');
-
-require('./list-button');
-
-require('./post-box/post-box');
-
-/**
- * Container of main controls
- *
- * @extends Component
- * @class ControlBar
- */
-
-var ControlBar = (function (_Component) {
-  _inherits(ControlBar, _Component);
-
-  function ControlBar() {
-    _classCallCheck(this, ControlBar);
-
-    _get(Object.getPrototypeOf(ControlBar.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(ControlBar, [{
-    key: 'createEl',
-
-    /**
-     * Create the component's DOM element
-     *
-     * @return {Element}
-     * @method createEl
-     */
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(ControlBar.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-control-bar',
-        dir: 'ltr'
-      }, {
-        // The control bar is a group, so it can contain menuitems
-        role: 'group'
-      });
-    }
-  }]);
-
-  return ControlBar;
-})(_component2['default']);
-
-ControlBar.prototype.options_ = {
-  children: ['komentToggle', 'editButton', 'listButton', 'postBox']
-};
-
-_component2['default'].registerComponent('ControlBar', ControlBar);
-exports['default'] = ControlBar;
-module.exports = exports['default'];
-},{"../component":24,"./edit-button":29,"./koment-toggle":30,"./like-button":31,"./list-button":32,"./post-box/post-box":33}],29:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./koment-item":24}],26:[function(require,module,exports){
+(function (global){
 /**
  * @file edit-button.js
  */
@@ -5811,13 +3962,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _componentJs = require('../component.js');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _componentJs2 = _interopRequireDefault(_componentJs);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _buttonJs = require('../button.js');
+var _komentButton = require('./koment-button');
 
-var _buttonJs2 = _interopRequireDefault(_buttonJs);
+var _komentButton2 = _interopRequireDefault(_komentButton);
 
 /**
  * The button component for toggling and selecting koment
@@ -5831,8 +3982,10 @@ var _buttonJs2 = _interopRequireDefault(_buttonJs);
  * @class EditButton
  */
 
-var EditButton = (function (_Button) {
-  _inherits(EditButton, _Button);
+var Component = _videoJs2['default'].getComponent('Component');
+
+var EditButton = (function (_KomentButton) {
+  _inherits(EditButton, _KomentButton);
 
   function EditButton(player, options, ready) {
     _classCallCheck(this, EditButton);
@@ -5871,7 +4024,7 @@ var EditButton = (function (_Button) {
       _get(Object.getPrototypeOf(EditButton.prototype), 'handleClick', this).call(this, event);
       this.addClass('active');
       this.setTimeout(this.disable, 300);
-      this.player_.toggleEdit();
+      this.player_.koment.toggleEdit();
     }
   }, {
     key: 'disable',
@@ -5881,14 +4034,102 @@ var EditButton = (function (_Button) {
   }]);
 
   return EditButton;
-})(_buttonJs2['default']);
+})(_komentButton2['default']);
 
 EditButton.prototype.controlText_ = 'Edit';
 
-_componentJs2['default'].registerComponent('EditButton', EditButton);
+Component.registerComponent('EditButton', EditButton);
 exports['default'] = EditButton;
 module.exports = exports['default'];
-},{"../button.js":22,"../component.js":24}],30:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./koment-button":28}],27:[function(require,module,exports){
+(function (global){
+/**
+ * @file control-bar.js
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+// Required children
+
+require('./koment-toggle');
+
+require('./like-button');
+
+require('./edit-button');
+
+require('./list-button');
+
+require('./post-box/post-box');
+
+/**
+ * Container of main controls
+ *
+ * @extends Component
+ * @class KomentBar
+ */
+
+var Component = _videoJs2['default'].getComponent('Component');
+var ControlBar = _videoJs2['default'].getComponent('ControlBar');
+var KomentBar = (function (_ControlBar) {
+  _inherits(KomentBar, _ControlBar);
+
+  function KomentBar() {
+    _classCallCheck(this, KomentBar);
+
+    _get(Object.getPrototypeOf(KomentBar.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(KomentBar, [{
+    key: 'createEl',
+
+    /**
+     * Create the component's DOM element
+     *
+     * @return {Element}
+     * @method createEl
+     */
+    value: function createEl() {
+      return _videoJs2['default'].createEl('div', {
+        className: 'koment-control-bar',
+        dir: 'ltr'
+      }, {
+        // The control bar is a group, so it can contain menuitems
+        role: 'group'
+      });
+    }
+  }]);
+
+  return KomentBar;
+})(ControlBar);
+
+KomentBar.prototype.options_ = {
+  children: ['komentToggle', 'editButton', 'listButton', 'postBox']
+};
+
+Component.registerComponent('KomentBar', KomentBar);
+exports['default'] = KomentBar;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./edit-button":26,"./koment-toggle":29,"./like-button":30,"./list-button":31,"./post-box/post-box":32}],28:[function(require,module,exports){
+(function (global){
 /**
  * @file koment-toggle.js
  */
@@ -5909,14 +4150,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _componentJs = require('../component.js');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _componentJs2 = _interopRequireDefault(_componentJs);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _buttonJs = require('../button.js');
-
-var _buttonJs2 = _interopRequireDefault(_buttonJs);
-
+var Component = _videoJs2['default'].getComponent('Component');
+var Button = _videoJs2['default'].getComponent('Button');
 /**
  * The button component for toggling and selecting koment
  * Chapters act much differently than other text tracks
@@ -5929,16 +4168,100 @@ var _buttonJs2 = _interopRequireDefault(_buttonJs);
  * @class KomentToggle
  */
 
-var KomentToggle = (function (_Button) {
-  _inherits(KomentToggle, _Button);
+var KomentButton = (function (_Button) {
+  _inherits(KomentButton, _Button);
+
+  function KomentButton(player, options, ready) {
+    _classCallCheck(this, KomentButton);
+
+    _get(Object.getPrototypeOf(KomentButton.prototype), 'constructor', this).call(this, player, options, ready);
+  }
+
+  /**
+   * Allow sub components to stack CSS class names
+   *
+   * @return {String} The constructed class name
+   * @method buildCSSClass
+   */
+
+  _createClass(KomentButton, [{
+    key: 'buildCSSClass',
+    value: function buildCSSClass() {
+      return 'koment-control koment-button';
+    }
+  }, {
+    key: 'createEl',
+    value: function createEl() {
+      return _get(Object.getPrototypeOf(KomentButton.prototype), 'createEl', this).call(this, 'button', {}, this.options_.attributes);
+    }
+  }]);
+
+  return KomentButton;
+})(Button);
+
+KomentButton.prototype.options_ = {
+  attributes: {}
+};
+
+KomentButton.prototype.controlText_ = 'KomentButton';
+
+Component.registerComponent('KomentButton', KomentButton);
+exports['default'] = KomentButton;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],29:[function(require,module,exports){
+(function (global){
+/**
+ * @file koment-toggle.js
+ */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
+var _komentButton = require('./koment-button');
+
+var _komentButton2 = _interopRequireDefault(_komentButton);
+
+var Component = _videoJs2['default'].getComponent('Component');
+/**
+ * The button component for toggling and selecting koment
+ * Chapters act much differently than other text tracks
+ * Cues are navigation vs. other tracks of alternative languages
+ *
+ * @param {Object} player  Player object
+ * @param {Object=} options Object of option names and values
+ * @param {Function=} ready    Ready callback function
+ * @extends Button
+ * @class KomentToggle
+ */
+
+var KomentToggle = (function (_KomentButton) {
+  _inherits(KomentToggle, _KomentButton);
 
   function KomentToggle(player, options, ready) {
     _classCallCheck(this, KomentToggle);
 
     _get(Object.getPrototypeOf(KomentToggle.prototype), 'constructor', this).call(this, player, options, ready);
     this.on(player, 'togglemenu', this.handleToggleChange);
-    if (player.options_.open) {
-      player.toggleMenu(player.options_.open);
+    if (player.koment.options_.open) {
+      player.koment.toggleMenu(player.koment.options_.open);
     }
   }
 
@@ -5954,11 +4277,6 @@ var KomentToggle = (function (_Button) {
     value: function buildCSSClass() {
       return 'koment-toggle ' + _get(Object.getPrototypeOf(KomentToggle.prototype), 'buildCSSClass', this).call(this);
     }
-  }, {
-    key: 'createEl',
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(KomentToggle.prototype), 'createEl', this).call(this, 'button', {}, this.options_.attributes);
-    }
 
     /**
      * Handle click on text track
@@ -5969,12 +4287,12 @@ var KomentToggle = (function (_Button) {
     key: 'handleClick',
     value: function handleClick(event) {
       _get(Object.getPrototypeOf(KomentToggle.prototype), 'handleClick', this).call(this, event);
-      this.player_.toggleMenu();
+      this.player_.koment.toggleMenu();
     }
   }, {
     key: 'handleToggleChange',
     value: function handleToggleChange() {
-      if (this.player_.isKomentOn()) {
+      if (this.player_.koment.isKomentOn()) {
         this.controlText('Non-Koment');
       } else {
         this.controlText('Koment');
@@ -5983,7 +4301,7 @@ var KomentToggle = (function (_Button) {
   }]);
 
   return KomentToggle;
-})(_buttonJs2['default']);
+})(_komentButton2['default']);
 
 KomentToggle.prototype.options_ = {
   attributes: {}
@@ -5991,13 +4309,16 @@ KomentToggle.prototype.options_ = {
 
 KomentToggle.prototype.controlText_ = 'Koment';
 
-_componentJs2['default'].registerComponent('KomentToggle', KomentToggle);
+Component.registerComponent('KomentToggle', KomentToggle);
 exports['default'] = KomentToggle;
 module.exports = exports['default'];
-},{"../button.js":22,"../component.js":24}],31:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./koment-button":28}],30:[function(require,module,exports){
+(function (global){
 /**
  * @file koment-toggle.js
  */
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -6016,6 +4337,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
 var _utilsToTitleCase = require('../utils/to-title-case');
 
 var _utilsToTitleCase2 = _interopRequireDefault(_utilsToTitleCase);
@@ -6024,13 +4349,9 @@ var _utilsDom = require('../utils/dom');
 
 var Dom = _interopRequireWildcard(_utilsDom);
 
-var _componentJs = require('../component.js');
+var _komentButton = require('./koment-button');
 
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-var _buttonJs = require('../button.js');
-
-var _buttonJs2 = _interopRequireDefault(_buttonJs);
+var _komentButton2 = _interopRequireDefault(_komentButton);
 
 /**
  * The button component for toggling and selecting koment
@@ -6044,8 +4365,10 @@ var _buttonJs2 = _interopRequireDefault(_buttonJs);
  * @class LikeButton
  */
 
-var LikeButton = (function (_Button) {
-  _inherits(LikeButton, _Button);
+var Component = _videoJs2['default'].getComponent('Component');
+
+var LikeButton = (function (_KomentButton) {
+  _inherits(LikeButton, _KomentButton);
 
   function LikeButton(player, options, ready) {
     _classCallCheck(this, LikeButton);
@@ -6093,14 +4416,16 @@ var LikeButton = (function (_Button) {
   }]);
 
   return LikeButton;
-})(_buttonJs2['default']);
+})(_komentButton2['default']);
 
 LikeButton.prototype.controlText_ = 'Like';
 
-_componentJs2['default'].registerComponent('LikeButton', LikeButton);
+Component.registerComponent('LikeButton', LikeButton);
 exports['default'] = LikeButton;
 module.exports = exports['default'];
-},{"../button.js":22,"../component.js":24,"../utils/dom":57,"../utils/to-title-case":66}],32:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../utils/dom":38,"../utils/to-title-case":44,"./koment-button":28}],31:[function(require,module,exports){
+(function (global){
 /**
  * @file list-button.js
  */
@@ -6121,13 +4446,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _componentJs = require('../component.js');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _componentJs2 = _interopRequireDefault(_componentJs);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _buttonJs = require('../button.js');
+var _komentButton = require('./koment-button');
 
-var _buttonJs2 = _interopRequireDefault(_buttonJs);
+var _komentButton2 = _interopRequireDefault(_komentButton);
 
 /**
  * The button component for toggling and selecting koment
@@ -6141,15 +4466,17 @@ var _buttonJs2 = _interopRequireDefault(_buttonJs);
  * @class ListButton
  */
 
-var ListButton = (function (_Button) {
-  _inherits(ListButton, _Button);
+var Component = _videoJs2['default'].getComponent('Component');
+
+var ListButton = (function (_KomentButton) {
+  _inherits(ListButton, _KomentButton);
 
   function ListButton(player, options, ready) {
     _classCallCheck(this, ListButton);
 
     _get(Object.getPrototypeOf(ListButton.prototype), 'constructor', this).call(this, player, options, ready);
-    this.on(player, 'kmtlistfetched', this.update);
-    this.on(player, 'komentsupdated', this.update);
+    this.on(this.player_, 'kmtlistfetched', this.update);
+    this.on(this.player_, 'komentsupdated', this.update);
   }
 
   /**
@@ -6162,7 +4489,7 @@ var ListButton = (function (_Button) {
   _createClass(ListButton, [{
     key: 'buildCSSClass',
     value: function buildCSSClass() {
-      return 'list-button koment-hidden ' + _get(Object.getPrototypeOf(ListButton.prototype), 'buildCSSClass', this).call(this);
+      return 'list-button vjs-hidden ' + _get(Object.getPrototypeOf(ListButton.prototype), 'buildCSSClass', this).call(this);
     }
 
     /**
@@ -6173,7 +4500,7 @@ var ListButton = (function (_Button) {
   }, {
     key: 'update',
     value: function update() {
-      var items = this.player_.komentsList();
+      var items = this.player_.koment.komentsList();
       if (items && items.length) {
         this.show();
       } else {
@@ -6192,7 +4519,7 @@ var ListButton = (function (_Button) {
       _get(Object.getPrototypeOf(ListButton.prototype), 'handleClick', this).call(this, event);
       this.addClass('active');
       this.setTimeout(this.disable, 300);
-      this.player_.toggleList();
+      this.player_.koment.toggleList();
     }
   }, {
     key: 'disable',
@@ -6202,14 +4529,16 @@ var ListButton = (function (_Button) {
   }]);
 
   return ListButton;
-})(_buttonJs2['default']);
+})(_komentButton2['default']);
 
 ListButton.prototype.controlText_ = 'List';
 
-_componentJs2['default'].registerComponent('ListButton', ListButton);
+Component.registerComponent('ListButton', ListButton);
 exports['default'] = ListButton;
 module.exports = exports['default'];
-},{"../button.js":22,"../component.js":24}],33:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./koment-button":28}],32:[function(require,module,exports){
+(function (global){
 /**
  * @file post-box.js
  */
@@ -6230,9 +4559,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _componentJs = require('../../component.js');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _componentJs2 = _interopRequireDefault(_componentJs);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
 require('./post-comment-box');
 
@@ -6251,6 +4580,8 @@ require('./post-user-box');
  * @extends Component
  * @class PostBox
  */
+
+var Component = _videoJs2['default'].getComponent('Component');
 
 var PostBox = (function (_Component) {
   _inherits(PostBox, _Component);
@@ -6271,16 +4602,18 @@ var PostBox = (function (_Component) {
   }]);
 
   return PostBox;
-})(_componentJs2['default']);
+})(Component);
 
 PostBox.prototype.options_ = {
   children: ['postUserBox', 'postCommentBox', 'postlimitBox', 'postSubmitButton']
 };
 
-_componentJs2['default'].registerComponent('PostBox', PostBox);
+Component.registerComponent('PostBox', PostBox);
 exports['default'] = PostBox;
 module.exports = exports['default'];
-},{"../../component.js":24,"./post-comment-box":34,"./post-submit-button":35,"./post-user-box":36}],34:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./post-comment-box":33,"./post-submit-button":34,"./post-user-box":35}],33:[function(require,module,exports){
+(function (global){
 /**
  * @file koment-toggle.js
  */
@@ -6308,12 +4641,14 @@ var _globalDocument = require('global/document');
 
 var _globalDocument2 = _interopRequireDefault(_globalDocument);
 
-var _componentJs = require('../../component.js');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _componentJs2 = _interopRequireDefault(_componentJs);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
 require('./post-comment-box');
 
+var Component = _videoJs2['default'].getComponent('Component');
+var Button = _videoJs2['default'].getComponent('Button');
 var key = {
   'backspace': 8,
   'tab': 9,
@@ -6550,9 +4885,9 @@ var PostCommentBox = (function (_Component) {
     value: function onSubmit() {
       var message = this.value();
       var timecode = Math.round(this.player_.currentTime());
-      var user = this.player_.options_.user;
+      var user = this.player_.koment.options_.user;
       this.clear();
-      this.player_.sendKoment({ message: message, timecode: timecode, user: user });
+      this.player_.koment.sendKoment({ message: message, timecode: timecode, user: user });
     }
   }, {
     key: 'createEl',
@@ -6583,16 +4918,18 @@ var PostCommentBox = (function (_Component) {
   }]);
 
   return PostCommentBox;
-})(_componentJs2['default']);
+})(Component);
 
 PostCommentBox.prototype.options_ = {
   max: 140
 };
 
-_componentJs2['default'].registerComponent('PostCommentBox', PostCommentBox);
+Component.registerComponent('PostCommentBox', PostCommentBox);
 exports['default'] = PostCommentBox;
 module.exports = exports['default'];
-},{"../../component.js":24,"./post-comment-box":34,"global/document":19,"global/window":20}],35:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./post-comment-box":33,"global/document":19,"global/window":20}],34:[function(require,module,exports){
+(function (global){
 /**
  * @file post-submit-button.js
  */
@@ -6613,14 +4950,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _componentJs = require('../../component.js');
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _componentJs2 = _interopRequireDefault(_componentJs);
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _buttonJs = require('../../button.js');
+var _komentButton = require('../koment-button');
 
-var _buttonJs2 = _interopRequireDefault(_buttonJs);
+var _komentButton2 = _interopRequireDefault(_komentButton);
 
+var Component = _videoJs2['default'].getComponent('Component');
 /**
  * The button component for toggling and selecting koment
  * Chapters act much differently than other text tracks
@@ -6633,8 +4971,8 @@ var _buttonJs2 = _interopRequireDefault(_buttonJs);
  * @class PostSubmitButton
  */
 
-var PostSubmitButton = (function (_Button) {
-  _inherits(PostSubmitButton, _Button);
+var PostSubmitButton = (function (_KomentButton) {
+  _inherits(PostSubmitButton, _KomentButton);
 
   function PostSubmitButton(player, options, ready) {
     _classCallCheck(this, PostSubmitButton);
@@ -6669,14 +5007,16 @@ var PostSubmitButton = (function (_Button) {
   }]);
 
   return PostSubmitButton;
-})(_buttonJs2['default']);
+})(_komentButton2['default']);
 
 PostSubmitButton.prototype.controlText_ = 'Send';
 
-_componentJs2['default'].registerComponent('PostSubmitButton', PostSubmitButton);
+Component.registerComponent('PostSubmitButton', PostSubmitButton);
 exports['default'] = PostSubmitButton;
 module.exports = exports['default'];
-},{"../../button.js":22,"../../component.js":24}],36:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../koment-button":28}],35:[function(require,module,exports){
+(function (global){
 /**
  * @file koment-toggle.js
  */
@@ -6696,15 +5036,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
+
+var _videoJs2 = _interopRequireDefault(_videoJs);
+
 var _utilsToTitleCase = require('../../utils/to-title-case');
 
 var _utilsToTitleCase2 = _interopRequireDefault(_utilsToTitleCase);
 
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
 require('./post-comment-box');
+
+var Component = _videoJs2['default'].getComponent('Component');
+var Button = _videoJs2['default'].getComponent('Button');
 
 /**
  * The button component for toggling and selecting koment
@@ -6737,8 +5080,7 @@ var PostUserBox = (function (_Component) {
   _createClass(PostUserBox, [{
     key: 'update',
     value: function update() {
-      var url = this.player_.options_.user.avatar;
-
+      var url = this.player_.koment.options_.user && this.player_.koment.options_.user.avatar;
       this.setSrc(url);
 
       // If there's no poster source we should display:none on this component
@@ -6784,1140 +5126,14 @@ var PostUserBox = (function (_Component) {
   }]);
 
   return PostUserBox;
-})(_componentJs2['default']);
+})(Component);
 
-_componentJs2['default'].registerComponent('PostUserBox', PostUserBox);
+Component.registerComponent('PostUserBox', PostUserBox);
 exports['default'] = PostUserBox;
 module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/to-title-case":66,"./post-comment-box":34}],37:[function(require,module,exports){
-/**
- * @file load-progress-bar.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-var _utilsDomJs = require('../../utils/dom.js');
-
-var Dom = _interopRequireWildcard(_utilsDomJs);
-
-/**
- * Shows load progress
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class LoadProgressBar
- */
-
-var LoadProgressBar = (function (_Component) {
-  _inherits(LoadProgressBar, _Component);
-
-  function LoadProgressBar(player, options) {
-    _classCallCheck(this, LoadProgressBar);
-
-    _get(Object.getPrototypeOf(LoadProgressBar.prototype), 'constructor', this).call(this, player, options);
-    this.on(player, 'progress', this.update);
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @return {Element}
-   * @method createEl
-   */
-
-  _createClass(LoadProgressBar, [{
-    key: 'createEl',
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(LoadProgressBar.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-load-progress',
-        innerHTML: '<span class="koment-control-text"><span>' + this.localize('Loaded') + '</span>: 0%</span>'
-      });
-    }
-
-    /**
-     * Update progress bar
-     *
-     * @method update
-     */
-  }, {
-    key: 'update',
-    value: function update() {
-      var buffered = this.player_.buffered();
-      var duration = this.player_.duration();
-      var bufferedEnd = this.player_.bufferedEnd();
-      var children = this.el_.children;
-
-      // get the percent width of a time compared to the total end
-      var percentify = function percentify(time, end) {
-        // no NaN
-        var percent = time / end || 0;
-
-        return (percent >= 1 ? 1 : percent) * 100 + '%';
-      };
-
-      // update the width of the progress bar
-      this.el_.style.width = percentify(bufferedEnd, duration);
-
-      // add child elements to represent the individual buffered time ranges
-      for (var i = 0; i < buffered.length; i++) {
-        var start = buffered.start(i);
-        var end = buffered.end(i);
-        var part = children[i];
-
-        if (!part) {
-          part = this.el_.appendChild(Dom.createEl());
-        }
-
-        // set the percent based on the width of the progress bar (bufferedEnd)
-        part.style.left = percentify(start, bufferedEnd);
-        part.style.width = percentify(end - start, bufferedEnd);
-      }
-
-      // remove unused buffered range elements
-      for (var i = children.length; i > buffered.length; i--) {
-        this.el_.removeChild(children[i - 1]);
-      }
-    }
-  }]);
-
-  return LoadProgressBar;
-})(_componentJs2['default']);
-
-_componentJs2['default'].registerComponent('LoadProgressBar', LoadProgressBar);
-exports['default'] = LoadProgressBar;
-module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/dom.js":57}],38:[function(require,module,exports){
-/**
- * @file mouse-time-display.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-var _utilsDomJs = require('../../utils/dom.js');
-
-var Dom = _interopRequireWildcard(_utilsDomJs);
-
-var _utilsFnJs = require('../../utils/fn.js');
-
-var Fn = _interopRequireWildcard(_utilsFnJs);
-
-var _utilsFormatTimeJs = require('../../utils/format-time.js');
-
-var _utilsFormatTimeJs2 = _interopRequireDefault(_utilsFormatTimeJs);
-
-var _lodashCompatFunctionThrottle = require('lodash-compat/function/throttle');
-
-var _lodashCompatFunctionThrottle2 = _interopRequireDefault(_lodashCompatFunctionThrottle);
-
-/**
- * The Mouse Time Display component shows the time you will seek to
- * when hovering over the progress bar
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class MouseTimeDisplay
- */
-
-var MouseTimeDisplay = (function (_Component) {
-  _inherits(MouseTimeDisplay, _Component);
-
-  function MouseTimeDisplay(player, options) {
-    var _this = this;
-
-    _classCallCheck(this, MouseTimeDisplay);
-
-    _get(Object.getPrototypeOf(MouseTimeDisplay.prototype), 'constructor', this).call(this, player, options);
-
-    if (options.playerOptions && options.playerOptions.progressControl && options.playerOptions.progressControl.keepTooltipsInside) {
-      this.keepTooltipsInside = options.playerOptions.progressControl.keepTooltipsInside;
-    }
-
-    if (this.keepTooltipsInside) {
-      this.tooltip = Dom.createEl('div', { className: 'koment-time-tooltip' });
-      this.el().appendChild(this.tooltip);
-      this.addClass('koment-keep-tooltips-inside');
-    }
-
-    this.update(0, 0);
-
-    player.on('ready', function () {
-      _this.on(player.progressControl.el(), 'mousemove', (0, _lodashCompatFunctionThrottle2['default'])(Fn.bind(_this, _this.handleMouseMove), 25));
-    });
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @return {Element}
-   * @method createEl
-   */
-
-  _createClass(MouseTimeDisplay, [{
-    key: 'createEl',
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(MouseTimeDisplay.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-mouse-display'
-      });
-    }
-  }, {
-    key: 'handleMouseMove',
-    value: function handleMouseMove(event) {
-      var duration = this.player_.duration();
-      var newTime = this.calculateDistance(event) * duration;
-      var position = event.pageX - Dom.findElPosition(this.el().parentNode).left;
-
-      this.update(newTime, position);
-    }
-  }, {
-    key: 'update',
-    value: function update(newTime, position) {
-      var time = (0, _utilsFormatTimeJs2['default'])(newTime, this.player_.duration());
-
-      this.el().style.left = position + 'px';
-      this.el().setAttribute('data-current-time', time);
-
-      if (this.keepTooltipsInside) {
-        var clampedPosition = this.clampPosition_(position);
-        var difference = position - clampedPosition + 1;
-        var tooltipWidth = parseFloat(_globalWindow2['default'].getComputedStyle(this.tooltip).width);
-        var tooltipWidthHalf = tooltipWidth / 2;
-
-        this.tooltip.innerHTML = time;
-        this.tooltip.style.right = '-' + (tooltipWidthHalf - difference) + 'px';
-      }
-    }
-  }, {
-    key: 'calculateDistance',
-    value: function calculateDistance(event) {
-      return Dom.getPointerPosition(this.el().parentNode, event).x;
-    }
-
-    /**
-     * This takes in a horizontal position for the bar and returns a clamped position.
-     * Clamped position means that it will keep the position greater than half the width
-     * of the tooltip and smaller than the player width minus half the width o the tooltip.
-     * It will only clamp the position if `keepTooltipsInside` option is set.
-     *
-     * @param {Number} position the position the bar wants to be
-     * @return {Number} newPosition the (potentially) clamped position
-     * @method clampPosition_
-     */
-  }, {
-    key: 'clampPosition_',
-    value: function clampPosition_(position) {
-      if (!this.keepTooltipsInside) {
-        return position;
-      }
-
-      var playerWidth = parseFloat(_globalWindow2['default'].getComputedStyle(this.player().el()).width);
-      var tooltipWidth = parseFloat(_globalWindow2['default'].getComputedStyle(this.tooltip).width);
-      var tooltipWidthHalf = tooltipWidth / 2;
-      var actualPosition = position;
-
-      if (position < tooltipWidthHalf) {
-        actualPosition = Math.ceil(tooltipWidthHalf);
-      } else if (position > playerWidth - tooltipWidthHalf) {
-        actualPosition = Math.floor(playerWidth - tooltipWidthHalf);
-      }
-
-      return actualPosition;
-    }
-  }]);
-
-  return MouseTimeDisplay;
-})(_componentJs2['default']);
-
-_componentJs2['default'].registerComponent('MouseTimeDisplay', MouseTimeDisplay);
-exports['default'] = MouseTimeDisplay;
-module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/dom.js":57,"../../utils/fn.js":59,"../../utils/format-time.js":60,"global/window":20,"lodash-compat/function/throttle":74}],39:[function(require,module,exports){
-/**
- * @file play-progress-bar.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-var _utilsFnJs = require('../../utils/fn.js');
-
-var Fn = _interopRequireWildcard(_utilsFnJs);
-
-var _utilsFormatTimeJs = require('../../utils/format-time.js');
-
-var _utilsFormatTimeJs2 = _interopRequireDefault(_utilsFormatTimeJs);
-
-/**
- * Shows play progress
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class PlayProgressBar
- */
-
-var PlayProgressBar = (function (_Component) {
-  _inherits(PlayProgressBar, _Component);
-
-  function PlayProgressBar(player, options) {
-    _classCallCheck(this, PlayProgressBar);
-
-    _get(Object.getPrototypeOf(PlayProgressBar.prototype), 'constructor', this).call(this, player, options);
-    this.updateDataAttr();
-    this.on(player, 'timeupdate', this.updateDataAttr);
-    player.ready(Fn.bind(this, this.updateDataAttr));
-
-    if (options.playerOptions && options.playerOptions.controlBar && options.playerOptions.controlBar.progressControl && options.playerOptions.controlBar.progressControl.keepTooltipsInside) {
-      this.keepTooltipsInside = options.playerOptions.controlBar.progressControl.keepTooltipsInside;
-    }
-
-    if (this.keepTooltipsInside) {
-      this.addClass('koment-keep-tooltips-inside');
-    }
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @return {Element}
-   * @method createEl
-   */
-
-  _createClass(PlayProgressBar, [{
-    key: 'createEl',
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(PlayProgressBar.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-play-progress koment-slider-bar',
-        innerHTML: '<span class="koment-control-text"><span>' + this.localize('Progress') + '</span>: 0%</span>'
-      });
-    }
-  }, {
-    key: 'updateDataAttr',
-    value: function updateDataAttr() {
-      var time = this.player_.scrubbing() ? this.player_.getCache().currentTime : this.player_.currentTime();
-
-      this.el_.setAttribute('data-current-time', (0, _utilsFormatTimeJs2['default'])(time, this.player_.duration()));
-    }
-  }]);
-
-  return PlayProgressBar;
-})(_componentJs2['default']);
-
-_componentJs2['default'].registerComponent('PlayProgressBar', PlayProgressBar);
-exports['default'] = PlayProgressBar;
-module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/fn.js":59,"../../utils/format-time.js":60}],40:[function(require,module,exports){
-/**
- * @file progress-control.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-require('./seek-bar.js');
-
-require('./mouse-time-display.js');
-
-/**
- * The Progress Control component contains the seek bar, load progress,
- * and play progress
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class ProgressControl
- */
-
-var ProgressControl = (function (_Component) {
-  _inherits(ProgressControl, _Component);
-
-  function ProgressControl() {
-    _classCallCheck(this, ProgressControl);
-
-    _get(Object.getPrototypeOf(ProgressControl.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(ProgressControl, [{
-    key: 'createEl',
-
-    /**
-     * Create the component's DOM element
-     *
-     * @return {Element}
-     * @method createEl
-     */
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(ProgressControl.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-progress-control koment-control'
-      });
-    }
-  }]);
-
-  return ProgressControl;
-})(_componentJs2['default']);
-
-ProgressControl.prototype.options_ = {
-  children: ['seekBar']
-};
-
-_componentJs2['default'].registerComponent('ProgressControl', ProgressControl);
-exports['default'] = ProgressControl;
-module.exports = exports['default'];
-},{"../../component.js":24,"./mouse-time-display.js":38,"./seek-bar.js":41}],41:[function(require,module,exports){
-/**
- * @file seek-bar.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
-var _sliderSliderJs = require('../../slider/slider.js');
-
-var _sliderSliderJs2 = _interopRequireDefault(_sliderSliderJs);
-
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-var _utilsFnJs = require('../../utils/fn.js');
-
-var Fn = _interopRequireWildcard(_utilsFnJs);
-
-var _utilsFormatTimeJs = require('../../utils/format-time.js');
-
-var _utilsFormatTimeJs2 = _interopRequireDefault(_utilsFormatTimeJs);
-
-require('./timeline-progress-bar.js');
-
-require('./load-progress-bar.js');
-
-require('./play-progress-bar.js');
-
-require('./tooltip-progress-bar.js');
-
-/**
- * Seek Bar and holder for the progress bars
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Slider
- * @class SeekBar
- */
-
-var SeekBar = (function (_Slider) {
-  _inherits(SeekBar, _Slider);
-
-  function SeekBar(player, options) {
-    _classCallCheck(this, SeekBar);
-
-    _get(Object.getPrototypeOf(SeekBar.prototype), 'constructor', this).call(this, player, options);
-    this.on(player, 'timeupdate', this.updateProgress);
-    this.on(player, 'ended', this.updateProgress);
-    player.ready(Fn.bind(this, this.updateProgress));
-
-    if (options.playerOptions && options.playerOptions.controlBar && options.playerOptions.controlBar.progressControl && options.playerOptions.controlBar.progressControl.keepTooltipsInside) {
-      this.keepTooltipsInside = options.playerOptions.controlBar.progressControl.keepTooltipsInside;
-    }
-
-    if (this.keepTooltipsInside) {
-      this.tooltipProgressBar = this.addChild('TooltipProgressBar');
-    }
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @return {Element}
-   * @method createEl
-   */
-
-  _createClass(SeekBar, [{
-    key: 'createEl',
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(SeekBar.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-progress-holder'
-      }, {
-        'aria-label': 'progress bar'
-      });
-    }
-
-    /**
-     * Update ARIA accessibility attributes
-     *
-     * @method updateARIAAttributes
-     */
-  }, {
-    key: 'updateProgress',
-    value: function updateProgress() {
-      this.updateAriaAttributes(this.el_);
-
-      if (this.keepTooltipsInside) {
-        this.updateAriaAttributes(this.tooltipProgressBar.el_);
-        this.tooltipProgressBar.el_.style.width = this.bar.el_.style.width;
-
-        var playerWidth = parseFloat(_globalWindow2['default'].getComputedStyle(this.player().el()).width);
-        var tooltipWidth = parseFloat(_globalWindow2['default'].getComputedStyle(this.tooltipProgressBar.tooltip).width);
-        var tooltipStyle = this.tooltipProgressBar.el().style;
-
-        tooltipStyle.maxWidth = Math.floor(playerWidth - tooltipWidth / 2) + 'px';
-        tooltipStyle.minWidth = Math.ceil(tooltipWidth / 2) + 'px';
-        tooltipStyle.right = '-' + tooltipWidth / 2 + 'px';
-      }
-    }
-  }, {
-    key: 'updateAriaAttributes',
-    value: function updateAriaAttributes(el) {
-      // Allows for smooth scrubbing, when player can't keep up.
-      var time = this.player_.scrubbing() ? this.player_.getCache().currentTime : this.player_.currentTime();
-
-      // machine readable value of progress bar (percentage complete)
-      el.setAttribute('aria-valuenow', (this.getPercent() * 100).toFixed(2));
-      // human readable value of progress bar (time complete)
-      el.setAttribute('aria-valuetext', (0, _utilsFormatTimeJs2['default'])(time, this.player_.duration()));
-    }
-
-    /**
-     * Get percentage of video played
-     *
-     * @return {Number} Percentage played
-     * @method getPercent
-     */
-  }, {
-    key: 'getPercent',
-    value: function getPercent() {
-      var percent = this.player_.currentTime() / this.player_.duration();
-
-      return percent >= 1 ? 1 : percent;
-    }
-
-    /**
-     * Handle mouse down on seek bar
-     *
-     * @method handleMouseDown
-     */
-  }, {
-    key: 'handleMouseDown',
-    value: function handleMouseDown(event) {
-      _get(Object.getPrototypeOf(SeekBar.prototype), 'handleMouseDown', this).call(this, event);
-
-      this.player_.scrubbing(true);
-
-      this.videoWasPlaying = !this.player_.paused();
-      this.player_.pause();
-    }
-
-    /**
-     * Handle mouse move on seek bar
-     *
-     * @method handleMouseMove
-     */
-  }, {
-    key: 'handleMouseMove',
-    value: function handleMouseMove(event) {
-      var newTime = this.calculateDistance(event) * this.player_.duration();
-
-      // Don't let video end while scrubbing.
-      if (newTime === this.player_.duration()) {
-        newTime = newTime - 0.1;
-      }
-
-      // Set new time (tell player to seek to new time)
-      this.player_.currentTime(newTime);
-    }
-
-    /**
-     * Handle mouse up on seek bar
-     *
-     * @method handleMouseUp
-     */
-  }, {
-    key: 'handleMouseUp',
-    value: function handleMouseUp(event) {
-      _get(Object.getPrototypeOf(SeekBar.prototype), 'handleMouseUp', this).call(this, event);
-
-      this.player_.scrubbing(false);
-      if (this.videoWasPlaying) {
-        this.player_.play();
-      }
-    }
-
-    /**
-     * Move more quickly fast forward for keyboard-only users
-     *
-     * @method stepForward
-     */
-  }, {
-    key: 'stepForward',
-    value: function stepForward() {
-      // more quickly fast forward for keyboard-only users
-      this.player_.currentTime(this.player_.currentTime() + 5);
-    }
-
-    /**
-     * Move more quickly rewind for keyboard-only users
-     *
-     * @method stepBack
-     */
-  }, {
-    key: 'stepBack',
-    value: function stepBack() {
-      // more quickly rewind for keyboard-only users
-      this.player_.currentTime(this.player_.currentTime() - 5);
-    }
-  }]);
-
-  return SeekBar;
-})(_sliderSliderJs2['default']);
-
-SeekBar.prototype.options_ = {
-  children: [
-  //'loadProgressBar',
-  'timelineProgressBar',
-  //'mouseTimeDisplay',
-  'playProgressBar'],
-  barName: 'playProgressBar'
-};
-
-SeekBar.prototype.playerEvent = 'timeupdate';
-
-_componentJs2['default'].registerComponent('SeekBar', SeekBar);
-exports['default'] = SeekBar;
-module.exports = exports['default'];
-},{"../../component.js":24,"../../slider/slider.js":51,"../../utils/fn.js":59,"../../utils/format-time.js":60,"./load-progress-bar.js":37,"./play-progress-bar.js":39,"./timeline-progress-bar.js":42,"./tooltip-progress-bar.js":44,"global/window":20}],42:[function(require,module,exports){
-/**
- * @file timeline-progress-bar.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-var _utilsDomJs = require('../../utils/dom.js');
-
-var Dom = _interopRequireWildcard(_utilsDomJs);
-
-var _lodash = require('lodash');
-
-var _timelineProgressItemJs = require('./timeline-progress-item.js');
-
-var _timelineProgressItemJs2 = _interopRequireDefault(_timelineProgressItemJs);
-
-/**
- * Shows load progress
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class TimelineProgressBar
- */
-
-var TimelineProgressBar = (function (_Component) {
-  _inherits(TimelineProgressBar, _Component);
-
-  function TimelineProgressBar(player, options) {
-    _classCallCheck(this, TimelineProgressBar);
-
-    _get(Object.getPrototypeOf(TimelineProgressBar.prototype), 'constructor', this).call(this, player, options);
-    this.on(player, 'komentsupdated', this.insert);
-    this.on(player, 'progress', this.update);
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @return {Element}
-   * @method createEl
-   */
-
-  _createClass(TimelineProgressBar, [{
-    key: 'createEl',
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(TimelineProgressBar.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-timeline-progress'
-      });
-    }
-
-    /**
-     * Update progress bar
-     *
-     * @method update
-     */
-  }, {
-    key: 'insert',
-    value: function insert(e) {
-      var duration = this.player_.duration();
-      var item = e.data;
-      var part = this.addChild(new _timelineProgressItemJs2['default'](this.player_, e.data));
-      // set the percent based on the width of the progress bar (bufferedEnd)
-      part.el_.style.left = this.percentify(item.timecode, duration);
-    }
-
-    /**
-     * get percent position in timeline
-     * @param time
-     * @param end
-     * @returns {string}
-     */
-  }, {
-    key: 'percentify',
-    value: function percentify(time, end) {
-      // no NaN
-      var percent = time / end || 0;
-
-      return (percent >= 1 ? 1 : percent) * 100 + '%';
-    }
-
-    /**
-     * Update progress bar
-     *
-     * @method update
-     */
-  }, {
-    key: 'update',
-    value: function update() {
-      var _this = this;
-
-      var items = this.player_.komentsList();
-      var duration = this.player_.duration();
-      var children = this.children();
-
-      // add child elements to represent the individual buffered time ranges
-      (0, _lodash.forEach)(items, function (item, i) {
-
-        var part = children[i];
-
-        if (!part) {
-          part = _this.addChild(new _timelineProgressItemJs2['default'](_this.player_, item));
-        }
-        // set the percent based on the width of the progress bar (bufferedEnd)
-        part.el_.style.left = _this.percentify(item.timecode, duration);
-      });
-    }
-  }]);
-
-  return TimelineProgressBar;
-})(_componentJs2['default']);
-
-_componentJs2['default'].registerComponent('TimelineProgressBar', TimelineProgressBar);
-exports['default'] = TimelineProgressBar;
-module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/dom.js":57,"./timeline-progress-item.js":43,"lodash":68}],43:[function(require,module,exports){
-/**
- * @file timeline-progress-item.js
- **/
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _utilsDom = require('../../utils/dom');
-
-var Dom = _interopRequireWildcard(_utilsDom);
-
-var _clickableComponentJs = require('../../clickable-component.js');
-
-var _clickableComponentJs2 = _interopRequireDefault(_clickableComponentJs);
-
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-/**
- * Container of main controls
- *
- * @extends Component
- * @class ControlBar
- */
-
-var TimelineProgressItem = (function (_ClickableComponent) {
-  _inherits(TimelineProgressItem, _ClickableComponent);
-
-  function TimelineProgressItem(player, options) {
-    _classCallCheck(this, TimelineProgressItem);
-
-    _get(Object.getPrototypeOf(TimelineProgressItem.prototype), 'constructor', this).call(this, player, options);
-    this.timecode = this.options_.timecode;
-    this.user = this.options_.user;
-    this.update();
-  }
-
-  /**
-   * Event handler for updates to the player's poster source
-   *
-   * @method update
-   */
-
-  _createClass(TimelineProgressItem, [{
-    key: 'update',
-    value: function update() {
-      var url = this.user.avatar;
-
-      this.setSrc(url);
-
-      // If there's no poster source we should display:none on this component
-      // so it's not still clickable or right-clickable
-      if (url) {
-        this.show();
-      } else {
-        this.hide();
-      }
-    }
-
-    /**
-     * Set the poster source depending on the display method
-     *
-     * @param {String} url The URL to the poster source
-     * @method setSrc
-     */
-  }, {
-    key: 'setSrc',
-    value: function setSrc(url) {
-      var backgroundImage = '';
-
-      // Any falsey values should stay as an empty string, otherwise
-      // this will throw an extra error
-      if (url) {
-        backgroundImage = 'url("' + url + '")';
-      }
-
-      this.avatarEl_.style.backgroundImage = backgroundImage;
-    }
-
-    /**
-     * Create the component's DOM element
-     *
-     * @return {Element}
-     * @method createEl
-     */
-  }, {
-    key: 'createEl',
-    value: function createEl() {
-
-      var el = _get(Object.getPrototypeOf(TimelineProgressItem.prototype), 'createEl', this).call(this, 'div', {
-        className: 'kmt-timeline-progress-item'
-      });
-
-      this.avatarEl_ = Dom.createEl('div', {
-        className: 'koment-item-avatar'
-      }, {
-        'aria-live': 'off'
-      });
-
-      el.appendChild(this.avatarEl_);
-      return el;
-    }
-  }, {
-    key: 'hide',
-    value: function hide() {
-      var _this = this;
-
-      if (this.hasClass('koment-show')) {
-        this.removeClass('koment-show');
-      }
-      this.addClass('koment-mask');
-      this.setTimeout(function () {
-        if (_this.hasClass('koment-mask')) {
-          _this.removeClass('koment-mask');
-        }
-        _this.addClass('koment-hidden');
-      }, 500);
-    }
-  }, {
-    key: 'handleClick',
-    value: function handleClick() {
-      this.player_.currentTime(this.timecode);
-    }
-  }]);
-
-  return TimelineProgressItem;
-})(_clickableComponentJs2['default']);
-
-TimelineProgressItem.prototype.timecode = 0;
-TimelineProgressItem.prototype.options_ = {
-  timecode: 0,
-  user: {
-    avatar: ''
-  }
-};
-
-_componentJs2['default'].registerComponent('TimelineProgressItem', TimelineProgressItem);
-exports['default'] = TimelineProgressItem;
-module.exports = exports['default'];
-},{"../../clickable-component.js":23,"../../component.js":24,"../../utils/dom":57}],44:[function(require,module,exports){
-/**
- * @file play-progress-bar.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _componentJs = require('../../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-var _utilsFnJs = require('../../utils/fn.js');
-
-var Fn = _interopRequireWildcard(_utilsFnJs);
-
-var _utilsFormatTimeJs = require('../../utils/format-time.js');
-
-var _utilsFormatTimeJs2 = _interopRequireDefault(_utilsFormatTimeJs);
-
-/**
- * Shows play progress
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class PlayProgressBar
- */
-
-var TooltipProgressBar = (function (_Component) {
-  _inherits(TooltipProgressBar, _Component);
-
-  function TooltipProgressBar(player, options) {
-    _classCallCheck(this, TooltipProgressBar);
-
-    _get(Object.getPrototypeOf(TooltipProgressBar.prototype), 'constructor', this).call(this, player, options);
-    this.updateDataAttr();
-    this.on(player, 'timeupdate', this.updateDataAttr);
-    player.ready(Fn.bind(this, this.updateDataAttr));
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @return {Element}
-   * @method createEl
-   */
-
-  _createClass(TooltipProgressBar, [{
-    key: 'createEl',
-    value: function createEl() {
-      var el = _get(Object.getPrototypeOf(TooltipProgressBar.prototype), 'createEl', this).call(this, 'div', {
-        className: 'koment-tooltip-progress-bar koment-slider-bar',
-        innerHTML: '<div class="koment-time-tooltip"></div>\n        <span class="koment-control-text"><span>' + this.localize('Progress') + '</span>: 0%</span>'
-      });
-
-      this.tooltip = el.querySelector('.koment-time-tooltip');
-
-      return el;
-    }
-  }, {
-    key: 'updateDataAttr',
-    value: function updateDataAttr() {
-      var time = this.player_.scrubbing() ? this.player_.getCache().currentTime : this.player_.currentTime();
-      var formattedTime = (0, _utilsFormatTimeJs2['default'])(time, this.player_.duration());
-
-      this.el_.setAttribute('data-current-time', formattedTime);
-      this.tooltip.innerHTML = formattedTime;
-    }
-  }]);
-
-  return TooltipProgressBar;
-})(_componentJs2['default']);
-
-_componentJs2['default'].registerComponent('TooltipProgressBar', TooltipProgressBar);
-exports['default'] = TooltipProgressBar;
-module.exports = exports['default'];
-},{"../../component.js":24,"../../utils/fn.js":59,"../../utils/format-time.js":60}],45:[function(require,module,exports){
-/**
- * @file fullscreen-api.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _globalDocument = require('global/document');
-
-var _globalDocument2 = _interopRequireDefault(_globalDocument);
-
-/*
- * Store the browser-specific methods for the fullscreen API
- * @type {Object|undefined}
- * @private
- */
-var FullscreenApi = {};
-
-// browser API methods
-// map approach from Screenful.js - https://github.com/sindresorhus/screenfull.js
-var apiMap = [
-// Spec: https://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html
-['requestFullscreen', 'exitFullscreen', 'fullscreenElement', 'fullscreenEnabled', 'fullscreenchange', 'fullscreenerror'],
-// WebKit
-['webkitRequestFullscreen', 'webkitExitFullscreen', 'webkitFullscreenElement', 'webkitFullscreenEnabled', 'webkitfullscreenchange', 'webkitfullscreenerror'],
-// Old WebKit (Safari 5.1)
-['webkitRequestFullScreen', 'webkitCancelFullScreen', 'webkitCurrentFullScreenElement', 'webkitCancelFullScreen', 'webkitfullscreenchange', 'webkitfullscreenerror'],
-// Mozilla
-['mozRequestFullScreen', 'mozCancelFullScreen', 'mozFullScreenElement', 'mozFullScreenEnabled', 'mozfullscreenchange', 'mozfullscreenerror'],
-// Microsoft
-['msRequestFullscreen', 'msExitFullscreen', 'msFullscreenElement', 'msFullscreenEnabled', 'MSFullscreenChange', 'MSFullscreenError']];
-
-var specApi = apiMap[0];
-var browserApi = undefined;
-
-// determine the supported set of functions
-for (var i = 0; i < apiMap.length; i++) {
-  // check for exitFullscreen function
-  if (apiMap[i][1] in _globalDocument2['default']) {
-    browserApi = apiMap[i];
-    break;
-  }
-}
-
-// map the browser API names to the spec API names
-if (browserApi) {
-  for (var i = 0; i < browserApi.length; i++) {
-    FullscreenApi[specApi[i]] = browserApi[i];
-  }
-}
-
-exports['default'] = FullscreenApi;
-module.exports = exports['default'];
-},{"global/document":19}],46:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../utils/to-title-case":44,"./post-comment-box":33}],36:[function(require,module,exports){
+(function (global){
 /**
  * @file koment.js
  */
@@ -7930,2343 +5146,72 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _globalWindow = require('global/window');
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
+var _videoJs = (typeof window !== "undefined" ? window['videojs'] : typeof global !== "undefined" ? global['videojs'] : null);
 
-var _globalDocument = require('global/document');
+var _videoJs2 = _interopRequireDefault(_videoJs);
 
-var _globalDocument2 = _interopRequireDefault(_globalDocument);
-
-var _setup = require('./setup');
-
-var setup = _interopRequireWildcard(_setup);
+require('videojs-externals');
 
 var _utilsStylesheetJs = require('./utils/stylesheet.js');
 
 var stylesheet = _interopRequireWildcard(_utilsStylesheetJs);
 
-var _utilsEventsJs = require('./utils/events.js');
-
-var Events = _interopRequireWildcard(_utilsEventsJs);
-
-var _player = require('./player');
-
-var _player2 = _interopRequireDefault(_player);
-
-var _utilsLogJs = require('./utils/log.js');
-
-var _utilsLogJs2 = _interopRequireDefault(_utilsLogJs);
-
 var _utilsDomJs = require('./utils/dom.js');
 
 var Dom = _interopRequireWildcard(_utilsDomJs);
-
-var _utilsBrowserJs = require('./utils/browser.js');
-
-var browser = _interopRequireWildcard(_utilsBrowserJs);
-
-var _utilsUrlJs = require('./utils/url.js');
-
-var Url = _interopRequireWildcard(_utilsUrlJs);
-
-var _lodashCompatObjectMerge = require('lodash-compat/object/merge');
-
-var _lodashCompatObjectMerge2 = _interopRequireDefault(_lodashCompatObjectMerge);
-
-// HTML5 Element Shim for IE8
-if (typeof HTMLVideoElement === 'undefined') {
-  _globalDocument2['default'].createElement('video');
-  _globalDocument2['default'].createElement('audio');
-  _globalDocument2['default'].createElement('track');
-}
-
-/**
- * Doubles as the main function for users to create a player instance and also
- * the main library object.
- * The `koment` function can be used to initialize or retrieve a player.
- * ```js
- *     var myPlayer = koment('my_video_id');
- * ```
- *
- * @param  {String|Element} id      Video element or video element ID
- * @param  {Object=} options        Optional options object for config/settings
- * @param  {Function=} ready        Optional ready callback
- * @return {Player}                 A player instance
- * @mixes koment
- * @method koment
- */
-function koment(id, options, ready) {
-  var tag = undefined;
-
-  // Allow for element or ID to be passed in
-  // String ID
-  if (typeof id === 'string') {
-
-    // Adjust for jQuery ID syntax
-    if (id.indexOf('#') === 0) {
-      id = id.slice(1);
-    }
-
-    // If a player instance has already been created for this ID return it.
-    if (koment.getPlayers()[id]) {
-
-      // If options or ready funtion are passed, warn
-      if (options) {
-        _utilsLogJs2['default'].warn('Player "' + id + '" is already initialised. Options will not be applied.');
-      }
-
-      if (ready) {
-        koment.getPlayers()[id].ready(ready);
-      }
-
-      return koment.getPlayers()[id];
-    }
-
-    // Otherwise get element for ID
-    tag = Dom.getEl(id);
-
-    // ID is a media element
-  } else {
-      tag = id;
-    }
-
-  // Check for a useable element
-  // re: nodeName, could be a box div also
-  if (!tag || !tag.nodeName) {
-    throw new TypeError('The element or ID supplied is not valid. (koment)');
-  }
-
-  // Element may have a player attr referring to an already created player instance.
-  // If not, set up a new player and return the instance.
-  return tag.koment || _player2['default'].players[tag.playerId] || new _player2['default'](tag, options, ready);
-}
-
-// Add default styles
-if (_globalWindow2['default'].koment_NO_DYNAMIC_STYLE !== true) {
-  var style = Dom.$('.koment-styles-defaults');
-
-  if (!style) {
-    style = stylesheet.createStyleElement('koment-styles-defaults');
-    var head = Dom.$('head');
-
-    if (head) {
-      head.insertBefore(style, head.firstChild);
-    }
-    stylesheet.setTextContent(style, '\n      .koment-js {\n      }\n    ');
-  }
-}
-
-// Run Auto-load players
-// You have to wait at least once in case this script is loaded after your
-// video in the DOM (weird behavior only with minified version)
-setup.autoSetupTimeout(1, koment);
-
-/*
- * Current software version (semver)
- *
- * @type {String}
- */
-koment.VERSION = require('../../package.json').version;
-
-/**
- * The global options object. These are the settings that take effect
- * if no overrides are specified when the player is created.
- *
- * ```js
- *     koment.options.autoplay = true
- *     // -> all players will autoplay by default
- * ```
- *
- * @type {Object}
- */
-koment.options = _player2['default'].prototype.options_;
-
-/**
- * Get an object with the currently created players, keyed by player ID
- *
- * @return {Object} The created players
- * @mixes koment
- * @method getPlayers
- */
-koment.getPlayers = function () {
-  return _player2['default'].players;
-};
-
-/**
- * Expose players object.
- *
- * @memberOf koment
- * @property {Object} players
- */
-koment.players = _player2['default'].players;
-
-/**
- * A suite of browser and device tests
- *
- * @type {Object}
- * @private
- */
-koment.browser = browser;
-
-/**
- * Whether or not the browser supports touch events. Included for backward
- * compatibility with 4.x, but deprecated. Use `koment.browser.TOUCH_ENABLED`
- * instead going forward.
- *
- * @deprecated
- * @type {Boolean}
- */
-koment.TOUCH_ENABLED = browser.TOUCH_ENABLED;
-
-/**
- * Adding languages so that they're available to all players.
- * ```js
- *     koment.addLanguage('es', { 'Hello': 'Hola' });
- * ```
- *
- * @param  {String} code The language code or dictionary property
- * @param  {Object} data The data values to be translated
- * @return {Object} The resulting language dictionary object
- * @mixes koment
- * @method addLanguage
- */
-koment.addLanguage = function (code, data) {
-  code = ('' + code).toLowerCase();
-  return (0, _lodashCompatObjectMerge2['default'])(koment.options.languages, _defineProperty({}, code, data))[code];
-};
-
-/**
- * Log debug messages.
- *
- * @param {...Object} messages One or more messages to log
- */
-koment.log = _utilsLogJs2['default'];
-
-/**
- * Resolve and parse the elements of a URL
- *
- * @param  {String} url The url to parse
- * @return {Object}     An object of url details
- * @method parseUrl
- */
-koment.parseUrl = Url.parseUrl;
-
-/**
- * Returns whether the url passed is a cross domain request or not.
- *
- * @param {String} url The url to check
- * @return {Boolean}   Whether it is a cross domain request or not
- * @method isCrossOrigin
- */
-koment.isCrossOrigin = Url.isCrossOrigin;
-
-/**
- * Add an event listener to element
- * It stores the handler function in a separate cache object
- * and adds a generic handler to the element's event,
- * along with a unique id (guid) to the element.
- *
- * @param  {Element|Object}   elem Element or object to bind listeners to
- * @param  {String|Array}   type Type of event to bind to.
- * @param  {Function} fn   Event listener.
- * @method on
- */
-koment.on = Events.on;
-
-/**
- * Trigger a listener only once for an event
- *
- * @param  {Element|Object}   elem Element or object to
- * @param  {String|Array}   type Name/type of event
- * @param  {Function} fn Event handler function
- * @method one
- */
-koment.one = Events.one;
-
-/**
- * Removes event listeners from an element
- *
- * @param  {Element|Object}   elem Object to remove listeners from
- * @param  {String|Array=}   type Type of listener to remove. Don't include to remove all events from element.
- * @param  {Function} fn   Specific listener to remove. Don't include to remove listeners for an event type.
- * @method off
- */
-koment.off = Events.off;
-
-/**
- * Trigger an event for an element
- *
- * @param  {Element|Object}      elem  Element to trigger an event on
- * @param  {Event|Object|String} event A string (the type) or an event object with a type attribute
- * @param  {Object} [hash] data hash to pass along with the event
- * @return {Boolean=} Returned only if default was prevented
- * @method trigger
- */
-koment.trigger = Events.trigger;
-
-/*
- * Custom Universal Module Definition (UMD)
- *
- * Koment.js will never be a non-browser lib so we can simplify UMD a bunch and
- * still support requirejs and browserify. This also needs to be closure
- * compiler compatible, so string keys are used.
- */
-if (typeof define === 'function' && define.amd) {
-  define('koment', [], function () {
-    return koment;
-  });
-
-  // checking that module is an object too because of umdjs/umd#35
-} else if (typeof exports === 'object' && typeof module === 'object') {
-    module.exports = koment;
-  }
-
-if (!_globalWindow2['default'].requestAnimationFrame) {
-  _globalWindow2['default'].requestAnimationFrame = function (fn) {
-    setTimeout(fn, 16.66);
-  };
-}
-
-exports['default'] = koment;
-module.exports = exports['default'];
-},{"../../package.json":70,"./player":49,"./setup":50,"./utils/browser.js":55,"./utils/dom.js":57,"./utils/events.js":58,"./utils/log.js":62,"./utils/stylesheet.js":64,"./utils/url.js":67,"global/document":19,"global/window":20,"lodash-compat/object/merge":107}],47:[function(require,module,exports){
-/**
- * @file media-error.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _objectAssign = require('object.assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
-
-/*
- * Custom MediaError class which mimics the standard HTML5 MediaError class.
- *
- * @param {Number|String|Object|MediaError} value
- *        This can be of multiple types:
- *        - Number: should be a standard error code
- *        - String: an error message (the code will be 0)
- *        - Object: arbitrary properties
- *        - MediaError (native): used to populate a video.js MediaError object
- *        - MediaError (video.js): will return itself if it's already a
- *          video.js MediaError object.
- */
-function MediaError(value) {
-
-  // Allow redundant calls to this constructor to avoid having `instanceof`
-  // checks peppered around the code.
-  if (value instanceof MediaError) {
-    return value;
-  }
-
-  if (typeof value === 'number') {
-    this.code = value;
-  } else if (typeof value === 'string') {
-    // default code is zero, so this is a custom error
-    this.message = value;
-  } else if (typeof value === 'object') {
-
-    // We assign the `code` property manually because native MediaError objects
-    // do not expose it as an own/enumerable property of the object.
-    if (typeof value.code === 'number') {
-      this.code = value.code;
-    }
-
-    (0, _objectAssign2['default'])(this, value);
-  }
-
-  if (!this.message) {
-    this.message = MediaError.defaultMessages[this.code] || '';
-  }
-}
-
-/*
- * The error code that refers two one of the defined
- * MediaError types
- *
- * @type {Number}
- */
-MediaError.prototype.code = 0;
-
-/*
- * An optional message to be shown with the error.
- * Message is not part of the HTML5 video spec
- * but allows for more informative custom errors.
- *
- * @type {String}
- */
-MediaError.prototype.message = '';
-
-/*
- * An optional status code that can be set by plugins
- * to allow even more detail about the error.
- * For example the HLS plugin might provide the specific
- * HTTP status code that was returned when the error
- * occurred, then allowing a custom error overlay
- * to display more information.
- *
- * @type {Array}
- */
-MediaError.prototype.status = null;
-
-// These errors are indexed by the W3C standard numeric value. The order
-// should not be changed!
-MediaError.errorTypes = ['MEDIA_ERR_CUSTOM', 'MEDIA_ERR_ABORTED', 'MEDIA_ERR_NETWORK', 'MEDIA_ERR_DECODE', 'MEDIA_ERR_SRC_NOT_SUPPORTED', 'MEDIA_ERR_ENCRYPTED'];
-
-MediaError.defaultMessages = {
-  1: 'You aborted the media playback',
-  2: 'A network error caused the media download to fail part-way.',
-  3: 'The media playback was aborted due to a corruption problem or because the media used features your browser did not support.',
-  4: 'The media could not be loaded, either because the server or network failed or because the format is not supported.',
-  5: 'The media is encrypted and we do not have the keys to decrypt it.'
-};
-
-// Add types as properties on MediaError
-// e.g. MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
-for (var errNum = 0; errNum < MediaError.errorTypes.length; errNum++) {
-  MediaError[MediaError.errorTypes[errNum]] = errNum;
-  // values should be accessible on both the class and instance
-  MediaError.prototype[MediaError.errorTypes[errNum]] = errNum;
-}
-
-exports['default'] = MediaError;
-module.exports = exports['default'];
-},{"object.assign":112}],48:[function(require,module,exports){
-/**
- * @file modal-dialog.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _utilsDom = require('./utils/dom');
-
-var Dom = _interopRequireWildcard(_utilsDom);
-
-var _utilsFn = require('./utils/fn');
-
-var Fn = _interopRequireWildcard(_utilsFn);
-
-var _component = require('./component');
-
-var _component2 = _interopRequireDefault(_component);
-
-var MODAL_CLASS_NAME = 'koment-modal-dialog';
-var ESC = 27;
-
-/**
- * The `ModalDialog` displays over the video and its controls, which blocks
- * interaction with the player until it is closed.
- *
- * Modal dialogs include a "Close" button and will close when that button
- * is activated - or when ESC is pressed anywhere.
- *
- * @extends Component
- * @class ModalDialog
- */
-
-var ModalDialog = (function (_Component) {
-  _inherits(ModalDialog, _Component);
-
-  /**
-   * Constructor for modals.
-   *
-   * @param  {Player} player
-   * @param  {Object} [options]
-   * @param  {Mixed} [options.content=undefined]
-   *         Provide customized content for this modal.
-   *
-   * @param  {String} [options.description]
-   *         A text description for the modal, primarily for accessibility.
-   *
-   * @param  {Boolean} [options.fillAlways=false]
-   *         Normally, modals are automatically filled only the first time
-   *         they open. This tells the modal to refresh its content
-   *         every time it opens.
-   *
-   * @param  {String} [options.label]
-   *         A text label for the modal, primarily for accessibility.
-   *
-   * @param  {Boolean} [options.temporary=true]
-   *         If `true`, the modal can only be opened once; it will be
-   *         disposed as soon as it's closed.
-   *
-   * @param  {Boolean} [options.uncloseable=false]
-   *         If `true`, the user will not be able to close the modal
-   *         through the UI in the normal ways. Programmatic closing is
-   *         still possible.
-   *
-   */
-
-  function ModalDialog(player, options) {
-    _classCallCheck(this, ModalDialog);
-
-    _get(Object.getPrototypeOf(ModalDialog.prototype), 'constructor', this).call(this, player, options);
-    this.opened_ = this.hasBeenOpened_ = this.hasBeenFilled_ = false;
-
-    this.closeable(!this.options_.uncloseable);
-    this.content(this.options_.content);
-
-    // Make sure the contentEl is defined AFTER any children are initialized
-    // because we only want the contents of the modal in the contentEl
-    // (not the UI elements like the close button).
-    this.contentEl_ = Dom.createEl('div', {
-      className: MODAL_CLASS_NAME + '-content'
-    }, {
-      role: 'document'
-    });
-
-    this.descEl_ = Dom.createEl('p', {
-      className: MODAL_CLASS_NAME + '-description koment-offscreen',
-      id: this.el().getAttribute('aria-describedby')
-    });
-
-    Dom.textContent(this.descEl_, this.description());
-    this.el_.appendChild(this.descEl_);
-    this.el_.appendChild(this.contentEl_);
-  }
-
-  /*
-   * Modal dialog default options.
-   *
-   * @type {Object}
-   * @private
-   */
-
-  /**
-   * Create the modal's DOM element
-   *
-   * @method createEl
-   * @return {Element}
-   */
-
-  _createClass(ModalDialog, [{
-    key: 'createEl',
-    value: function createEl() {
-      return _get(Object.getPrototypeOf(ModalDialog.prototype), 'createEl', this).call(this, 'div', {
-        className: this.buildCSSClass(),
-        tabIndex: -1
-      }, {
-        'aria-describedby': this.id() + '_description',
-        'aria-hidden': 'true',
-        'aria-label': this.label(),
-        'role': 'dialog'
-      });
-    }
-
-    /**
-     * Build the modal's CSS class.
-     *
-     * @method buildCSSClass
-     * @return {String}
-     */
-  }, {
-    key: 'buildCSSClass',
-    value: function buildCSSClass() {
-      return MODAL_CLASS_NAME + ' koment-hidden ' + _get(Object.getPrototypeOf(ModalDialog.prototype), 'buildCSSClass', this).call(this);
-    }
-
-    /**
-     * Handles key presses on the document, looking for ESC, which closes
-     * the modal.
-     *
-     * @method handleKeyPress
-     * @param  {Event} e
-     */
-  }, {
-    key: 'handleKeyPress',
-    value: function handleKeyPress(e) {
-      if (e.which === ESC && this.closeable()) {
-        this.close();
-      }
-    }
-
-    /**
-     * Returns the label string for this modal. Primarily used for accessibility.
-     *
-     * @return {String}
-     */
-  }, {
-    key: 'label',
-    value: function label() {
-      return this.options_.label || this.localize('Modal Window');
-    }
-
-    /**
-     * Returns the description string for this modal. Primarily used for
-     * accessibility.
-     *
-     * @return {String}
-     */
-  }, {
-    key: 'description',
-    value: function description() {
-      var desc = this.options_.description || this.localize('This is a modal window.');
-
-      // Append a universal closeability message if the modal is closeable.
-      if (this.closeable()) {
-        desc += ' ' + this.localize('This modal can be closed by pressing the Escape key or activating the close button.');
-      }
-
-      return desc;
-    }
-
-    /**
-     * Opens the modal.
-     *
-     * @method open
-     * @return {ModalDialog}
-     */
-  }, {
-    key: 'open',
-    value: function open() {
-      if (!this.opened_) {
-        var player = this.player();
-
-        this.trigger('beforemodalopen');
-        this.opened_ = true;
-
-        // Fill content if the modal has never opened before and
-        // never been filled.
-        if (this.options_.fillAlways || !this.hasBeenOpened_ && !this.hasBeenFilled_) {
-          this.fill();
-        }
-
-        // If the player was playing, pause it and take note of its previously
-        // playing state.
-        this.wasPlaying_ = !player.paused();
-
-        if (this.wasPlaying_) {
-          player.pause();
-        }
-
-        if (this.closeable()) {
-          this.on(this.el_.ownerDocument, 'keydown', Fn.bind(this, this.handleKeyPress));
-        }
-
-        player.controls(false);
-        this.show();
-        this.el().setAttribute('aria-hidden', 'false');
-        this.trigger('modalopen');
-        this.hasBeenOpened_ = true;
-      }
-      return this;
-    }
-
-    /**
-     * Whether or not the modal is opened currently.
-     *
-     * @method opened
-     * @param  {Boolean} [value]
-     *         If given, it will open (`true`) or close (`false`) the modal.
-     *
-     * @return {Boolean}
-     */
-  }, {
-    key: 'opened',
-    value: function opened(value) {
-      if (typeof value === 'boolean') {
-        this[value ? 'open' : 'close']();
-      }
-      return this.opened_;
-    }
-
-    /**
-     * Closes the modal.
-     *
-     * @method close
-     * @return {ModalDialog}
-     */
-  }, {
-    key: 'close',
-    value: function close() {
-      if (this.opened_) {
-        var player = this.player();
-
-        this.trigger('beforemodalclose');
-        this.opened_ = false;
-
-        if (this.wasPlaying_) {
-          player.play();
-        }
-
-        if (this.closeable()) {
-          this.off(this.el_.ownerDocument, 'keydown', Fn.bind(this, this.handleKeyPress));
-        }
-
-        player.controls(true);
-        this.hide();
-        this.el().setAttribute('aria-hidden', 'true');
-        this.trigger('modalclose');
-
-        if (this.options_.temporary) {
-          this.dispose();
-        }
-      }
-      return this;
-    }
-
-    /**
-     * Whether or not the modal is closeable via the UI.
-     *
-     * @method closeable
-     * @param  {Boolean} [value]
-     *         If given as a Boolean, it will set the `closeable` option.
-     *
-     * @return {Boolean}
-     */
-  }, {
-    key: 'closeable',
-    value: function closeable(value) {
-      if (typeof value === 'boolean') {
-        var closeable = this.closeable_ = !!value;
-        var _close = this.getChild('closeButton');
-
-        // If this is being made closeable and has no close button, add one.
-        if (closeable && !_close) {
-
-          // The close button should be a child of the modal - not its
-          // content element, so temporarily change the content element.
-          var temp = this.contentEl_;
-
-          this.contentEl_ = this.el_;
-          _close = this.addChild('closeButton', { controlText: 'Close Modal Dialog' });
-          this.contentEl_ = temp;
-          this.on(_close, 'close', this.close);
-        }
-
-        // If this is being made uncloseable and has a close button, remove it.
-        if (!closeable && _close) {
-          this.off(_close, 'close', this.close);
-          this.removeChild(_close);
-          _close.dispose();
-        }
-      }
-      return this.closeable_;
-    }
-
-    /**
-     * Fill the modal's content element with the modal's "content" option.
-     *
-     * The content element will be emptied before this change takes place.
-     *
-     * @method fill
-     * @return {ModalDialog}
-     */
-  }, {
-    key: 'fill',
-    value: function fill() {
-      return this.fillWith(this.content());
-    }
-
-    /**
-     * Fill the modal's content element with arbitrary content.
-     *
-     * The content element will be emptied before this change takes place.
-     *
-     * @method fillWith
-     * @param  {Mixed} [content]
-     *         The same rules apply to this as apply to the `content` option.
-     *
-     * @return {ModalDialog}
-     */
-  }, {
-    key: 'fillWith',
-    value: function fillWith(content) {
-      var contentEl = this.contentEl();
-      var parentEl = contentEl.parentNode;
-      var nextSiblingEl = contentEl.nextSibling;
-
-      this.trigger('beforemodalfill');
-      this.hasBeenFilled_ = true;
-
-      // Detach the content element from the DOM before performing
-      // manipulation to avoid modifying the live DOM multiple times.
-      parentEl.removeChild(contentEl);
-      this.empty();
-      Dom.insertContent(contentEl, content);
-      this.trigger('modalfill');
-
-      // Re-inject the re-filled content element.
-      if (nextSiblingEl) {
-        parentEl.insertBefore(contentEl, nextSiblingEl);
-      } else {
-        parentEl.appendChild(contentEl);
-      }
-
-      return this;
-    }
-
-    /**
-     * Empties the content element.
-     *
-     * This happens automatically anytime the modal is filled.
-     *
-     * @method empty
-     * @return {ModalDialog}
-     */
-  }, {
-    key: 'empty',
-    value: function empty() {
-      this.trigger('beforemodalempty');
-      Dom.emptyEl(this.contentEl());
-      this.trigger('modalempty');
-      return this;
-    }
-
-    /**
-     * Gets or sets the modal content, which gets normalized before being
-     * rendered into the DOM.
-     *
-     * This does not update the DOM or fill the modal, but it is called during
-     * that process.
-     *
-     * @method content
-     * @param  {Mixed} [value]
-     *         If defined, sets the internal content value to be used on the
-     *         next call(s) to `fill`. This value is normalized before being
-     *         inserted. To "clear" the internal content value, pass `null`.
-     *
-     * @return {Mixed}
-     */
-  }, {
-    key: 'content',
-    value: function content(value) {
-      if (typeof value !== 'undefined') {
-        this.content_ = value;
-      }
-      return this.content_;
-    }
-  }]);
-
-  return ModalDialog;
-})(_component2['default']);
-
-ModalDialog.prototype.options_ = {
-  temporary: true
-};
-
-_component2['default'].registerComponent('ModalDialog', ModalDialog);
-exports['default'] = ModalDialog;
-module.exports = exports['default'];
-},{"./component":24,"./utils/dom":57,"./utils/fn":59}],49:[function(require,module,exports){
-/**
- * @file player.js
- */
-// Subclasses Component
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _component = require('./component');
-
-var _component2 = _interopRequireDefault(_component);
-
-var _globalDocument = require('global/document');
-
-var _globalDocument2 = _interopRequireDefault(_globalDocument);
 
 var _globalWindow = require('global/window');
 
 var _globalWindow2 = _interopRequireDefault(_globalWindow);
 
-var _utilsEvents = require('./utils/events');
-
-var Events = _interopRequireWildcard(_utilsEvents);
-
-var _utilsDom = require('./utils/dom');
-
-var Dom = _interopRequireWildcard(_utilsDom);
-
-var _utilsFn = require('./utils/fn');
-
-var Fn = _interopRequireWildcard(_utilsFn);
-
-var _utilsGuid = require('./utils/guid');
-
-var Guid = _interopRequireWildcard(_utilsGuid);
-
-var _utilsBrowser = require('./utils/browser');
-
-var browser = _interopRequireWildcard(_utilsBrowser);
-
-var _utilsLog = require('./utils/log');
-
-var _utilsLog2 = _interopRequireDefault(_utilsLog);
-
-var _utilsStylesheet = require('./utils/stylesheet');
-
-var stylesheet = _interopRequireWildcard(_utilsStylesheet);
-
-var _fullscreenApi = require('./fullscreen-api');
-
-var _fullscreenApi2 = _interopRequireDefault(_fullscreenApi);
-
-var _mediaError = require('./media-error');
-
-var _mediaError2 = _interopRequireDefault(_mediaError);
-
-var _safeJsonParseTuple = require('safe-json-parse/tuple');
-
-var _safeJsonParseTuple2 = _interopRequireDefault(_safeJsonParseTuple);
-
-var _objectAssign = require('object.assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
-
-var _utilsMergeOptions = require('./utils/merge-options');
-
-var _utilsMergeOptions2 = _interopRequireDefault(_utilsMergeOptions);
-
-var _utilsTimeRangesJs = require('./utils/time-ranges.js');
-
-var _modalDialog = require('./modal-dialog');
-
-var _modalDialog2 = _interopRequireDefault(_modalDialog);
-
-var _techTech = require('./tech/tech');
-
-var _techTech2 = _interopRequireDefault(_techTech);
-
-var _lodash = require('lodash');
-
-// The following imports are used only to ensure that the corresponding modules
-// are always included in the video.js package. Importing the modules will
-// execute them and they will register themselves with video.js.
-
-require('./control-bar/control-bar');
-
-require('./control-bar/progress-control/progress-control');
+require('./control-bar/koment-bar');
 
 require('./component/koment-display');
 
 require('./component/koment-list');
 
-require('./tech/videojs');
+var Player = _videoJs2['default'].getComponent('Player');
+var Component = _videoJs2['default'].getComponent('Component');
 
-require('./tech/html5');
-
-//import './tech/youtube'
 /**
- * An instance of the `Player` class is created when any of the Video.js setup methods are used to initialize a video.
- * ```js
- * var myPlayer = koment('example_video_1');
- * ```
- * In the following example, the `data-setup` attribute tells the Video.js library to create a player instance when the library is ready.
- * ```html
- * <video id="example_video_1" data-setup='{}' controls>
- *   <source src="my-source.mp4" type="video/mp4">
- * </video>
- * ```
- * After an instance has been created it can be accessed globally using `Video('example_video_1')`.
- *
- * @param {Element} tag        The original video tag used for configuring options
- * @param {Object=} options    Object of option names and values
- * @param {Function=} ready    Ready callback function
- * @extends Component
- * @class Player
+ * Initialize the plugin.
+ * @param options (optional) {object} configuration for the plugin
  */
 
-var Player = (function (_Component) {
-  _inherits(Player, _Component);
+var Koment = (function (_Component) {
+  _inherits(Koment, _Component);
 
-  /**
-   * player's constructor function
-   *
-   * @constructs
-   * @method init
-   * @param {Element} tag        The original video tag used for configuring options
-   * @param {Object=} options    Player options
-   * @param {Function=} ready    Ready callback function
-   */
+  function Koment(player, options, ready) {
+    _classCallCheck(this, Koment);
 
-  function Player(tag, options, ready) {
-    var _this = this;
-
-    _classCallCheck(this, Player);
-
-    // Make sure tag ID exists
-    tag.id = tag.id || 'koment_video_' + Guid.newGUID();
-
-    // Set Options
-    // The options argument overrides options set in the video tag
-    // which overrides globally set options.
-    // This latter part coincides with the load order
-    // (tag must exist before Player)
-    options = (0, _objectAssign2['default'])(Player.getTagSettings(tag), options);
-
-    // Delay the initialization of children because we need to set up
-    // player properties first, and can't use `this` before `super()`
-    options.initChildren = false;
-
-    // Same with creating the element
-    options.createEl = false;
-
-    // we don't want the player to report touch activity on itself
-    // see enableTouchActivity in Component
-    options.reportTouchActivity = false;
-
-    // If language is not set, get the closest lang attribute
-    if (!options.language) {
-      if (typeof tag.closest === 'function') {
-        var closest = tag.closest('[lang]');
-
-        if (closest) {
-          options.language = closest.getAttribute('lang');
-        }
-      } else {
-        var element = tag;
-
-        while (element && element.nodeType === 1) {
-          if (Dom.getElAttributes(element).hasOwnProperty('lang')) {
-            options.language = element.getAttribute('lang');
-            break;
-          }
-          element = element.parentNode;
-        }
-      }
-    }
-
-    // Run base component initializing with new options
-    _get(Object.getPrototypeOf(Player.prototype), 'constructor', this).call(this, null, options, ready);
-
-    // Store the original tag used to set options
-    this.tag = tag;
-
-    // Store the tag attributes used to restore html5 element
-    this.tagAttributes = tag && Dom.getElAttributes(tag);
-
-    // Update current language
-    this.language(this.options_.language);
-
-    // Update Supported Languages
-    if (options.languages) {
-      (function () {
-        // Normalise player option languages to lowercase
-        var languagesToLower = {};
-
-        Object.getOwnPropertyNames(options.languages).forEach(function (name) {
-          languagesToLower[name.toLowerCase()] = options.languages[name];
-        });
-        _this.languages_ = languagesToLower;
-      })();
-    } else {
-      this.languages_ = Player.prototype.options_.languages;
-    }
-
-    // Cache for video property values.
-    this.cache_ = {};
-
-    // Set controls
-    this.controls_ = !this.tag.controls;
-
-    // Original tag settings stored in options
-    // now remove immediately so native controls don't flash.
-    // May be turned back on by HTML5 tech if nativeControlsForTouch is true
-    //tag.controls = false;
-
-    /*
-     * Store the internal state of scrubbing
-     *
-     * @private
-     * @return {Boolean} True if the user is scrubbing
-     */
-    this.scrubbing_ = false;
-
-    this.el_ = this.createEl();
-
-    // We also want to pass the original player options to each component and plugin
-    // as well so they don't need to reach back into the player for options later.
-    // We also need to do another copy of this.options_ so we don't end up with
-    // an infinite loop.
-    var playerOptionsCopy = (0, _utilsMergeOptions2['default'])(this.options_);
-
-    // Load plugins
-    if (options.plugins) {
-      (function () {
-        var plugins = options.plugins;
-
-        Object.getOwnPropertyNames(plugins).forEach(function (name) {
-          if (typeof this[name] === 'function') {
-            this[name](plugins[name]);
-          } else {
-            _utilsLog2['default'].error('Unable to find plugin:', name);
-          }
-        }, _this);
-      })();
-    }
-
-    this.options_.playerOptions = playerOptionsCopy;
-
-    this.initChildren();
-
-    // Update controls className. Can't do this when the controls are initially
-    // set because the element doesn't exist yet.
-    if (this.controls()) {
-      this.addClass('koment-controls-enabled');
-    } else {
-      this.addClass('koment-controls-disabled');
-    }
-
-    // Set ARIA label and region role depending on player type
-    this.el_.setAttribute('role', 'region');
-    this.el_.setAttribute('aria-label', 'video player');
-
-    if (this.flexNotSupported_()) {
-      this.addClass('koment-no-flex');
-    }
-
-    // iOS Safari has broken hover handling
-    if (!browser.IS_IOS) {
-      this.addClass('koment-workinghover');
-    }
-
-    // Make player easily findable by ID
-    Player.players[this.id_] = this;
-
-    // When the player is first initialized, trigger activity so components
-    // like the control bar show themselves if needed
-    this.userActive(true);
-    this.reportUserActivity();
-    this.listenForUserActivity_();
-
-    this.on('fullscreenchange', this.handleFullscreenChange_);
-    this.on('stageclick', this.handleStageClick_);
-
-    this.sourceList_();
+    _get(Object.getPrototypeOf(Koment.prototype), 'constructor', this).call(this, player, options, ready);
   }
 
-  /*
-   * Global player list
-   *
-   * @type {Object}
-   */
-
-  /**
-   * Destroys the video player and does any necessary cleanup
-   * ```js
-   *     myPlayer.dispose();
-   * ```
-   * This is especially helpful if you are dynamically adding and removing videos
-   * to/from the DOM.
-   *
-   * @method dispose
-   */
-
-  _createClass(Player, [{
-    key: 'dispose',
-    value: function dispose() {
-      this.trigger('dispose');
-      // prevent dispose from being called twice
-      this.off('dispose');
-
-      if (this.styleEl_ && this.styleEl_.parentNode) {
-        this.styleEl_.parentNode.removeChild(this.styleEl_);
-      }
-
-      // Kill reference to this player
-      Player.players[this.id_] = null;
-
-      if (this.tag && this.tag.koment) {
-        this.tag.koment = null;
-      }
-
-      if (this.el_ && this.el_.koment) {
-        this.el_.koment = null;
-      }
-
-      if (this.tech_) {
-        this.tech_.dispose();
-      }
-
-      _get(Object.getPrototypeOf(Player.prototype), 'dispose', this).call(this);
-    }
-
-    /**
-     * Create the component's DOM element
-     *
-     * @return {Element}
-     * @method createEl
-     */
-  }, {
+  _createClass(Koment, [{
     key: 'createEl',
     value: function createEl() {
-      var el = this.el_ = _get(Object.getPrototypeOf(Player.prototype), 'createEl', this).call(this, 'div');
-      var tag = this.tag;
-
-      // Remove width/height attrs from tag so CSS can make it 100% width/height
-      //tag.removeAttribute('width');
-      //tag.removeAttribute('height');
-
-      // Copy over all the attributes from the tag, including ID and class
-      // ID will now reference player box, not the video tag
-      var attrs = Dom.getElAttributes(tag);
-
-      Object.getOwnPropertyNames(attrs).forEach(function (attr) {
-        // workaround so we don't totally break IE7
-        // http://stackoverflow.com/questions/3653444/css-styles-not-applied-on-dynamic-elements-in-internet-explorer-7
-        if (attr === 'class') {
-          el.className = attrs[attr];
-        } else {
-          el.setAttribute(attr, attrs[attr]);
-        }
+      return _get(Object.getPrototypeOf(Koment.prototype), 'createEl', this).call(this, 'div', {
+        className: 'koment-component'
       });
-
-      // Update tag id/class for use as HTML5 playback tech
-      // Might think we should do this after embedding in container so .koment-tech class
-      // doesn't flash 100% width/height, but class only applies with .video-js parent
-      tag.playerId = tag.id;
-      tag.id += '_html5_api';
-      tag.className = 'koment-tech';
-
-      // Make player findable on elements
-      tag.koment = el.koment = this;
-      // Default state of video is paused
-      this.addClass('koment');
-      this.addClass('koment-paused');
-
-      // Add a style element in the player that we'll use to set the width/height
-      // of the player in a way that's still overrideable by CSS, just like the
-      // video element
-      if (_globalWindow2['default'].koment_NO_DYNAMIC_STYLE !== true) {
-        this.styleEl_ = stylesheet.createStyleElement('koment-styles-dimensions');
-        var defaultsStyleEl = Dom.$('.koment-styles-defaults');
-        var head = Dom.$('head');
-
-        head.insertBefore(this.styleEl_, defaultsStyleEl ? defaultsStyleEl.nextSibling : head.firstChild);
-      }
-
-      // Pass in the width/height/aspectRatio options which will update the style el
-      this.width(this.options_.width);
-      this.height(this.options_.height);
-      this.fluid(this.options_.fluid);
-      this.aspectRatio(this.options_.aspectRatio);
-
-      // Hide any links within the video/audio tag, because IE doesn't hide them completely.
-      var links = tag.getElementsByTagName('a');
-
-      for (var i = 0; i < links.length; i++) {
-        var linkEl = links.item(i);
-
-        Dom.addElClass(linkEl, 'koment-hidden');
-        linkEl.setAttribute('hidden', 'hidden');
-      }
-
-      // insertElFirst seems to cause the networkState to flicker from 3 to 2, so
-      // keep track of the original for later so we can know if the source originally failed
-      tag.initNetworkState_ = tag.networkState;
-
-      // Wrap video tag in div (el/box) container
-      if (tag.parentNode) {
-        tag.parentNode.insertBefore(el, tag);
-      }
-
-      // insert the tag as the first child of the player element
-      // then manually add it to the children array so that this.addChild
-      // will work properly for other components
-      //
-      // Breaks iPhone, fixed in HTML5 setup.
-      Dom.insertElFirst(tag, el);
-      this.children_.unshift(tag);
-
-      this.el_ = el;
-
-      return el;
-    }
-
-    /**
-     * Get/set player width
-     *
-     * @param {Number=} value Value for width
-     * @return {Number} Width when getting
-     * @method width
-     */
-  }, {
-    key: 'width',
-    value: function width(value) {
-      return this.dimension('width', value);
-    }
-
-    /**
-     * Get/set player height
-     *
-     * @param {Number=} value Value for height
-     * @return {Number} Height when getting
-     * @method height
-     */
-  }, {
-    key: 'height',
-    value: function height(value) {
-      return this.dimension('height', value);
-    }
-
-    /**
-     * Get/set dimension for player
-     *
-     * @param {String} dimension Either width or height
-     * @param {Number=} value Value for dimension
-     * @return {Component}
-     * @method dimension
-     */
-  }, {
-    key: 'dimension',
-    value: function dimension(_dimension, value) {
-      var privDimension = _dimension + '_';
-
-      if (value === undefined) {
-        return this[privDimension] || 0;
-      }
-
-      if (value === '') {
-        // If an empty string is given, reset the dimension to be automatic
-        this[privDimension] = undefined;
-      } else {
-        var parsedVal = parseFloat(value);
-
-        if (isNaN(parsedVal)) {
-          _utilsLog2['default'].error('Improper value "' + value + '" supplied for for ' + _dimension);
-          return this;
-        }
-
-        this[privDimension] = parsedVal;
-      }
-
-      this.updateStyleEl_();
-      return this;
-    }
-
-    /**
-     * Add/remove the koment-fluid class
-     *
-     * @param {Boolean} bool Value of true adds the class, value of false removes the class
-     * @method fluid
-     */
-  }, {
-    key: 'fluid',
-    value: function fluid(bool) {
-      if (bool === undefined) {
-        return !!this.fluid_;
-      }
-
-      this.fluid_ = !!bool;
-
-      if (bool) {
-        this.addClass('koment-fluid');
-      } else {
-        this.removeClass('koment-fluid');
-      }
-    }
-
-    /**
-     * Get/Set the aspect ratio
-     *
-     * @param {String=} ratio Aspect ratio for player
-     * @return aspectRatio
-     * @method aspectRatio
-     */
-  }, {
-    key: 'aspectRatio',
-    value: function aspectRatio(ratio) {
-      if (ratio === undefined) {
-        return this.aspectRatio_;
-      }
-
-      // Check for width:height format
-      if (!/^\d+\:\d+$/.test(ratio)) {
-        throw new Error('Improper value supplied for aspect ratio. The format should be width:height, for example 16:9.');
-      }
-      this.aspectRatio_ = ratio;
-
-      // We're assuming if you set an aspect ratio you want fluid mode,
-      // because in fixed mode you could calculate width and height yourself.
-      this.fluid(true);
-
-      this.updateStyleEl_();
-    }
-
-    /**
-     * Update styles of the player element (height, width and aspect ratio)
-     *
-     * @method updateStyleEl_
-     */
-  }, {
-    key: 'updateStyleEl_',
-    value: function updateStyleEl_() {
-      if (_globalWindow2['default'].koment_NO_DYNAMIC_STYLE === true) {
-        var _width = typeof this.width_ === 'number' ? this.width_ : this.options_.width;
-        var _height = typeof this.height_ === 'number' ? this.height_ : this.options_.height;
-        var techEl = this.tech_ && this.tech_.el();
-
-        if (techEl) {
-          if (_width >= 0) {
-            techEl.width = _width;
-          }
-          if (_height >= 0) {
-            techEl.height = _height;
-          }
-        }
-
-        return;
-      }
-
-      var width = undefined;
-      var height = undefined;
-      var aspectRatio = undefined;
-      var idClass = undefined;
-
-      // The aspect ratio is either used directly or to calculate width and height.
-      if (this.aspectRatio_ !== undefined && this.aspectRatio_ !== 'auto') {
-        // Use any aspectRatio that's been specifically set
-        aspectRatio = this.aspectRatio_;
-      } else if (this.videoWidth()) {
-        // Otherwise try to get the aspect ratio from the video metadata
-        aspectRatio = this.videoWidth() + ':' + this.videoHeight();
-      } else {
-        // Or use a default. The video element's is 2:1, but 16:9 is more common.
-        aspectRatio = '16:9';
-      }
-
-      // Get the ratio as a decimal we can use to calculate dimensions
-      var ratioParts = aspectRatio.split(':');
-      var ratioMultiplier = ratioParts[1] / ratioParts[0];
-
-      if (this.width_ !== undefined) {
-        // Use any width that's been specifically set
-        width = this.width_;
-      } else if (this.height_ !== undefined) {
-        // Or calulate the width from the aspect ratio if a height has been set
-        width = this.height_ / ratioMultiplier;
-      } else {
-        // Or use the video's metadata, or use the video el's default of 300
-        width = this.videoWidth() || 300;
-      }
-
-      if (this.height_ !== undefined) {
-        // Use any height that's been specifically set
-        height = this.height_;
-      } else {
-        // Otherwise calculate the height from the ratio and the width
-        height = width * ratioMultiplier;
-      }
-
-      // Ensure the CSS class is valid by starting with an alpha character
-      if (/^[^a-zA-Z]/.test(this.id())) {
-        idClass = 'dimensions-' + this.id();
-      } else {
-        idClass = this.id() + '-dimensions';
-      }
-
-      // Ensure the right class is still on the player for the style element
-      this.addClass(idClass);
-
-      stylesheet.setTextContent(this.styleEl_, '\n      .' + idClass + ' {\n        width: ' + width + 'px;\n        height: ' + height + 'px;\n      }\n\n      .' + idClass + '.koment-fluid {\n        padding-top: ' + ratioMultiplier * 100 + '%;\n      }\n    ');
-    }
-  }, {
-    key: 'sourceList_',
-    value: function sourceList_() {
-      var sourceTech = this.selectSource();
-
-      if (sourceTech) {
-        this.loadTech_(sourceTech[0]);
-      } else {
-        // We need to wrap this in a timeout to give folks a chance to add error event handlers
-        this.setTimeout(function () {
-          this.error({ code: 4, message: this.localize(this.options_.notSupportedMessage) });
-        }, 0);
-
-        // we could not find an appropriate tech, but let's still notify the delegate that this is it
-        // this needs a better comment about why this is needed
-        this.triggerReady();
-      }
-    }
-
-    /**
-     * Load the Media Playback Technology (tech)
-     * Load/Create an instance of playback technology including element and API methods
-     * And append playback element in player div.
-     *
-     * @param {String} techName Name of the playback technology
-     * @param {String} source Video source
-     * @method loadTech_
-     * @private
-     */
-  }, {
-    key: 'loadTech_',
-    value: function loadTech_(techName) {
-
-      // Pause and remove current playback technology
-      if (this.tech_) {
-        this.unloadTech_();
-      }
-
-      this.techName_ = techName; //this.tag.tagName;
-      // Turn off API access because we're loading a new tech that might load asynchronously
-      this.isReady_ = false;
-
-      // Grab tech-specific options from player options and add source and parent element to use.
-      var techOptions = (0, _objectAssign2['default'])({
-        'nativeControlsForTouch': this.options_.nativeControlsForTouch,
-        'playerId': this.id(),
-        'techId': this.id() + '_' + techName + '_api',
-        'language': this.language()
-      }, this.options_[techName.toLowerCase()]);
-
-      if (this.tag) {
-        techOptions.tag = this.tag;
-      }
-
-      // Initialize tech instance
-      var TechComponent = _techTech2['default'].getTech(this.techName_);
-      this.tech_ = new TechComponent(techOptions);
-
-      // player.triggerReady is always async, so don't need this to be async
-      this.tech_.ready(Fn.bind(this, this.handleTechReady_), true);
-      // Listen to all HTML5-defined events and trigger them on the player
-      this.on(this.tech_, 'loadstart', this.handleTechLoadStart_);
-      this.on(this.tech_, 'waiting', this.handleTechWaiting_);
-      this.on(this.tech_, 'canplay', this.handleTechCanPlay_);
-      this.on(this.tech_, 'canplaythrough', this.handleTechCanPlayThrough_);
-      this.on(this.tech_, 'playing', this.handleTechPlaying_);
-      this.on(this.tech_, 'ended', this.handleTechEnded_);
-      this.on(this.tech_, 'seeking', this.handleTechSeeking_);
-      this.on(this.tech_, 'seeked', this.handleTechSeeked_);
-      this.on(this.tech_, 'play', this.handleTechPlay_);
-      this.on(this.tech_, 'pause', this.handleTechPause_);
-      this.on(this.tech_, 'progress', this.handleTechProgress_);
-      this.on(this.tech_, 'durationchange', this.handleTechDurationChange_);
-      this.on(this.tech_, 'fullscreenchange', this.handleTechFullscreenChange_);
-      this.on(this.tech_, 'error', this.handleTechError_);
-      this.on(this.tech_, 'loadedmetadata', this.handleTechLoadedMetaData_);
-      this.on(this.tech_, 'loadeddata', this.handleTechLoadedData_);
-      this.on(this.tech_, 'timeupdate', this.handleTechTimeUpdate_);
-      this.on(this.tech_, 'volumechange', this.handleTechVolumeChange_);
-      this.on(this.tech_, 'loadedmetadata', this.updateStyleEl_);
-
-      if (this.controls() && !this.usingNativeControls() && (! ~this.el_.className.indexOf('vjs-tech') || browser.TOUCH_ENABLED)) {
-        this.addTechControlsListeners_();
-      }
-
-      //// Add the tech element in the DOM if it was not already there
-      //// Make sure to not insert the original video element if using Html5
-      //if (this.tech_.el().parentNode !== this.el() && (techName !== 'Html5' || !this.tag)) {
-      //  Dom.insertElFirst(this.tech_.el(), this.el());
-      //}
-
-      // Get rid of the original video tag reference after the first tech is loaded
-      if (this.tag) {
-        this.tag.koment = null;
-        this.tag = null;
-      }
-    }
-
-    /**
-     * Unload playback technology
-     *
-     * @method unloadTech_
-     * @private
-     */
-  }, {
-    key: 'unloadTech_',
-    value: function unloadTech_() {
-      // Save the current text tracks so that we can reuse the same text tracks with the next tech
-
-      this.isReady_ = false;
-
-      this.tech_.dispose();
-
-      this.tech_ = false;
-    }
-  }, {
-    key: 'selectSource',
-    value: function selectSource() {
-      var _this2 = this;
-
-      var techs = (0, _lodash.map)(_techTech2['default'].techs_, function (tech, key) {
-        return [key, _techTech2['default'].getTech(key) || _component2['default'].getComponent(key)];
-      }).filter(function (_ref) {
-        var _ref2 = _slicedToArray(_ref, 2);
-
-        var techName = _ref2[0];
-        var tech = _ref2[1];
-
-        // Check if the current tech is defined before continuing
-        if (tech) {
-          // Check if the browser supports this technology
-          return tech.isSupported(_this2.tag);
-        }
-
-        _utilsLog2['default'].error('The "' + techName + '" tech is undefined. Skipped browser support check for that tech.');
-        return false;
-      });
-
-      return techs && techs.length && techs[0];
-    }
-
-    /**
-     * Return a reference to the current tech.
-     * It will only return a reference to the tech if given an object with the
-     * `IWillNotUseThisInPlugins` property on it. This is try and prevent misuse
-     * of techs by plugins.
-     *
-     * @param {Object}
-     * @return {Object} The Tech
-     * @method tech
-     */
-  }, {
-    key: 'tech',
-    value: function tech(safety) {
-      if (safety && safety.IWillNotUseThisInPlugins) {
-        return this.tech_;
-      }
-      var errorText = '\n      Please make sure that you are not using this inside of a plugin.\n      To disable this alert and error, please pass in an object with\n      `IWillNotUseThisInPlugins` \n    ';
-
-      _globalWindow2['default'].alert(errorText);
-      throw new Error(errorText);
-    }
-
-    /**
-     * Set up click and touch listeners for the playback element
-     *
-     * On desktops, a click on the video itself will toggle playback,
-     * on a mobile device a click on the video toggles controls.
-     * (toggling controls is done by toggling the user state between active and
-     * inactive)
-     * A tap can signal that a user has become active, or has become inactive
-     * e.g. a quick tap on an iPhone movie should reveal the controls. Another
-     * quick tap should hide them again (signaling the user is in an inactive
-     * viewing state)
-     * In addition to this, we still want the user to be considered inactive after
-     * a few seconds of inactivity.
-     * Note: the only part of iOS interaction we can't mimic with this setup
-     * is a touch and hold on the video element counting as activity in order to
-     * keep the controls showing, but that shouldn't be an issue. A touch and hold
-     * on any controls will still keep the user active
-     *
-     * @private
-     * @method addTechControlsListeners_
-     */
-  }, {
-    key: 'addTechControlsListeners_',
-    value: function addTechControlsListeners_() {
-      // Make sure to remove all the previous listeners in case we are called multiple times.
-      this.removeTechControlsListeners_();
-
-      // Some browsers (Chrome & IE) don't trigger a click on a flash swf, but do
-      // trigger mousedown/up.
-      // http://stackoverflow.com/questions/1444562/javascript-onclick-event-over-flash-object
-      // Any touch events are set to block the mousedown event from happening
-      this.on(this.tech_, 'mousedown', this.handleTechClick_);
-
-      // If the controls were hidden we don't want that to change without a tap event
-      // so we'll check if the controls were already showing before reporting user
-      // activity
-      this.on(this.tech_, 'touchstart', this.handleTechTouchStart_);
-      this.on(this.tech_, 'touchmove', this.handleTechTouchMove_);
-      this.on(this.tech_, 'touchend', this.handleTechTouchEnd_);
-
-      // The tap listener needs to come after the touchend listener because the tap
-      // listener cancels out any reportedUserActivity when setting userActive(false)
-      this.on(this.tech_, 'tap', this.handleTechTap_);
-    }
-
-    /**
-     * Remove the listeners used for click and tap controls. This is needed for
-     * toggling to controls disabled, where a tap/touch should do nothing.
-     *
-     * @method removeTechControlsListeners_
-     * @private
-     */
-  }, {
-    key: 'removeTechControlsListeners_',
-    value: function removeTechControlsListeners_() {
-      // We don't want to just use `this.off()` because there might be other needed
-      // listeners added by techs that extend this.
-      this.off(this.tech_, 'tap', this.handleTechTap_);
-      this.off(this.tech_, 'touchstart', this.handleTechTouchStart_);
-      this.off(this.tech_, 'touchmove', this.handleTechTouchMove_);
-      this.off(this.tech_, 'touchend', this.handleTechTouchEnd_);
-      this.off(this.tech_, 'mousedown', this.handleTechClick_);
-    }
-
-    /**
-     * Player waits for the tech to be ready
-     *
-     * @method handleTechReady_
-     * @private
-     */
-  }, {
-    key: 'handleTechReady_',
-    value: function handleTechReady_() {
-      this.triggerReady();
-      // Keep the same volume as before
-      if (this.cache_.volume) {
-        this.techCall_('setVolume', this.cache_.volume);
-      }
-      // Update the duration if available
-      this.handleTechDurationChange_();
-    }
-
-    /**
-     * Fired when the user agent begins looking for media data
-     *
-     * @private
-     * @method handleTechLoadStart_
-     */
-  }, {
-    key: 'handleTechLoadStart_',
-    value: function handleTechLoadStart_() {
-      // TODO: Update to use `emptied` event instead. See #1277.
-
-      this.removeClass('koment-ended');
-
-      // reset the error state
-      this.error(null);
-
-      // If it's already playing we want to trigger a firstplay event now.
-      // The firstplay event relies on both the play and loadstart events
-      // which can happen in any order for a new source
-      if (!this.paused()) {
-        this.trigger('loadstart');
-        this.trigger('firstplay');
-      } else {
-        // reset the hasStarted state
-        this.hasStarted(false);
-        this.trigger('loadstart');
-      }
-    }
-
-    /**
-     * Add/remove the koment-has-started class
-     *
-     * @param {Boolean} hasStarted The value of true adds the class the value of false remove the class
-     * @return {Boolean} Boolean value if has started
-     * @private
-     * @method hasStarted
-     */
-  }, {
-    key: 'hasStarted',
-    value: function hasStarted(_hasStarted) {
-
-      if (_hasStarted !== undefined) {
-        // only update if this is a new value
-        if (this.hasStarted_ !== _hasStarted) {
-          this.hasStarted_ = _hasStarted;
-          if (_hasStarted) {
-            this.addClass('koment-has-started');
-            // trigger the firstplay event if this newly has played
-            this.trigger('firstplay');
-          } else {
-            this.removeClass('koment-has-started');
-          }
-        }
-        return this;
-      }
-      return !!this.hasStarted_;
-    }
-
-    /**
-     * Fired whenever the media begins or resumes playback
-     *
-     * @private
-     * @method handleTechPlay_
-     */
-  }, {
-    key: 'handleTechPlay_',
-    value: function handleTechPlay_() {
-      this.removeClass('koment-ended');
-      this.removeClass('koment-paused');
-      this.addClass('koment-playing');
-
-      // hide the poster when the user hits play
-      // https://html.spec.whatwg.org/multipage/embedded-content.html#dom-media-play
-      this.hasStarted(true);
-
-      this.trigger('play');
-    }
-
-    /**
-     * Fired whenever the media begins waiting
-     *
-     * @private
-     * @method handleTechWaiting_
-     */
-  }, {
-    key: 'handleTechWaiting_',
-    value: function handleTechWaiting_() {
-      var _this3 = this;
-
-      this.addClass('koment-waiting');
-      this.trigger('waiting');
-      this.one('timeupdate', function () {
-        return _this3.removeClass('koment-waiting');
-      });
-    }
-
-    /**
-     * A handler for events that signal that waiting has ended
-     * which is not consistent between browsers. See #1351
-     *
-     * @private
-     * @method handleTechCanPlay_
-     */
-  }, {
-    key: 'handleTechCanPlay_',
-    value: function handleTechCanPlay_() {
-      this.removeClass('koment-waiting');
-      this.trigger('canplay');
-    }
-
-    /**
-     * A handler for events that signal that waiting has ended
-     * which is not consistent between browsers. See #1351
-     *
-     * @private
-     * @method handleTechCanPlayThrough_
-     */
-  }, {
-    key: 'handleTechCanPlayThrough_',
-    value: function handleTechCanPlayThrough_() {
-      this.removeClass('koment-waiting');
-      this.trigger('canplaythrough');
-    }
-
-    /**
-     * A handler for events that signal that waiting has ended
-     * which is not consistent between browsers. See #1351
-     *
-     * @private
-     * @method handleTechPlaying_
-     */
-  }, {
-    key: 'handleTechPlaying_',
-    value: function handleTechPlaying_() {
-      this.removeClass('koment-waiting');
-      this.trigger('playing');
-    }
-
-    /**
-     * Fired whenever the player is jumping to a new time
-     *
-     * @private
-     * @method handleTechSeeking_
-     */
-  }, {
-    key: 'handleTechSeeking_',
-    value: function handleTechSeeking_() {
-      this.addClass('koment-seeking');
-      this.trigger('seeking');
-    }
-
-    /**
-     * Fired when the player has finished jumping to a new time
-     *
-     * @private
-     * @method handleTechSeeked_
-     */
-  }, {
-    key: 'handleTechSeeked_',
-    value: function handleTechSeeked_() {
-      this.removeClass('koment-seeking');
-      this.trigger('seeked');
-    }
-
-    /**
-     * Fired the first time a video is played
-     * Not part of the HLS spec, and we're not sure if this is the best
-     * implementation yet, so use sparingly. If you don't have a reason to
-     * prevent playback, use `myPlayer.one('play');` instead.
-     *
-     * @private
-     * @method handleTechFirstPlay_
-     */
-  }, {
-    key: 'handleTechFirstPlay_',
-    value: function handleTechFirstPlay_() {
-      // If the first starttime attribute is specified
-      // then we will start at the given offset in seconds
-      if (this.options_.starttime) {
-        this.currentTime(this.options_.starttime);
-      }
-
-      this.addClass('koment-has-started');
-      this.trigger('firstplay');
-    }
-
-    /**
-     * Fired whenever the media has been paused
-     *
-     * @private
-     * @method handleTechPause_
-     */
-  }, {
-    key: 'handleTechPause_',
-    value: function handleTechPause_() {
-      this.removeClass('koment-playing');
-      this.addClass('koment-paused');
-      this.trigger('pause');
-    }
-
-    /**
-     * Fired while the user agent is downloading media data
-     *
-     * @private
-     * @method handleTechProgress_
-     */
-  }, {
-    key: 'handleTechProgress_',
-    value: function handleTechProgress_() {
-      this.trigger('progress');
-    }
-
-    /**
-     * Fired when the end of the media resource is reached (currentTime == duration)
-     *
-     * @private
-     * @method handleTechEnded_
-     */
-  }, {
-    key: 'handleTechEnded_',
-    value: function handleTechEnded_() {
-      this.addClass('koment-ended');
-      if (this.options_.loop) {
-        this.currentTime(0);
-        this.play();
-      } else if (!this.paused()) {
-        this.pause();
-      }
-
-      this.trigger('ended');
-    }
-
-    /**
-     * Fired when the duration of the media resource is first known or changed
-     *
-     * @private
-     * @method handleTechDurationChange_
-     */
-  }, {
-    key: 'handleTechDurationChange_',
-    value: function handleTechDurationChange_() {
-      this.duration(this.techGet_('duration'));
-    }
-
-    /**
-     * Handle a click on the media element to play/pause
-     *
-     * @param {Object=} event Event object
-     * @private
-     * @method handleTechClick_
-     */
-  }, {
-    key: 'handleTechClick_',
-    value: function handleTechClick_(event) {
-      // We're using mousedown to detect clicks thanks to Flash, but mousedown
-      // will also be triggered with right-clicks, so we need to prevent that
-      if (event.button !== 0) {
-        return;
-      }
-
-      // When controls are disabled a click should not toggle playback because
-      // the click is considered a control
-      if (this.controls()) {
-        if (this.paused()) {
-          this.play();
-        } else {
-          this.pause();
-        }
-      }
-    }
-
-    /**
-     * Handle a tap on the media element. It will toggle the user
-     * activity state, which hides and shows the controls.
-     *
-     * @private
-     * @method handleTechTap_
-     */
-  }, {
-    key: 'handleTechTap_',
-    value: function handleTechTap_() {
-      this.userActive(!this.userActive());
-    }
-
-    /**
-     * Handle touch to start
-     *
-     * @private
-     * @method handleTechTouchStart_
-     */
-  }, {
-    key: 'handleTechTouchStart_',
-    value: function handleTechTouchStart_() {
-      this.userWasActive = this.userActive();
-    }
-
-    /**
-     * Handle touch to move
-     *
-     * @private
-     * @method handleTechTouchMove_
-     */
-  }, {
-    key: 'handleTechTouchMove_',
-    value: function handleTechTouchMove_() {
-      if (this.userWasActive) {
-        this.reportUserActivity();
-      }
-    }
-
-    /**
-     * Handle touch to end
-     *
-     * @private
-     * @method handleTechTouchEnd_
-     */
-  }, {
-    key: 'handleTechTouchEnd_',
-    value: function handleTechTouchEnd_(event) {
-      // Stop the mouse events from also happening
-      event.preventDefault();
-    }
-
-    /**
-     * Fired when the player switches in or out of fullscreen mode
-     *
-     * @private
-     * @method handleFullscreenChange_
-     */
-  }, {
-    key: 'handleFullscreenChange_',
-    value: function handleFullscreenChange_() {
-      if (this.isFullscreen()) {
-        this.addClass('koment-fullscreen');
-      } else {
-        this.removeClass('koment-fullscreen');
-      }
-    }
-
-    /**
-     * native click events on the SWF aren't triggered on IE11, Win8.1RT
-     * use stageclick events triggered from inside the SWF instead
-     *
-     * @private
-     * @method handleStageClick_
-     */
-  }, {
-    key: 'handleStageClick_',
-    value: function handleStageClick_() {
-      this.reportUserActivity();
-    }
-
-    /**
-     * Handle Tech Fullscreen Change
-     *
-     * @private
-     * @method handleTechFullscreenChange_
-     */
-  }, {
-    key: 'handleTechFullscreenChange_',
-    value: function handleTechFullscreenChange_(event, data) {
-      if (data) {
-        this.isFullscreen(data.isFullscreen);
-      }
-      this.trigger('fullscreenchange');
-    }
-
-    /**
-     * Fires when an error occurred during the loading of an audio/video
-     *
-     * @private
-     * @method handleTechError_
-     */
-  }, {
-    key: 'handleTechError_',
-    value: function handleTechError_() {
-      var error = this.tech_.error();
-
-      this.error(error);
-    }
-
-    /**
-     * Fires when the browser is intentionally not getting media data
-     *
-     * @private
-     * @method handleTechSuspend_
-     */
-  }, {
-    key: 'handleTechSuspend_',
-    value: function handleTechSuspend_() {
-      this.trigger('suspend');
-    }
-
-    /**
-     * Fires when the loading of an audio/video is aborted
-     *
-     * @private
-     * @method handleTechAbort_
-     */
-  }, {
-    key: 'handleTechAbort_',
-    value: function handleTechAbort_() {
-      this.trigger('abort');
-    }
-
-    /**
-     * Fires when the current playlist is empty
-     *
-     * @private
-     * @method handleTechEmptied_
-     */
-  }, {
-    key: 'handleTechEmptied_',
-    value: function handleTechEmptied_() {
-      this.trigger('emptied');
-    }
-
-    /**
-     * Fires when the browser is trying to get media data, but data is not available
-     *
-     * @private
-     * @method handleTechStalled_
-     */
-  }, {
-    key: 'handleTechStalled_',
-    value: function handleTechStalled_() {
-      this.trigger('stalled');
-    }
-
-    /**
-     * Fires when the browser has loaded meta data for the audio/video
-     *
-     * @private
-     * @method handleTechLoadedMetaData_
-     */
-  }, {
-    key: 'handleTechLoadedMetaData_',
-    value: function handleTechLoadedMetaData_() {
-      this.trigger('loadedmetadata');
-    }
-  }, {
-    key: 'handleTechTextData_',
-    value: function handleTechTextData_() {
-      var data = null;
-
-      if (arguments.length > 1) {
-        data = arguments[1];
-      }
-      this.trigger('textdata', data);
-    }
-
-    /**
-     * Fires when the browser has loaded the current frame of the audio/video
-     *
-     * @private
-     * @method handleTechLoadedData_
-     */
-  }, {
-    key: 'handleTechLoadedData_',
-    value: function handleTechLoadedData_() {
-      this.trigger('loadeddata');
-    }
-
-    /**
-     * Fires when the current playback position has changed
-     *
-     * @private
-     * @method handleTechTimeUpdate_
-     */
-  }, {
-    key: 'handleTechTimeUpdate_',
-    value: function handleTechTimeUpdate_() {
-      this.trigger('timeupdate');
-    }
-
-    /**
-     * Fires when the playing speed of the audio/video is changed
-     *
-     * @private
-     * @method handleTechRateChange_
-     */
-  }, {
-    key: 'handleTechRateChange_',
-    value: function handleTechRateChange_() {
-      this.trigger('ratechange');
-    }
-
-    /**
-     * Fires when the volume has been changed
-     *
-     * @private
-     * @method handleTechVolumeChange_
-     */
-  }, {
-    key: 'handleTechVolumeChange_',
-    value: function handleTechVolumeChange_() {
-      this.trigger('volumechange');
-    }
-
-    /**
-     * Fires when the text track has been changed
-     *
-     * @private
-     * @method handleTechTextTrackChange_
-     */
-  }, {
-    key: 'handleTechTextTrackChange_',
-    value: function handleTechTextTrackChange_() {
-      this.trigger('texttrackchange');
-    }
-
-    /**
-     * Get object for cached values.
-     *
-     * @return {Object}
-     * @method getCache
-     */
-  }, {
-    key: 'getCache',
-    value: function getCache() {
-      return this.cache_;
-    }
-
-    /**
-     * Pass values to the playback tech
-     *
-     * @param {String=} method Method
-     * @param {Object=} arg Argument
-     * @private
-     * @method techCall_
-     */
-  }, {
-    key: 'techCall_',
-    value: function techCall_(method, arg) {
-      // If it's not ready yet, call method when it is
-      if (this.tech_ && !this.tech_.isReady_) {
-        this.tech_.ready(function () {
-          this[method](arg);
-        }, true);
-
-        // Otherwise call method now
-      } else {
-          try {
-            if (this.tech_) {
-              this.tech_[method](arg);
-            }
-          } catch (e) {
-            (0, _utilsLog2['default'])(e);
-            throw e;
-          }
-        }
-    }
-
-    /**
-     * Get calls can't wait for the tech, and sometimes don't need to.
-     *
-     * @param {String} method Tech method
-     * @return {Method}
-     * @private
-     * @method techGet_
-     */
-  }, {
-    key: 'techGet_',
-    value: function techGet_(method) {
-      if (this.tech_ && this.tech_.isReady_) {
-
-        // Flash likes to die and reload when you hide or reposition it.
-        // In these cases the object methods go away and we get errors.
-        // When that happens we'll catch the errors and inform tech that it's not ready any more.
-        try {
-          return this.tech_[method]();
-        } catch (e) {
-          // When building additional tech libs, an expected method may not be defined yet
-          if (this.tech_[method] === undefined) {
-            (0, _utilsLog2['default'])('Video.js: ' + method + ' method not defined for ' + this.techName_ + ' playback technology.', e);
-
-            // When a method isn't available on the object it throws a TypeError
-          } else if (e.name === 'TypeError') {
-              (0, _utilsLog2['default'])('Video.js: ' + method + ' unavailable on ' + this.techName_ + ' playback technology element.', e);
-              this.tech_.isReady_ = false;
-            } else {
-              (0, _utilsLog2['default'])(e);
-            }
-          throw e;
-        }
-      }
-
-      return;
-    }
-
-    /**
-     * start media playback
-     * ```js
-     *     myPlayer.play();
-     * ```
-     *
-     * @return {Player} self
-     * @method play
-     */
-  }, {
-    key: 'play',
-    value: function play() {
-      // Only calls the tech's play if we already have a src loaded
-      if (this.src() || this.currentSrc()) {
-        this.techCall_('play');
-      } else {
-        this.tech_.one('loadstart', function () {
-          this.play();
-        });
-      }
-
-      return this;
     }
   }, {
     key: 'komentsList',
     value: function komentsList(list) {
       if (list !== undefined) {
         this.komentsList_ = list;
+        this.player_.addClass('koment');
       }
       return this.komentsList_;
     }
@@ -10286,9 +5231,9 @@ var Player = (function (_Component) {
       }
 
       if (this.toggleMenu_) {
-        this.addClass('koment-toggle-menu');
+        this.player_.addClass('koment-toggle-menu');
       } else {
-        this.removeClass('koment-toggle-menu');
+        this.player_.removeClass('koment-toggle-menu');
         this.toggleEdit(this.toggleMenu_);
         this.toggleList(this.toggleMenu_);
       }
@@ -10306,14 +5251,14 @@ var Player = (function (_Component) {
       }
 
       if (this.toggleEdit_) {
-        this.playBeforeEdit = !this.paused();
-        this.pause();
-        this.addClass('koment-toggle-edit');
+        this.playBeforeEdit = !this.player_.paused();
+        this.player_.pause();
+        this.player_.addClass('koment-toggle-edit');
       } else {
         if (this.playBeforeEdit) {
-          this.play();
+          this.player_.play();
         }
-        this.removeClass('koment-toggle-edit');
+        this.player_.removeClass('koment-toggle-edit');
       }
 
       return this;
@@ -10321,6 +5266,7 @@ var Player = (function (_Component) {
   }, {
     key: 'toggleList',
     value: function toggleList(toggle) {
+
       if (toggle !== undefined) {
         this.toggleList_ = !!toggle;
       } else {
@@ -10328,9 +5274,9 @@ var Player = (function (_Component) {
       }
 
       if (this.toggleList_) {
-        this.addClass('koment-toggle-list');
+        this.player_.addClass('koment-toggle-list');
       } else {
-        this.removeClass('koment-toggle-list');
+        this.player_.removeClass('koment-toggle-list');
       }
 
       return this;
@@ -10344,2918 +5290,49 @@ var Player = (function (_Component) {
       console.log('koment send ', kmt);
       this.komentsList_.unshift(kmt);
       this.toggleEdit(false);
-      this.trigger({ data: kmt, type: 'komentsupdated' });
-    }
-
-    /**
-     * Pause the video playback
-     * ```js
-     *     myPlayer.pause();
-     * ```
-     *
-     * @return {Player} self
-     * @method pause
-     */
-  }, {
-    key: 'pause',
-    value: function pause() {
-      this.techCall_('pause');
-      return this;
-    }
-
-    /**
-     * Check if the player is paused
-     * ```js
-     *     var isPaused = myPlayer.paused();
-     *     var isPlaying = !myPlayer.paused();
-     * ```
-     *
-     * @return {Boolean} false if the media is currently playing, or true otherwise
-     * @method paused
-     */
-  }, {
-    key: 'paused',
-    value: function paused() {
-      // The initial state of paused should be true (in Safari it's actually false)
-      return this.techGet_('paused') === false ? false : true;
-    }
-
-    /**
-     * Returns whether or not the user is "scrubbing". Scrubbing is when the user
-     * has clicked the progress bar handle and is dragging it along the progress bar.
-     *
-     * @param  {Boolean} isScrubbing   True/false the user is scrubbing
-     * @return {Boolean}               The scrubbing status when getting
-     * @return {Object}                The player when setting
-     * @method scrubbing
-     */
-  }, {
-    key: 'scrubbing',
-    value: function scrubbing(isScrubbing) {
-      if (isScrubbing !== undefined) {
-        this.scrubbing_ = !!isScrubbing;
-
-        if (isScrubbing) {
-          this.addClass('koment-scrubbing');
-        } else {
-          this.removeClass('koment-scrubbing');
-        }
-
-        return this;
-      }
-
-      return this.scrubbing_;
-    }
-
-    /**
-     * Get or set the current time (in seconds)
-     * ```js
-     *     // get
-     *     var whereYouAt = myPlayer.currentTime();
-     *     // set
-     *     myPlayer.currentTime(120); // 2 minutes into the video
-     * ```
-     *
-     * @param  {Number|String=} seconds The time to seek to
-     * @return {Number}        The time in seconds, when not setting
-     * @return {Player}    self, when the current time is set
-     * @method currentTime
-     */
-  }, {
-    key: 'currentTime',
-    value: function currentTime(seconds) {
-      if (seconds !== undefined) {
-
-        this.techCall_('setCurrentTime', seconds);
-
-        return this;
-      }
-
-      // cache last currentTime and return. default to 0 seconds
-      //
-      // Caching the currentTime is meant to prevent a massive amount of reads on the tech's
-      // currentTime when scrubbing, but may not provide much performance benefit afterall.
-      // Should be tested. Also something has to read the actual current time or the cache will
-      // never get updated.
-      this.cache_.currentTime = this.techGet_('currentTime') || 0;
-      return this.cache_.currentTime;
-    }
-
-    /**
-     * Normally gets the length in time of the video in seconds;
-     * in all but the rarest use cases an argument will NOT be passed to the method
-     * ```js
-     *     var lengthOfVideo = myPlayer.duration();
-     * ```
-     * **NOTE**: The video must have started loading before the duration can be
-     * known, and in the case of Flash, may not be known until the video starts
-     * playing.
-     *
-     * @param {Number} seconds Duration when setting
-     * @return {Number} The duration of the video in seconds when getting
-     * @method duration
-     */
-  }, {
-    key: 'duration',
-    value: function duration(seconds) {
-      if (seconds === undefined) {
-        return this.cache_.duration || 0;
-      }
-
-      seconds = parseFloat(seconds) || 0;
-
-      // Standardize on Inifity for signaling video is live
-      if (seconds < 0) {
-        seconds = Infinity;
-      }
-
-      if (seconds !== this.cache_.duration) {
-        // Cache the last set value for optimized scrubbing (esp. Flash)
-        this.cache_.duration = seconds;
-
-        if (seconds === Infinity) {
-          this.addClass('koment-live');
-        } else {
-          this.removeClass('koment-live');
-        }
-
-        this.trigger('durationchange');
-      }
-
-      return this;
-    }
-
-    /**
-     * Calculates how much time is left.
-     * ```js
-     *     var timeLeft = myPlayer.remainingTime();
-     * ```
-     * Not a native video element function, but useful
-     *
-     * @return {Number} The time remaining in seconds
-     * @method remainingTime
-     */
-  }, {
-    key: 'remainingTime',
-    value: function remainingTime() {
-      return this.duration() - this.currentTime();
-    }
-
-    // http://dev.w3.org/html5/spec/video.html#dom-media-buffered
-    // Buffered returns a timerange object.
-    // Kind of like an array of portions of the video that have been downloaded.
-
-    /**
-     * Get a TimeRange object with the times of the video that have been downloaded
-     * If you just want the percent of the video that's been downloaded,
-     * use bufferedPercent.
-     * ```js
-     *     // Number of different ranges of time have been buffered. Usually 1.
-     *     numberOfRanges = bufferedTimeRange.length,
-     *     // Time in seconds when the first range starts. Usually 0.
-     *     firstRangeStart = bufferedTimeRange.start(0),
-     *     // Time in seconds when the first range ends
-     *     firstRangeEnd = bufferedTimeRange.end(0),
-     *     // Length in seconds of the first time range
-     *     firstRangeLength = firstRangeEnd - firstRangeStart;
-     * ```
-     *
-     * @return {Object} A mock TimeRange object (following HTML spec)
-     * @method buffered
-     */
-  }, {
-    key: 'buffered',
-    value: function buffered() {
-      var buffered = this.techGet_('buffered');
-
-      if (!buffered || !buffered.length) {
-        buffered = (0, _utilsTimeRangesJs.createTimeRange)(0, 0);
-      }
-
-      return buffered;
-    }
-
-    /**
-     * Get the percent (as a decimal) of the video that's been downloaded
-     * ```js
-     *     var howMuchIsDownloaded = myPlayer.bufferedPercent();
-     * ```
-     * 0 means none, 1 means all.
-     * (This method isn't in the HTML5 spec, but it's very convenient)
-     *
-     * @return {Number} A decimal between 0 and 1 representing the percent
-     * @method bufferedPercent
-     */
-  }, {
-    key: 'bufferedPercent',
-    value: (function (_bufferedPercent) {
-      function bufferedPercent() {
-        return _bufferedPercent.apply(this, arguments);
-      }
-
-      bufferedPercent.toString = function () {
-        return _bufferedPercent.toString();
-      };
-
-      return bufferedPercent;
-    })(function () {
-      return bufferedPercent(this.buffered(), this.duration());
-    })
-
-    /**
-     * Get the ending time of the last buffered time range
-     * This is used in the progress bar to encapsulate all time ranges.
-     *
-     * @return {Number} The end of the last buffered time range
-     * @method bufferedEnd
-     */
-  }, {
-    key: 'bufferedEnd',
-    value: function bufferedEnd() {
-      var buffered = this.buffered();
-      var duration = this.duration();
-      var end = buffered.end(buffered.length - 1);
-
-      if (end > duration) {
-        end = duration;
-      }
-
-      return end;
-    }
-
-    // Check if current tech can support native fullscreen
-    // (e.g. with built in controls like iOS, so not our flash swf)
-    /**
-     * Check to see if fullscreen is supported
-     *
-     * @return {Boolean}
-     * @method supportsFullScreen
-     */
-  }, {
-    key: 'supportsFullScreen',
-    value: function supportsFullScreen() {
-      return this.techGet_('supportsFullScreen') || false;
-    }
-
-    /**
-     * Check if the player is in fullscreen mode
-     * ```js
-     *     // get
-     *     var fullscreenOrNot = myPlayer.isFullscreen();
-     *     // set
-     *     myPlayer.isFullscreen(true); // tell the player it's in fullscreen
-     * ```
-     * NOTE: As of the latest HTML5 spec, isFullscreen is no longer an official
-     * property and instead document.fullscreenElement is used. But isFullscreen is
-     * still a valuable property for internal player workings.
-     *
-     * @param  {Boolean=} isFS Update the player's fullscreen state
-     * @return {Boolean} true if fullscreen false if not when getting
-     * @return {Player} self when setting
-     * @method isFullscreen
-     */
-  }, {
-    key: 'isFullscreen',
-    value: function isFullscreen(isFS) {
-      if (isFS !== undefined) {
-        this.isFullscreen_ = !!isFS;
-        return this;
-      }
-      return !!this.isFullscreen_;
-    }
-
-    /**
-     * Increase the size of the video to full screen
-     * ```js
-     *     myPlayer.requestFullscreen();
-     * ```
-     * In some browsers, full screen is not supported natively, so it enters
-     * "full window mode", where the video fills the browser window.
-     * In browsers and devices that support native full screen, sometimes the
-     * browser's default controls will be shown, and not the Video.js custom skin.
-     * This includes most mobile devices (iOS, Android) and older versions of
-     * Safari.
-     *
-     * @return {Player} self
-     * @method requestFullscreen
-     */
-  }, {
-    key: 'requestFullscreen',
-    value: function requestFullscreen() {
-      var fsApi = _fullscreenApi2['default'];
-
-      this.isFullscreen(true);
-
-      if (fsApi.requestFullscreen) {
-        // the browser supports going fullscreen at the element level so we can
-        // take the controls fullscreen as well as the video
-
-        // Trigger fullscreenchange event after change
-        // We have to specifically add this each time, and remove
-        // when canceling fullscreen. Otherwise if there's multiple
-        // players on a page, they would all be reacting to the same fullscreen
-        // events
-        Events.on(_globalDocument2['default'], fsApi.fullscreenchange, Fn.bind(this, function documentFullscreenChange(e) {
-          this.isFullscreen(_globalDocument2['default'][fsApi.fullscreenElement]);
-
-          // If cancelling fullscreen, remove event listener.
-          if (this.isFullscreen() === false) {
-            Events.off(_globalDocument2['default'], fsApi.fullscreenchange, documentFullscreenChange);
-          }
-
-          this.trigger('fullscreenchange');
-        }));
-
-        this.el_[fsApi.requestFullscreen]();
-      } else if (this.tech_.supportsFullScreen()) {
-        // we can't take the video.js controls fullscreen but we can go fullscreen
-        // with native controls
-        this.techCall_('enterFullScreen');
-      } else {
-        // fullscreen isn't supported so we'll just stretch the video element to
-        // fill the viewport
-        this.enterFullWindow();
-        this.trigger('fullscreenchange');
-      }
-
-      return this;
-    }
-
-    /**
-     * Return the video to its normal size after having been in full screen mode
-     * ```js
-     *     myPlayer.exitFullscreen();
-     * ```
-     *
-     * @return {Player} self
-     * @method exitFullscreen
-     */
-  }, {
-    key: 'exitFullscreen',
-    value: function exitFullscreen() {
-      var fsApi = _fullscreenApi2['default'];
-
-      this.isFullscreen(false);
-
-      // Check for browser element fullscreen support
-      if (fsApi.requestFullscreen) {
-        _globalDocument2['default'][fsApi.exitFullscreen]();
-      } else if (this.tech_.supportsFullScreen()) {
-        this.techCall_('exitFullScreen');
-      } else {
-        this.exitFullWindow();
-        this.trigger('fullscreenchange');
-      }
-
-      return this;
-    }
-
-    /**
-     * When fullscreen isn't supported we can stretch the video container to as wide as the browser will let us.
-     *
-     * @method enterFullWindow
-     */
-  }, {
-    key: 'enterFullWindow',
-    value: function enterFullWindow() {
-      this.isFullWindow = true;
-
-      // Storing original doc overflow value to return to when fullscreen is off
-      this.docOrigOverflow = _globalDocument2['default'].documentElement.style.overflow;
-
-      // Add listener for esc key to exit fullscreen
-      Events.on(_globalDocument2['default'], 'keydown', Fn.bind(this, this.fullWindowOnEscKey));
-
-      // Hide any scroll bars
-      _globalDocument2['default'].documentElement.style.overflow = 'hidden';
-
-      // Apply fullscreen styles
-      Dom.addElClass(_globalDocument2['default'].body, 'koment-full-window');
-
-      this.trigger('enterFullWindow');
-    }
-
-    /**
-     * Check for call to either exit full window or full screen on ESC key
-     *
-     * @param {String} event Event to check for key press
-     * @method fullWindowOnEscKey
-     */
-  }, {
-    key: 'fullWindowOnEscKey',
-    value: function fullWindowOnEscKey(event) {
-      if (event.keyCode === 27) {
-        if (this.isFullscreen() === true) {
-          this.exitFullscreen();
-        } else {
-          this.exitFullWindow();
-        }
-      }
-    }
-
-    /**
-     * Exit full window
-     *
-     * @method exitFullWindow
-     */
-  }, {
-    key: 'exitFullWindow',
-    value: function exitFullWindow() {
-      this.isFullWindow = false;
-      Events.off(_globalDocument2['default'], 'keydown', this.fullWindowOnEscKey);
-
-      // Unhide scroll bars.
-      _globalDocument2['default'].documentElement.style.overflow = this.docOrigOverflow;
-
-      // Remove fullscreen styles
-      Dom.removeElClass(_globalDocument2['default'].body, 'koment-full-window');
-
-      // Resize the box, controller, and poster to original sizes
-      // this.positionAll();
-      this.trigger('exitFullWindow');
-    }
-  }, {
-    key: 'src',
-    value: function src() {
-      return this.techGet_('currentSrc');
-    }
-
-    /**
-     * Returns the fully qualified URL of the current source value e.g. http://mysite.com/video.mp4
-     * Can be used in conjuction with `currentType` to assist in rebuilding the current source object.
-     *
-     * @return {String} The current source
-     * @method currentSrc
-     */
-  }, {
-    key: 'currentSrc',
-    value: function currentSrc() {
-      return this.techGet_('currentSrc') || this.cache_.src || '';
-    }
-
-    /**
-     * Get or set whether or not the controls are showing.
-     *
-     * @param  {Boolean} bool Set controls to showing or not
-     * @return {Boolean}    Controls are showing
-     * @method controls
-     */
-  }, {
-    key: 'controls',
-    value: function controls(bool) {
-      if (bool !== undefined) {
-        bool = !!bool;
-        // Don't trigger a change event unless it actually changed
-        if (this.controls_ !== bool) {
-          this.controls_ = bool;
-
-          if (this.usingNativeControls()) {
-            this.techCall_('setControls', bool);
-          }
-
-          if (bool) {
-            this.removeClass('koment-controls-disabled');
-            this.addClass('koment-controls-enabled');
-            this.trigger('controlsenabled');
-            if (!this.usingNativeControls()) {
-              this.addTechControlsListeners_();
-            }
-          } else {
-            this.removeClass('koment-controls-enabled');
-            this.addClass('koment-controls-disabled');
-            this.trigger('controlsdisabled');
-
-            if (!this.usingNativeControls()) {
-              this.removeTechControlsListeners_();
-            }
-          }
-        }
-        return this;
-      }
-      return !!this.controls_;
-    }
-
-    /**
-     * Toggle native controls on/off. Native controls are the controls built into
-     * devices (e.g. default iPhone controls), Flash, or other techs
-     * (e.g. Vimeo Controls)
-     * **This should only be set by the current tech, because only the tech knows
-     * if it can support native controls**
-     *
-     * @param  {Boolean} bool    True signals that native controls are on
-     * @return {Player}      Returns the player
-     * @private
-     * @method usingNativeControls
-     */
-  }, {
-    key: 'usingNativeControls',
-    value: function usingNativeControls(bool) {
-      if (bool !== undefined) {
-        bool = !!bool;
-
-        // Don't trigger a change event unless it actually changed
-        if (this.usingNativeControls_ !== bool) {
-          this.usingNativeControls_ = bool;
-          if (bool) {
-            this.addClass('koment-using-native-controls');
-
-            /**
-             * player is using the native device controls
-             *
-             * @event usingnativecontrols
-             * @memberof Player
-             * @instance
-             * @private
-             */
-            this.trigger('usingnativecontrols');
-          } else {
-            this.removeClass('koment-using-native-controls');
-
-            /**
-             * player is using the custom HTML controls
-             *
-             * @event usingcustomcontrols
-             * @memberof Player
-             * @instance
-             * @private
-             */
-            this.trigger('usingcustomcontrols');
-          }
-        }
-        return this;
-      }
-      return !!this.usingNativeControls_;
-    }
-
-    /**
-     * Set or get the current MediaError
-     *
-     * @param  {*} err A MediaError or a String/Number to be turned into a MediaError
-     * @return {MediaError|null}     when getting
-     * @return {Player}              when setting
-     * @method error
-     */
-  }, {
-    key: 'error',
-    value: function error(err) {
-      if (err === undefined) {
-        return this.error_ || null;
-      }
-
-      // restoring to default
-      if (err === null) {
-        this.error_ = err;
-        this.removeClass('koment-error');
-        if (this.errorDisplay) {
-          this.errorDisplay.close();
-        }
-        return this;
-      }
-
-      this.error_ = new _mediaError2['default'](err);
-
-      // add the koment-error classname to the player
-      this.addClass('koment-error');
-
-      // log the name of the error type and any message
-      // ie8 just logs "[object object]" if you just log the error object
-      _utilsLog2['default'].error('(CODE:' + this.error_.code + ' ' + _mediaError2['default'].errorTypes[this.error_.code] + ')', this.error_.message, this.error_);
-
-      // fire an error event on the player
-      this.trigger('error');
-
-      return this;
-    }
-
-    /**
-     * Returns whether or not the player is in the "ended" state.
-     *
-     * @return {Boolean} True if the player is in the ended state, false if not.
-     * @method ended
-     */
-  }, {
-    key: 'ended',
-    value: function ended() {
-      return this.techGet_('ended');
-    }
-
-    /**
-     * Returns whether or not the player is in the "seeking" state.
-     *
-     * @return {Boolean} True if the player is in the seeking state, false if not.
-     * @method seeking
-     */
-  }, {
-    key: 'seeking',
-    value: function seeking() {
-      return this.techGet_('seeking');
-    }
-
-    /**
-     * Returns the TimeRanges of the media that are currently available
-     * for seeking to.
-     *
-     * @return {TimeRanges} the seekable intervals of the media timeline
-     * @method seekable
-     */
-  }, {
-    key: 'seekable',
-    value: function seekable() {
-      return this.techGet_('seekable');
-    }
-
-    /**
-     * Report user activity
-     *
-     * @param {Object} event Event object
-     * @method reportUserActivity
-     */
-  }, {
-    key: 'reportUserActivity',
-    value: function reportUserActivity(event) {
-      this.userActivity_ = true;
-    }
-
-    /**
-     * Get/set if user is active
-     *
-     * @param {Boolean} bool Value when setting
-     * @return {Boolean} Value if user is active user when getting
-     * @method userActive
-     */
-  }, {
-    key: 'userActive',
-    value: function userActive(bool) {
-      if (bool !== undefined) {
-        bool = !!bool;
-        if (bool !== this.userActive_) {
-          this.userActive_ = bool;
-          if (bool) {
-            // If the user was inactive and is now active we want to reset the
-            // inactivity timer
-            this.userActivity_ = true;
-            this.removeClass('koment-user-inactive');
-            this.addClass('koment-user-active');
-            this.trigger('useractive');
-          } else {
-            // We're switching the state to inactive manually, so erase any other
-            // activity
-            this.userActivity_ = false;
-
-            // Chrome/Safari/IE have bugs where when you change the cursor it can
-            // trigger a mousemove event. This causes an issue when you're hiding
-            // the cursor when the user is inactive, and a mousemove signals user
-            // activity. Making it impossible to go into inactive mode. Specifically
-            // this happens in fullscreen when we really need to hide the cursor.
-            //
-            // When this gets resolved in ALL browsers it can be removed
-            // https://code.google.com/p/chromium/issues/detail?id=103041
-            if (this.tech_) {
-              this.tech_.one('mousemove', function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-              });
-            }
-
-            this.removeClass('koment-user-active');
-            this.addClass('koment-user-inactive');
-            this.trigger('userinactive');
-          }
-        }
-        return this;
-      }
-      return this.userActive_;
-    }
-
-    /**
-     * Listen for user activity based on timeout value
-     *
-     * @private
-     * @method listenForUserActivity_
-     */
-  }, {
-    key: 'listenForUserActivity_',
-    value: function listenForUserActivity_() {
-      var mouseInProgress = undefined;
-      var lastMoveX = undefined;
-      var lastMoveY = undefined;
-      var handleActivity = Fn.bind(this, this.reportUserActivity);
-
-      var handleMouseMove = function handleMouseMove(e) {
-        // #1068 - Prevent mousemove spamming
-        // Chrome Bug: https://code.google.com/p/chromium/issues/detail?id=366970
-        if (e.screenX !== lastMoveX || e.screenY !== lastMoveY) {
-          lastMoveX = e.screenX;
-          lastMoveY = e.screenY;
-          handleActivity();
-        }
-      };
-
-      var handleMouseDown = function handleMouseDown() {
-        handleActivity();
-        // For as long as the they are touching the device or have their mouse down,
-        // we consider them active even if they're not moving their finger or mouse.
-        // So we want to continue to update that they are active
-        this.clearInterval(mouseInProgress);
-        // Setting userActivity=true now and setting the interval to the same time
-        // as the activityCheck interval (250) should ensure we never miss the
-        // next activityCheck
-        mouseInProgress = this.setInterval(handleActivity, 250);
-      };
-
-      var handleMouseUp = function handleMouseUp(event) {
-        handleActivity();
-        // Stop the interval that maintains activity if the mouse/touch is down
-        this.clearInterval(mouseInProgress);
-      };
-
-      // Any mouse movement will be considered user activity
-      this.on('mousedown', handleMouseDown);
-      this.on('mousemove', handleMouseMove);
-      this.on('mouseup', handleMouseUp);
-
-      // Listen for keyboard navigation
-      // Shouldn't need to use inProgress interval because of key repeat
-      this.on('keydown', handleActivity);
-      this.on('keyup', handleActivity);
-
-      // Run an interval every 250 milliseconds instead of stuffing everything into
-      // the mousemove/touchmove function itself, to prevent performance degradation.
-      // `this.reportUserActivity` simply sets this.userActivity_ to true, which
-      // then gets picked up by this loop
-      // http://ejohn.org/blog/learning-from-twitter/
-      var inactivityTimeout = undefined;
-
-      this.setInterval(function () {
-        // Check to see if mouse/touch activity has happened
-        if (this.userActivity_) {
-          // Reset the activity tracker
-          this.userActivity_ = false;
-
-          // If the user state was inactive, set the state to active
-          this.userActive(true);
-
-          // Clear any existing inactivity timeout to start the timer over
-          this.clearTimeout(inactivityTimeout);
-
-          var timeout = this.options_.inactivityTimeout;
-
-          if (timeout > 0) {
-            // In <timeout> milliseconds, if no more activity has occurred the
-            // user will be considered inactive
-            inactivityTimeout = this.setTimeout(function () {
-              // Protect against the case where the inactivityTimeout can trigger just
-              // before the next user activity is picked up by the activity check loop
-              // causing a flicker
-              if (!this.userActivity_) {
-                this.userActive(false);
-              }
-            }, timeout);
-          }
-        }
-      }, 250);
-    }
-
-    /**
-     * Returns the current state of network activity for the element, from
-     * the codes in the list below.
-     * - NETWORK_EMPTY (numeric value 0)
-     *   The element has not yet been initialised. All attributes are in
-     *   their initial states.
-     * - NETWORK_IDLE (numeric value 1)
-     *   The element's resource selection algorithm is active and has
-     *   selected a resource, but it is not actually using the network at
-     *   this time.
-     * - NETWORK_LOADING (numeric value 2)
-     *   The user agent is actively trying to download data.
-     * - NETWORK_NO_SOURCE (numeric value 3)
-     *   The element's resource selection algorithm is active, but it has
-     *   not yet found a resource to use.
-     *
-     * @see https://html.spec.whatwg.org/multipage/embedded-content.html#network-states
-     * @return {Number} the current network activity state
-     * @method networkState
-     */
-  }, {
-    key: 'networkState',
-    value: function networkState() {
-      return this.techGet_('networkState');
-    }
-
-    /**
-     * Returns a value that expresses the current state of the element
-     * with respect to rendering the current playback position, from the
-     * codes in the list below.
-     * - HAVE_NOTHING (numeric value 0)
-     *   No information regarding the media resource is available.
-     * - HAVE_METADATA (numeric value 1)
-     *   Enough of the resource has been obtained that the duration of the
-     *   resource is available.
-     * - HAVE_CURRENT_DATA (numeric value 2)
-     *   Data for the immediate current playback position is available.
-     * - HAVE_FUTURE_DATA (numeric value 3)
-     *   Data for the immediate current playback position is available, as
-     *   well as enough data for the user agent to advance the current
-     *   playback position in the direction of playback.
-     * - HAVE_ENOUGH_DATA (numeric value 4)
-     *   The user agent estimates that enough data is available for
-     *   playback to proceed uninterrupted.
-     *
-     * @see https://html.spec.whatwg.org/multipage/embedded-content.html#dom-media-readystate
-     * @return {Number} the current playback rendering state
-     * @method readyState
-     */
-  }, {
-    key: 'readyState',
-    value: function readyState() {
-      return this.techGet_('readyState');
-    }
-
-    /**
-     * Get video width
-     *
-     * @return {Number} Video width
-     * @method videoWidth
-     */
-  }, {
-    key: 'videoWidth',
-    value: function videoWidth() {
-      return this.tech_ && this.tech_.videoWidth && this.tech_.videoWidth() || 0;
-    }
-
-    /**
-     * Get video height
-     *
-     * @return {Number} Video height
-     * @method videoHeight
-     */
-  }, {
-    key: 'videoHeight',
-    value: function videoHeight() {
-      return this.tech_ && this.tech_.videoHeight && this.tech_.videoHeight() || 0;
-    }
-
-    // Methods to add support for
-    // initialTime: function() { return this.techCall_('initialTime'); },
-    // startOffsetTime: function() { return this.techCall_('startOffsetTime'); },
-    // played: function() { return this.techCall_('played'); },
-    // defaultPlaybackRate: function() { return this.techCall_('defaultPlaybackRate'); },
-    // defaultMuted: function() { return this.techCall_('defaultMuted'); }
-
-    /**
-     * The player's language code
-     * NOTE: The language should be set in the player options if you want the
-     * the controls to be built with a specific language. Changing the lanugage
-     * later will not update controls text.
-     *
-     * @param {String} code  The locale string
-     * @return {String}      The locale string when getting
-     * @return {Player}      self when setting
-     * @method language
-     */
-  }, {
-    key: 'language',
-    value: function language(code) {
-      if (code === undefined) {
-        return this.language_;
-      }
-
-      this.language_ = String(code).toLowerCase();
-      return this;
-    }
-
-    /**
-     * Get the player's language dictionary
-     * Merge every time, because a newly added plugin might call koment.addLanguage() at any time
-     * Languages specified directly in the player options have precedence
-     *
-     * @return {Array} Array of languages
-     * @method languages
-     */
-  }, {
-    key: 'languages',
-    value: function languages() {
-      return (0, _utilsMergeOptions2['default'])(Player.prototype.options_.languages, this.languages_);
-    }
-
-    /**
-     * Creates a simple modal dialog (an instance of the `ModalDialog`
-     * component) that immediately overlays the player with arbitrary
-     * content and removes itself when closed.
-     *
-     * @param {String|Function|Element|Array|Null} content
-     *        Same as `ModalDialog#content`'s param of the same name.
-     *
-     *        The most straight-forward usage is to provide a string or DOM
-     *        element.
-     *
-     * @param {Object} [options]
-     *        Extra options which will be passed on to the `ModalDialog`.
-     *
-     * @return {ModalDialog}
-     */
-  }, {
-    key: 'createModal',
-    value: function createModal(content, options) {
-      var _this4 = this;
-
-      options = options || {};
-      options.content = content || '';
-
-      var modal = new _modalDialog2['default'](this, options);
-
-      this.addChild(modal);
-      modal.on('dispose', function () {
-        _this4.removeChild(modal);
-      });
-
-      return modal.open();
-    }
-
-    /**
-     * Gets tag settings
-     *
-     * @param {Element} tag The player tag
-     * @return {Array} An array of sources and track objects
-     * @static
-     * @method getTagSettings
-     */
-  }], [{
-    key: 'getTagSettings',
-    value: function getTagSettings(tag) {
-      var baseOptions = {
-        sources: [],
-        tracks: []
-      };
-      var tagOptions = Dom.getElAttributes(tag);
-      var dataSetup = tagOptions['data-setup'];
-
-      if (!dataSetup) {
-        tagOptions = Dom.getElAttributes(tag.parentNode);
-        dataSetup = tagOptions['data-setup'];
-      }
-
-      // Check if data-setup attr exists.
-      if (dataSetup !== null) {
-        // Parse options JSON
-
-        var _safeParseTuple = (0, _safeJsonParseTuple2['default'])(dataSetup || '{}');
-
-        var _safeParseTuple2 = _slicedToArray(_safeParseTuple, 2);
-
-        var err = _safeParseTuple2[0];
-        var data = _safeParseTuple2[1];
-
-        if (err) {
-          _utilsLog2['default'].error(err);
-        }
-        (0, _objectAssign2['default'])(tagOptions, data);
-      }
-
-      (0, _objectAssign2['default'])(baseOptions, tagOptions);
-
-      // Get tag children settings
-      if (tag.hasChildNodes()) {
-        var children = tag.childNodes;
-
-        for (var i = 0, j = children.length; i < j; i++) {
-          var child = children[i];
-          // Change case needed: http://ejohn.org/blog/nodename-case-sensitivity/
-          var childName = child.nodeName.toLowerCase();
-
-          if (childName === 'source') {
-            baseOptions.sources.push(Dom.getElAttributes(child));
-          } else if (childName === 'track') {
-            baseOptions.tracks.push(Dom.getElAttributes(child));
-          }
-        }
-      }
-
-      return baseOptions;
+      this.player_.trigger({ data: kmt, type: 'komentsupdated' });
     }
   }]);
 
-  return Player;
-})(_component2['default']);
+  return Koment;
+})(Component);
 
-Player.players = {};
+Koment.prototype.komentsList_ = []; // eslint-disable-line
 
-var navigator = _globalWindow2['default'].navigator;
-
-/*
- * Player instance options, surfaced using options
- * options = Player.prototype.options_
- * Make changes in options, not here.
- *
- * @type {Object}
- * @private
- */
-Player.prototype.options_ = {
-  // default inactivity timeout
-  inactivityTimeout: 2000,
-  children: ['komentDisplay', 'komentList', 'progressControl', 'controlBar'],
-
+Koment.prototype.options_ = {
   api: 'https://koment-api.herokuapp.com/api/koments',
-
-  user: {},
-
-  language: navigator && (navigator.languages && navigator.languages[0] || navigator.userLanguage || navigator.language) || 'en',
-
-  // locales and their language translations
-  languages: {},
-
-  // Default message to show when a video cannot be played.
-  notSupportedMessage: 'No compatible source was found for this media.'
+  user: {}
 };
 
-// The following no-op expressions are here only for purposes of documentation.
+// Add default styles
+if (_globalWindow2['default'].koment_NO_DYNAMIC_STYLE !== true) {
+  var style = Dom.$('.koment-styles-defaults');
 
-Player.prototype.komentsList_ = []; // eslint-disable-line
-/**
- * Fired when the user agent begins looking for media data
- *
- * @event loadstart
- */
-Player.prototype.handleTechLoadStart_; // eslint-disable-line
+  if (!style) {
+    style = stylesheet.createStyleElement('koment-styles-defaults');
+    var head = Dom.$('head');
 
-/**
- * Fired when the player has initial duration and dimension information
- *
- * @event loadedmetadata
- */
-Player.prototype.handleLoadedMetaData_; // eslint-disable-line
-
-/**
- * Fired when the player receives text data
- *
- * @event textdata
- */
-Player.prototype.handleTextData_; // eslint-disable-line
-
-/**
- * Fired when the player has downloaded data at the current playback position
- *
- * @event loadeddata
- */
-Player.prototype.handleLoadedData_; // eslint-disable-line
-
-/**
- * Fired when the user is active, e.g. moves the mouse over the player
- *
- * @event useractive
- */
-Player.prototype.handleUserActive_; // eslint-disable-line
-
-/**
- * Fired when the user is inactive, e.g. a short delay after the last mouse move or control interaction
- *
- * @event userinactive
- */
-Player.prototype.handleUserInactive_; // eslint-disable-line
-
-/**
- * Fired when the current playback position has changed *
- * During playback this is fired every 15-250 milliseconds, depending on the
- * playback technology in use.
- *
- * @event timeupdate
- */
-Player.prototype.handleTimeUpdate_; // eslint-disable-line
-
-/**
- * Fired when video playback ends
- *
- * @event ended
- */
-Player.prototype.handleTechEnded_; // eslint-disable-line
-
-/**
- * Fired when the volume changes
- *
- * @event volumechange
- */
-Player.prototype.handleVolumeChange_; // eslint-disable-line
-
-/**
- * Fired when an error occurs
- *
- * @event error
- */
-Player.prototype.handleError_; // eslint-disable-line
-
-Player.prototype.flexNotSupported_ = function () {
-  var elem = _globalDocument2['default'].createElement('i');
-
-  // Note: We don't actually use flexBasis (or flexOrder), but it's one of the more
-  // common flex features that we can rely on when checking for flex support.
-  return !('flexBasis' in elem.style || 'webkitFlexBasis' in elem.style || 'mozFlexBasis' in elem.style || 'msFlexBasis' in elem.style ||
-  // IE10-specific (2012 flex spec)
-  'msFlexOrder' in elem.style);
-};
-
-_component2['default'].registerComponent('Player', Player);
-exports['default'] = Player;
-module.exports = exports['default'];
-// If empty string, make it a parsable json object.
-},{"./component":24,"./component/koment-display":25,"./component/koment-list":27,"./control-bar/control-bar":28,"./control-bar/progress-control/progress-control":40,"./fullscreen-api":45,"./media-error":47,"./modal-dialog":48,"./tech/html5":52,"./tech/tech":53,"./tech/videojs":54,"./utils/browser":55,"./utils/dom":57,"./utils/events":58,"./utils/fn":59,"./utils/guid":61,"./utils/log":62,"./utils/merge-options":63,"./utils/stylesheet":64,"./utils/time-ranges.js":65,"global/document":19,"global/window":20,"lodash":68,"object.assign":112,"safe-json-parse/tuple":122}],50:[function(require,module,exports){
-/**
- * @file setup.js
- *
- * Functions for automatically setting up a player
- * based on the data-setup attribute of the video tag
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-var _utilsEventsJs = require('./utils/events.js');
-
-var Events = _interopRequireWildcard(_utilsEventsJs);
-
-var _globalDocument = require('global/document');
-
-var _globalDocument2 = _interopRequireDefault(_globalDocument);
-
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
-var _lodash = require('lodash');
-
-var _windowLoaded = false;
-var koment = undefined;
-
-// Automatically set up any tags that have a data-setup attribute
-var autoSetup = function autoSetup() {
-  var selectors = ['.video-js', 'video', 'iframe[src*="player.vimeo.com"]', 'iframe[src*="youtube.com"]', 'iframe[src*="youtube-nocookie.com"]', 'iframe[src*="kickstarter.com"][src*="video.html"]', 'object', 'embed'];
-
-  var ignoreList = ['object object', '.komentignore'];
-
-  //if (this.options_.customSelector) {
-  //  selectors.push(this.options_.customSelector)
-  //}
-  //
-  //if (this.options_.ignoreSelector) {
-  //  ignoreList.push(this.options_.ignoreSelector)
-  //}
-
-  //add selector to exclude ignored list
-  (0, _lodash.map)(ignoreList, function (selector) {
-    return ':not(' + selector + ')';
-  });
-
-  var allVideos = _globalDocument2['default'].querySelectorAll(selectors.join(','));
-  var ingnored = _globalDocument2['default'].querySelectorAll(ignoreList.join(','));
-
-  //Remove all ignored selector
-  var mediaEls = (0, _lodash.pullAll)(allVideos, ingnored);
-  // Check if any media elements exist
-  if (mediaEls && mediaEls.length > 0) {
-
-    for (var i = 0, e = mediaEls.length; i < e; i++) {
-      var mediaEl = mediaEls[i];
-      // Check if element exists, has getAttribute func.
-      // IE seems to consider typeof el.getAttribute == 'object' instead of
-      // 'function' like expected, at least when loading the player immediately.
-      if (mediaEl && mediaEl.getAttribute) {
-        var isVideojs = mediaEl.firstChild && mediaEl.firstChild.tagName === 'VIDEO' && ~'vjs-tech'.indexOf(mediaEl.firstChild.classList);
-        var wrapper = undefined;
-        if (isVideojs) {
-          wrapper = mediaEl;
-          mediaEl = mediaEl.firstChild;
-        }
-        // Make sure this player hasn't already been set up.
-        if (mediaEl.koment === undefined) {
-          var options = mediaEl.getAttribute('data-setup') || wrapper && wrapper.getAttribute && wrapper.getAttribute('data-setup');
-          // Check if data-setup attr exists.
-          // We only auto-setup if they've added the data-setup attr.
-          if (options !== null) {
-            // Create new video.js instance.
-            koment(mediaEl);
-          }
-        }
-
-        // If getAttribute isn't defined, we need to wait for the DOM.
-      } else {
-          autoSetupTimeout(1);
-          break;
-        }
+    if (head) {
+      head.insertBefore(style, head.firstChild);
     }
-
-    // No videos were found, so keep looping unless page is finished loading.
-  } else if (!_windowLoaded) {
-      autoSetupTimeout(1);
-    }
-};
-
-// Pause to let the DOM keep processing
-function autoSetupTimeout(wait, kmt) {
-  if (kmt) {
-    koment = kmt;
+    stylesheet.setTextContent(style, '\n      .koment-js {\n      }\n    ');
   }
-
-  setTimeout(autoSetup, wait);
 }
 
-if (_globalDocument2['default'].readyState === 'complete') {
-  _windowLoaded = true;
-} else {
-  Events.one(_globalWindow2['default'], 'load', function () {
-    _windowLoaded = true;
-  });
-}
-
-var hasLoaded = function hasLoaded() {
-  return _windowLoaded;
-};
-
-exports.autoSetup = autoSetup;
-exports.autoSetupTimeout = autoSetupTimeout;
-exports.hasLoaded = hasLoaded;
-},{"./utils/events.js":58,"global/document":19,"global/window":20,"lodash":68}],51:[function(require,module,exports){
-/**
- * @file slider.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _componentJs = require('../component.js');
-
-var _componentJs2 = _interopRequireDefault(_componentJs);
-
-var _utilsDomJs = require('../utils/dom.js');
-
-var Dom = _interopRequireWildcard(_utilsDomJs);
-
-var _objectAssign = require('object.assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
+Component.registerComponent('Koment', Koment);
 
 /**
- * The base functionality for sliders like the volume bar and seek bar
- *
- * @param {Player|Object} player
- * @param {Object=} options
- * @extends Component
- * @class Slider
+ * add afrostream to videojs childs
+ * @type {{}}
  */
+_videoJs2['default'].options.children.push('koment');
 
-var Slider = (function (_Component) {
-  _inherits(Slider, _Component);
+Player.prototype.options_.children = Player.prototype.options_.children.concat(['komentDisplay', 'komentList', 'komentBar']);
 
-  function Slider(player, options) {
-    _classCallCheck(this, Slider);
-
-    _get(Object.getPrototypeOf(Slider.prototype), 'constructor', this).call(this, player, options);
-
-    // Set property names to bar to match with the child Slider class is looking for
-    this.bar = this.getChild(this.options_.barName);
-
-    // Set a horizontal or vertical class on the slider depending on the slider type
-    this.vertical(!!this.options_.vertical);
-
-    this.on('mousedown', this.handleMouseDown);
-    this.on('touchstart', this.handleMouseDown);
-    this.on('focus', this.handleFocus);
-    this.on('blur', this.handleBlur);
-    this.on('click', this.handleClick);
-
-    this.on(player, 'controlsvisible', this.update);
-    this.on(player, this.playerEvent, this.update);
-  }
-
-  /**
-   * Create the component's DOM element
-   *
-   * @param {String} type Type of element to create
-   * @param {Object=} props List of properties in Object form
-   * @return {Element}
-   * @method createEl
-   */
-
-  _createClass(Slider, [{
-    key: 'createEl',
-    value: function createEl(type) {
-      var props = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-      var attributes = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-      // Add the slider element class to all sub classes
-      props.className = props.className + ' kmt-slider';
-      props = (0, _objectAssign2['default'])({
-        tabIndex: 0
-      }, props);
-
-      attributes = (0, _objectAssign2['default'])({
-        'role': 'slider',
-        'aria-valuenow': 0,
-        'aria-valuemin': 0,
-        'aria-valuemax': 100,
-        'tabIndex': 0
-      }, attributes);
-
-      return _get(Object.getPrototypeOf(Slider.prototype), 'createEl', this).call(this, type, props, attributes);
-    }
-
-    /**
-     * Handle mouse down on slider
-     *
-     * @param {Object} event Mouse down event object
-     * @method handleMouseDown
-     */
-  }, {
-    key: 'handleMouseDown',
-    value: function handleMouseDown(event) {
-      var doc = this.bar.el_.ownerDocument;
-
-      event.preventDefault();
-      Dom.blockTextSelection();
-
-      this.addClass('kmt-sliding');
-      this.trigger('slideractive');
-
-      this.on(doc, 'mousemove', this.handleMouseMove);
-      this.on(doc, 'mouseup', this.handleMouseUp);
-      this.on(doc, 'touchmove', this.handleMouseMove);
-      this.on(doc, 'touchend', this.handleMouseUp);
-
-      this.handleMouseMove(event);
-    }
-
-    /**
-     * To be overridden by a subclass
-     *
-     * @method handleMouseMove
-     */
-  }, {
-    key: 'handleMouseMove',
-    value: function handleMouseMove() {}
-
-    /**
-     * Handle mouse up on Slider
-     *
-     * @method handleMouseUp
-     */
-  }, {
-    key: 'handleMouseUp',
-    value: function handleMouseUp() {
-      var doc = this.bar.el_.ownerDocument;
-
-      Dom.unblockTextSelection();
-
-      this.removeClass('kmt-sliding');
-      this.trigger('sliderinactive');
-
-      this.off(doc, 'mousemove', this.handleMouseMove);
-      this.off(doc, 'mouseup', this.handleMouseUp);
-      this.off(doc, 'touchmove', this.handleMouseMove);
-      this.off(doc, 'touchend', this.handleMouseUp);
-
-      this.update();
-    }
-
-    /**
-     * Update slider
-     *
-     * @method update
-     */
-  }, {
-    key: 'update',
-    value: function update() {
-      // In VolumeBar init we have a setTimeout for update that pops and update to the end of the
-      // execution stack. The player is destroyed before then update will cause an error
-      if (!this.el_) {
-        return;
-      }
-
-      // If scrubbing, we could use a cached value to make the handle keep up with the user's mouse.
-      // On HTML5 browsers scrubbing is really smooth, but some flash players are slow, so we might want to utilize this later.
-      // var progress =  (this.player_.scrubbing()) ? this.player_.getCache().currentTime / this.player_.duration() : this.player_.currentTime() / this.player_.duration();
-      var progress = this.getPercent();
-      var bar = this.bar;
-
-      // If there's no bar...
-      if (!bar) {
-        return;
-      }
-
-      // Protect against no duration and other division issues
-      if (typeof progress !== 'number' || progress !== progress || progress < 0 || progress === Infinity) {
-        progress = 0;
-      }
-
-      // Convert to a percentage for setting
-      var percentage = (progress * 100).toFixed(2) + '%';
-
-      // Set the new bar width or height
-      if (this.vertical()) {
-        bar.el().style.height = percentage;
-      } else {
-        bar.el().style.width = percentage;
-      }
-    }
-
-    /**
-     * Calculate distance for slider
-     *
-     * @param {Object} event Event object
-     * @method calculateDistance
-     */
-  }, {
-    key: 'calculateDistance',
-    value: function calculateDistance(event) {
-      var position = Dom.getPointerPosition(this.el_, event);
-
-      if (this.vertical()) {
-        return position.y;
-      }
-      return position.x;
-    }
-
-    /**
-     * Handle on focus for slider
-     *
-     * @method handleFocus
-     */
-  }, {
-    key: 'handleFocus',
-    value: function handleFocus() {
-      this.on(this.bar.el_.ownerDocument, 'keydown', this.handleKeyPress);
-    }
-
-    /**
-     * Handle key press for slider
-     *
-     * @param {Object} event Event object
-     * @method handleKeyPress
-     */
-  }, {
-    key: 'handleKeyPress',
-    value: function handleKeyPress(event) {
-      // Left and Down Arrows
-      if (event.which === 37 || event.which === 40) {
-        event.preventDefault();
-        this.stepBack();
-
-        // Up and Right Arrows
-      } else if (event.which === 38 || event.which === 39) {
-          event.preventDefault();
-          this.stepForward();
-        }
-    }
-
-    /**
-     * Handle on blur for slider
-     *
-     * @method handleBlur
-     */
-  }, {
-    key: 'handleBlur',
-    value: function handleBlur() {
-      this.off(this.bar.el_.ownerDocument, 'keydown', this.handleKeyPress);
-    }
-
-    /**
-     * Listener for click events on slider, used to prevent clicks
-     *   from bubbling up to parent elements like button menus.
-     *
-     * @param {Object} event Event object
-     * @method handleClick
-     */
-  }, {
-    key: 'handleClick',
-    value: function handleClick(event) {
-      event.stopImmediatePropagation();
-      event.preventDefault();
-    }
-
-    /**
-     * Get/set if slider is horizontal for vertical
-     *
-     * @param {Boolean} bool True if slider is vertical, false is horizontal
-     * @return {Boolean} True if slider is vertical, false is horizontal
-     * @method vertical
-     */
-  }, {
-    key: 'vertical',
-    value: function vertical(bool) {
-      if (bool === undefined) {
-        return this.vertical_ || false;
-      }
-
-      this.vertical_ = !!bool;
-
-      if (this.vertical_) {
-        this.addClass('kmt-slider-vertical');
-      } else {
-        this.addClass('kmt-slider-horizontal');
-      }
-
-      return this;
-    }
-  }]);
-
-  return Slider;
-})(_componentJs2['default']);
-
-_componentJs2['default'].registerComponent('Slider', Slider);
-exports['default'] = Slider;
+exports['default'] = Koment;
 module.exports = exports['default'];
-},{"../component.js":24,"../utils/dom.js":57,"object.assign":112}],52:[function(require,module,exports){
-/**
- * @file html5.js
- * HTML5 Media Controller - Wrapper for HTML5 Media API
- */
-
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _techJs = require('./tech.js');
-
-var _techJs2 = _interopRequireDefault(_techJs);
-
-var _component = require('../component');
-
-var _component2 = _interopRequireDefault(_component);
-
-var _utilsDomJs = require('../utils/dom.js');
-
-var Dom = _interopRequireWildcard(_utilsDomJs);
-
-var _utilsUrlJs = require('../utils/url.js');
-
-var Url = _interopRequireWildcard(_utilsUrlJs);
-
-var _utilsFnJs = require('../utils/fn.js');
-
-var Fn = _interopRequireWildcard(_utilsFnJs);
-
-var _utilsLogJs = require('../utils/log.js');
-
-var _utilsLogJs2 = _interopRequireDefault(_utilsLogJs);
-
-var _tsml = require('tsml');
-
-var _tsml2 = _interopRequireDefault(_tsml);
-
-var _utilsBrowserJs = require('../utils/browser.js');
-
-var browser = _interopRequireWildcard(_utilsBrowserJs);
-
-var _globalDocument = require('global/document');
-
-var _globalDocument2 = _interopRequireDefault(_globalDocument);
-
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
-var _objectAssign = require('object.assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
-
-var _utilsMergeOptionsJs = require('../utils/merge-options.js');
-
-var _utilsMergeOptionsJs2 = _interopRequireDefault(_utilsMergeOptionsJs);
-
-var _utilsToTitleCaseJs = require('../utils/to-title-case.js');
-
-var _utilsToTitleCaseJs2 = _interopRequireDefault(_utilsToTitleCaseJs);
-
-/**
- * HTML5 Media Controller - Wrapper for HTML5 Media API
- *
- * @param {Object=} options Object of option names and values
- * @param {Function=} ready Ready callback function
- * @extends Tech
- * @class Html5
- */
-
-var Html5 = (function (_Tech) {
-  _inherits(Html5, _Tech);
-
-  function Html5(options, ready) {
-    _classCallCheck(this, Html5);
-
-    _get(Object.getPrototypeOf(Html5.prototype), 'constructor', this).call(this, options, ready);
-
-    // Determine if native controls should be used
-    // Our goal should be to get the custom controls on mobile solid everywhere
-    // so we can remove this all together. Right now this will block custom
-    // controls on touch enabled laptops like the Chrome Pixel
-    if ((browser.TOUCH_ENABLED || browser.IS_IPHONE || browser.IS_NATIVE_ANDROID) && options.nativeControlsForTouch === true) {
-      this.setControls(true);
-    }
-
-    this.triggerReady();
-  }
-
-  /* HTML5 Support Testing ---------------------------------------------------- */
-
-  /*
-   * Element for testing browser HTML5 video capabilities
-   *
-   * @type {Element}
-   * @constant
-   * @private
-   */
-
-  /**
-   * Dispose of html5 media element
-   *
-   * @method dispose
-   */
-
-  _createClass(Html5, [{
-    key: 'dispose',
-    value: function dispose() {
-      Html5.disposeMediaElement(this.el_);
-      // tech will handle clearing of the emulated track list
-      _get(Object.getPrototypeOf(Html5.prototype), 'dispose', this).call(this);
-    }
-
-    /**
-     * Create the component's DOM element
-     *
-     * @return {Element}
-     * @method createEl
-     */
-  }, {
-    key: 'createEl',
-    value: function createEl() {
-      return this.options_.tag;
-    }
-
-    /**
-     * Play for html5 tech
-     *
-     * @method play
-     */
-  }, {
-    key: 'play',
-    value: function play() {
-      var playPromise = this.el_.play();
-
-      // Catch/silence error when a pause interrupts a play request
-      // on browsers which return a promise
-      if (playPromise !== undefined && typeof playPromise.then === 'function') {
-        playPromise.then(null, function (e) {});
-      }
-    }
-
-    /**
-     * Pause for html5 tech
-     *
-     * @method pause
-     */
-  }, {
-    key: 'pause',
-    value: function pause() {
-      this.el_.pause();
-    }
-
-    /**
-     * Paused for html5 tech
-     *
-     * @return {Boolean}
-     * @method paused
-     */
-  }, {
-    key: 'paused',
-    value: function paused() {
-      return this.el_.paused;
-    }
-
-    /**
-     * Get current time
-     *
-     * @return {Number}
-     * @method currentTime
-     */
-  }, {
-    key: 'currentTime',
-    value: function currentTime() {
-      return this.el_.currentTime;
-    }
-
-    /**
-     * Set current time
-     *
-     * @param {Number} seconds Current time of video
-     * @method setCurrentTime
-     */
-  }, {
-    key: 'setCurrentTime',
-    value: function setCurrentTime(seconds) {
-      try {
-        this.el_.currentTime = seconds;
-      } catch (e) {
-        (0, _utilsLogJs2['default'])(e, 'Video is not ready. (Video.js)');
-        // this.warning(koment.warnings.videoNotReady);
-      }
-    }
-
-    /**
-     * Get duration
-     *
-     * @return {Number}
-     * @method duration
-     */
-  }, {
-    key: 'duration',
-    value: function duration() {
-      return this.el_.duration || 0;
-    }
-
-    /**
-     * Get a TimeRange object that represents the intersection
-     * of the time ranges for which the user agent has all
-     * relevant media
-     *
-     * @return {TimeRangeObject}
-     * @method buffered
-     */
-  }, {
-    key: 'buffered',
-    value: function buffered() {
-      return this.el_.buffered;
-    }
-
-    /**
-     * Get volume level
-     *
-     * @return {Number}
-     * @method volume
-     */
-  }, {
-    key: 'volume',
-    value: function volume() {
-      return this.el_.volume;
-    }
-
-    /**
-     * Set volume level
-     *
-     * @param {Number} percentAsDecimal Volume percent as a decimal
-     * @method setVolume
-     */
-  }, {
-    key: 'setVolume',
-    value: function setVolume(percentAsDecimal) {
-      this.el_.volume = percentAsDecimal;
-    }
-
-    /**
-     * Get if muted
-     *
-     * @return {Boolean}
-     * @method muted
-     */
-  }, {
-    key: 'muted',
-    value: function muted() {
-      return this.el_.muted;
-    }
-
-    /**
-     * Set muted
-     *
-     * @param {Boolean} If player is to be muted or note
-     * @method setMuted
-     */
-  }, {
-    key: 'setMuted',
-    value: function setMuted(muted) {
-      this.el_.muted = muted;
-    }
-
-    /**
-     * Get player width
-     *
-     * @return {Number}
-     * @method width
-     */
-  }, {
-    key: 'width',
-    value: function width() {
-      return this.el_.offsetWidth;
-    }
-
-    /**
-     * Get player height
-     *
-     * @return {Number}
-     * @method height
-     */
-  }, {
-    key: 'height',
-    value: function height() {
-      return this.el_.offsetHeight;
-    }
-
-    /**
-     * Get if there is fullscreen support
-     *
-     * @return {Boolean}
-     * @method supportsFullScreen
-     */
-  }, {
-    key: 'supportsFullScreen',
-    value: function supportsFullScreen() {
-      if (typeof this.el_.webkitEnterFullScreen === 'function') {
-        var userAgent = _globalWindow2['default'].navigator && _globalWindow2['default'].navigator.userAgent || '';
-
-        // Seems to be broken in Chromium/Chrome && Safari in Leopard
-        if (/Android/.test(userAgent) || !/Chrome|Mac OS X 10.5/.test(userAgent)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Request to enter fullscreen
-     *
-     * @method enterFullScreen
-     */
-  }, {
-    key: 'enterFullScreen',
-    value: function enterFullScreen() {
-      var video = this.el_;
-
-      if ('webkitDisplayingFullscreen' in video) {
-        this.one('webkitbeginfullscreen', function () {
-          this.one('webkitendfullscreen', function () {
-            this.trigger('fullscreenchange', { isFullscreen: false });
-          });
-
-          this.trigger('fullscreenchange', { isFullscreen: true });
-        });
-      }
-
-      if (video.paused && video.networkState <= video.HAVE_METADATA) {
-        // attempt to prime the video element for programmatic access
-        // this isn't necessary on the desktop but shouldn't hurt
-        this.el_.play();
-
-        // playing and pausing synchronously during the transition to fullscreen
-        // can get iOS ~6.1 devices into a play/pause loop
-        this.setTimeout(function () {
-          video.pause();
-          video.webkitEnterFullScreen();
-        }, 0);
-      } else {
-        video.webkitEnterFullScreen();
-      }
-    }
-
-    /**
-     * Request to exit fullscreen
-     *
-     * @method exitFullScreen
-     */
-  }, {
-    key: 'exitFullScreen',
-    value: function exitFullScreen() {
-      this.el_.webkitExitFullScreen();
-    }
-
-    /**
-     * Get/set video
-     *
-     * @param {Object=} src Source object
-     * @return {Object}
-     * @method src
-     */
-  }, {
-    key: 'src',
-    value: function src(_src) {
-      if (_src === undefined) {
-        return this.el_.src;
-      }
-
-      // Setting src through `src` instead of `setSrc` will be deprecated
-      this.setSrc(_src);
-    }
-
-    /**
-     * Set video
-     *
-     * @param {Object} src Source object
-     * @deprecated
-     * @method setSrc
-     */
-  }, {
-    key: 'setSrc',
-    value: function setSrc(src) {
-      this.el_.src = src;
-    }
-
-    /**
-     * Load media into player
-     *
-     * @method load
-     */
-  }, {
-    key: 'load',
-    value: function load() {
-      this.el_.load();
-    }
-
-    /**
-     * Reset the tech. Removes all sources and calls `load`.
-     *
-     * @method reset
-     */
-  }, {
-    key: 'reset',
-    value: function reset() {
-      Html5.resetMediaElement(this.el_);
-    }
-
-    /**
-     * Get current source
-     *
-     * @return {Object}
-     * @method currentSrc
-     */
-  }, {
-    key: 'currentSrc',
-    value: function currentSrc() {
-      return this.el_.currentSrc;
-    }
-
-    /**
-     * Get poster
-     *
-     * @return {String}
-     * @method poster
-     */
-  }, {
-    key: 'poster',
-    value: function poster() {
-      return this.el_.poster;
-    }
-
-    /**
-     * Set poster
-     *
-     * @param {String} val URL to poster image
-     * @method
-     */
-  }, {
-    key: 'setPoster',
-    value: function setPoster(val) {
-      this.el_.poster = val;
-    }
-
-    /**
-     * Get preload attribute
-     *
-     * @return {String}
-     * @method preload
-     */
-  }, {
-    key: 'preload',
-    value: function preload() {
-      return this.el_.preload;
-    }
-
-    /**
-     * Set preload attribute
-     *
-     * @param {String} val Value for preload attribute
-     * @method setPreload
-     */
-  }, {
-    key: 'setPreload',
-    value: function setPreload(val) {
-      this.el_.preload = val;
-    }
-
-    /**
-     * Get autoplay attribute
-     *
-     * @return {String}
-     * @method autoplay
-     */
-  }, {
-    key: 'autoplay',
-    value: function autoplay() {
-      return this.el_.autoplay;
-    }
-
-    /**
-     * Set autoplay attribute
-     *
-     * @param {String} val Value for preload attribute
-     * @method setAutoplay
-     */
-  }, {
-    key: 'setAutoplay',
-    value: function setAutoplay(val) {
-      this.el_.autoplay = val;
-    }
-
-    /**
-     * Get controls attribute
-     *
-     * @return {String}
-     * @method controls
-     */
-  }, {
-    key: 'controls',
-    value: function controls() {
-      return this.el_.controls;
-    }
-
-    /**
-     * Set controls attribute
-     *
-     * @param {String} val Value for controls attribute
-     * @method setControls
-     */
-  }, {
-    key: 'setControls',
-    value: function setControls(val) {
-      this.el_.controls = !!val;
-    }
-
-    /**
-     * Get loop attribute
-     *
-     * @return {String}
-     * @method loop
-     */
-  }, {
-    key: 'loop',
-    value: function loop() {
-      return this.el_.loop;
-    }
-
-    /**
-     * Set loop attribute
-     *
-     * @param {String} val Value for loop attribute
-     * @method setLoop
-     */
-  }, {
-    key: 'setLoop',
-    value: function setLoop(val) {
-      this.el_.loop = val;
-    }
-
-    /**
-     * Get error value
-     *
-     * @return {String}
-     * @method error
-     */
-  }, {
-    key: 'error',
-    value: function error() {
-      return this.el_.error;
-    }
-
-    /**
-     * Get whether or not the player is in the "seeking" state
-     *
-     * @return {Boolean}
-     * @method seeking
-     */
-  }, {
-    key: 'seeking',
-    value: function seeking() {
-      return this.el_.seeking;
-    }
-
-    /**
-     * Get a TimeRanges object that represents the
-     * ranges of the media resource to which it is possible
-     * for the user agent to seek.
-     *
-     * @return {TimeRangeObject}
-     * @method seekable
-     */
-  }, {
-    key: 'seekable',
-    value: function seekable() {
-      return this.el_.seekable;
-    }
-
-    /**
-     * Get if video ended
-     *
-     * @return {Boolean}
-     * @method ended
-     */
-  }, {
-    key: 'ended',
-    value: function ended() {
-      return this.el_.ended;
-    }
-
-    /**
-     * Get the value of the muted content attribute
-     * This attribute has no dynamic effect, it only
-     * controls the default state of the element
-     *
-     * @return {Boolean}
-     * @method defaultMuted
-     */
-  }, {
-    key: 'defaultMuted',
-    value: function defaultMuted() {
-      return this.el_.defaultMuted;
-    }
-
-    /**
-     * Get desired speed at which the media resource is to play
-     *
-     * @return {Number}
-     * @method playbackRate
-     */
-  }, {
-    key: 'playbackRate',
-    value: function playbackRate() {
-      return this.el_.playbackRate;
-    }
-
-    /**
-     * Returns a TimeRanges object that represents the ranges of the
-     * media resource that the user agent has played.
-     * @return {TimeRangeObject} the range of points on the media
-     * timeline that has been reached through normal playback
-     * @see https://html.spec.whatwg.org/multipage/embedded-content.html#dom-media-played
-     */
-  }, {
-    key: 'played',
-    value: function played() {
-      return this.el_.played;
-    }
-
-    /**
-     * Set desired speed at which the media resource is to play
-     *
-     * @param {Number} val Speed at which the media resource is to play
-     * @method setPlaybackRate
-     */
-  }, {
-    key: 'setPlaybackRate',
-    value: function setPlaybackRate(val) {
-      this.el_.playbackRate = val;
-    }
-
-    /**
-     * Get the current state of network activity for the element, from
-     * the list below
-     * NETWORK_EMPTY (numeric value 0)
-     * NETWORK_IDLE (numeric value 1)
-     * NETWORK_LOADING (numeric value 2)
-     * NETWORK_NO_SOURCE (numeric value 3)
-     *
-     * @return {Number}
-     * @method networkState
-     */
-  }, {
-    key: 'networkState',
-    value: function networkState() {
-      return this.el_.networkState;
-    }
-
-    /**
-     * Get a value that expresses the current state of the element
-     * with respect to rendering the current playback position, from
-     * the codes in the list below
-     * HAVE_NOTHING (numeric value 0)
-     * HAVE_METADATA (numeric value 1)
-     * HAVE_CURRENT_DATA (numeric value 2)
-     * HAVE_FUTURE_DATA (numeric value 3)
-     * HAVE_ENOUGH_DATA (numeric value 4)
-     *
-     * @return {Number}
-     * @method readyState
-     */
-  }, {
-    key: 'readyState',
-    value: function readyState() {
-      return this.el_.readyState;
-    }
-
-    /**
-     * Get width of video
-     *
-     * @return {Number}
-     * @method videoWidth
-     */
-  }, {
-    key: 'videoWidth',
-    value: function videoWidth() {
-      return this.el_.videoWidth;
-    }
-
-    /**
-     * Get height of video
-     *
-     * @return {Number}
-     * @method videoHeight
-     */
-  }, {
-    key: 'videoHeight',
-    value: function videoHeight() {
-      return this.el_.videoHeight;
-    }
-
-    /**
-     * Get text tracks
-     *
-     * @return {TextTrackList}
-     * @method textTracks
-     */
-  }, {
-    key: 'textTracks',
-    value: function textTracks() {
-      return _get(Object.getPrototypeOf(Html5.prototype), 'textTracks', this).call(this);
-    }
-  }]);
-
-  return Html5;
-})(_techJs2['default']);
-
-Html5.TEST_VID = _globalDocument2['default'].createElement('video');
-var track = _globalDocument2['default'].createElement('track');
-
-track.kind = 'captions';
-track.srclang = 'en';
-track.label = 'English';
-Html5.TEST_VID.appendChild(track);
-
-/*
- * Check if HTML5 video is supported by this browser/device
- *
- * @return {Boolean}
- */
-Html5.isSupported = function (tag) {
-  return tag && tag.tagName && tag.tagName === 'VIDEO';
-};
-
-/*
- * Check if the volume can be changed in this browser/device.
- * Volume cannot be changed in a lot of mobile devices.
- * Specifically, it can't be changed from 1 on iOS.
- *
- * @return {Boolean}
- */
-Html5.canControlVolume = function () {
-  // IE will error if Windows Media Player not installed #3315
-  try {
-    var volume = Html5.TEST_VID.volume;
-
-    Html5.TEST_VID.volume = volume / 2 + 0.1;
-    return volume !== Html5.TEST_VID.volume;
-  } catch (e) {
-    return false;
-  }
-};
-
-/*
- * Check if playbackRate is supported in this browser/device.
- *
- * @return {Boolean}
- */
-Html5.canControlPlaybackRate = function () {
-  // Playback rate API is implemented in Android Chrome, but doesn't do anything
-  // https://github.com/koment/video.js/issues/3180
-  if (browser.IS_ANDROID && browser.IS_CHROME) {
-    return false;
-  }
-  // IE will error if Windows Media Player not installed #3315
-  try {
-    var playbackRate = Html5.TEST_VID.playbackRate;
-
-    Html5.TEST_VID.playbackRate = playbackRate / 2 + 0.1;
-    return playbackRate !== Html5.TEST_VID.playbackRate;
-  } catch (e) {
-    return false;
-  }
-};
-
-/**
- * An array of events available on the Html5 tech.
- *
- * @private
- * @type {Array}
- */
-Html5.Events = ['loadstart', 'suspend', 'abort', 'error', 'emptied', 'stalled', 'loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough', 'playing', 'waiting', 'seeking', 'seeked', 'ended', 'durationchange', 'timeupdate', 'progress', 'play', 'pause', 'ratechange', 'volumechange'];
-
-/*
- * Set the tech's volume control support status
- *
- * @type {Boolean}
- */
-Html5.prototype.featuresVolumeControl = Html5.canControlVolume();
-
-/*
- * Set the tech's playbackRate support status
- *
- * @type {Boolean}
- */
-Html5.prototype.featuresPlaybackRate = Html5.canControlPlaybackRate();
-
-/*
- * Set the tech's status on moving the video element.
- * In iOS, if you move a video element in the DOM, it breaks video playback.
- *
- * @type {Boolean}
- */
-Html5.prototype.movingMediaElementInDOM = !browser.IS_IOS;
-
-/*
- * Set the the tech's fullscreen resize support status.
- * HTML video is able to automatically resize when going to fullscreen.
- * (No longer appears to be used. Can probably be removed.)
- */
-Html5.prototype.featuresFullscreenResize = true;
-
-/*
- * Set the tech's progress event support status
- * (this disables the manual progress events of the Tech)
- */
-Html5.prototype.featuresProgressEvents = true;
-
-Html5.disposeMediaElement = function (el) {
-  if (!el) {
-    return;
-  }
-
-  if (el.parentNode) {
-    el.parentNode.removeChild(el);
-  }
-
-  // remove any child track or source nodes to prevent their loading
-  while (el.hasChildNodes()) {
-    el.removeChild(el.firstChild);
-  }
-
-  // remove any src reference. not setting `src=''` because that causes a warning
-  // in firefox
-  el.removeAttribute('src');
-
-  // force the media element to update its loading state by calling load()
-  // however IE on Windows 7N has a bug that throws an error so need a try/catch (#793)
-  if (typeof el.load === 'function') {
-    // wrapping in an iife so it's not deoptimized (#1060#discussion_r10324473)
-    (function () {
-      try {
-        el.load();
-      } catch (e) {
-        // not supported
-      }
-    })();
-  }
-};
-
-Html5.resetMediaElement = function (el) {
-  if (!el) {
-    return;
-  }
-
-  var sources = el.querySelectorAll('source');
-  var i = sources.length;
-
-  while (i--) {
-    el.removeChild(sources[i]);
-  }
-
-  // remove any src reference.
-  // not setting `src=''` because that throws an error
-  el.removeAttribute('src');
-
-  if (typeof el.load === 'function') {
-    // wrapping in an iife so it's not deoptimized (#1060#discussion_r10324473)
-    (function () {
-      try {
-        el.load();
-      } catch (e) {
-        // satisfy linter
-      }
-    })();
-  }
-};
-
-_component2['default'].registerComponent('Html5', Html5);
-_techJs2['default'].registerTech('Html5', Html5);
-exports['default'] = Html5;
-module.exports = exports['default'];
-},{"../component":24,"../utils/browser.js":55,"../utils/dom.js":57,"../utils/fn.js":59,"../utils/log.js":62,"../utils/merge-options.js":63,"../utils/to-title-case.js":66,"../utils/url.js":67,"./tech.js":53,"global/document":19,"global/window":20,"object.assign":112,"tsml":125}],53:[function(require,module,exports){
-/**
- * @file tech.js
- * Media Technology Controller - Base class for media playback
- * technology controllers like Flash and HTML5
- */
-
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _component = require('../component');
-
-var _component2 = _interopRequireDefault(_component);
-
-var _utilsFnJs = require('../utils/fn.js');
-
-var Fn = _interopRequireWildcard(_utilsFnJs);
-
-var _utilsLogJs = require('../utils/log.js');
-
-var _utilsLogJs2 = _interopRequireDefault(_utilsLogJs);
-
-var _utilsTimeRangesJs = require('../utils/time-ranges.js');
-
-var _utilsBufferJs = require('../utils/buffer.js');
-
-var _mediaErrorJs = require('../media-error.js');
-
-var _mediaErrorJs2 = _interopRequireDefault(_mediaErrorJs);
-
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
-/**
- * Base class for media (HTML5 Video, Flash) controllers
- *
- * @param {Object=} options Options object
- * @param {Function=} ready Ready callback function
- * @extends Component
- * @class Tech
- */
-
-var Tech = (function (_Component) {
-  _inherits(Tech, _Component);
-
-  function Tech() {
-    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-    var ready = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
-
-    _classCallCheck(this, Tech);
-
-    // we don't want the tech to report user activity automatically.
-    // This is done manually in addControlsListeners
-    options.reportTouchActivity = false;
-    _get(Object.getPrototypeOf(Tech.prototype), 'constructor', this).call(this, null, options, ready);
-
-    // keep track of whether the current source has played at all to
-    // implement a very limited played()
-    this.hasStarted_ = false;
-    this.on('playing', function () {
-      this.hasStarted_ = true;
-    });
-    this.on('loadstart', function () {
-      this.hasStarted_ = false;
-    });
-
-    // Manually track progress in cases where the browser/flash player doesn't report it.
-    if (!this.featuresProgressEvents) {
-      this.manualProgressOn();
-    }
-
-    // Manually track timeupdates in cases where the browser/flash player doesn't report it.
-    if (!this.featuresTimeupdateEvents) {
-      this.manualTimeUpdatesOn();
-    }
-
-    // Turn on component tap events
-    this.emitTapEvents();
-  }
-
-  _createClass(Tech, [{
-    key: 'duration',
-    value: function duration() {
-      return 0;
-    }
-
-    /* Fallbacks for unsupported event types
-     ================================================================================ */
-    // Manually trigger progress events based on changes to the buffered amount
-    // Many flash players and older HTML5 browsers don't send progress or progress-like events
-    /**
-     * Turn on progress events
-     *
-     * @method manualProgressOn
-     */
-  }, {
-    key: 'manualProgressOn',
-    value: function manualProgressOn() {
-      this.on('durationchange', this.onDurationChange);
-
-      this.manualProgress = true;
-
-      // Trigger progress watching when a source begins loading
-      this.one('ready', this.trackProgress);
-    }
-
-    /**
-     * Turn off progress events
-     *
-     * @method manualProgressOff
-     */
-  }, {
-    key: 'manualProgressOff',
-    value: function manualProgressOff() {
-      this.manualProgress = false;
-      this.stopTrackingProgress();
-
-      this.off('durationchange', this.onDurationChange);
-    }
-
-    /**
-     * Track progress
-     *
-     * @method trackProgress
-     */
-  }, {
-    key: 'trackProgress',
-    value: function trackProgress() {
-      this.stopTrackingProgress();
-      this.progressInterval = this.setInterval(Fn.bind(this, function () {
-        // Don't trigger unless buffered amount is greater than last time
-
-        var numBufferedPercent = this.bufferedPercent();
-
-        if (this.bufferedPercent_ !== numBufferedPercent) {
-          this.trigger('progress');
-        }
-
-        this.bufferedPercent_ = numBufferedPercent;
-
-        if (numBufferedPercent === 1) {
-          this.stopTrackingProgress();
-        }
-      }), 500);
-    }
-
-    /**
-     * Update duration
-     *
-     * @method onDurationChange
-     */
-  }, {
-    key: 'onDurationChange',
-    value: function onDurationChange() {
-      this.duration_ = this.duration();
-    }
-
-    /**
-     * Create and get TimeRange object for buffering
-     *
-     * @return {TimeRangeObject}
-     * @method buffered
-     */
-  }, {
-    key: 'buffered',
-    value: function buffered() {
-      return (0, _utilsTimeRangesJs.createTimeRange)(0, 0);
-    }
-
-    /**
-     * Get buffered percent
-     *
-     * @return {Number}
-     * @method bufferedPercent
-     */
-  }, {
-    key: 'bufferedPercent',
-    value: function bufferedPercent() {
-      return (0, _utilsBufferJs.bufferedPercent)(this.buffered(), this.duration_);
-    }
-
-    /**
-     * Stops tracking progress by clearing progress interval
-     *
-     * @method stopTrackingProgress
-     */
-  }, {
-    key: 'stopTrackingProgress',
-    value: function stopTrackingProgress() {
-      this.clearInterval(this.progressInterval);
-    }
-
-    /**
-     * Set event listeners for on play and pause and tracking current time
-     *
-     * @method manualTimeUpdatesOn
-     */
-  }, {
-    key: 'manualTimeUpdatesOn',
-    value: function manualTimeUpdatesOn() {
-      this.manualTimeUpdates = true;
-
-      this.on('play', this.trackCurrentTime);
-      this.on('pause', this.stopTrackingCurrentTime);
-    }
-
-    /**
-     * Remove event listeners for on play and pause and tracking current time
-     *
-     * @method manualTimeUpdatesOff
-     */
-  }, {
-    key: 'manualTimeUpdatesOff',
-    value: function manualTimeUpdatesOff() {
-      this.manualTimeUpdates = false;
-      this.stopTrackingCurrentTime();
-      this.off('play', this.trackCurrentTime);
-      this.off('pause', this.stopTrackingCurrentTime);
-    }
-
-    /**
-     * Tracks current time
-     *
-     * @method trackCurrentTime
-     */
-  }, {
-    key: 'trackCurrentTime',
-    value: function trackCurrentTime() {
-      if (this.currentTimeInterval) {
-        this.stopTrackingCurrentTime();
-      }
-      this.currentTimeInterval = this.setInterval(function () {
-        this.trigger({ type: 'timeupdate', target: this, manuallyTriggered: true });
-
-        // 42 = 24 fps // 250 is what Webkit uses // FF uses 15
-      }, 250);
-    }
-
-    /**
-     * Turn off play progress tracking (when paused or dragging)
-     *
-     * @method stopTrackingCurrentTime
-     */
-  }, {
-    key: 'stopTrackingCurrentTime',
-    value: function stopTrackingCurrentTime() {
-      this.clearInterval(this.currentTimeInterval);
-
-      // #1002 - if the video ends right before the next timeupdate would happen,
-      // the progress bar won't make it all the way to the end
-      this.trigger({ type: 'timeupdate', target: this, manuallyTriggered: true });
-    }
-
-    /**
-     * Turn off any manual progress or timeupdate tracking
-     *
-     * @method dispose
-     */
-  }, {
-    key: 'dispose',
-    value: function dispose() {
-
-      // clear out all tracks because we can't reuse them between techs
-      // Turn off any manual progress or timeupdate tracking
-      if (this.manualProgress) {
-        this.manualProgressOff();
-      }
-
-      if (this.manualTimeUpdates) {
-        this.manualTimeUpdatesOff();
-      }
-
-      _get(Object.getPrototypeOf(Tech.prototype), 'dispose', this).call(this);
-    }
-
-    /**
-     * When invoked without an argument, returns a MediaError object
-     * representing the current error state of the player or null if
-     * there is no error. When invoked with an argument, set the current
-     * error state of the player.
-     * @param {MediaError=} err    Optional an error object
-     * @return {MediaError}        the current error object or null
-     * @method error
-     */
-  }, {
-    key: 'error',
-    value: function error(err) {
-      if (err !== undefined) {
-        this.error_ = new _mediaErrorJs2['default'](err);
-        this.trigger('error');
-      }
-      return this.error_;
-    }
-
-    /**
-     * Set current time
-     *
-     * @method setCurrentTime
-     */
-  }, {
-    key: 'setCurrentTime',
-    value: function setCurrentTime() {
-      // improve the accuracy of manual timeupdates
-      if (this.manualTimeUpdates) {
-        this.trigger({ type: 'timeupdate', target: this, manuallyTriggered: true });
-      }
-    }
-
-    /*
-     * Return whether the argument is a Tech or not.
-     * Can be passed either a Class like `Html5` or a instance like `player.tech_`
-     *
-     * @param {Object} component An item to check
-     * @return {Boolean}         Whether it is a tech or not
-     */
-  }], [{
-    key: 'isTech',
-    value: function isTech(component) {
-      return component.prototype instanceof Tech || component instanceof Tech || component === Tech;
-    }
-
-    /**
-     * Registers a Tech
-     *
-     * @param {String} name Name of the Tech to register
-     * @param {Object} tech The tech to register
-     * @static
-     * @method registerComponent
-     */
-  }, {
-    key: 'registerTech',
-    value: function registerTech(name, tech) {
-      if (!Tech.techs_) {
-        Tech.techs_ = {};
-      }
-
-      if (!Tech.isTech(tech)) {
-        throw new Error('Tech ' + name + ' must be a Tech');
-      }
-      Tech.techs_[name] = tech;
-      return tech;
-    }
-
-    /**
-     * Gets a component by name
-     *
-     * @param {String} name Name of the component to get
-     * @return {Component}
-     * @static
-     * @method getComponent
-     */
-  }, {
-    key: 'getTech',
-    value: function getTech(name) {
-      if (Tech.techs_ && Tech.techs_[name]) {
-        return Tech.techs_[name];
-      }
-
-      if (_globalWindow2['default'] && _globalWindow2['default'].koment && _globalWindow2['default'].koment[name]) {
-        _utilsLogJs2['default'].warn('The ' + name + ' tech was added to the koment object when it should be registered using koment.registerTech(name, tech)');
-        return _globalWindow2['default'].koment[name];
-      }
-    }
-  }, {
-    key: 'isSupported',
-    value: function isSupported(tag) {
-      return false;
-    }
-  }]);
-
-  return Tech;
-})(_component2['default']);
-
-Tech.prototype.featuresVolumeControl = true;
-
-// Resizing plugins using request fullscreen reloads the plugin
-Tech.prototype.featuresFullscreenResize = false;
-Tech.prototype.featuresPlaybackRate = false;
-
-// Optional events that we can manually mimic with timers
-Tech.prototype.featuresProgressEvents = false;
-Tech.prototype.featuresTimeupdateEvents = false;
-
-_component2['default'].registerComponent('Tech', Tech);
-Tech.registerTech('Tech', Tech);
-exports['default'] = Tech;
-module.exports = exports['default'];
-},{"../component":24,"../media-error.js":47,"../utils/buffer.js":56,"../utils/fn.js":59,"../utils/log.js":62,"../utils/time-ranges.js":65,"global/window":20}],54:[function(require,module,exports){
-/**
- * @file Videojs.js
- * Videojs Media Controller - Wrapper for Videojs Media API
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _techJs = require('./tech.js');
-
-var _techJs2 = _interopRequireDefault(_techJs);
-
-var _html5Js = require('./html5.js');
-
-var _html5Js2 = _interopRequireDefault(_html5Js);
-
-var _component = require('../component');
-
-var _component2 = _interopRequireDefault(_component);
-
-var _globalDocument = require('global/document');
-
-var _globalDocument2 = _interopRequireDefault(_globalDocument);
-
-var _utilsFnJs = require('../utils/fn.js');
-
-var Fn = _interopRequireWildcard(_utilsFnJs);
-
-/**
- * Videojs Media Controller - Wrapper for Videojs Media API
- *
- * @param {Object=} options Object of option names and values
- * @param {Function=} ready Ready callback function
- * @extends Tech
- * @class Videojs
- */
-
-var Videojs = (function (_Html5) {
-  _inherits(Videojs, _Html5);
-
-  function Videojs(options, ready) {
-    _classCallCheck(this, Videojs);
-
-    _get(Object.getPrototypeOf(Videojs.prototype), 'constructor', this).call(this, options, ready);
-  }
-
-  return Videojs;
-})(_html5Js2['default']);
-
-Videojs.isSupported = function (tag) {
-  return tag && tag.firstChild && tag.firstChild.tagName === 'VIDEO' && ~'vjs-tech'.indexOf(tag.firstChild.classList);
-};
-
-_component2['default'].registerComponent('Videojs', Videojs);
-_techJs2['default'].registerTech('Videojs', Videojs);
-exports['default'] = Videojs;
-module.exports = exports['default'];
-},{"../component":24,"../utils/fn.js":59,"./html5.js":52,"./tech.js":53,"global/document":19}],55:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./component/koment-display":23,"./component/koment-list":25,"./control-bar/koment-bar":27,"./utils/dom.js":38,"./utils/stylesheet.js":43,"global/window":20,"videojs-externals":73}],37:[function(require,module,exports){
 /**
  * @file browser.js
  */
@@ -13355,57 +5432,7 @@ var TOUCH_ENABLED = !!('ontouchstart' in _globalWindow2['default'] || _globalWin
 exports.TOUCH_ENABLED = TOUCH_ENABLED;
 var BACKGROUND_SIZE_SUPPORTED = ('backgroundSize' in _globalDocument2['default'].createElement('video').style);
 exports.BACKGROUND_SIZE_SUPPORTED = BACKGROUND_SIZE_SUPPORTED;
-},{"global/document":19,"global/window":20}],56:[function(require,module,exports){
-/**
- * @file buffer.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.bufferedPercent = bufferedPercent;
-
-var _timeRangesJs = require('./time-ranges.js');
-
-/**
- * Compute how much your video has been buffered
- *
- * @param  {Object} Buffered object
- * @param  {Number} Total duration
- * @return {Number} Percent buffered of the total duration
- * @private
- * @function bufferedPercent
- */
-
-function bufferedPercent(buffered, duration) {
-  var bufferedDuration = 0;
-  var start = undefined;
-  var end = undefined;
-
-  if (!duration) {
-    return 0;
-  }
-
-  if (!buffered || !buffered.length) {
-    buffered = (0, _timeRangesJs.createTimeRange)(0, 0);
-  }
-
-  for (var i = 0; i < buffered.length; i++) {
-    start = buffered.start(i);
-    end = buffered.end(i);
-
-    // buffered end can be bigger than duration by a very small fraction
-    if (end > duration) {
-      end = duration;
-    }
-
-    bufferedDuration += end - start;
-  }
-
-  return bufferedDuration / duration;
-}
-},{"./time-ranges.js":65}],57:[function(require,module,exports){
+},{"global/document":19,"global/window":20}],38:[function(require,module,exports){
 /**
  * @file dom.js
  */
@@ -14135,447 +6162,7 @@ exports.$ = $;
  */
 var $$ = createQuerier('querySelectorAll');
 exports.$$ = $$;
-},{"./guid.js":61,"./log.js":62,"global/document":19,"global/window":20,"tsml":125}],58:[function(require,module,exports){
-/**
- * @file events.js
- *
- * Event System (John Resig - Secrets of a JS Ninja http://jsninja.com/)
- * (Original book version wasn't completely usable, so fixed some things and made Closure Compiler compatible)
- * This should work very similarly to jQuery's events, however it's based off the book version which isn't as
- * robust as jquery's, so there's probably some differences.
- */
-
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.fixEvent = fixEvent;
-exports.on = on;
-exports.off = off;
-exports.trigger = trigger;
-exports.one = one;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-var _domJs = require('./dom.js');
-
-var Dom = _interopRequireWildcard(_domJs);
-
-var _guidJs = require('./guid.js');
-
-var Guid = _interopRequireWildcard(_guidJs);
-
-var _logJs = require('./log.js');
-
-var _logJs2 = _interopRequireDefault(_logJs);
-
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
-var _globalDocument = require('global/document');
-
-var _globalDocument2 = _interopRequireDefault(_globalDocument);
-
-/**
- * Clean up the listener cache and dispatchers
-*
- * @param  {Element|Object} elem Element to clean up
- * @param  {String} type Type of event to clean up
- * @private
- * @method _cleanUpEvents
- */
-function _cleanUpEvents(elem, type) {
-  var data = Dom.getElData(elem);
-
-  // Remove the events of a particular type if there are none left
-  if (data.handlers[type].length === 0) {
-    delete data.handlers[type];
-    // data.handlers[type] = null;
-    // Setting to null was causing an error with data.handlers
-
-    // Remove the meta-handler from the element
-    if (elem.removeEventListener) {
-      elem.removeEventListener(type, data.dispatcher, false);
-    } else if (elem.detachEvent) {
-      elem.detachEvent('on' + type, data.dispatcher);
-    }
-  }
-
-  // Remove the events object if there are no types left
-  if (Object.getOwnPropertyNames(data.handlers).length <= 0) {
-    delete data.handlers;
-    delete data.dispatcher;
-    delete data.disabled;
-  }
-
-  // Finally remove the element data if there is no data left
-  if (Object.getOwnPropertyNames(data).length === 0) {
-    Dom.removeElData(elem);
-  }
-}
-
-/**
- * Loops through an array of event types and calls the requested method for each type.
- *
- * @param  {Function} fn   The event method we want to use.
- * @param  {Element|Object} elem Element or object to bind listeners to
- * @param  {String}   type Type of event to bind to.
- * @param  {Function} callback   Event listener.
- * @private
- * @function _handleMultipleEvents
- */
-function _handleMultipleEvents(fn, elem, types, callback) {
-  types.forEach(function (type) {
-    // Call the event method for each one of the types
-    fn(elem, type, callback);
-  });
-}
-
-/**
- * Fix a native event to have standard property values
- *
- * @param  {Object} event Event object to fix
- * @return {Object}
- * @private
- * @method fixEvent
- */
-
-function fixEvent(event) {
-
-  function returnTrue() {
-    return true;
-  }
-
-  function returnFalse() {
-    return false;
-  }
-
-  // Test if fixing up is needed
-  // Used to check if !event.stopPropagation instead of isPropagationStopped
-  // But native events return true for stopPropagation, but don't have
-  // other expected methods like isPropagationStopped. Seems to be a problem
-  // with the Javascript Ninja code. So we're just overriding all events now.
-  if (!event || !event.isPropagationStopped) {
-    (function () {
-      var old = event || _globalWindow2['default'].event;
-
-      event = {};
-      // Clone the old object so that we can modify the values event = {};
-      // IE8 Doesn't like when you mess with native event properties
-      // Firefox returns false for event.hasOwnProperty('type') and other props
-      //  which makes copying more difficult.
-      // TODO: Probably best to create a whitelist of event props
-      for (var key in old) {
-        // Safari 6.0.3 warns you if you try to copy deprecated layerX/Y
-        // Chrome warns you if you try to copy deprecated keyboardEvent.keyLocation
-        // and webkitMovementX/Y
-        if (key !== 'layerX' && key !== 'layerY' && key !== 'keyLocation' && key !== 'webkitMovementX' && key !== 'webkitMovementY') {
-          // Chrome 32+ warns if you try to copy deprecated returnValue, but
-          // we still want to if preventDefault isn't supported (IE8).
-          if (!(key === 'returnValue' && old.preventDefault)) {
-            event[key] = old[key];
-          }
-        }
-      }
-
-      // The event occurred on this element
-      if (!event.target) {
-        event.target = event.srcElement || _globalDocument2['default'];
-      }
-
-      // Handle which other element the event is related to
-      if (!event.relatedTarget) {
-        event.relatedTarget = event.fromElement === event.target ? event.toElement : event.fromElement;
-      }
-
-      // Stop the default browser action
-      event.preventDefault = function () {
-        if (old.preventDefault) {
-          old.preventDefault();
-        }
-        event.returnValue = false;
-        old.returnValue = false;
-        event.defaultPrevented = true;
-      };
-
-      event.defaultPrevented = false;
-
-      // Stop the event from bubbling
-      event.stopPropagation = function () {
-        if (old.stopPropagation) {
-          old.stopPropagation();
-        }
-        event.cancelBubble = true;
-        old.cancelBubble = true;
-        event.isPropagationStopped = returnTrue;
-      };
-
-      event.isPropagationStopped = returnFalse;
-
-      // Stop the event from bubbling and executing other handlers
-      event.stopImmediatePropagation = function () {
-        if (old.stopImmediatePropagation) {
-          old.stopImmediatePropagation();
-        }
-        event.isImmediatePropagationStopped = returnTrue;
-        event.stopPropagation();
-      };
-
-      event.isImmediatePropagationStopped = returnFalse;
-
-      // Handle mouse position
-      if (event.clientX !== null && event.clientX !== undefined) {
-        var doc = _globalDocument2['default'].documentElement;
-        var body = _globalDocument2['default'].body;
-
-        event.pageX = event.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
-        event.pageY = event.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc && doc.clientTop || body && body.clientTop || 0);
-      }
-
-      // Handle key presses
-      event.which = event.charCode || event.keyCode;
-
-      // Fix button for mouse clicks:
-      // 0 == left; 1 == middle; 2 == right
-      if (event.button !== null && event.button !== undefined) {
-
-        // The following is disabled because it does not pass koment-standard
-        // and... yikes.
-        /* eslint-disable */
-        event.button = event.button & 1 ? 0 : event.button & 4 ? 1 : event.button & 2 ? 2 : 0;
-        /* eslint-enable */
-      }
-    })();
-  }
-
-  // Returns fixed-up instance
-  return event;
-}
-
-/**
- * Add an event listener to element
- * It stores the handler function in a separate cache object
- * and adds a generic handler to the element's event,
- * along with a unique id (guid) to the element.
- *
- * @param  {Element|Object}   elem Element or object to bind listeners to
- * @param  {String|Array}   type Type of event to bind to.
- * @param  {Function} fn   Event listener.
- * @method on
- */
-
-function on(elem, type, fn) {
-  if (Array.isArray(type)) {
-    return _handleMultipleEvents(on, elem, type, fn);
-  }
-
-  var data = Dom.getElData(elem);
-
-  // We need a place to store all our handler data
-  if (!data.handlers) {
-    data.handlers = {};
-  }
-
-  if (!data.handlers[type]) {
-    data.handlers[type] = [];
-  }
-
-  if (!fn.guid) {
-    fn.guid = Guid.newGUID();
-  }
-
-  data.handlers[type].push(fn);
-
-  if (!data.dispatcher) {
-    data.disabled = false;
-
-    data.dispatcher = function (event, hash) {
-
-      if (data.disabled) {
-        return;
-      }
-
-      event = fixEvent(event);
-
-      var handlers = data.handlers[event.type];
-
-      if (handlers) {
-        // Copy handlers so if handlers are added/removed during the process it doesn't throw everything off.
-        var handlersCopy = handlers.slice(0);
-
-        for (var m = 0, n = handlersCopy.length; m < n; m++) {
-          if (event.isImmediatePropagationStopped()) {
-            break;
-          } else {
-            try {
-              handlersCopy[m].call(elem, event, hash);
-            } catch (e) {
-              _logJs2['default'].error(e);
-            }
-          }
-        }
-      }
-    };
-  }
-
-  if (data.handlers[type].length === 1) {
-    if (elem.addEventListener) {
-      elem.addEventListener(type, data.dispatcher, false);
-    } else if (elem.attachEvent) {
-      elem.attachEvent('on' + type, data.dispatcher);
-    }
-  }
-}
-
-/**
- * Removes event listeners from an element
- *
- * @param  {Element|Object}   elem Object to remove listeners from
- * @param  {String|Array=}   type Type of listener to remove. Don't include to remove all events from element.
- * @param  {Function} fn   Specific listener to remove. Don't include to remove listeners for an event type.
- * @method off
- */
-
-function off(elem, type, fn) {
-  // Don't want to add a cache object through getElData if not needed
-  if (!Dom.hasElData(elem)) {
-    return;
-  }
-
-  var data = Dom.getElData(elem);
-
-  // If no events exist, nothing to unbind
-  if (!data.handlers) {
-    return;
-  }
-
-  if (Array.isArray(type)) {
-    return _handleMultipleEvents(off, elem, type, fn);
-  }
-
-  // Utility function
-  var removeType = function removeType(t) {
-    data.handlers[t] = [];
-    _cleanUpEvents(elem, t);
-  };
-
-  // Are we removing all bound events?
-  if (!type) {
-    for (var t in data.handlers) {
-      removeType(t);
-    }
-    return;
-  }
-
-  var handlers = data.handlers[type];
-
-  // If no handlers exist, nothing to unbind
-  if (!handlers) {
-    return;
-  }
-
-  // If no listener was provided, remove all listeners for type
-  if (!fn) {
-    removeType(type);
-    return;
-  }
-
-  // We're only removing a single handler
-  if (fn.guid) {
-    for (var n = 0; n < handlers.length; n++) {
-      if (handlers[n].guid === fn.guid) {
-        handlers.splice(n--, 1);
-      }
-    }
-  }
-
-  _cleanUpEvents(elem, type);
-}
-
-/**
- * Trigger an event for an element
- *
- * @param  {Element|Object}      elem  Element to trigger an event on
- * @param  {Event|Object|String} event A string (the type) or an event object with a type attribute
- * @param  {Object} [hash] data hash to pass along with the event
- * @return {Boolean=} Returned only if default was prevented
- * @method trigger
- */
-
-function trigger(elem, event, hash) {
-  // Fetches element data and a reference to the parent (for bubbling).
-  // Don't want to add a data object to cache for every parent,
-  // so checking hasElData first.
-  var elemData = Dom.hasElData(elem) ? Dom.getElData(elem) : {};
-  var parent = elem.parentNode || elem.ownerDocument;
-  // type = event.type || event,
-  // handler;
-
-  // If an event name was passed as a string, creates an event out of it
-  if (typeof event === 'string') {
-    event = { type: event, target: elem };
-  }
-  // Normalizes the event properties.
-  event = fixEvent(event);
-
-  // If the passed element has a dispatcher, executes the established handlers.
-  if (elemData.dispatcher) {
-    elemData.dispatcher.call(elem, event, hash);
-  }
-
-  // Unless explicitly stopped or the event does not bubble (e.g. media events)
-  // recursively calls this function to bubble the event up the DOM.
-  if (parent && !event.isPropagationStopped() && event.bubbles === true) {
-    trigger.call(null, parent, event, hash);
-
-    // If at the top of the DOM, triggers the default action unless disabled.
-  } else if (!parent && !event.defaultPrevented) {
-      var targetData = Dom.getElData(event.target);
-
-      // Checks if the target has a default action for this event.
-      if (event.target[event.type]) {
-        // Temporarily disables event dispatching on the target as we have already executed the handler.
-        targetData.disabled = true;
-        // Executes the default action.
-        if (typeof event.target[event.type] === 'function') {
-          event.target[event.type]();
-        }
-        // Re-enables event dispatching.
-        targetData.disabled = false;
-      }
-    }
-
-  // Inform the triggerer if the default was prevented by returning false
-  return !event.defaultPrevented;
-}
-
-/**
- * Trigger a listener only once for an event
- *
- * @param  {Element|Object}   elem Element or object to
- * @param  {String|Array}   type Name/type of event
- * @param  {Function} fn Event handler function
- * @method one
- */
-
-function one(elem, type, fn) {
-  if (Array.isArray(type)) {
-    return _handleMultipleEvents(one, elem, type, fn);
-  }
-  var func = function func() {
-    off(elem, type, func);
-    fn.apply(this, arguments);
-  };
-
-  // copy the guid to the new function so it can removed using the original function's ID
-  func.guid = fn.guid = fn.guid || Guid.newGUID();
-  on(elem, type, func);
-}
-},{"./dom.js":57,"./guid.js":61,"./log.js":62,"global/document":19,"global/window":20}],59:[function(require,module,exports){
+},{"./guid.js":41,"./log.js":42,"global/document":19,"global/window":20,"tsml":61}],39:[function(require,module,exports){
 /**
  * @file fn.js
  */
@@ -14620,7 +6207,7 @@ var bind = function bind(context, fn, uid) {
   return ret;
 };
 exports.bind = bind;
-},{"./guid.js":61}],60:[function(require,module,exports){
+},{"./guid.js":41}],40:[function(require,module,exports){
 /**
  * @file format-time.js
  *
@@ -14672,7 +6259,7 @@ function formatTime(seconds) {
 
 exports['default'] = formatTime;
 module.exports = exports['default'];
-},{}],61:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /**
  * @file guid.js
  *
@@ -14698,7 +6285,7 @@ var _guid = 1;
 function newGUID() {
   return _guid++;
 }
-},{}],62:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /**
  * @file log.js
  */
@@ -14827,75 +6414,7 @@ log.warn = function () {
 };
 
 exports['default'] = log;
-},{"./browser":55,"global/window":20}],63:[function(require,module,exports){
-/**
- * @file merge-options.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports['default'] = mergeOptions;
-
-var _lodash = require('lodash');
-
-function isPlain(obj) {
-  return !!obj && typeof obj === 'object' && obj.toString() === '[object Object]' && obj.constructor === Object;
-}
-
-/**
- * Merge customizer. video.js simply overwrites non-simple objects
- * (like arrays) instead of attempting to overlay them.
- * @see https://lodash.com/docs#merge
- */
-function customizer(destination, source) {
-  // If we're not working with a plain object, copy the value as is
-  // If source is an array, for instance, it will replace destination
-  if (!isPlain(source)) {
-    return source;
-  }
-
-  // If the new value is a plain object but the first object value is not
-  // we need to create a new object for the first object to merge with.
-  // This makes it consistent with how merge() works by default
-  // and also protects from later changes the to first object affecting
-  // the second object's values.
-  if (!isPlain(destination)) {
-    return mergeOptions(source);
-  }
-}
-
-/**
- * Merge one or more options objects, recursively merging **only**
- * plain object properties.  Previously `deepMerge`.
- *
- * @param  {...Object} source One or more objects to merge
- * @returns {Object}          a new object that is the union of all
- * provided objects
- * @function mergeOptions
- */
-
-function mergeOptions() {
-  // contruct the call dynamically to handle the variable number of
-  // objects to merge
-  var args = Array.prototype.slice.call(arguments);
-
-  // unshift an empty object into the front of the call as the target
-  // of the merge
-  args.unshift({});
-
-  // customize conflict resolution to match our historical merge behavior
-  args.push(customizer);
-
-  _lodash.merge.apply(null, args);
-
-  // return the mutated result object
-  return args[0];
-}
-
-module.exports = exports['default'];
-},{"lodash":68}],64:[function(require,module,exports){
+},{"./browser":37,"global/window":20}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -14925,79 +6444,7 @@ var setTextContent = function setTextContent(el, content) {
   }
 };
 exports.setTextContent = setTextContent;
-},{"global/document":19}],65:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.createTimeRanges = createTimeRanges;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _logJs = require('./log.js');
-
-var _logJs2 = _interopRequireDefault(_logJs);
-
-function rangeCheck(fnName, index, maxIndex) {
-  if (index < 0 || index > maxIndex) {
-    throw new Error('Failed to execute \'' + fnName + '\' on \'TimeRanges\': The index provided (' + index + ') is greater than or equal to the maximum bound (' + maxIndex + ').');
-  }
-}
-
-function getRange(fnName, valueIndex, ranges, rangeIndex) {
-  if (rangeIndex === undefined) {
-    _logJs2['default'].warn('DEPRECATED: Function \'' + fnName + '\' on \'TimeRanges\' called without an index argument.');
-    rangeIndex = 0;
-  }
-  rangeCheck(fnName, rangeIndex, ranges.length - 1);
-  return ranges[rangeIndex][valueIndex];
-}
-
-function createTimeRangesObj(ranges) {
-  if (ranges === undefined || ranges.length === 0) {
-    return {
-      length: 0,
-      start: function start() {
-        throw new Error('This TimeRanges object is empty');
-      },
-      end: function end() {
-        throw new Error('This TimeRanges object is empty');
-      }
-    };
-  }
-  return {
-    length: ranges.length,
-    start: getRange.bind(null, 'start', 0, ranges),
-    end: getRange.bind(null, 'end', 1, ranges)
-  };
-}
-
-/**
- * @file time-ranges.js
- *
- * Should create a fake TimeRange object
- * Mimics an HTML5 time range instance, which has functions that
- * return the start and end times for a range
- * TimeRanges are returned by the buffered() method
- *
- * @param  {(Number|Array)} Start of a single range or an array of ranges
- * @param  {Number} End of a single range
- * @private
- * @method createTimeRanges
- */
-
-function createTimeRanges(start, end) {
-  if (Array.isArray(start)) {
-    return createTimeRangesObj(start);
-  } else if (start === undefined || end === undefined) {
-    return createTimeRangesObj();
-  }
-  return createTimeRangesObj([[start, end]]);
-}
-
-exports.createTimeRange = createTimeRanges;
-},{"./log.js":62}],66:[function(require,module,exports){
+},{"global/document":19}],44:[function(require,module,exports){
 /**
  * @file to-title-case.js
  *
@@ -15019,153 +6466,11 @@ function toTitleCase(string) {
 
 exports["default"] = toTitleCase;
 module.exports = exports["default"];
-},{}],67:[function(require,module,exports){
-/**
- * @file url.js
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _globalDocument = require('global/document');
-
-var _globalDocument2 = _interopRequireDefault(_globalDocument);
-
-var _globalWindow = require('global/window');
-
-var _globalWindow2 = _interopRequireDefault(_globalWindow);
-
-/**
- * Resolve and parse the elements of a URL
- *
- * @param  {String} url The url to parse
- * @return {Object}     An object of url details
- * @method parseUrl
- */
-var parseUrl = function parseUrl(url) {
-  var props = ['protocol', 'hostname', 'port', 'pathname', 'search', 'hash', 'host'];
-
-  // add the url to an anchor and let the browser parse the URL
-  var a = _globalDocument2['default'].createElement('a');
-
-  a.href = url;
-
-  // IE8 (and 9?) Fix
-  // ie8 doesn't parse the URL correctly until the anchor is actually
-  // added to the body, and an innerHTML is needed to trigger the parsing
-  var addToBody = a.host === '' && a.protocol !== 'file:';
-  var div = undefined;
-
-  if (addToBody) {
-    div = _globalDocument2['default'].createElement('div');
-    div.innerHTML = '<a href="' + url + '"></a>';
-    a = div.firstChild;
-    // prevent the div from affecting layout
-    div.setAttribute('style', 'display:none; position:absolute;');
-    _globalDocument2['default'].body.appendChild(div);
-  }
-
-  // Copy the specific URL properties to a new object
-  // This is also needed for IE8 because the anchor loses its
-  // properties when it's removed from the dom
-  var details = {};
-
-  for (var i = 0; i < props.length; i++) {
-    details[props[i]] = a[props[i]];
-  }
-
-  // IE9 adds the port to the host property unlike everyone else. If
-  // a port identifier is added for standard ports, strip it.
-  if (details.protocol === 'http:') {
-    details.host = details.host.replace(/:80$/, '');
-  }
-
-  if (details.protocol === 'https:') {
-    details.host = details.host.replace(/:443$/, '');
-  }
-
-  if (addToBody) {
-    _globalDocument2['default'].body.removeChild(div);
-  }
-
-  return details;
-};
-
-exports.parseUrl = parseUrl;
-/**
- * Get absolute version of relative URL. Used to tell flash correct URL.
- * http://stackoverflow.com/questions/470832/getting-an-absolute-url-from-a-relative-one-ie6-issue
- *
- * @param  {String} url URL to make absolute
- * @return {String}     Absolute URL
- * @private
- * @method getAbsoluteURL
- */
-var getAbsoluteURL = function getAbsoluteURL(url) {
-  // Check if absolute URL
-  if (!url.match(/^https?:\/\//)) {
-    // Convert to absolute URL. Flash hosted off-site needs an absolute URL.
-    var div = _globalDocument2['default'].createElement('div');
-
-    div.innerHTML = '<a href="' + url + '">x</a>';
-    url = div.firstChild.href;
-  }
-
-  return url;
-};
-
-exports.getAbsoluteURL = getAbsoluteURL;
-/**
- * Returns the extension of the passed file name. It will return an empty string if you pass an invalid path
- *
- * @param {String}    path    The fileName path like '/path/to/file.mp4'
- * @returns {String}          The extension in lower case or an empty string if no extension could be found.
- * @method getFileExtension
- */
-var getFileExtension = function getFileExtension(path) {
-  if (typeof path === 'string') {
-    var splitPathRe = /^(\/?)([\s\S]*?)((?:\.{1,2}|[^\/]+?)(\.([^\.\/\?]+)))(?:[\/]*|[\?].*)$/i;
-    var pathParts = splitPathRe.exec(path);
-
-    if (pathParts) {
-      return pathParts.pop().toLowerCase();
-    }
-  }
-
-  return '';
-};
-
-exports.getFileExtension = getFileExtension;
-/**
- * Returns whether the url passed is a cross domain request or not.
- *
- * @param {String} url The url to check
- * @return {Boolean}   Whether it is a cross domain request or not
- * @method isCrossOrigin
- */
-var isCrossOrigin = function isCrossOrigin(url) {
-  var winLoc = _globalWindow2['default'].location;
-  var urlInfo = parseUrl(url);
-
-  // IE8 protocol relative urls will return ':' for protocol
-  var srcProtocol = urlInfo.protocol === ':' ? winLoc.protocol : urlInfo.protocol;
-
-  // Check if url is for another domain/origin
-  // IE8 doesn't know location.origin, so we won't rely on it here
-  var crossOrigin = srcProtocol + urlInfo.host !== winLoc.protocol + winLoc.host;
-
-  return crossOrigin;
-};
-exports.isCrossOrigin = isCrossOrigin;
-},{"global/document":19,"global/window":20}],68:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 (function (global){
 /**
  * @license
- * lodash <https://lodash.com/>
+ * Lodash <https://lodash.com/>
  * Copyright JS Foundation and other contributors <https://js.foundation/>
  * Released under MIT license <https://lodash.com/license>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -15177,13 +6482,13 @@ exports.isCrossOrigin = isCrossOrigin;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.16.6';
+  var VERSION = '4.17.3';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
 
   /** Error message constants. */
-  var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://github.com/es-shims.',
+  var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
       FUNC_ERROR_TEXT = 'Expected a function';
 
   /** Used to stand-in for `undefined` hash values. */
@@ -15195,21 +6500,26 @@ exports.isCrossOrigin = isCrossOrigin;
   /** Used as the internal argument placeholder. */
   var PLACEHOLDER = '__lodash_placeholder__';
 
-  /** Used to compose bitmasks for function metadata. */
-  var BIND_FLAG = 1,
-      BIND_KEY_FLAG = 2,
-      CURRY_BOUND_FLAG = 4,
-      CURRY_FLAG = 8,
-      CURRY_RIGHT_FLAG = 16,
-      PARTIAL_FLAG = 32,
-      PARTIAL_RIGHT_FLAG = 64,
-      ARY_FLAG = 128,
-      REARG_FLAG = 256,
-      FLIP_FLAG = 512;
+  /** Used to compose bitmasks for cloning. */
+  var CLONE_DEEP_FLAG = 1,
+      CLONE_FLAT_FLAG = 2,
+      CLONE_SYMBOLS_FLAG = 4;
 
-  /** Used to compose bitmasks for comparison styles. */
-  var UNORDERED_COMPARE_FLAG = 1,
-      PARTIAL_COMPARE_FLAG = 2;
+  /** Used to compose bitmasks for value comparisons. */
+  var COMPARE_PARTIAL_FLAG = 1,
+      COMPARE_UNORDERED_FLAG = 2;
+
+  /** Used to compose bitmasks for function metadata. */
+  var WRAP_BIND_FLAG = 1,
+      WRAP_BIND_KEY_FLAG = 2,
+      WRAP_CURRY_BOUND_FLAG = 4,
+      WRAP_CURRY_FLAG = 8,
+      WRAP_CURRY_RIGHT_FLAG = 16,
+      WRAP_PARTIAL_FLAG = 32,
+      WRAP_PARTIAL_RIGHT_FLAG = 64,
+      WRAP_ARY_FLAG = 128,
+      WRAP_REARG_FLAG = 256,
+      WRAP_FLIP_FLAG = 512;
 
   /** Used as default options for `_.truncate`. */
   var DEFAULT_TRUNC_LENGTH = 30,
@@ -15237,15 +6547,15 @@ exports.isCrossOrigin = isCrossOrigin;
 
   /** Used to associate wrap methods with their bit flags. */
   var wrapFlags = [
-    ['ary', ARY_FLAG],
-    ['bind', BIND_FLAG],
-    ['bindKey', BIND_KEY_FLAG],
-    ['curry', CURRY_FLAG],
-    ['curryRight', CURRY_RIGHT_FLAG],
-    ['flip', FLIP_FLAG],
-    ['partial', PARTIAL_FLAG],
-    ['partialRight', PARTIAL_RIGHT_FLAG],
-    ['rearg', REARG_FLAG]
+    ['ary', WRAP_ARY_FLAG],
+    ['bind', WRAP_BIND_FLAG],
+    ['bindKey', WRAP_BIND_KEY_FLAG],
+    ['curry', WRAP_CURRY_FLAG],
+    ['curryRight', WRAP_CURRY_RIGHT_FLAG],
+    ['flip', WRAP_FLIP_FLAG],
+    ['partial', WRAP_PARTIAL_FLAG],
+    ['partialRight', WRAP_PARTIAL_RIGHT_FLAG],
+    ['rearg', WRAP_REARG_FLAG]
   ];
 
   /** `Object#toString` result references. */
@@ -15364,8 +6674,10 @@ exports.isCrossOrigin = isCrossOrigin;
 
   /** Used to compose unicode character classes. */
   var rsAstralRange = '\\ud800-\\udfff',
-      rsComboMarksRange = '\\u0300-\\u036f\\ufe20-\\ufe23',
-      rsComboSymbolsRange = '\\u20d0-\\u20f0',
+      rsComboMarksRange = '\\u0300-\\u036f',
+      reComboHalfMarksRange = '\\ufe20-\\ufe2f',
+      rsComboSymbolsRange = '\\u20d0-\\u20ff',
+      rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange,
       rsDingbatRange = '\\u2700-\\u27bf',
       rsLowerRange = 'a-z\\xdf-\\xf6\\xf8-\\xff',
       rsMathOpRange = '\\xac\\xb1\\xd7\\xf7',
@@ -15380,7 +6692,7 @@ exports.isCrossOrigin = isCrossOrigin;
   var rsApos = "['\u2019]",
       rsAstral = '[' + rsAstralRange + ']',
       rsBreak = '[' + rsBreakRange + ']',
-      rsCombo = '[' + rsComboMarksRange + rsComboSymbolsRange + ']',
+      rsCombo = '[' + rsComboRange + ']',
       rsDigits = '\\d+',
       rsDingbat = '[' + rsDingbatRange + ']',
       rsLower = '[' + rsLowerRange + ']',
@@ -15432,7 +6744,7 @@ exports.isCrossOrigin = isCrossOrigin;
   ].join('|'), 'g');
 
   /** Used to detect strings with [zero-width joiners or code points from the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/). */
-  var reHasUnicode = RegExp('[' + rsZWJ + rsAstralRange  + rsComboMarksRange + rsComboSymbolsRange + rsVarRange + ']');
+  var reHasUnicode = RegExp('[' + rsZWJ + rsAstralRange  + rsComboRange + rsVarRange + ']');
 
   /** Used to detect strings that need a more robust regexp to match words. */
   var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2,}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
@@ -15595,7 +6907,7 @@ exports.isCrossOrigin = isCrossOrigin;
   /** Used to access faster Node.js helpers. */
   var nodeUtil = (function() {
     try {
-      return freeProcess && freeProcess.binding('util');
+      return freeProcess && freeProcess.binding && freeProcess.binding('util');
     } catch (e) {}
   }());
 
@@ -16725,9 +8037,9 @@ exports.isCrossOrigin = isCrossOrigin;
      * Shortcut fusion is an optimization to merge iteratee calls; this avoids
      * the creation of intermediate arrays and can greatly reduce the number of
      * iteratee executions. Sections of a chain sequence qualify for shortcut
-     * fusion if the section is applied to an array of at least `200` elements
-     * and any iteratees accept only one argument. The heuristic for whether a
-     * section qualifies for shortcut fusion is subject to change.
+     * fusion if the section is applied to an array and iteratees accept only
+     * one argument. The heuristic for whether a section qualifies for shortcut
+     * fusion is subject to change.
      *
      * Chaining is supported in custom builds as long as the `_#value` method is
      * directly or indirectly included in the build.
@@ -16886,8 +8198,8 @@ exports.isCrossOrigin = isCrossOrigin;
 
     /**
      * By default, the template delimiters used by lodash are like those in
-     * embedded Ruby (ERB). Change the following template settings to use
-     * alternative delimiters.
+     * embedded Ruby (ERB) as well as ES2015 template strings. Change the
+     * following template settings to use alternative delimiters.
      *
      * @static
      * @memberOf _
@@ -17034,8 +8346,7 @@ exports.isCrossOrigin = isCrossOrigin;
           resIndex = 0,
           takeCount = nativeMin(length, this.__takeCount__);
 
-      if (!isArr || arrLength < LARGE_ARRAY_SIZE ||
-          (arrLength == length && takeCount == length)) {
+      if (!isArr || (!isRight && arrLength == length && takeCount == length)) {
         return baseWrapperValue(array, this.__actions__);
       }
       var result = [];
@@ -17149,7 +8460,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function hashHas(key) {
       var data = this.__data__;
-      return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
+      return nativeCreate ? (data[key] !== undefined) : hasOwnProperty.call(data, key);
     }
 
     /**
@@ -17623,24 +8934,6 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
-     * Used by `_.defaults` to customize its `_.assignIn` use.
-     *
-     * @private
-     * @param {*} objValue The destination value.
-     * @param {*} srcValue The source value.
-     * @param {string} key The key of the property to assign.
-     * @param {Object} object The parent object of `objValue`.
-     * @returns {*} Returns the value to assign.
-     */
-    function assignInDefaults(objValue, srcValue, key, object) {
-      if (objValue === undefined ||
-          (eq(objValue, objectProto[key]) && !hasOwnProperty.call(object, key))) {
-        return srcValue;
-      }
-      return objValue;
-    }
-
-    /**
      * This function is like `assignValue` except that it doesn't assign
      * `undefined` values.
      *
@@ -17724,6 +9017,19 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
+     * The base implementation of `_.assignIn` without support for multiple sources
+     * or `customizer` functions.
+     *
+     * @private
+     * @param {Object} object The destination object.
+     * @param {Object} source The source object.
+     * @returns {Object} Returns `object`.
+     */
+    function baseAssignIn(object, source) {
+      return object && copyObject(source, keysIn(source), object);
+    }
+
+    /**
      * The base implementation of `assignValue` and `assignMergeValue` without
      * value checks.
      *
@@ -17750,7 +9056,7 @@ exports.isCrossOrigin = isCrossOrigin;
      *
      * @private
      * @param {Object} object The object to iterate over.
-     * @param {string[]} paths The property paths of elements to pick.
+     * @param {string[]} paths The property paths to pick.
      * @returns {Array} Returns the picked elements.
      */
     function baseAt(object, paths) {
@@ -17792,16 +9098,22 @@ exports.isCrossOrigin = isCrossOrigin;
      *
      * @private
      * @param {*} value The value to clone.
-     * @param {boolean} [isDeep] Specify a deep clone.
-     * @param {boolean} [isFull] Specify a clone including symbols.
+     * @param {boolean} bitmask The bitmask flags.
+     *  1 - Deep clone
+     *  2 - Flatten inherited properties
+     *  4 - Clone symbols
      * @param {Function} [customizer] The function to customize cloning.
      * @param {string} [key] The key of `value`.
      * @param {Object} [object] The parent object of `value`.
      * @param {Object} [stack] Tracks traversed objects and their clone counterparts.
      * @returns {*} Returns the cloned value.
      */
-    function baseClone(value, isDeep, isFull, customizer, key, object, stack) {
-      var result;
+    function baseClone(value, bitmask, customizer, key, object, stack) {
+      var result,
+          isDeep = bitmask & CLONE_DEEP_FLAG,
+          isFlat = bitmask & CLONE_FLAT_FLAG,
+          isFull = bitmask & CLONE_SYMBOLS_FLAG;
+
       if (customizer) {
         result = object ? customizer(value, key, object, stack) : customizer(value);
       }
@@ -17825,9 +9137,11 @@ exports.isCrossOrigin = isCrossOrigin;
           return cloneBuffer(value, isDeep);
         }
         if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
-          result = initCloneObject(isFunc ? {} : value);
+          result = (isFlat || isFunc) ? {} : initCloneObject(value);
           if (!isDeep) {
-            return copySymbols(value, baseAssign(result, value));
+            return isFlat
+              ? copySymbolsIn(value, baseAssignIn(result, value))
+              : copySymbols(value, baseAssign(result, value));
           }
         } else {
           if (!cloneableTags[tag]) {
@@ -17844,14 +9158,18 @@ exports.isCrossOrigin = isCrossOrigin;
       }
       stack.set(value, result);
 
-      var props = isArr ? undefined : (isFull ? getAllKeys : keys)(value);
+      var keysFunc = isFull
+        ? (isFlat ? getAllKeysIn : getAllKeys)
+        : (isFlat ? keysIn : keys);
+
+      var props = isArr ? undefined : keysFunc(value);
       arrayEach(props || value, function(subValue, key) {
         if (props) {
           key = subValue;
           subValue = value[key];
         }
         // Recursively populate clone (susceptible to call stack limits).
-        assignValue(result, key, baseClone(subValue, isDeep, isFull, customizer, key, value, stack));
+        assignValue(result, key, baseClone(subValue, bitmask, customizer, key, value, stack));
       });
       return result;
     }
@@ -18189,7 +9507,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {*} Returns the resolved value.
      */
     function baseGet(object, path) {
-      path = isKey(path, object) ? [path] : castPath(path);
+      path = castPath(path, object);
 
       var index = 0,
           length = path.length;
@@ -18227,8 +9545,7 @@ exports.isCrossOrigin = isCrossOrigin;
       if (value == null) {
         return value === undefined ? undefinedTag : nullTag;
       }
-      value = Object(value);
-      return (symToStringTag && symToStringTag in value)
+      return (symToStringTag && symToStringTag in Object(value))
         ? getRawTag(value)
         : objectToString(value);
     }
@@ -18375,12 +9692,9 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {*} Returns the result of the invoked method.
      */
     function baseInvoke(object, path, args) {
-      if (!isKey(path, object)) {
-        path = castPath(path);
-        object = parent(object, path);
-        path = last(path);
-      }
-      var func = object == null ? object : object[toKey(path)];
+      path = castPath(path, object);
+      object = parent(object, path);
+      var func = object == null ? object : object[toKey(last(path))];
       return func == null ? undefined : apply(func, object, args);
     }
 
@@ -18424,22 +9738,21 @@ exports.isCrossOrigin = isCrossOrigin;
      * @private
      * @param {*} value The value to compare.
      * @param {*} other The other value to compare.
+     * @param {boolean} bitmask The bitmask flags.
+     *  1 - Unordered comparison
+     *  2 - Partial comparison
      * @param {Function} [customizer] The function to customize comparisons.
-     * @param {boolean} [bitmask] The bitmask of comparison flags.
-     *  The bitmask may be composed of the following flags:
-     *     1 - Unordered comparison
-     *     2 - Partial comparison
      * @param {Object} [stack] Tracks traversed `value` and `other` objects.
      * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
      */
-    function baseIsEqual(value, other, customizer, bitmask, stack) {
+    function baseIsEqual(value, other, bitmask, customizer, stack) {
       if (value === other) {
         return true;
       }
-      if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
+      if (value == null || other == null || (!isObjectLike(value) && !isObjectLike(other))) {
         return value !== value && other !== other;
       }
-      return baseIsEqualDeep(value, other, baseIsEqual, customizer, bitmask, stack);
+      return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
     }
 
     /**
@@ -18450,27 +9763,21 @@ exports.isCrossOrigin = isCrossOrigin;
      * @private
      * @param {Object} object The object to compare.
      * @param {Object} other The other object to compare.
+     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+     * @param {Function} customizer The function to customize comparisons.
      * @param {Function} equalFunc The function to determine equivalents of values.
-     * @param {Function} [customizer] The function to customize comparisons.
-     * @param {number} [bitmask] The bitmask of comparison flags. See `baseIsEqual`
-     *  for more details.
      * @param {Object} [stack] Tracks traversed `object` and `other` objects.
      * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
      */
-    function baseIsEqualDeep(object, other, equalFunc, customizer, bitmask, stack) {
+    function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
       var objIsArr = isArray(object),
           othIsArr = isArray(other),
-          objTag = arrayTag,
-          othTag = arrayTag;
+          objTag = objIsArr ? arrayTag : getTag(object),
+          othTag = othIsArr ? arrayTag : getTag(other);
 
-      if (!objIsArr) {
-        objTag = getTag(object);
-        objTag = objTag == argsTag ? objectTag : objTag;
-      }
-      if (!othIsArr) {
-        othTag = getTag(other);
-        othTag = othTag == argsTag ? objectTag : othTag;
-      }
+      objTag = objTag == argsTag ? objectTag : objTag;
+      othTag = othTag == argsTag ? objectTag : othTag;
+
       var objIsObj = objTag == objectTag,
           othIsObj = othTag == objectTag,
           isSameTag = objTag == othTag;
@@ -18485,10 +9792,10 @@ exports.isCrossOrigin = isCrossOrigin;
       if (isSameTag && !objIsObj) {
         stack || (stack = new Stack);
         return (objIsArr || isTypedArray(object))
-          ? equalArrays(object, other, equalFunc, customizer, bitmask, stack)
-          : equalByTag(object, other, objTag, equalFunc, customizer, bitmask, stack);
+          ? equalArrays(object, other, bitmask, customizer, equalFunc, stack)
+          : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
       }
-      if (!(bitmask & PARTIAL_COMPARE_FLAG)) {
+      if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
         var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
             othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
 
@@ -18497,14 +9804,14 @@ exports.isCrossOrigin = isCrossOrigin;
               othUnwrapped = othIsWrapped ? other.value() : other;
 
           stack || (stack = new Stack);
-          return equalFunc(objUnwrapped, othUnwrapped, customizer, bitmask, stack);
+          return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
         }
       }
       if (!isSameTag) {
         return false;
       }
       stack || (stack = new Stack);
-      return equalObjects(object, other, equalFunc, customizer, bitmask, stack);
+      return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
     }
 
     /**
@@ -18562,7 +9869,7 @@ exports.isCrossOrigin = isCrossOrigin;
             var result = customizer(objValue, srcValue, key, object, source, stack);
           }
           if (!(result === undefined
-                ? baseIsEqual(srcValue, objValue, customizer, UNORDERED_COMPARE_FLAG | PARTIAL_COMPARE_FLAG, stack)
+                ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack)
                 : result
               )) {
             return false;
@@ -18752,7 +10059,7 @@ exports.isCrossOrigin = isCrossOrigin;
         var objValue = get(object, path);
         return (objValue === undefined && objValue === srcValue)
           ? hasIn(object, path)
-          : baseIsEqual(srcValue, objValue, undefined, UNORDERED_COMPARE_FLAG | PARTIAL_COMPARE_FLAG);
+          : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
       };
     }
 
@@ -18914,13 +10221,12 @@ exports.isCrossOrigin = isCrossOrigin;
      *
      * @private
      * @param {Object} object The source object.
-     * @param {string[]} props The property identifiers to pick.
+     * @param {string[]} paths The property paths to pick.
      * @returns {Object} Returns the new object.
      */
-    function basePick(object, props) {
-      object = Object(object);
-      return basePickBy(object, props, function(value, key) {
-        return key in object;
+    function basePick(object, paths) {
+      return basePickBy(object, paths, function(value, path) {
+        return hasIn(object, path);
       });
     }
 
@@ -18929,21 +10235,21 @@ exports.isCrossOrigin = isCrossOrigin;
      *
      * @private
      * @param {Object} object The source object.
-     * @param {string[]} props The property identifiers to pick from.
+     * @param {string[]} paths The property paths to pick.
      * @param {Function} predicate The function invoked per property.
      * @returns {Object} Returns the new object.
      */
-    function basePickBy(object, props, predicate) {
+    function basePickBy(object, paths, predicate) {
       var index = -1,
-          length = props.length,
+          length = paths.length,
           result = {};
 
       while (++index < length) {
-        var key = props[index],
-            value = object[key];
+        var path = paths[index],
+            value = baseGet(object, path);
 
-        if (predicate(value, key)) {
-          baseAssignValue(result, key, value);
+        if (predicate(value, path)) {
+          baseSet(result, castPath(path, object), value);
         }
       }
       return result;
@@ -19019,17 +10325,8 @@ exports.isCrossOrigin = isCrossOrigin;
           var previous = index;
           if (isIndex(index)) {
             splice.call(array, index, 1);
-          }
-          else if (!isKey(index, array)) {
-            var path = castPath(index),
-                object = parent(array, path);
-
-            if (object != null) {
-              delete object[toKey(last(path))];
-            }
-          }
-          else {
-            delete array[toKey(index)];
+          } else {
+            baseUnset(array, index);
           }
         }
       }
@@ -19150,7 +10447,7 @@ exports.isCrossOrigin = isCrossOrigin;
       if (!isObject(object)) {
         return object;
       }
-      path = isKey(path, object) ? [path] : castPath(path);
+      path = castPath(path, object);
 
       var index = -1,
           length = path.length,
@@ -19487,15 +10784,13 @@ exports.isCrossOrigin = isCrossOrigin;
      *
      * @private
      * @param {Object} object The object to modify.
-     * @param {Array|string} path The path of the property to unset.
+     * @param {Array|string} path The property path to unset.
      * @returns {boolean} Returns `true` if the property is deleted, else `false`.
      */
     function baseUnset(object, path) {
-      path = isKey(path, object) ? [path] : castPath(path);
+      path = castPath(path, object);
       object = parent(object, path);
-
-      var key = toKey(last(path));
-      return !(object != null && hasOwnProperty.call(object, key)) || delete object[key];
+      return object == null || delete object[toKey(last(path))];
     }
 
     /**
@@ -19635,10 +10930,14 @@ exports.isCrossOrigin = isCrossOrigin;
      *
      * @private
      * @param {*} value The value to inspect.
+     * @param {Object} [object] The object to query keys on.
      * @returns {Array} Returns the cast property path array.
      */
-    function castPath(value) {
-      return isArray(value) ? value : stringToPath(value);
+    function castPath(value, object) {
+      if (isArray(value)) {
+        return value;
+      }
+      return isKey(value, object) ? [value] : stringToPath(toString(value));
     }
 
     /**
@@ -19732,7 +11031,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Object} Returns the cloned map.
      */
     function cloneMap(map, isDeep, cloneFunc) {
-      var array = isDeep ? cloneFunc(mapToArray(map), true) : mapToArray(map);
+      var array = isDeep ? cloneFunc(mapToArray(map), CLONE_DEEP_FLAG) : mapToArray(map);
       return arrayReduce(array, addMapEntry, new map.constructor);
     }
 
@@ -19759,7 +11058,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Object} Returns the cloned set.
      */
     function cloneSet(set, isDeep, cloneFunc) {
-      var array = isDeep ? cloneFunc(setToArray(set), true) : setToArray(set);
+      var array = isDeep ? cloneFunc(setToArray(set), CLONE_DEEP_FLAG) : setToArray(set);
       return arrayReduce(array, addSetEntry, new set.constructor);
     }
 
@@ -19994,7 +11293,7 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
-     * Copies own symbol properties of `source` to `object`.
+     * Copies own symbols of `source` to `object`.
      *
      * @private
      * @param {Object} source The object to copy symbols from.
@@ -20003,6 +11302,18 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function copySymbols(source, object) {
       return copyObject(source, getSymbols(source), object);
+    }
+
+    /**
+     * Copies own and inherited symbols of `source` to `object`.
+     *
+     * @private
+     * @param {Object} source The object to copy symbols from.
+     * @param {Object} [object={}] The object to copy symbols to.
+     * @returns {Object} Returns `object`.
+     */
+    function copySymbolsIn(source, object) {
+      return copyObject(source, getSymbolsIn(source), object);
     }
 
     /**
@@ -20119,7 +11430,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Function} Returns the new wrapped function.
      */
     function createBind(func, bitmask, thisArg) {
-      var isBind = bitmask & BIND_FLAG,
+      var isBind = bitmask & WRAP_BIND_FLAG,
           Ctor = createCtor(func);
 
       function wrapper() {
@@ -20292,7 +11603,7 @@ exports.isCrossOrigin = isCrossOrigin;
               data = funcName == 'wrapper' ? getData(func) : undefined;
 
           if (data && isLaziable(data[0]) &&
-                data[1] == (ARY_FLAG | CURRY_FLAG | PARTIAL_FLAG | REARG_FLAG) &&
+                data[1] == (WRAP_ARY_FLAG | WRAP_CURRY_FLAG | WRAP_PARTIAL_FLAG | WRAP_REARG_FLAG) &&
                 !data[4].length && data[9] == 1
               ) {
             wrapper = wrapper[getFuncName(data[0])].apply(wrapper, data[3]);
@@ -20306,8 +11617,7 @@ exports.isCrossOrigin = isCrossOrigin;
           var args = arguments,
               value = args[0];
 
-          if (wrapper && args.length == 1 &&
-              isArray(value) && value.length >= LARGE_ARRAY_SIZE) {
+          if (wrapper && args.length == 1 && isArray(value)) {
             return wrapper.plant(value).value();
           }
           var index = 0,
@@ -20341,11 +11651,11 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Function} Returns the new wrapped function.
      */
     function createHybrid(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity) {
-      var isAry = bitmask & ARY_FLAG,
-          isBind = bitmask & BIND_FLAG,
-          isBindKey = bitmask & BIND_KEY_FLAG,
-          isCurried = bitmask & (CURRY_FLAG | CURRY_RIGHT_FLAG),
-          isFlip = bitmask & FLIP_FLAG,
+      var isAry = bitmask & WRAP_ARY_FLAG,
+          isBind = bitmask & WRAP_BIND_FLAG,
+          isBindKey = bitmask & WRAP_BIND_KEY_FLAG,
+          isCurried = bitmask & (WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG),
+          isFlip = bitmask & WRAP_FLIP_FLAG,
           Ctor = isBindKey ? undefined : createCtor(func);
 
       function wrapper() {
@@ -20496,7 +11806,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Function} Returns the new wrapped function.
      */
     function createPartial(func, bitmask, thisArg, partials) {
-      var isBind = bitmask & BIND_FLAG,
+      var isBind = bitmask & WRAP_BIND_FLAG,
           Ctor = createCtor(func);
 
       function wrapper() {
@@ -20578,17 +11888,17 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Function} Returns the new wrapped function.
      */
     function createRecurry(func, bitmask, wrapFunc, placeholder, thisArg, partials, holders, argPos, ary, arity) {
-      var isCurry = bitmask & CURRY_FLAG,
+      var isCurry = bitmask & WRAP_CURRY_FLAG,
           newHolders = isCurry ? holders : undefined,
           newHoldersRight = isCurry ? undefined : holders,
           newPartials = isCurry ? partials : undefined,
           newPartialsRight = isCurry ? undefined : partials;
 
-      bitmask |= (isCurry ? PARTIAL_FLAG : PARTIAL_RIGHT_FLAG);
-      bitmask &= ~(isCurry ? PARTIAL_RIGHT_FLAG : PARTIAL_FLAG);
+      bitmask |= (isCurry ? WRAP_PARTIAL_FLAG : WRAP_PARTIAL_RIGHT_FLAG);
+      bitmask &= ~(isCurry ? WRAP_PARTIAL_RIGHT_FLAG : WRAP_PARTIAL_FLAG);
 
-      if (!(bitmask & CURRY_BOUND_FLAG)) {
-        bitmask &= ~(BIND_FLAG | BIND_KEY_FLAG);
+      if (!(bitmask & WRAP_CURRY_BOUND_FLAG)) {
+        bitmask &= ~(WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG);
       }
       var newData = [
         func, bitmask, thisArg, newPartials, newHolders, newPartialsRight,
@@ -20614,7 +11924,7 @@ exports.isCrossOrigin = isCrossOrigin;
       var func = Math[methodName];
       return function(number, precision) {
         number = toNumber(number);
-        precision = nativeMin(toInteger(precision), 292);
+        precision = precision == null ? 0 : nativeMin(toInteger(precision), 292);
         if (precision) {
           // Shift with exponential notation to avoid floating-point issues.
           // See [MDN](https://mdn.io/round#Examples) for more details.
@@ -20666,17 +11976,16 @@ exports.isCrossOrigin = isCrossOrigin;
      * @private
      * @param {Function|string} func The function or method name to wrap.
      * @param {number} bitmask The bitmask flags.
-     *  The bitmask may be composed of the following flags:
-     *     1 - `_.bind`
-     *     2 - `_.bindKey`
-     *     4 - `_.curry` or `_.curryRight` of a bound function
-     *     8 - `_.curry`
-     *    16 - `_.curryRight`
-     *    32 - `_.partial`
-     *    64 - `_.partialRight`
-     *   128 - `_.rearg`
-     *   256 - `_.ary`
-     *   512 - `_.flip`
+     *    1 - `_.bind`
+     *    2 - `_.bindKey`
+     *    4 - `_.curry` or `_.curryRight` of a bound function
+     *    8 - `_.curry`
+     *   16 - `_.curryRight`
+     *   32 - `_.partial`
+     *   64 - `_.partialRight`
+     *  128 - `_.rearg`
+     *  256 - `_.ary`
+     *  512 - `_.flip`
      * @param {*} [thisArg] The `this` binding of `func`.
      * @param {Array} [partials] The arguments to be partially applied.
      * @param {Array} [holders] The `partials` placeholder indexes.
@@ -20686,20 +11995,20 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Function} Returns the new wrapped function.
      */
     function createWrap(func, bitmask, thisArg, partials, holders, argPos, ary, arity) {
-      var isBindKey = bitmask & BIND_KEY_FLAG;
+      var isBindKey = bitmask & WRAP_BIND_KEY_FLAG;
       if (!isBindKey && typeof func != 'function') {
         throw new TypeError(FUNC_ERROR_TEXT);
       }
       var length = partials ? partials.length : 0;
       if (!length) {
-        bitmask &= ~(PARTIAL_FLAG | PARTIAL_RIGHT_FLAG);
+        bitmask &= ~(WRAP_PARTIAL_FLAG | WRAP_PARTIAL_RIGHT_FLAG);
         partials = holders = undefined;
       }
       ary = ary === undefined ? ary : nativeMax(toInteger(ary), 0);
       arity = arity === undefined ? arity : toInteger(arity);
       length -= holders ? holders.length : 0;
 
-      if (bitmask & PARTIAL_RIGHT_FLAG) {
+      if (bitmask & WRAP_PARTIAL_RIGHT_FLAG) {
         var partialsRight = partials,
             holdersRight = holders;
 
@@ -20720,18 +12029,18 @@ exports.isCrossOrigin = isCrossOrigin;
       thisArg = newData[2];
       partials = newData[3];
       holders = newData[4];
-      arity = newData[9] = newData[9] == null
+      arity = newData[9] = newData[9] === undefined
         ? (isBindKey ? 0 : func.length)
         : nativeMax(newData[9] - length, 0);
 
-      if (!arity && bitmask & (CURRY_FLAG | CURRY_RIGHT_FLAG)) {
-        bitmask &= ~(CURRY_FLAG | CURRY_RIGHT_FLAG);
+      if (!arity && bitmask & (WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG)) {
+        bitmask &= ~(WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG);
       }
-      if (!bitmask || bitmask == BIND_FLAG) {
+      if (!bitmask || bitmask == WRAP_BIND_FLAG) {
         var result = createBind(func, bitmask, thisArg);
-      } else if (bitmask == CURRY_FLAG || bitmask == CURRY_RIGHT_FLAG) {
+      } else if (bitmask == WRAP_CURRY_FLAG || bitmask == WRAP_CURRY_RIGHT_FLAG) {
         result = createCurry(func, bitmask, arity);
-      } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !holders.length) {
+      } else if ((bitmask == WRAP_PARTIAL_FLAG || bitmask == (WRAP_BIND_FLAG | WRAP_PARTIAL_FLAG)) && !holders.length) {
         result = createPartial(func, bitmask, thisArg, partials);
       } else {
         result = createHybrid.apply(undefined, newData);
@@ -20741,21 +12050,77 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
+     * Used by `_.defaults` to customize its `_.assignIn` use to assign properties
+     * of source objects to the destination object for all destination properties
+     * that resolve to `undefined`.
+     *
+     * @private
+     * @param {*} objValue The destination value.
+     * @param {*} srcValue The source value.
+     * @param {string} key The key of the property to assign.
+     * @param {Object} object The parent object of `objValue`.
+     * @returns {*} Returns the value to assign.
+     */
+    function customDefaultsAssignIn(objValue, srcValue, key, object) {
+      if (objValue === undefined ||
+          (eq(objValue, objectProto[key]) && !hasOwnProperty.call(object, key))) {
+        return srcValue;
+      }
+      return objValue;
+    }
+
+    /**
+     * Used by `_.defaultsDeep` to customize its `_.merge` use to merge source
+     * objects into destination objects that are passed thru.
+     *
+     * @private
+     * @param {*} objValue The destination value.
+     * @param {*} srcValue The source value.
+     * @param {string} key The key of the property to merge.
+     * @param {Object} object The parent object of `objValue`.
+     * @param {Object} source The parent object of `srcValue`.
+     * @param {Object} [stack] Tracks traversed source values and their merged
+     *  counterparts.
+     * @returns {*} Returns the value to assign.
+     */
+    function customDefaultsMerge(objValue, srcValue, key, object, source, stack) {
+      if (isObject(objValue) && isObject(srcValue)) {
+        // Recursively merge objects and arrays (susceptible to call stack limits).
+        stack.set(srcValue, objValue);
+        baseMerge(objValue, srcValue, undefined, customDefaultsMerge, stack);
+        stack['delete'](srcValue);
+      }
+      return objValue;
+    }
+
+    /**
+     * Used by `_.omit` to customize its `_.cloneDeep` use to only clone plain
+     * objects.
+     *
+     * @private
+     * @param {*} value The value to inspect.
+     * @param {string} key The key of the property to inspect.
+     * @returns {*} Returns the uncloned value or `undefined` to defer cloning to `_.cloneDeep`.
+     */
+    function customOmitClone(value, key) {
+      return (key !== undefined && isPlainObject(value)) ? undefined : value;
+    }
+
+    /**
      * A specialized version of `baseIsEqualDeep` for arrays with support for
      * partial deep comparisons.
      *
      * @private
      * @param {Array} array The array to compare.
      * @param {Array} other The other array to compare.
-     * @param {Function} equalFunc The function to determine equivalents of values.
+     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
      * @param {Function} customizer The function to customize comparisons.
-     * @param {number} bitmask The bitmask of comparison flags. See `baseIsEqual`
-     *  for more details.
+     * @param {Function} equalFunc The function to determine equivalents of values.
      * @param {Object} stack Tracks traversed `array` and `other` objects.
      * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
      */
-    function equalArrays(array, other, equalFunc, customizer, bitmask, stack) {
-      var isPartial = bitmask & PARTIAL_COMPARE_FLAG,
+    function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
           arrLength = array.length,
           othLength = other.length;
 
@@ -20769,7 +12134,7 @@ exports.isCrossOrigin = isCrossOrigin;
       }
       var index = -1,
           result = true,
-          seen = (bitmask & UNORDERED_COMPARE_FLAG) ? new SetCache : undefined;
+          seen = (bitmask & COMPARE_UNORDERED_FLAG) ? new SetCache : undefined;
 
       stack.set(array, other);
       stack.set(other, array);
@@ -20795,7 +12160,7 @@ exports.isCrossOrigin = isCrossOrigin;
         if (seen) {
           if (!arraySome(other, function(othValue, othIndex) {
                 if (!cacheHas(seen, othIndex) &&
-                    (arrValue === othValue || equalFunc(arrValue, othValue, customizer, bitmask, stack))) {
+                    (arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
                   return seen.push(othIndex);
                 }
               })) {
@@ -20804,7 +12169,7 @@ exports.isCrossOrigin = isCrossOrigin;
           }
         } else if (!(
               arrValue === othValue ||
-                equalFunc(arrValue, othValue, customizer, bitmask, stack)
+                equalFunc(arrValue, othValue, bitmask, customizer, stack)
             )) {
           result = false;
           break;
@@ -20826,14 +12191,13 @@ exports.isCrossOrigin = isCrossOrigin;
      * @param {Object} object The object to compare.
      * @param {Object} other The other object to compare.
      * @param {string} tag The `toStringTag` of the objects to compare.
-     * @param {Function} equalFunc The function to determine equivalents of values.
+     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
      * @param {Function} customizer The function to customize comparisons.
-     * @param {number} bitmask The bitmask of comparison flags. See `baseIsEqual`
-     *  for more details.
+     * @param {Function} equalFunc The function to determine equivalents of values.
      * @param {Object} stack Tracks traversed `object` and `other` objects.
      * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
      */
-    function equalByTag(object, other, tag, equalFunc, customizer, bitmask, stack) {
+    function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
       switch (tag) {
         case dataViewTag:
           if ((object.byteLength != other.byteLength) ||
@@ -20871,7 +12235,7 @@ exports.isCrossOrigin = isCrossOrigin;
           var convert = mapToArray;
 
         case setTag:
-          var isPartial = bitmask & PARTIAL_COMPARE_FLAG;
+          var isPartial = bitmask & COMPARE_PARTIAL_FLAG;
           convert || (convert = setToArray);
 
           if (object.size != other.size && !isPartial) {
@@ -20882,11 +12246,11 @@ exports.isCrossOrigin = isCrossOrigin;
           if (stacked) {
             return stacked == other;
           }
-          bitmask |= UNORDERED_COMPARE_FLAG;
+          bitmask |= COMPARE_UNORDERED_FLAG;
 
           // Recursively compare objects (susceptible to call stack limits).
           stack.set(object, other);
-          var result = equalArrays(convert(object), convert(other), equalFunc, customizer, bitmask, stack);
+          var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
           stack['delete'](object);
           return result;
 
@@ -20905,18 +12269,17 @@ exports.isCrossOrigin = isCrossOrigin;
      * @private
      * @param {Object} object The object to compare.
      * @param {Object} other The other object to compare.
-     * @param {Function} equalFunc The function to determine equivalents of values.
+     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
      * @param {Function} customizer The function to customize comparisons.
-     * @param {number} bitmask The bitmask of comparison flags. See `baseIsEqual`
-     *  for more details.
+     * @param {Function} equalFunc The function to determine equivalents of values.
      * @param {Object} stack Tracks traversed `object` and `other` objects.
      * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
      */
-    function equalObjects(object, other, equalFunc, customizer, bitmask, stack) {
-      var isPartial = bitmask & PARTIAL_COMPARE_FLAG,
-          objProps = keys(object),
+    function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
+          objProps = getAllKeys(object),
           objLength = objProps.length,
-          othProps = keys(other),
+          othProps = getAllKeys(other),
           othLength = othProps.length;
 
       if (objLength != othLength && !isPartial) {
@@ -20951,7 +12314,7 @@ exports.isCrossOrigin = isCrossOrigin;
         }
         // Recursively compare objects (susceptible to call stack limits).
         if (!(compared === undefined
-              ? (objValue === othValue || equalFunc(objValue, othValue, customizer, bitmask, stack))
+              ? (objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack))
               : compared
             )) {
           result = false;
@@ -21148,17 +12511,24 @@ exports.isCrossOrigin = isCrossOrigin;
     }
 
     /**
-     * Creates an array of the own enumerable symbol properties of `object`.
+     * Creates an array of the own enumerable symbols of `object`.
      *
      * @private
      * @param {Object} object The object to query.
      * @returns {Array} Returns the array of symbols.
      */
-    var getSymbols = nativeGetSymbols ? overArg(nativeGetSymbols, Object) : stubArray;
+    var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
+      if (object == null) {
+        return [];
+      }
+      object = Object(object);
+      return arrayFilter(nativeGetSymbols(object), function(symbol) {
+        return propertyIsEnumerable.call(object, symbol);
+      });
+    };
 
     /**
-     * Creates an array of the own and inherited enumerable symbol properties
-     * of `object`.
+     * Creates an array of the own and inherited enumerable symbols of `object`.
      *
      * @private
      * @param {Object} object The object to query.
@@ -21256,7 +12626,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {boolean} Returns `true` if `path` exists, else `false`.
      */
     function hasPath(object, path, hasFunc) {
-      path = isKey(path, object) ? [path] : castPath(path);
+      path = castPath(path, object);
 
       var index = -1,
           length = path.length,
@@ -21590,22 +12960,22 @@ exports.isCrossOrigin = isCrossOrigin;
       var bitmask = data[1],
           srcBitmask = source[1],
           newBitmask = bitmask | srcBitmask,
-          isCommon = newBitmask < (BIND_FLAG | BIND_KEY_FLAG | ARY_FLAG);
+          isCommon = newBitmask < (WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG | WRAP_ARY_FLAG);
 
       var isCombo =
-        ((srcBitmask == ARY_FLAG) && (bitmask == CURRY_FLAG)) ||
-        ((srcBitmask == ARY_FLAG) && (bitmask == REARG_FLAG) && (data[7].length <= source[8])) ||
-        ((srcBitmask == (ARY_FLAG | REARG_FLAG)) && (source[7].length <= source[8]) && (bitmask == CURRY_FLAG));
+        ((srcBitmask == WRAP_ARY_FLAG) && (bitmask == WRAP_CURRY_FLAG)) ||
+        ((srcBitmask == WRAP_ARY_FLAG) && (bitmask == WRAP_REARG_FLAG) && (data[7].length <= source[8])) ||
+        ((srcBitmask == (WRAP_ARY_FLAG | WRAP_REARG_FLAG)) && (source[7].length <= source[8]) && (bitmask == WRAP_CURRY_FLAG));
 
       // Exit early if metadata can't be merged.
       if (!(isCommon || isCombo)) {
         return data;
       }
       // Use source `thisArg` if available.
-      if (srcBitmask & BIND_FLAG) {
+      if (srcBitmask & WRAP_BIND_FLAG) {
         data[2] = source[2];
         // Set when currying a bound function.
-        newBitmask |= bitmask & BIND_FLAG ? 0 : CURRY_BOUND_FLAG;
+        newBitmask |= bitmask & WRAP_BIND_FLAG ? 0 : WRAP_CURRY_BOUND_FLAG;
       }
       // Compose partial arguments.
       var value = source[3];
@@ -21627,7 +12997,7 @@ exports.isCrossOrigin = isCrossOrigin;
         data[7] = value;
       }
       // Use source `ary` if it's smaller.
-      if (srcBitmask & ARY_FLAG) {
+      if (srcBitmask & WRAP_ARY_FLAG) {
         data[8] = data[8] == null ? source[8] : nativeMin(data[8], source[8]);
       }
       // Use source `arity` if one is not provided.
@@ -21639,29 +13009,6 @@ exports.isCrossOrigin = isCrossOrigin;
       data[1] = newBitmask;
 
       return data;
-    }
-
-    /**
-     * Used by `_.defaultsDeep` to customize its `_.merge` use.
-     *
-     * @private
-     * @param {*} objValue The destination value.
-     * @param {*} srcValue The source value.
-     * @param {string} key The key of the property to merge.
-     * @param {Object} object The parent object of `objValue`.
-     * @param {Object} source The parent object of `srcValue`.
-     * @param {Object} [stack] Tracks traversed source values and their merged
-     *  counterparts.
-     * @returns {*} Returns the value to assign.
-     */
-    function mergeDefaults(objValue, srcValue, key, object, source, stack) {
-      if (isObject(objValue) && isObject(srcValue)) {
-        // Recursively merge objects and arrays (susceptible to call stack limits).
-        stack.set(srcValue, objValue);
-        baseMerge(objValue, srcValue, undefined, mergeDefaults, stack);
-        stack['delete'](srcValue);
-      }
-      return objValue;
     }
 
     /**
@@ -21733,7 +13080,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {*} Returns the parent value.
      */
     function parent(object, path) {
-      return path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
+      return path.length < 2 ? object : baseGet(object, baseSlice(path, 0, -1));
     }
 
     /**
@@ -21873,8 +13220,6 @@ exports.isCrossOrigin = isCrossOrigin;
      * @returns {Array} Returns the property path array.
      */
     var stringToPath = memoizeCapped(function(string) {
-      string = toString(string);
-
       var result = [];
       if (reLeadingDot.test(string)) {
         result.push('');
@@ -23408,7 +14753,7 @@ exports.isCrossOrigin = isCrossOrigin;
      *
      * var users = [
      *   { 'user': 'barney',  'active': false },
-     *   { 'user': 'fred',    'active': false},
+     *   { 'user': 'fred',    'active': false },
      *   { 'user': 'pebbles', 'active': true }
      * ];
      *
@@ -23944,7 +15289,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @memberOf _
      * @since 1.0.0
      * @category Seq
-     * @param {...(string|string[])} [paths] The property paths of elements to pick.
+     * @param {...(string|string[])} [paths] The property paths to pick.
      * @returns {Object} Returns the new `lodash` wrapper instance.
      * @example
      *
@@ -24609,12 +15954,10 @@ exports.isCrossOrigin = isCrossOrigin;
     var invokeMap = baseRest(function(collection, path, args) {
       var index = -1,
           isFunc = typeof path == 'function',
-          isProp = isKey(path),
           result = isArrayLike(collection) ? Array(collection.length) : [];
 
       baseEach(collection, function(value) {
-        var func = isFunc ? path : ((isProp && value != null) ? value[path] : undefined);
-        result[++index] = func ? apply(func, value, args) : baseInvoke(value, path, args);
+        result[++index] = isFunc ? apply(path, value, args) : baseInvoke(value, path, args);
       });
       return result;
     });
@@ -25163,7 +16506,7 @@ exports.isCrossOrigin = isCrossOrigin;
     function ary(func, n, guard) {
       n = guard ? undefined : n;
       n = (func && n == null) ? func.length : n;
-      return createWrap(func, ARY_FLAG, undefined, undefined, undefined, undefined, n);
+      return createWrap(func, WRAP_ARY_FLAG, undefined, undefined, undefined, undefined, n);
     }
 
     /**
@@ -25236,10 +16579,10 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => 'hi fred!'
      */
     var bind = baseRest(function(func, thisArg, partials) {
-      var bitmask = BIND_FLAG;
+      var bitmask = WRAP_BIND_FLAG;
       if (partials.length) {
         var holders = replaceHolders(partials, getHolder(bind));
-        bitmask |= PARTIAL_FLAG;
+        bitmask |= WRAP_PARTIAL_FLAG;
       }
       return createWrap(func, bitmask, thisArg, partials, holders);
     });
@@ -25290,10 +16633,10 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => 'hiya fred!'
      */
     var bindKey = baseRest(function(object, key, partials) {
-      var bitmask = BIND_FLAG | BIND_KEY_FLAG;
+      var bitmask = WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG;
       if (partials.length) {
         var holders = replaceHolders(partials, getHolder(bindKey));
-        bitmask |= PARTIAL_FLAG;
+        bitmask |= WRAP_PARTIAL_FLAG;
       }
       return createWrap(key, bitmask, object, partials, holders);
     });
@@ -25341,7 +16684,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function curry(func, arity, guard) {
       arity = guard ? undefined : arity;
-      var result = createWrap(func, CURRY_FLAG, undefined, undefined, undefined, undefined, undefined, arity);
+      var result = createWrap(func, WRAP_CURRY_FLAG, undefined, undefined, undefined, undefined, undefined, arity);
       result.placeholder = curry.placeholder;
       return result;
     }
@@ -25386,7 +16729,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function curryRight(func, arity, guard) {
       arity = guard ? undefined : arity;
-      var result = createWrap(func, CURRY_RIGHT_FLAG, undefined, undefined, undefined, undefined, undefined, arity);
+      var result = createWrap(func, WRAP_CURRY_RIGHT_FLAG, undefined, undefined, undefined, undefined, undefined, arity);
       result.placeholder = curryRight.placeholder;
       return result;
     }
@@ -25631,7 +16974,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => ['d', 'c', 'b', 'a']
      */
     function flip(func) {
-      return createWrap(func, FLIP_FLAG);
+      return createWrap(func, WRAP_FLIP_FLAG);
     }
 
     /**
@@ -25842,7 +17185,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     var partial = baseRest(function(func, partials) {
       var holders = replaceHolders(partials, getHolder(partial));
-      return createWrap(func, PARTIAL_FLAG, undefined, partials, holders);
+      return createWrap(func, WRAP_PARTIAL_FLAG, undefined, partials, holders);
     });
 
     /**
@@ -25879,7 +17222,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     var partialRight = baseRest(function(func, partials) {
       var holders = replaceHolders(partials, getHolder(partialRight));
-      return createWrap(func, PARTIAL_RIGHT_FLAG, undefined, partials, holders);
+      return createWrap(func, WRAP_PARTIAL_RIGHT_FLAG, undefined, partials, holders);
     });
 
     /**
@@ -25905,7 +17248,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => ['a', 'b', 'c']
      */
     var rearg = flatRest(function(func, indexes) {
-      return createWrap(func, REARG_FLAG, undefined, undefined, undefined, indexes);
+      return createWrap(func, WRAP_REARG_FLAG, undefined, undefined, undefined, indexes);
     });
 
     /**
@@ -25979,7 +17322,7 @@ exports.isCrossOrigin = isCrossOrigin;
       if (typeof func != 'function') {
         throw new TypeError(FUNC_ERROR_TEXT);
       }
-      start = start === undefined ? 0 : nativeMax(toInteger(start), 0);
+      start = start == null ? 0 : nativeMax(toInteger(start), 0);
       return baseRest(function(args) {
         var array = args[start],
             otherArgs = castSlice(args, 0, start);
@@ -26168,7 +17511,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => true
      */
     function clone(value) {
-      return baseClone(value, false, true);
+      return baseClone(value, CLONE_SYMBOLS_FLAG);
     }
 
     /**
@@ -26204,7 +17547,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function cloneWith(value, customizer) {
       customizer = typeof customizer == 'function' ? customizer : undefined;
-      return baseClone(value, false, true, customizer);
+      return baseClone(value, CLONE_SYMBOLS_FLAG, customizer);
     }
 
     /**
@@ -26226,7 +17569,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => false
      */
     function cloneDeep(value) {
-      return baseClone(value, true, true);
+      return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
     }
 
     /**
@@ -26259,7 +17602,7 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function cloneDeepWith(value, customizer) {
       customizer = typeof customizer == 'function' ? customizer : undefined;
-      return baseClone(value, true, true, customizer);
+      return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG, customizer);
     }
 
     /**
@@ -26649,7 +17992,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * date objects, error objects, maps, numbers, `Object` objects, regexes,
      * sets, strings, symbols, and typed arrays. `Object` objects are compared
      * by their own, not inherited, enumerable properties. Functions and DOM
-     * nodes are **not** supported.
+     * nodes are compared by strict equality, i.e. `===`.
      *
      * @static
      * @memberOf _
@@ -26708,7 +18051,7 @@ exports.isCrossOrigin = isCrossOrigin;
     function isEqualWith(value, other, customizer) {
       customizer = typeof customizer == 'function' ? customizer : undefined;
       var result = customizer ? customizer(value, other) : undefined;
-      return result === undefined ? baseIsEqual(value, other, customizer) : !!result;
+      return result === undefined ? baseIsEqual(value, other, undefined, customizer) : !!result;
     }
 
     /**
@@ -27669,7 +19012,9 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => 3
      */
     function toSafeInteger(value) {
-      return baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER);
+      return value
+        ? baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER)
+        : (value === 0 ? value : 0);
     }
 
     /**
@@ -27851,7 +19196,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @since 1.0.0
      * @category Object
      * @param {Object} object The object to iterate over.
-     * @param {...(string|string[])} [paths] The property paths of elements to pick.
+     * @param {...(string|string[])} [paths] The property paths to pick.
      * @returns {Array} Returns the picked values.
      * @example
      *
@@ -27923,7 +19268,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => { 'a': 1, 'b': 2 }
      */
     var defaults = baseRest(function(args) {
-      args.push(undefined, assignInDefaults);
+      args.push(undefined, customDefaultsAssignIn);
       return apply(assignInWith, undefined, args);
     });
 
@@ -27947,7 +19292,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => { 'a': { 'b': 2, 'c': 3 } }
      */
     var defaultsDeep = baseRest(function(args) {
-      args.push(undefined, mergeDefaults);
+      args.push(undefined, customDefaultsMerge);
       return apply(mergeWith, undefined, args);
     });
 
@@ -28578,15 +19923,16 @@ exports.isCrossOrigin = isCrossOrigin;
 
     /**
      * The opposite of `_.pick`; this method creates an object composed of the
-     * own and inherited enumerable string keyed properties of `object` that are
-     * not omitted.
+     * own and inherited enumerable property paths of `object` that are not omitted.
+     *
+     * **Note:** This method is considerably slower than `_.pick`.
      *
      * @static
      * @since 0.1.0
      * @memberOf _
      * @category Object
      * @param {Object} object The source object.
-     * @param {...(string|string[])} [props] The property identifiers to omit.
+     * @param {...(string|string[])} [paths] The property paths to omit.
      * @returns {Object} Returns the new object.
      * @example
      *
@@ -28595,12 +19941,26 @@ exports.isCrossOrigin = isCrossOrigin;
      * _.omit(object, ['a', 'c']);
      * // => { 'b': '2' }
      */
-    var omit = flatRest(function(object, props) {
+    var omit = flatRest(function(object, paths) {
+      var result = {};
       if (object == null) {
-        return {};
+        return result;
       }
-      props = arrayMap(props, toKey);
-      return basePick(object, baseDifference(getAllKeysIn(object), props));
+      var isDeep = false;
+      paths = arrayMap(paths, function(path) {
+        path = castPath(path, object);
+        isDeep || (isDeep = path.length > 1);
+        return path;
+      });
+      copyObject(object, getAllKeysIn(object), result);
+      if (isDeep) {
+        result = baseClone(result, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG, customOmitClone);
+      }
+      var length = paths.length;
+      while (length--) {
+        baseUnset(result, paths[length]);
+      }
+      return result;
     });
 
     /**
@@ -28635,7 +19995,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * @memberOf _
      * @category Object
      * @param {Object} object The source object.
-     * @param {...(string|string[])} [props] The property identifiers to pick.
+     * @param {...(string|string[])} [paths] The property paths to pick.
      * @returns {Object} Returns the new object.
      * @example
      *
@@ -28644,8 +20004,8 @@ exports.isCrossOrigin = isCrossOrigin;
      * _.pick(object, ['a', 'c']);
      * // => { 'a': 1, 'c': 3 }
      */
-    var pick = flatRest(function(object, props) {
-      return object == null ? {} : basePick(object, arrayMap(props, toKey));
+    var pick = flatRest(function(object, paths) {
+      return object == null ? {} : basePick(object, paths);
     });
 
     /**
@@ -28667,7 +20027,16 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => { 'a': 1, 'c': 3 }
      */
     function pickBy(object, predicate) {
-      return object == null ? {} : basePickBy(object, getAllKeysIn(object), getIteratee(predicate));
+      if (object == null) {
+        return {};
+      }
+      var props = arrayMap(getAllKeysIn(object), function(prop) {
+        return [prop];
+      });
+      predicate = getIteratee(predicate);
+      return basePickBy(object, props, function(value, path) {
+        return predicate(value, path[0]);
+      });
     }
 
     /**
@@ -28700,15 +20069,15 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => 'default'
      */
     function result(object, path, defaultValue) {
-      path = isKey(path, object) ? [path] : castPath(path);
+      path = castPath(path, object);
 
       var index = -1,
           length = path.length;
 
       // Ensure the loop is entered when path is empty.
       if (!length) {
-        object = undefined;
         length = 1;
+        object = undefined;
       }
       while (++index < length) {
         var value = object == null ? undefined : object[toKey(path[index])];
@@ -29734,7 +21103,10 @@ exports.isCrossOrigin = isCrossOrigin;
      */
     function startsWith(string, target, position) {
       string = toString(string);
-      position = baseClamp(toInteger(position), 0, string.length);
+      position = position == null
+        ? 0
+        : baseClamp(toInteger(position), 0, string.length);
+
       target = baseToString(target);
       return string.slice(position, position + target.length) == target;
     }
@@ -29853,9 +21225,9 @@ exports.isCrossOrigin = isCrossOrigin;
         options = undefined;
       }
       string = toString(string);
-      options = assignInWith({}, options, settings, assignInDefaults);
+      options = assignInWith({}, options, settings, customDefaultsAssignIn);
 
-      var imports = assignInWith({}, options.imports, settings.imports, assignInDefaults),
+      var imports = assignInWith({}, options.imports, settings.imports, customDefaultsAssignIn),
           importsKeys = keys(imports),
           importsValues = baseValues(imports, importsKeys);
 
@@ -30438,7 +21810,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => [{ 'a': 1, 'b': 2 }]
      */
     function conforms(source) {
-      return baseConforms(baseClone(source, true));
+      return baseConforms(baseClone(source, CLONE_DEEP_FLAG));
     }
 
     /**
@@ -30600,7 +21972,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => ['def']
      */
     function iteratee(func) {
-      return baseIteratee(typeof func == 'function' ? func : baseClone(func, true));
+      return baseIteratee(typeof func == 'function' ? func : baseClone(func, CLONE_DEEP_FLAG));
     }
 
     /**
@@ -30632,7 +22004,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => [{ 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matches(source) {
-      return baseMatches(baseClone(source, true));
+      return baseMatches(baseClone(source, CLONE_DEEP_FLAG));
     }
 
     /**
@@ -30662,7 +22034,7 @@ exports.isCrossOrigin = isCrossOrigin;
      * // => { 'a': 4, 'b': 5, 'c': 6 }
      */
     function matchesProperty(path, srcValue) {
-      return baseMatchesProperty(path, baseClone(srcValue, true));
+      return baseMatchesProperty(path, baseClone(srcValue, CLONE_DEEP_FLAG));
     }
 
     /**
@@ -31218,7 +22590,7 @@ exports.isCrossOrigin = isCrossOrigin;
       if (isArray(value)) {
         return arrayMap(value, toKey);
       }
-      return isSymbol(value) ? [value] : copyArray(stringToPath(value));
+      return isSymbol(value) ? [value] : copyArray(stringToPath(toString(value)));
     }
 
     /**
@@ -31939,14 +23311,13 @@ exports.isCrossOrigin = isCrossOrigin;
     // Add `LazyWrapper` methods for `_.drop` and `_.take` variants.
     arrayEach(['drop', 'take'], function(methodName, index) {
       LazyWrapper.prototype[methodName] = function(n) {
-        var filtered = this.__filtered__;
-        if (filtered && !index) {
-          return new LazyWrapper(this);
-        }
         n = n === undefined ? 1 : nativeMax(toInteger(n), 0);
 
-        var result = this.clone();
-        if (filtered) {
+        var result = (this.__filtered__ && !index)
+          ? new LazyWrapper(this)
+          : this.clone();
+
+        if (result.__filtered__) {
           result.__takeCount__ = nativeMin(n, result.__takeCount__);
         } else {
           result.__views__.push({
@@ -32122,7 +23493,7 @@ exports.isCrossOrigin = isCrossOrigin;
       }
     });
 
-    realNames[createHybrid(undefined, BIND_KEY_FLAG).name] = [{
+    realNames[createHybrid(undefined, WRAP_BIND_KEY_FLAG).name] = [{
       'name': 'wrapper',
       'func': undefined
     }];
@@ -32183,7 +23554,7 @@ exports.isCrossOrigin = isCrossOrigin;
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],69:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var isFunction = require("is-function")
@@ -32274,15 +23645,6 @@ function _createXHR(options) {
         return body
     }
 
-    var failureResponse = {
-                body: undefined,
-                headers: {},
-                statusCode: 0,
-                method: method,
-                url: uri,
-                rawRequest: xhr
-            }
-
     function errorFunc(evt) {
         clearTimeout(timeoutTimer)
         if(!(evt instanceof Error)){
@@ -32343,13 +23705,21 @@ function _createXHR(options) {
     var sync = !!options.sync
     var isJson = false
     var timeoutTimer
+    var failureResponse = {
+        body: undefined,
+        headers: {},
+        statusCode: 0,
+        method: method,
+        url: uri,
+        rawRequest: xhr
+    }
 
-    if ("json" in options) {
+    if ("json" in options && options.json !== false) {
         isJson = true
         headers["accept"] || headers["Accept"] || (headers["Accept"] = "application/json") //Don't override existing accept header declared by user
         if (method !== "GET" && method !== "HEAD") {
             headers["content-type"] || headers["Content-Type"] || (headers["Content-Type"] = "application/json") //Don't override existing accept header declared by user
-            body = JSON.stringify(options.json)
+            body = JSON.stringify(options.json === true ? body : options.json)
         }
     }
 
@@ -32359,6 +23729,9 @@ function _createXHR(options) {
     // IE9 must have onprogress be set to a unique function.
     xhr.onprogress = function () {
         // IE must die
+    }
+    xhr.onabort = function(){
+        aborted = true;
     }
     xhr.ontimeout = errorFunc
     xhr.open(method, uri, !sync, options.username, options.password)
@@ -32371,7 +23744,8 @@ function _createXHR(options) {
     // both npm's request and jquery 1.x use this kind of timeout, so this is being consistent
     if (!sync && options.timeout > 0 ) {
         timeoutTimer = setTimeout(function(){
-            aborted=true//IE9 may still call readystatechange
+            if (aborted) return
+            aborted = true//IE9 may still call readystatechange
             xhr.abort("timeout")
             var e = new Error("XMLHttpRequest timeout")
             e.code = "ETIMEDOUT"
@@ -32420,2021 +23794,7 @@ function getXml(xhr) {
 
 function noop() {}
 
-},{"global/window":20,"is-function":21,"parse-headers":121,"xtend":148}],70:[function(require,module,exports){
-module.exports={
-  "_args": [
-    [
-      {
-        "escapedName": null,
-        "hosted": {
-          "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.20/package.json",
-          "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-          "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-          "shortcut": "github:Afrostream/koment-js#1.0.20",
-          "ssh": "git@github.com:Afrostream/koment-js.git#1.0.20",
-          "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.20",
-          "type": "github"
-        },
-        "name": null,
-        "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-        "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-        "scope": null,
-        "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-        "type": "hosted"
-      },
-      "/Users/benjipott/Documents/projects/afrostream/afrostream-player"
-    ]
-  ],
-  "_from": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-  "_id": "koment-js@1.0.10",
-  "_inCache": true,
-  "_location": "/koment-js",
-  "_phantomChildren": {
-    "JSONStream": "1.2.1",
-    "assert": "1.3.0",
-    "async-foreach": "0.1.3",
-    "babel-core": "5.8.38",
-    "brace-expansion": "1.1.6",
-    "browser-pack": "5.0.1",
-    "browser-resolve": "1.11.2",
-    "browserify-zlib": "0.1.4",
-    "buffer": "3.6.0",
-    "builtins": "0.0.7",
-    "chalk": "1.1.3",
-    "chokidar": "1.6.1",
-    "commander": "2.9.0",
-    "commondir": "0.0.1",
-    "console-browserify": "1.1.0",
-    "constants-browserify": "0.0.1",
-    "convert-source-map": "1.3.0",
-    "core-util-is": "1.0.2",
-    "crypto-browserify": "3.11.0",
-    "debug": "2.2.0",
-    "defined": "1.0.0",
-    "deps-sort": "1.3.9",
-    "domain-browser": "1.1.7",
-    "duplexer2": "0.0.2",
-    "es6-promise": "3.3.1",
-    "events": "1.0.2",
-    "fs-readdir-recursive": "0.1.2",
-    "fs.realpath": "1.0.0",
-    "get-stdin": "4.0.1",
-    "glob": "5.0.15",
-    "global": "4.3.0",
-    "has": "1.0.1",
-    "htmlescape": "1.1.1",
-    "https-browserify": "0.0.1",
-    "ignore-by-default": "1.0.1",
-    "in-publish": "2.0.0",
-    "inflight": "1.0.5",
-    "inherits": "2.0.1",
-    "insert-module-globals": "6.6.3",
-    "is-function": "1.0.1",
-    "labeled-stream-splicer": "1.0.2",
-    "lodash.assign": "4.2.0",
-    "lodash.clonedeep": "4.5.0",
-    "lodash.defaults": "3.1.2",
-    "lru-cache": "4.0.1",
-    "meow": "3.7.0",
-    "mkdirp": "0.5.1",
-    "module-deps": "3.9.1",
-    "nan": "2.4.0",
-    "node-gyp": "3.4.0",
-    "npmlog": "4.0.0",
-    "object-assign": "4.1.0",
-    "once": "1.3.3",
-    "os-browserify": "0.1.2",
-    "output-file-sync": "1.1.2",
-    "parents": "1.0.1",
-    "parse-headers": "2.0.1",
-    "path-browserify": "0.0.0",
-    "path-exists": "1.0.0",
-    "path-is-absolute": "1.0.0",
-    "process": "0.11.9",
-    "ps-tree": "1.1.0",
-    "punycode": "1.4.1",
-    "querystring-es3": "0.2.1",
-    "read-only-stream": "1.1.1",
-    "readable-stream": "2.0.6",
-    "request": "2.74.0",
-    "resolve": "1.1.7",
-    "sass-graph": "2.1.2",
-    "shasum": "1.0.2",
-    "shell-quote": "0.0.1",
-    "slash": "1.0.0",
-    "source-map": "0.5.6",
-    "stream-browserify": "2.0.1",
-    "stream-http": "1.7.1",
-    "string_decoder": "0.10.31",
-    "subarg": "1.0.0",
-    "syntax-error": "1.1.6",
-    "through2": "1.1.1",
-    "timers-browserify": "1.4.2",
-    "touch": "1.0.0",
-    "tty-browserify": "0.0.0",
-    "typedarray": "0.0.6",
-    "undefsafe": "0.0.3",
-    "update-notifier": "0.5.0",
-    "url": "0.10.3",
-    "util": "0.10.3",
-    "vm-browserify": "0.0.4",
-    "which": "1.2.10",
-    "xtend": "4.0.1"
-  },
-  "_requested": {
-    "escapedName": null,
-    "hosted": {
-      "directUrl": "https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@raw.githubusercontent.com/Afrostream/koment-js/1.0.20/package.json",
-      "gitUrl": "git://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-      "httpsUrl": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-      "shortcut": "github:Afrostream/koment-js#1.0.20",
-      "ssh": "git@github.com:Afrostream/koment-js.git#1.0.20",
-      "sshUrl": "git+ssh://git@github.com/Afrostream/koment-js.git#1.0.20",
-      "type": "github"
-    },
-    "name": null,
-    "raw": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-    "rawSpec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-    "scope": null,
-    "spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-    "type": "hosted"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#4fbdcb5c69e4a3bc52a92de40f486e6858120665",
-  "_shasum": "a6a0e949a66dde3bb16bcc23877b9ac0a712edff",
-  "_shrinkwrap": null,
-  "_spec": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.0.20",
-  "_where": "/Users/benjipott/Documents/projects/afrostream/afrostream-player",
-  "author": {
-    "name": "Benjipott"
-  },
-  "babel": {},
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
-  },
-  "browserify-shim": {
-    "qunit": "global:QUnit",
-    "sinon": "global:sinon"
-  },
-  "bugs": {
-    "url": "https://github.com/komentio/koment-js/issues"
-  },
-  "dependencies": {
-    "babel": "^5.8.0",
-    "babelify": "^6.0.0",
-    "bannerize": "^1.0.0",
-    "browserify": "^11.0.0",
-    "browserify-shim": "^3.0.0",
-    "connect": "^3.4.0",
-    "cowsay": "^1.1.0",
-    "doctoc": "^0.15.0",
-    "dom-select": "^1.1.1",
-    "global": "^4.3.0",
-    "karma": "^0.13.0",
-    "karma-browserify": "^4.4.0",
-    "karma-chrome-launcher": "^0.2.0",
-    "karma-detect-browsers": "^2.0.0",
-    "karma-firefox-launcher": "^0.1.0",
-    "karma-ie-launcher": "^0.2.0",
-    "karma-qunit": "^0.1.0",
-    "karma-safari-launcher": "^0.1.0",
-    "lodash": "^4.15.0",
-    "lodash-compat": "^3.10.2",
-    "minimist": "^1.2.0",
-    "node-sass": "^3.8.0",
-    "node.extend": "^1.1.5",
-    "nodemon": "^1.10.2",
-    "npm-run-all": "~1.2.0",
-    "object.assign": "^4.0.3",
-    "portscanner": "^1.0.0",
-    "qunitjs": "^1.0.0",
-    "safe-json-parse": "^4.0.0",
-    "serve-static": "^1.10.0",
-    "sinon": "1.14.1",
-    "tsml": "^1.0.1",
-    "uglify-js": "^2.5.0",
-    "videojs-externals": "^1.0.3",
-    "watchify": "^3.6.0",
-    "xhr": "^2.2.2"
-  },
-  "description": "Post comments on all video players",
-  "devDependencies": {},
-  "eslintConfig": {
-    "extends": "airbnb/base",
-    "parser": "babel-eslint"
-  },
-  "files": [
-    "CONTRIBUTING.md",
-    "bower.json",
-    "dist-test/",
-    "dist/",
-    "docs/",
-    "es5/",
-    "index.html",
-    "scripts/",
-    "src/",
-    "test/"
-  ],
-  "gitHead": "4fbdcb5c69e4a3bc52a92de40f486e6858120665",
-  "homepage": "https://github.com/komentio/koment-js#readme",
-  "keywords": [
-    "koment.io",
-    "comments"
-  ],
-  "license": "MIT",
-  "main": "es5/js/koment.js",
-  "name": "koment-js",
-  "optionalDependencies": {},
-  "private": true,
-  "readme": "<!-- START doctoc generated TOC please keep comment here to allow auto update -->\n<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->\n**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*\n\n- [[koment-js](https://github.com/komentio/koment-js)](#koment-jshttpsgithubcomkomentiokoment-js)\n    - [How to Install](#how-to-install)\n    - [Getting Started](#getting-started)\n    - [How to Test](#how-to-test)\n    - [License](#license)\n\n<!-- END doctoc generated TOC please keep comment here to allow auto update -->\n\n# [koment-js](https://github.com/komentio/koment-js)\n\n[![NPM version](http://img.shields.io/npm/v/koment-js.svg?style=flat-square)](https://www.npmjs.com/package/koment-js)\n[![NPM downloads](http://img.shields.io/npm/dm/koment-js.svg?style=flat-square)](https://www.npmjs.com/package/koment-js)\n[![Build Status](http://img.shields.io/travis/komentio/koment-js/master.svg?style=flat-square)](https://travis-ci.org/komentio/koment-js)\n[![Coverage Status](https://img.shields.io/coveralls/komentio/koment-js.svg?style=flat-square)](https://coveralls.io/komentio/koment-js)\n[![Dependency Status](http://img.shields.io/david/komentio/koment-js.svg?style=flat-square)](https://david-dm.org/komentio/koment-js)\n\n> Post comments on all video players\n\n### How to Install\n\n```sh\n$ npm install koment-js\n```\n\n### Getting Started\n\n...\n\n### How to Test\n\nRun one, or a combination of the following commands to lint and test your code:\n\n```sh\n$ npm run lint          # Lint the source code with ESLint\n$ npm test              # Run unit tests with Mocha\n$ npm run test:watch    # Run unit tests with Mocha, and watch files for changes\n$ npm run test:cover    # Run unit tests with code coverage by Istanbul\n```\n\nTo launch the documentation site, run:\n\n```sh\n$ npm install -g easystatic\n$ npm start\n```\n\n### License\n\nMIT © 2016 Benjipott\n",
-  "readmeFilename": "README.md",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/komentio/koment-js.git"
-  },
-  "scripts": {
-    "build": "npm-run-all -p build:*",
-    "build:css": "node-sass --include-path src --output-style compressed src/css/koment.scss -o dist",
-    "build:js": "npm-run-all mkdirs build:js:babel build:js:browserify build:js:bannerize build:js:uglify copy",
-    "build:js:babel": "babel src -d es5",
-    "build:js:bannerize": "bannerize dist/koment.js --banner=scripts/banner.ejs",
-    "build:js:browserify": "browserify . -s koment -o dist/koment.js",
-    "build:js:uglify": "uglifyjs dist/koment.js --koment --mangle --compress -o dist/koment.min.js",
-    "build:test": "npm-run-all mkdirs build:test:browserify",
-    "build:test:browserify": "browserify `find test -name '*.test.js'` -t babelify -o dist-test/koment.js",
-    "clean": "rm -rf dist dist-test es5",
-    "copy": "npm-run-all -p copy:*",
-    "copy:fonts": "cp -R src/fonts dist/fonts",
-    "dev": "echo 'requiring node v6.9.1' && . ~/.nvm/nvm.sh && nvm use 6.9.1 && npm-run-all -p start watch",
-    "docs": "doctoc README.md docs/api.md",
-    "lint": "vjsstandard",
-    "mkdirs": "mkdir -p dist dist-test es5",
-    "postversion": "./scripts/npm-postversion-for-bower.sh",
-    "prebuild": "npm run clean",
-    "prepublish": "npm run build",
-    "prestart": "npm-run-all -p docs build",
-    "pretest": "npm-run-all build:test",
-    "preversion": "./scripts/npm-preversion-for-bower.sh",
-    "start": "npm-run-all -p start:serve",
-    "start:serve": "babel-node scripts/server.js",
-    "test": "karma start test/karma/detected.js",
-    "test:chrome": "npm run pretest && karma start test/karma/chrome.js",
-    "test:firefox": "npm run pretest && karma start test/karma/firefox.js",
-    "test:ie": "npm run pretest && karma start test/karma/ie.js",
-    "test:safari": "npm run pretest && karma start test/karma/safari.js",
-    "version": "./scripts/npm-version-for-bower.sh",
-    "watch": "npm run mkdirs && npm-run-all -p watch:*",
-    "watch:css": "nodemon -e scss -x \"npm run build:css\"",
-    "watch:js": "watchify src/js/koment -t babelify -v -o dist/koment.js",
-    "watch:test": "watchify `find test -name '*.test.js'` -t babelify -o dist-test/koment.js"
-  },
-  "version": "1.0.10",
-  "vjsstandard": {
-    "ignore": [
-      "dist",
-      "dist-test",
-      "docs",
-      "es5",
-      "test/karma",
-      "scripts"
-    ]
-  }
-}
-
-},{}],71:[function(require,module,exports){
-var getNative = require('../internal/getNative');
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeNow = getNative(Date, 'now');
-
-/**
- * Gets the number of milliseconds that have elapsed since the Unix epoch
- * (1 January 1970 00:00:00 UTC).
- *
- * @static
- * @memberOf _
- * @category Date
- * @example
- *
- * _.defer(function(stamp) {
- *   console.log(_.now() - stamp);
- * }, _.now());
- * // => logs the number of milliseconds it took for the deferred function to be invoked
- */
-var now = nativeNow || function() {
-  return new Date().getTime();
-};
-
-module.exports = now;
-
-},{"../internal/getNative":87}],72:[function(require,module,exports){
-var isObject = require('../lang/isObject'),
-    now = require('../date/now');
-
-/** Used as the `TypeError` message for "Functions" methods. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeMax = Math.max;
-
-/**
- * Creates a debounced function that delays invoking `func` until after `wait`
- * milliseconds have elapsed since the last time the debounced function was
- * invoked. The debounced function comes with a `cancel` method to cancel
- * delayed invocations. Provide an options object to indicate that `func`
- * should be invoked on the leading and/or trailing edge of the `wait` timeout.
- * Subsequent calls to the debounced function return the result of the last
- * `func` invocation.
- *
- * **Note:** If `leading` and `trailing` options are `true`, `func` is invoked
- * on the trailing edge of the timeout only if the the debounced function is
- * invoked more than once during the `wait` timeout.
- *
- * See [David Corbacho's article](http://drupalmotion.com/article/debounce-and-throttle-visual-explanation)
- * for details over the differences between `_.debounce` and `_.throttle`.
- *
- * @static
- * @memberOf _
- * @category Function
- * @param {Function} func The function to debounce.
- * @param {number} [wait=0] The number of milliseconds to delay.
- * @param {Object} [options] The options object.
- * @param {boolean} [options.leading=false] Specify invoking on the leading
- *  edge of the timeout.
- * @param {number} [options.maxWait] The maximum time `func` is allowed to be
- *  delayed before it's invoked.
- * @param {boolean} [options.trailing=true] Specify invoking on the trailing
- *  edge of the timeout.
- * @returns {Function} Returns the new debounced function.
- * @example
- *
- * // avoid costly calculations while the window size is in flux
- * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
- *
- * // invoke `sendMail` when the click event is fired, debouncing subsequent calls
- * jQuery('#postbox').on('click', _.debounce(sendMail, 300, {
- *   'leading': true,
- *   'trailing': false
- * }));
- *
- * // ensure `batchLog` is invoked once after 1 second of debounced calls
- * var source = new EventSource('/stream');
- * jQuery(source).on('message', _.debounce(batchLog, 250, {
- *   'maxWait': 1000
- * }));
- *
- * // cancel a debounced call
- * var todoChanges = _.debounce(batchLog, 1000);
- * Object.observe(models.todo, todoChanges);
- *
- * Object.observe(models, function(changes) {
- *   if (_.find(changes, { 'user': 'todo', 'type': 'delete'})) {
- *     todoChanges.cancel();
- *   }
- * }, ['delete']);
- *
- * // ...at some point `models.todo` is changed
- * models.todo.completed = true;
- *
- * // ...before 1 second has passed `models.todo` is deleted
- * // which cancels the debounced `todoChanges` call
- * delete models.todo;
- */
-function debounce(func, wait, options) {
-  var args,
-      maxTimeoutId,
-      result,
-      stamp,
-      thisArg,
-      timeoutId,
-      trailingCall,
-      lastCalled = 0,
-      maxWait = false,
-      trailing = true;
-
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  wait = wait < 0 ? 0 : (+wait || 0);
-  if (options === true) {
-    var leading = true;
-    trailing = false;
-  } else if (isObject(options)) {
-    leading = !!options.leading;
-    maxWait = 'maxWait' in options && nativeMax(+options.maxWait || 0, wait);
-    trailing = 'trailing' in options ? !!options.trailing : trailing;
-  }
-
-  function cancel() {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    if (maxTimeoutId) {
-      clearTimeout(maxTimeoutId);
-    }
-    lastCalled = 0;
-    maxTimeoutId = timeoutId = trailingCall = undefined;
-  }
-
-  function complete(isCalled, id) {
-    if (id) {
-      clearTimeout(id);
-    }
-    maxTimeoutId = timeoutId = trailingCall = undefined;
-    if (isCalled) {
-      lastCalled = now();
-      result = func.apply(thisArg, args);
-      if (!timeoutId && !maxTimeoutId) {
-        args = thisArg = undefined;
-      }
-    }
-  }
-
-  function delayed() {
-    var remaining = wait - (now() - stamp);
-    if (remaining <= 0 || remaining > wait) {
-      complete(trailingCall, maxTimeoutId);
-    } else {
-      timeoutId = setTimeout(delayed, remaining);
-    }
-  }
-
-  function maxDelayed() {
-    complete(trailing, timeoutId);
-  }
-
-  function debounced() {
-    args = arguments;
-    stamp = now();
-    thisArg = this;
-    trailingCall = trailing && (timeoutId || !leading);
-
-    if (maxWait === false) {
-      var leadingCall = leading && !timeoutId;
-    } else {
-      if (!maxTimeoutId && !leading) {
-        lastCalled = stamp;
-      }
-      var remaining = maxWait - (stamp - lastCalled),
-          isCalled = remaining <= 0 || remaining > maxWait;
-
-      if (isCalled) {
-        if (maxTimeoutId) {
-          maxTimeoutId = clearTimeout(maxTimeoutId);
-        }
-        lastCalled = stamp;
-        result = func.apply(thisArg, args);
-      }
-      else if (!maxTimeoutId) {
-        maxTimeoutId = setTimeout(maxDelayed, remaining);
-      }
-    }
-    if (isCalled && timeoutId) {
-      timeoutId = clearTimeout(timeoutId);
-    }
-    else if (!timeoutId && wait !== maxWait) {
-      timeoutId = setTimeout(delayed, wait);
-    }
-    if (leadingCall) {
-      isCalled = true;
-      result = func.apply(thisArg, args);
-    }
-    if (isCalled && !timeoutId && !maxTimeoutId) {
-      args = thisArg = undefined;
-    }
-    return result;
-  }
-  debounced.cancel = cancel;
-  return debounced;
-}
-
-module.exports = debounce;
-
-},{"../date/now":71,"../lang/isObject":100}],73:[function(require,module,exports){
-/** Used as the `TypeError` message for "Functions" methods. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeMax = Math.max;
-
-/**
- * Creates a function that invokes `func` with the `this` binding of the
- * created function and arguments from `start` and beyond provided as an array.
- *
- * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/Web/JavaScript/Reference/Functions/rest_parameters).
- *
- * @static
- * @memberOf _
- * @category Function
- * @param {Function} func The function to apply a rest parameter to.
- * @param {number} [start=func.length-1] The start position of the rest parameter.
- * @returns {Function} Returns the new function.
- * @example
- *
- * var say = _.restParam(function(what, names) {
- *   return what + ' ' + _.initial(names).join(', ') +
- *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
- * });
- *
- * say('hello', 'fred', 'barney', 'pebbles');
- * // => 'hello fred, barney, & pebbles'
- */
-function restParam(func, start) {
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
-  return function() {
-    var args = arguments,
-        index = -1,
-        length = nativeMax(args.length - start, 0),
-        rest = Array(length);
-
-    while (++index < length) {
-      rest[index] = args[start + index];
-    }
-    switch (start) {
-      case 0: return func.call(this, rest);
-      case 1: return func.call(this, args[0], rest);
-      case 2: return func.call(this, args[0], args[1], rest);
-    }
-    var otherArgs = Array(start + 1);
-    index = -1;
-    while (++index < start) {
-      otherArgs[index] = args[index];
-    }
-    otherArgs[start] = rest;
-    return func.apply(this, otherArgs);
-  };
-}
-
-module.exports = restParam;
-
-},{}],74:[function(require,module,exports){
-var debounce = require('./debounce'),
-    isObject = require('../lang/isObject');
-
-/** Used as the `TypeError` message for "Functions" methods. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/**
- * Creates a throttled function that only invokes `func` at most once per
- * every `wait` milliseconds. The throttled function comes with a `cancel`
- * method to cancel delayed invocations. Provide an options object to indicate
- * that `func` should be invoked on the leading and/or trailing edge of the
- * `wait` timeout. Subsequent calls to the throttled function return the
- * result of the last `func` call.
- *
- * **Note:** If `leading` and `trailing` options are `true`, `func` is invoked
- * on the trailing edge of the timeout only if the the throttled function is
- * invoked more than once during the `wait` timeout.
- *
- * See [David Corbacho's article](http://drupalmotion.com/article/debounce-and-throttle-visual-explanation)
- * for details over the differences between `_.throttle` and `_.debounce`.
- *
- * @static
- * @memberOf _
- * @category Function
- * @param {Function} func The function to throttle.
- * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
- * @param {Object} [options] The options object.
- * @param {boolean} [options.leading=true] Specify invoking on the leading
- *  edge of the timeout.
- * @param {boolean} [options.trailing=true] Specify invoking on the trailing
- *  edge of the timeout.
- * @returns {Function} Returns the new throttled function.
- * @example
- *
- * // avoid excessively updating the position while scrolling
- * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
- *
- * // invoke `renewToken` when the click event is fired, but not more than once every 5 minutes
- * jQuery('.interactive').on('click', _.throttle(renewToken, 300000, {
- *   'trailing': false
- * }));
- *
- * // cancel a trailing throttled call
- * jQuery(window).on('popstate', throttled.cancel);
- */
-function throttle(func, wait, options) {
-  var leading = true,
-      trailing = true;
-
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  if (options === false) {
-    leading = false;
-  } else if (isObject(options)) {
-    leading = 'leading' in options ? !!options.leading : leading;
-    trailing = 'trailing' in options ? !!options.trailing : trailing;
-  }
-  return debounce(func, wait, { 'leading': leading, 'maxWait': +wait, 'trailing': trailing });
-}
-
-module.exports = throttle;
-
-},{"../lang/isObject":100,"./debounce":72}],75:[function(require,module,exports){
-/**
- * Copies the values of `source` to `array`.
- *
- * @private
- * @param {Array} source The array to copy values from.
- * @param {Array} [array=[]] The array to copy values to.
- * @returns {Array} Returns `array`.
- */
-function arrayCopy(source, array) {
-  var index = -1,
-      length = source.length;
-
-  array || (array = Array(length));
-  while (++index < length) {
-    array[index] = source[index];
-  }
-  return array;
-}
-
-module.exports = arrayCopy;
-
-},{}],76:[function(require,module,exports){
-/**
- * A specialized version of `_.forEach` for arrays without support for callback
- * shorthands and `this` binding.
- *
- * @private
- * @param {Array} array The array to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Array} Returns `array`.
- */
-function arrayEach(array, iteratee) {
-  var index = -1,
-      length = array.length;
-
-  while (++index < length) {
-    if (iteratee(array[index], index, array) === false) {
-      break;
-    }
-  }
-  return array;
-}
-
-module.exports = arrayEach;
-
-},{}],77:[function(require,module,exports){
-/**
- * Copies properties of `source` to `object`.
- *
- * @private
- * @param {Object} source The object to copy properties from.
- * @param {Array} props The property names to copy.
- * @param {Object} [object={}] The object to copy properties to.
- * @returns {Object} Returns `object`.
- */
-function baseCopy(source, props, object) {
-  object || (object = {});
-
-  var index = -1,
-      length = props.length;
-
-  while (++index < length) {
-    var key = props[index];
-    object[key] = source[key];
-  }
-  return object;
-}
-
-module.exports = baseCopy;
-
-},{}],78:[function(require,module,exports){
-var createBaseFor = require('./createBaseFor');
-
-/**
- * The base implementation of `baseForIn` and `baseForOwn` which iterates
- * over `object` properties returned by `keysFunc` invoking `iteratee` for
- * each property. Iteratee functions may exit iteration early by explicitly
- * returning `false`.
- *
- * @private
- * @param {Object} object The object to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @param {Function} keysFunc The function to get the keys of `object`.
- * @returns {Object} Returns `object`.
- */
-var baseFor = createBaseFor();
-
-module.exports = baseFor;
-
-},{"./createBaseFor":85}],79:[function(require,module,exports){
-var baseFor = require('./baseFor'),
-    keysIn = require('../object/keysIn');
-
-/**
- * The base implementation of `_.forIn` without support for callback
- * shorthands and `this` binding.
- *
- * @private
- * @param {Object} object The object to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Object} Returns `object`.
- */
-function baseForIn(object, iteratee) {
-  return baseFor(object, iteratee, keysIn);
-}
-
-module.exports = baseForIn;
-
-},{"../object/keysIn":106,"./baseFor":78}],80:[function(require,module,exports){
-var arrayEach = require('./arrayEach'),
-    baseMergeDeep = require('./baseMergeDeep'),
-    isArray = require('../lang/isArray'),
-    isArrayLike = require('./isArrayLike'),
-    isObject = require('../lang/isObject'),
-    isObjectLike = require('./isObjectLike'),
-    isTypedArray = require('../lang/isTypedArray'),
-    keys = require('../object/keys');
-
-/**
- * The base implementation of `_.merge` without support for argument juggling,
- * multiple sources, and `this` binding `customizer` functions.
- *
- * @private
- * @param {Object} object The destination object.
- * @param {Object} source The source object.
- * @param {Function} [customizer] The function to customize merged values.
- * @param {Array} [stackA=[]] Tracks traversed source objects.
- * @param {Array} [stackB=[]] Associates values with source counterparts.
- * @returns {Object} Returns `object`.
- */
-function baseMerge(object, source, customizer, stackA, stackB) {
-  if (!isObject(object)) {
-    return object;
-  }
-  var isSrcArr = isArrayLike(source) && (isArray(source) || isTypedArray(source)),
-      props = isSrcArr ? undefined : keys(source);
-
-  arrayEach(props || source, function(srcValue, key) {
-    if (props) {
-      key = srcValue;
-      srcValue = source[key];
-    }
-    if (isObjectLike(srcValue)) {
-      stackA || (stackA = []);
-      stackB || (stackB = []);
-      baseMergeDeep(object, source, key, baseMerge, customizer, stackA, stackB);
-    }
-    else {
-      var value = object[key],
-          result = customizer ? customizer(value, srcValue, key, object, source) : undefined,
-          isCommon = result === undefined;
-
-      if (isCommon) {
-        result = srcValue;
-      }
-      if ((result !== undefined || (isSrcArr && !(key in object))) &&
-          (isCommon || (result === result ? (result !== value) : (value === value)))) {
-        object[key] = result;
-      }
-    }
-  });
-  return object;
-}
-
-module.exports = baseMerge;
-
-},{"../lang/isArray":97,"../lang/isObject":100,"../lang/isTypedArray":103,"../object/keys":105,"./arrayEach":76,"./baseMergeDeep":81,"./isArrayLike":88,"./isObjectLike":93}],81:[function(require,module,exports){
-var arrayCopy = require('./arrayCopy'),
-    isArguments = require('../lang/isArguments'),
-    isArray = require('../lang/isArray'),
-    isArrayLike = require('./isArrayLike'),
-    isPlainObject = require('../lang/isPlainObject'),
-    isTypedArray = require('../lang/isTypedArray'),
-    toPlainObject = require('../lang/toPlainObject');
-
-/**
- * A specialized version of `baseMerge` for arrays and objects which performs
- * deep merges and tracks traversed objects enabling objects with circular
- * references to be merged.
- *
- * @private
- * @param {Object} object The destination object.
- * @param {Object} source The source object.
- * @param {string} key The key of the value to merge.
- * @param {Function} mergeFunc The function to merge values.
- * @param {Function} [customizer] The function to customize merged values.
- * @param {Array} [stackA=[]] Tracks traversed source objects.
- * @param {Array} [stackB=[]] Associates values with source counterparts.
- * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
- */
-function baseMergeDeep(object, source, key, mergeFunc, customizer, stackA, stackB) {
-  var length = stackA.length,
-      srcValue = source[key];
-
-  while (length--) {
-    if (stackA[length] == srcValue) {
-      object[key] = stackB[length];
-      return;
-    }
-  }
-  var value = object[key],
-      result = customizer ? customizer(value, srcValue, key, object, source) : undefined,
-      isCommon = result === undefined;
-
-  if (isCommon) {
-    result = srcValue;
-    if (isArrayLike(srcValue) && (isArray(srcValue) || isTypedArray(srcValue))) {
-      result = isArray(value)
-        ? value
-        : (isArrayLike(value) ? arrayCopy(value) : []);
-    }
-    else if (isPlainObject(srcValue) || isArguments(srcValue)) {
-      result = isArguments(value)
-        ? toPlainObject(value)
-        : (isPlainObject(value) ? value : {});
-    }
-    else {
-      isCommon = false;
-    }
-  }
-  // Add the source value to the stack of traversed objects and associate
-  // it with its merged value.
-  stackA.push(srcValue);
-  stackB.push(result);
-
-  if (isCommon) {
-    // Recursively merge objects and arrays (susceptible to call stack limits).
-    object[key] = mergeFunc(result, srcValue, customizer, stackA, stackB);
-  } else if (result === result ? (result !== value) : (value === value)) {
-    object[key] = result;
-  }
-}
-
-module.exports = baseMergeDeep;
-
-},{"../lang/isArguments":96,"../lang/isArray":97,"../lang/isPlainObject":101,"../lang/isTypedArray":103,"../lang/toPlainObject":104,"./arrayCopy":75,"./isArrayLike":88}],82:[function(require,module,exports){
-var toObject = require('./toObject');
-
-/**
- * The base implementation of `_.property` without support for deep paths.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @returns {Function} Returns the new function.
- */
-function baseProperty(key) {
-  return function(object) {
-    return object == null ? undefined : toObject(object)[key];
-  };
-}
-
-module.exports = baseProperty;
-
-},{"./toObject":95}],83:[function(require,module,exports){
-var identity = require('../utility/identity');
-
-/**
- * A specialized version of `baseCallback` which only supports `this` binding
- * and specifying the number of arguments to provide to `func`.
- *
- * @private
- * @param {Function} func The function to bind.
- * @param {*} thisArg The `this` binding of `func`.
- * @param {number} [argCount] The number of arguments to provide to `func`.
- * @returns {Function} Returns the callback.
- */
-function bindCallback(func, thisArg, argCount) {
-  if (typeof func != 'function') {
-    return identity;
-  }
-  if (thisArg === undefined) {
-    return func;
-  }
-  switch (argCount) {
-    case 1: return function(value) {
-      return func.call(thisArg, value);
-    };
-    case 3: return function(value, index, collection) {
-      return func.call(thisArg, value, index, collection);
-    };
-    case 4: return function(accumulator, value, index, collection) {
-      return func.call(thisArg, accumulator, value, index, collection);
-    };
-    case 5: return function(value, other, key, object, source) {
-      return func.call(thisArg, value, other, key, object, source);
-    };
-  }
-  return function() {
-    return func.apply(thisArg, arguments);
-  };
-}
-
-module.exports = bindCallback;
-
-},{"../utility/identity":109}],84:[function(require,module,exports){
-var bindCallback = require('./bindCallback'),
-    isIterateeCall = require('./isIterateeCall'),
-    restParam = require('../function/restParam');
-
-/**
- * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
- *
- * @private
- * @param {Function} assigner The function to assign values.
- * @returns {Function} Returns the new assigner function.
- */
-function createAssigner(assigner) {
-  return restParam(function(object, sources) {
-    var index = -1,
-        length = object == null ? 0 : sources.length,
-        customizer = length > 2 ? sources[length - 2] : undefined,
-        guard = length > 2 ? sources[2] : undefined,
-        thisArg = length > 1 ? sources[length - 1] : undefined;
-
-    if (typeof customizer == 'function') {
-      customizer = bindCallback(customizer, thisArg, 5);
-      length -= 2;
-    } else {
-      customizer = typeof thisArg == 'function' ? thisArg : undefined;
-      length -= (customizer ? 1 : 0);
-    }
-    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
-      customizer = length < 3 ? undefined : customizer;
-      length = 1;
-    }
-    while (++index < length) {
-      var source = sources[index];
-      if (source) {
-        assigner(object, source, customizer);
-      }
-    }
-    return object;
-  });
-}
-
-module.exports = createAssigner;
-
-},{"../function/restParam":73,"./bindCallback":83,"./isIterateeCall":91}],85:[function(require,module,exports){
-var toObject = require('./toObject');
-
-/**
- * Creates a base function for `_.forIn` or `_.forInRight`.
- *
- * @private
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {Function} Returns the new base function.
- */
-function createBaseFor(fromRight) {
-  return function(object, iteratee, keysFunc) {
-    var iterable = toObject(object),
-        props = keysFunc(object),
-        length = props.length,
-        index = fromRight ? length : -1;
-
-    while ((fromRight ? index-- : ++index < length)) {
-      var key = props[index];
-      if (iteratee(iterable[key], key, iterable) === false) {
-        break;
-      }
-    }
-    return object;
-  };
-}
-
-module.exports = createBaseFor;
-
-},{"./toObject":95}],86:[function(require,module,exports){
-var baseProperty = require('./baseProperty');
-
-/**
- * Gets the "length" property value of `object`.
- *
- * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
- * that affects Safari on at least iOS 8.1-8.3 ARM64.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {*} Returns the "length" value.
- */
-var getLength = baseProperty('length');
-
-module.exports = getLength;
-
-},{"./baseProperty":82}],87:[function(require,module,exports){
-var isNative = require('../lang/isNative');
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = object == null ? undefined : object[key];
-  return isNative(value) ? value : undefined;
-}
-
-module.exports = getNative;
-
-},{"../lang/isNative":99}],88:[function(require,module,exports){
-var getLength = require('./getLength'),
-    isLength = require('./isLength');
-
-/**
- * Checks if `value` is array-like.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- */
-function isArrayLike(value) {
-  return value != null && isLength(getLength(value));
-}
-
-module.exports = isArrayLike;
-
-},{"./getLength":86,"./isLength":92}],89:[function(require,module,exports){
-/**
- * Checks if `value` is a host object in IE < 9.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
- */
-var isHostObject = (function() {
-  try {
-    Object({ 'toString': 0 } + '');
-  } catch(e) {
-    return function() { return false; };
-  }
-  return function(value) {
-    // IE < 9 presents many host objects as `Object` objects that can coerce
-    // to strings despite having improperly defined `toString` methods.
-    return typeof value.toString != 'function' && typeof (value + '') == 'string';
-  };
-}());
-
-module.exports = isHostObject;
-
-},{}],90:[function(require,module,exports){
-/** Used to detect unsigned integer values. */
-var reIsUint = /^\d+$/;
-
-/**
- * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
- * of an array-like value.
- */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/**
- * Checks if `value` is a valid array-like index.
- *
- * @private
- * @param {*} value The value to check.
- * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
- * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
- */
-function isIndex(value, length) {
-  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
-  length = length == null ? MAX_SAFE_INTEGER : length;
-  return value > -1 && value % 1 == 0 && value < length;
-}
-
-module.exports = isIndex;
-
-},{}],91:[function(require,module,exports){
-var isArrayLike = require('./isArrayLike'),
-    isIndex = require('./isIndex'),
-    isObject = require('../lang/isObject');
-
-/**
- * Checks if the provided arguments are from an iteratee call.
- *
- * @private
- * @param {*} value The potential iteratee value argument.
- * @param {*} index The potential iteratee index or key argument.
- * @param {*} object The potential iteratee object argument.
- * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
- */
-function isIterateeCall(value, index, object) {
-  if (!isObject(object)) {
-    return false;
-  }
-  var type = typeof index;
-  if (type == 'number'
-      ? (isArrayLike(object) && isIndex(index, object.length))
-      : (type == 'string' && index in object)) {
-    var other = object[index];
-    return value === value ? (value === other) : (other !== other);
-  }
-  return false;
-}
-
-module.exports = isIterateeCall;
-
-},{"../lang/isObject":100,"./isArrayLike":88,"./isIndex":90}],92:[function(require,module,exports){
-/**
- * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
- * of an array-like value.
- */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/**
- * Checks if `value` is a valid array-like length.
- *
- * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
- */
-function isLength(value) {
-  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-
-module.exports = isLength;
-
-},{}],93:[function(require,module,exports){
-/**
- * Checks if `value` is object-like.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
-module.exports = isObjectLike;
-
-},{}],94:[function(require,module,exports){
-var isArguments = require('../lang/isArguments'),
-    isArray = require('../lang/isArray'),
-    isIndex = require('./isIndex'),
-    isLength = require('./isLength'),
-    isString = require('../lang/isString'),
-    keysIn = require('../object/keysIn');
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * A fallback implementation of `Object.keys` which creates an array of the
- * own enumerable property names of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- */
-function shimKeys(object) {
-  var props = keysIn(object),
-      propsLength = props.length,
-      length = propsLength && object.length;
-
-  var allowIndexes = !!length && isLength(length) &&
-    (isArray(object) || isArguments(object) || isString(object));
-
-  var index = -1,
-      result = [];
-
-  while (++index < propsLength) {
-    var key = props[index];
-    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
-      result.push(key);
-    }
-  }
-  return result;
-}
-
-module.exports = shimKeys;
-
-},{"../lang/isArguments":96,"../lang/isArray":97,"../lang/isString":102,"../object/keysIn":106,"./isIndex":90,"./isLength":92}],95:[function(require,module,exports){
-var isObject = require('../lang/isObject'),
-    isString = require('../lang/isString'),
-    support = require('../support');
-
-/**
- * Converts `value` to an object if it's not one.
- *
- * @private
- * @param {*} value The value to process.
- * @returns {Object} Returns the object.
- */
-function toObject(value) {
-  if (support.unindexedChars && isString(value)) {
-    var index = -1,
-        length = value.length,
-        result = Object(value);
-
-    while (++index < length) {
-      result[index] = value.charAt(index);
-    }
-    return result;
-  }
-  return isObject(value) ? value : Object(value);
-}
-
-module.exports = toObject;
-
-},{"../lang/isObject":100,"../lang/isString":102,"../support":108}],96:[function(require,module,exports){
-var isArrayLike = require('../internal/isArrayLike'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Native method references. */
-var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-
-/**
- * Checks if `value` is classified as an `arguments` object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isArguments(function() { return arguments; }());
- * // => true
- *
- * _.isArguments([1, 2, 3]);
- * // => false
- */
-function isArguments(value) {
-  return isObjectLike(value) && isArrayLike(value) &&
-    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
-}
-
-module.exports = isArguments;
-
-},{"../internal/isArrayLike":88,"../internal/isObjectLike":93}],97:[function(require,module,exports){
-var getNative = require('../internal/getNative'),
-    isLength = require('../internal/isLength'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** `Object#toString` result references. */
-var arrayTag = '[object Array]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeIsArray = getNative(Array, 'isArray');
-
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(function() { return arguments; }());
- * // => false
- */
-var isArray = nativeIsArray || function(value) {
-  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
-};
-
-module.exports = isArray;
-
-},{"../internal/getNative":87,"../internal/isLength":92,"../internal/isObjectLike":93}],98:[function(require,module,exports){
-var isObject = require('./isObject');
-
-/** `Object#toString` result references. */
-var funcTag = '[object Function]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- *
- * _.isFunction(/abc/);
- * // => false
- */
-function isFunction(value) {
-  // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in older versions of Chrome and Safari which return 'function' for regexes
-  // and Safari 8 which returns 'object' for typed array constructors.
-  return isObject(value) && objToString.call(value) == funcTag;
-}
-
-module.exports = isFunction;
-
-},{"./isObject":100}],99:[function(require,module,exports){
-var isFunction = require('./isFunction'),
-    isHostObject = require('../internal/isHostObject'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** Used to detect host constructors (Safari > 5). */
-var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var fnToString = Function.prototype.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Used to detect if a method is native. */
-var reIsNative = RegExp('^' +
-  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
-  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-);
-
-/**
- * Checks if `value` is a native function.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
- * @example
- *
- * _.isNative(Array.prototype.push);
- * // => true
- *
- * _.isNative(_);
- * // => false
- */
-function isNative(value) {
-  if (value == null) {
-    return false;
-  }
-  if (isFunction(value)) {
-    return reIsNative.test(fnToString.call(value));
-  }
-  return isObjectLike(value) && (isHostObject(value) ? reIsNative : reIsHostCtor).test(value);
-}
-
-module.exports = isNative;
-
-},{"../internal/isHostObject":89,"../internal/isObjectLike":93,"./isFunction":98}],100:[function(require,module,exports){
-/**
- * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
- * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(1);
- * // => false
- */
-function isObject(value) {
-  // Avoid a V8 JIT bug in Chrome 19-20.
-  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-}
-
-module.exports = isObject;
-
-},{}],101:[function(require,module,exports){
-var baseForIn = require('../internal/baseForIn'),
-    isArguments = require('./isArguments'),
-    isHostObject = require('../internal/isHostObject'),
-    isObjectLike = require('../internal/isObjectLike'),
-    support = require('../support');
-
-/** `Object#toString` result references. */
-var objectTag = '[object Object]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * Checks if `value` is a plain object, that is, an object created by the
- * `Object` constructor or one with a `[[Prototype]]` of `null`.
- *
- * **Note:** This method assumes objects created by the `Object` constructor
- * have no inherited enumerable properties.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- * }
- *
- * _.isPlainObject(new Foo);
- * // => false
- *
- * _.isPlainObject([1, 2, 3]);
- * // => false
- *
- * _.isPlainObject({ 'x': 0, 'y': 0 });
- * // => true
- *
- * _.isPlainObject(Object.create(null));
- * // => true
- */
-function isPlainObject(value) {
-  var Ctor;
-
-  // Exit early for non `Object` objects.
-  if (!(isObjectLike(value) && objToString.call(value) == objectTag && !isHostObject(value) && !isArguments(value)) ||
-      (!hasOwnProperty.call(value, 'constructor') && (Ctor = value.constructor, typeof Ctor == 'function' && !(Ctor instanceof Ctor)))) {
-    return false;
-  }
-  // IE < 9 iterates inherited properties before own properties. If the first
-  // iterated property is an object's own property then there are no inherited
-  // enumerable properties.
-  var result;
-  if (support.ownLast) {
-    baseForIn(value, function(subValue, key, object) {
-      result = hasOwnProperty.call(object, key);
-      return false;
-    });
-    return result !== false;
-  }
-  // In most environments an object's own properties are iterated before
-  // its inherited properties. If the last iterated property is an object's
-  // own property then there are no inherited enumerable properties.
-  baseForIn(value, function(subValue, key) {
-    result = key;
-  });
-  return result === undefined || hasOwnProperty.call(value, result);
-}
-
-module.exports = isPlainObject;
-
-},{"../internal/baseForIn":79,"../internal/isHostObject":89,"../internal/isObjectLike":93,"../support":108,"./isArguments":96}],102:[function(require,module,exports){
-var isObjectLike = require('../internal/isObjectLike');
-
-/** `Object#toString` result references. */
-var stringTag = '[object String]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * Checks if `value` is classified as a `String` primitive or object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isString('abc');
- * // => true
- *
- * _.isString(1);
- * // => false
- */
-function isString(value) {
-  return typeof value == 'string' || (isObjectLike(value) && objToString.call(value) == stringTag);
-}
-
-module.exports = isString;
-
-},{"../internal/isObjectLike":93}],103:[function(require,module,exports){
-var isLength = require('../internal/isLength'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]',
-    arrayTag = '[object Array]',
-    boolTag = '[object Boolean]',
-    dateTag = '[object Date]',
-    errorTag = '[object Error]',
-    funcTag = '[object Function]',
-    mapTag = '[object Map]',
-    numberTag = '[object Number]',
-    objectTag = '[object Object]',
-    regexpTag = '[object RegExp]',
-    setTag = '[object Set]',
-    stringTag = '[object String]',
-    weakMapTag = '[object WeakMap]';
-
-var arrayBufferTag = '[object ArrayBuffer]',
-    float32Tag = '[object Float32Array]',
-    float64Tag = '[object Float64Array]',
-    int8Tag = '[object Int8Array]',
-    int16Tag = '[object Int16Array]',
-    int32Tag = '[object Int32Array]',
-    uint8Tag = '[object Uint8Array]',
-    uint8ClampedTag = '[object Uint8ClampedArray]',
-    uint16Tag = '[object Uint16Array]',
-    uint32Tag = '[object Uint32Array]';
-
-/** Used to identify `toStringTag` values of typed arrays. */
-var typedArrayTags = {};
-typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
-typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
-typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
-typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
-typedArrayTags[uint32Tag] = true;
-typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
-typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
-typedArrayTags[dateTag] = typedArrayTags[errorTag] =
-typedArrayTags[funcTag] = typedArrayTags[mapTag] =
-typedArrayTags[numberTag] = typedArrayTags[objectTag] =
-typedArrayTags[regexpTag] = typedArrayTags[setTag] =
-typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * Checks if `value` is classified as a typed array.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isTypedArray(new Uint8Array);
- * // => true
- *
- * _.isTypedArray([]);
- * // => false
- */
-function isTypedArray(value) {
-  return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[objToString.call(value)];
-}
-
-module.exports = isTypedArray;
-
-},{"../internal/isLength":92,"../internal/isObjectLike":93}],104:[function(require,module,exports){
-var baseCopy = require('../internal/baseCopy'),
-    keysIn = require('../object/keysIn');
-
-/**
- * Converts `value` to a plain object flattening inherited enumerable
- * properties of `value` to own properties of the plain object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to convert.
- * @returns {Object} Returns the converted plain object.
- * @example
- *
- * function Foo() {
- *   this.b = 2;
- * }
- *
- * Foo.prototype.c = 3;
- *
- * _.assign({ 'a': 1 }, new Foo);
- * // => { 'a': 1, 'b': 2 }
- *
- * _.assign({ 'a': 1 }, _.toPlainObject(new Foo));
- * // => { 'a': 1, 'b': 2, 'c': 3 }
- */
-function toPlainObject(value) {
-  return baseCopy(value, keysIn(value));
-}
-
-module.exports = toPlainObject;
-
-},{"../internal/baseCopy":77,"../object/keysIn":106}],105:[function(require,module,exports){
-var getNative = require('../internal/getNative'),
-    isArrayLike = require('../internal/isArrayLike'),
-    isObject = require('../lang/isObject'),
-    shimKeys = require('../internal/shimKeys'),
-    support = require('../support');
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeKeys = getNative(Object, 'keys');
-
-/**
- * Creates an array of the own enumerable property names of `object`.
- *
- * **Note:** Non-object values are coerced to objects. See the
- * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
- * for more details.
- *
- * @static
- * @memberOf _
- * @category Object
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- *   this.b = 2;
- * }
- *
- * Foo.prototype.c = 3;
- *
- * _.keys(new Foo);
- * // => ['a', 'b'] (iteration order is not guaranteed)
- *
- * _.keys('hi');
- * // => ['0', '1']
- */
-var keys = !nativeKeys ? shimKeys : function(object) {
-  var Ctor = object == null ? undefined : object.constructor;
-  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-      (typeof object == 'function' ? support.enumPrototypes : isArrayLike(object))) {
-    return shimKeys(object);
-  }
-  return isObject(object) ? nativeKeys(object) : [];
-};
-
-module.exports = keys;
-
-},{"../internal/getNative":87,"../internal/isArrayLike":88,"../internal/shimKeys":94,"../lang/isObject":100,"../support":108}],106:[function(require,module,exports){
-var arrayEach = require('../internal/arrayEach'),
-    isArguments = require('../lang/isArguments'),
-    isArray = require('../lang/isArray'),
-    isFunction = require('../lang/isFunction'),
-    isIndex = require('../internal/isIndex'),
-    isLength = require('../internal/isLength'),
-    isObject = require('../lang/isObject'),
-    isString = require('../lang/isString'),
-    support = require('../support');
-
-/** `Object#toString` result references. */
-var arrayTag = '[object Array]',
-    boolTag = '[object Boolean]',
-    dateTag = '[object Date]',
-    errorTag = '[object Error]',
-    funcTag = '[object Function]',
-    numberTag = '[object Number]',
-    objectTag = '[object Object]',
-    regexpTag = '[object RegExp]',
-    stringTag = '[object String]';
-
-/** Used to fix the JScript `[[DontEnum]]` bug. */
-var shadowProps = [
-  'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable',
-  'toLocaleString', 'toString', 'valueOf'
-];
-
-/** Used for native method references. */
-var errorProto = Error.prototype,
-    objectProto = Object.prototype,
-    stringProto = String.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/** Used to avoid iterating over non-enumerable properties in IE < 9. */
-var nonEnumProps = {};
-nonEnumProps[arrayTag] = nonEnumProps[dateTag] = nonEnumProps[numberTag] = { 'constructor': true, 'toLocaleString': true, 'toString': true, 'valueOf': true };
-nonEnumProps[boolTag] = nonEnumProps[stringTag] = { 'constructor': true, 'toString': true, 'valueOf': true };
-nonEnumProps[errorTag] = nonEnumProps[funcTag] = nonEnumProps[regexpTag] = { 'constructor': true, 'toString': true };
-nonEnumProps[objectTag] = { 'constructor': true };
-
-arrayEach(shadowProps, function(key) {
-  for (var tag in nonEnumProps) {
-    if (hasOwnProperty.call(nonEnumProps, tag)) {
-      var props = nonEnumProps[tag];
-      props[key] = hasOwnProperty.call(props, key);
-    }
-  }
-});
-
-/**
- * Creates an array of the own and inherited enumerable property names of `object`.
- *
- * **Note:** Non-object values are coerced to objects.
- *
- * @static
- * @memberOf _
- * @category Object
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- *   this.b = 2;
- * }
- *
- * Foo.prototype.c = 3;
- *
- * _.keysIn(new Foo);
- * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
- */
-function keysIn(object) {
-  if (object == null) {
-    return [];
-  }
-  if (!isObject(object)) {
-    object = Object(object);
-  }
-  var length = object.length;
-
-  length = (length && isLength(length) &&
-    (isArray(object) || isArguments(object) || isString(object)) && length) || 0;
-
-  var Ctor = object.constructor,
-      index = -1,
-      proto = (isFunction(Ctor) && Ctor.prototype) || objectProto,
-      isProto = proto === object,
-      result = Array(length),
-      skipIndexes = length > 0,
-      skipErrorProps = support.enumErrorProps && (object === errorProto || object instanceof Error),
-      skipProto = support.enumPrototypes && isFunction(object);
-
-  while (++index < length) {
-    result[index] = (index + '');
-  }
-  // lodash skips the `constructor` property when it infers it's iterating
-  // over a `prototype` object because IE < 9 can't set the `[[Enumerable]]`
-  // attribute of an existing property and the `constructor` property of a
-  // prototype defaults to non-enumerable.
-  for (var key in object) {
-    if (!(skipProto && key == 'prototype') &&
-        !(skipErrorProps && (key == 'message' || key == 'name')) &&
-        !(skipIndexes && isIndex(key, length)) &&
-        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
-      result.push(key);
-    }
-  }
-  if (support.nonEnumShadows && object !== objectProto) {
-    var tag = object === stringProto ? stringTag : (object === errorProto ? errorTag : objToString.call(object)),
-        nonEnums = nonEnumProps[tag] || nonEnumProps[objectTag];
-
-    if (tag == objectTag) {
-      proto = objectProto;
-    }
-    length = shadowProps.length;
-    while (length--) {
-      key = shadowProps[length];
-      var nonEnum = nonEnums[key];
-      if (!(isProto && nonEnum) &&
-          (nonEnum ? hasOwnProperty.call(object, key) : object[key] !== proto[key])) {
-        result.push(key);
-      }
-    }
-  }
-  return result;
-}
-
-module.exports = keysIn;
-
-},{"../internal/arrayEach":76,"../internal/isIndex":90,"../internal/isLength":92,"../lang/isArguments":96,"../lang/isArray":97,"../lang/isFunction":98,"../lang/isObject":100,"../lang/isString":102,"../support":108}],107:[function(require,module,exports){
-var baseMerge = require('../internal/baseMerge'),
-    createAssigner = require('../internal/createAssigner');
-
-/**
- * Recursively merges own enumerable properties of the source object(s), that
- * don't resolve to `undefined` into the destination object. Subsequent sources
- * overwrite property assignments of previous sources. If `customizer` is
- * provided it's invoked to produce the merged values of the destination and
- * source properties. If `customizer` returns `undefined` merging is handled
- * by the method instead. The `customizer` is bound to `thisArg` and invoked
- * with five arguments: (objectValue, sourceValue, key, object, source).
- *
- * @static
- * @memberOf _
- * @category Object
- * @param {Object} object The destination object.
- * @param {...Object} [sources] The source objects.
- * @param {Function} [customizer] The function to customize assigned values.
- * @param {*} [thisArg] The `this` binding of `customizer`.
- * @returns {Object} Returns `object`.
- * @example
- *
- * var users = {
- *   'data': [{ 'user': 'barney' }, { 'user': 'fred' }]
- * };
- *
- * var ages = {
- *   'data': [{ 'age': 36 }, { 'age': 40 }]
- * };
- *
- * _.merge(users, ages);
- * // => { 'data': [{ 'user': 'barney', 'age': 36 }, { 'user': 'fred', 'age': 40 }] }
- *
- * // using a customizer callback
- * var object = {
- *   'fruits': ['apple'],
- *   'vegetables': ['beet']
- * };
- *
- * var other = {
- *   'fruits': ['banana'],
- *   'vegetables': ['carrot']
- * };
- *
- * _.merge(object, other, function(a, b) {
- *   if (_.isArray(a)) {
- *     return a.concat(b);
- *   }
- * });
- * // => { 'fruits': ['apple', 'banana'], 'vegetables': ['beet', 'carrot'] }
- */
-var merge = createAssigner(baseMerge);
-
-module.exports = merge;
-
-},{"../internal/baseMerge":80,"../internal/createAssigner":84}],108:[function(require,module,exports){
-/** Used for native method references. */
-var arrayProto = Array.prototype,
-    errorProto = Error.prototype,
-    objectProto = Object.prototype;
-
-/** Native method references. */
-var propertyIsEnumerable = objectProto.propertyIsEnumerable,
-    splice = arrayProto.splice;
-
-/**
- * An object environment feature flags.
- *
- * @static
- * @memberOf _
- * @type Object
- */
-var support = {};
-
-(function(x) {
-  var Ctor = function() { this.x = x; },
-      object = { '0': x, 'length': x },
-      props = [];
-
-  Ctor.prototype = { 'valueOf': x, 'y': x };
-  for (var key in new Ctor) { props.push(key); }
-
-  /**
-   * Detect if `name` or `message` properties of `Error.prototype` are
-   * enumerable by default (IE < 9, Safari < 5.1).
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  support.enumErrorProps = propertyIsEnumerable.call(errorProto, 'message') ||
-    propertyIsEnumerable.call(errorProto, 'name');
-
-  /**
-   * Detect if `prototype` properties are enumerable by default.
-   *
-   * Firefox < 3.6, Opera > 9.50 - Opera < 11.60, and Safari < 5.1
-   * (if the prototype or a property on the prototype has been set)
-   * incorrectly set the `[[Enumerable]]` value of a function's `prototype`
-   * property to `true`.
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  support.enumPrototypes = propertyIsEnumerable.call(Ctor, 'prototype');
-
-  /**
-   * Detect if properties shadowing those on `Object.prototype` are non-enumerable.
-   *
-   * In IE < 9 an object's own properties, shadowing non-enumerable ones,
-   * are made non-enumerable as well (a.k.a the JScript `[[DontEnum]]` bug).
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  support.nonEnumShadows = !/valueOf/.test(props);
-
-  /**
-   * Detect if own properties are iterated after inherited properties (IE < 9).
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  support.ownLast = props[0] != 'x';
-
-  /**
-   * Detect if `Array#shift` and `Array#splice` augment array-like objects
-   * correctly.
-   *
-   * Firefox < 10, compatibility modes of IE 8, and IE < 9 have buggy Array
-   * `shift()` and `splice()` functions that fail to remove the last element,
-   * `value[0]`, of array-like objects even though the "length" property is
-   * set to `0`. The `shift()` method is buggy in compatibility modes of IE 8,
-   * while `splice()` is buggy regardless of mode in IE < 9.
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  support.spliceObjects = (splice.call(object, 0, 1), !object[0]);
-
-  /**
-   * Detect lack of support for accessing string characters by index.
-   *
-   * IE < 8 can't access characters by index. IE 8 can only access characters
-   * by index on string literals, not string objects.
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  support.unindexedChars = ('x'[0] + Object('x')[0]) != 'xx';
-}(1, 0));
-
-module.exports = support;
-
-},{}],109:[function(require,module,exports){
-/**
- * This method returns the first argument provided to it.
- *
- * @static
- * @memberOf _
- * @category Utility
- * @param {*} value Any value.
- * @returns {*} Returns `value`.
- * @example
- *
- * var object = { 'user': 'fred' };
- *
- * _.identity(object) === object;
- * // => true
- */
-function identity(value) {
-  return value;
-}
-
-module.exports = identity;
-
-},{}],110:[function(require,module,exports){
+},{"global/window":20,"is-function":21,"parse-headers":58,"xtend":84}],47:[function(require,module,exports){
 'use strict';
 
 var keys = require('object-keys');
@@ -34473,7 +23833,7 @@ module.exports = function hasSymbols() {
 	return true;
 };
 
-},{"object-keys":117}],111:[function(require,module,exports){
+},{"object-keys":54}],48:[function(require,module,exports){
 'use strict';
 
 // modified from https://github.com/es-shims/es6-shim
@@ -34514,7 +23874,7 @@ module.exports = function assign(target, source1) {
 	return objTarget;
 };
 
-},{"./hasSymbols":110,"function-bind":116,"object-keys":117}],112:[function(require,module,exports){
+},{"./hasSymbols":47,"function-bind":53,"object-keys":54}],49:[function(require,module,exports){
 'use strict';
 
 var defineProperties = require('define-properties');
@@ -34531,7 +23891,7 @@ defineProperties(implementation, {
 
 module.exports = implementation;
 
-},{"./implementation":111,"./polyfill":119,"./shim":120,"define-properties":113}],113:[function(require,module,exports){
+},{"./implementation":48,"./polyfill":56,"./shim":57,"define-properties":50}],50:[function(require,module,exports){
 'use strict';
 
 var keys = require('object-keys');
@@ -34589,7 +23949,7 @@ defineProperties.supportsDescriptors = !!supportsDescriptors;
 
 module.exports = defineProperties;
 
-},{"foreach":114,"object-keys":117}],114:[function(require,module,exports){
+},{"foreach":51,"object-keys":54}],51:[function(require,module,exports){
 
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
@@ -34613,7 +23973,7 @@ module.exports = function forEach (obj, fn, ctx) {
 };
 
 
-},{}],115:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
 var slice = Array.prototype.slice;
 var toStr = Object.prototype.toString;
@@ -34663,12 +24023,12 @@ module.exports = function bind(that) {
     return bound;
 };
 
-},{}],116:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 var implementation = require('./implementation');
 
 module.exports = Function.prototype.bind || implementation;
 
-},{"./implementation":115}],117:[function(require,module,exports){
+},{"./implementation":52}],54:[function(require,module,exports){
 'use strict';
 
 // modified from https://github.com/es-shims/es5-shim
@@ -34798,7 +24158,7 @@ keysShim.shim = function shimObjectKeys() {
 
 module.exports = keysShim;
 
-},{"./isArguments":118}],118:[function(require,module,exports){
+},{"./isArguments":55}],55:[function(require,module,exports){
 'use strict';
 
 var toStr = Object.prototype.toString;
@@ -34817,7 +24177,7 @@ module.exports = function isArguments(value) {
 	return isArgs;
 };
 
-},{}],119:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 var implementation = require('./implementation');
@@ -34869,7 +24229,7 @@ module.exports = function getPolyfill() {
 	return Object.assign;
 };
 
-},{"./implementation":111}],120:[function(require,module,exports){
+},{"./implementation":48}],57:[function(require,module,exports){
 'use strict';
 
 var define = require('define-properties');
@@ -34885,7 +24245,7 @@ module.exports = function shimAssign() {
 	return polyfill;
 };
 
-},{"./polyfill":119,"define-properties":113}],121:[function(require,module,exports){
+},{"./polyfill":56,"define-properties":50}],58:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -34917,23 +24277,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":18,"trim":124}],122:[function(require,module,exports){
-module.exports = SafeParseTuple
-
-function SafeParseTuple(obj, reviver) {
-    var json
-    var error = null
-
-    try {
-        json = JSON.parse(obj, reviver)
-    } catch (err) {
-        error = err
-    }
-
-    return [error, json]
-}
-
-},{}],123:[function(require,module,exports){
+},{"for-each":18,"trim":60}],59:[function(require,module,exports){
 (function (global){
 /**
  * streamroot-dashjs-p2p-wrapper
@@ -34956,7 +24300,7 @@ function r(e){return e&&e.__esModule?e:{default:e}}function i(e,t,n){var r=t?E.d
 cpu:[[/(?:(amd|x(?:(?:86|64)[_-])?|wow|win)64)[;\)]/i],[[y,"amd64"]],[/(ia32(?=;))/i],[[y,C.lowerize]],[/((?:i[346]|x)86)[;\)]/i],[[y,"ia32"]],[/windows\s(ce|mobile);\sppc;/i],[[y,"arm"]],[/((?:ppc|powerpc)(?:64)?)(?:\smac|;|\))/i],[[y,/ower/,"",C.lowerize]],[/(sun4\w)[;\)]/i],[[y,"sparc"]],[/((?:avr32|ia64(?=;))|68k(?=\))|arm(?:64|(?=v\d+;))|(?=atmel\s)avr|(?:irix|mips|sparc)(?:64)?(?=;)|pa-risc)/i],[[y,C.lowerize]]],device:[[/\((ipad|playbook);[\w\s\);-]+(rim|apple)/i],[_,m,[v,T]],[/applecoremedia\/[\w\.]+ \((ipad)/],[_,[m,"Apple"],[v,T]],[/(apple\s{0,1}tv)/i],[[_,"Apple TV"],[m,"Apple"]],[/(archos)\s(gamepad2?)/i,/(hp).+(touchpad)/i,/(kindle)\/([\w\.]+)/i,/\s(nook)[\w\s]+build\/(\w+)/i,/(dell)\s(strea[kpr\s\d]*[\dko])/i],[m,_,[v,T]],[/(kf[A-z]+)\sbuild\/[\w\.]+.*silk\//i],[_,[m,"Amazon"],[v,T]],[/(sd|kf)[0349hijorstuw]+\sbuild\/[\w\.]+.*silk\//i],[[_,R.str,k.device.amazon.model],[m,"Amazon"],[v,S]],[/\((ip[honed|\s\w*]+);.+(apple)/i],[_,m,[v,S]],[/\((ip[honed|\s\w*]+);/i],[_,[m,"Apple"],[v,S]],[/(blackberry)[\s-]?(\w+)/i,/(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|huawei|meizu|motorola|polytron)[\s_-]?([\w-]+)*/i,/(hp)\s([\w\s]+\w)/i,/(asus)-?(\w+)/i],[m,_,[v,S]],[/\(bb10;\s(\w+)/i],[_,[m,"BlackBerry"],[v,S]],[/android.+(transfo[prime\s]{4,10}\s\w+|eeepc|slider\s\w+|nexus 7)/i],[_,[m,"Asus"],[v,T]],[/(sony)\s(tablet\s[ps])\sbuild\//i,/(sony)?(?:sgp.+)\sbuild\//i],[[m,"Sony"],[_,"Xperia Tablet"],[v,T]],[/(?:sony)?(?:(?:(?:c|d)\d{4})|(?:so[-l].+))\sbuild\//i],[[m,"Sony"],[_,"Xperia Phone"],[v,S]],[/\s(ouya)\s/i,/(nintendo)\s([wids3u]+)/i],[m,_,[v,E]],[/android.+;\s(shield)\sbuild/i],[_,[m,"Nvidia"],[v,E]],[/(playstation\s[34portablevi]+)/i],[_,[m,"Sony"],[v,E]],[/(sprint\s(\w+))/i],[[m,R.str,k.device.sprint.vendor],[_,R.str,k.device.sprint.model],[v,S]],[/(lenovo)\s?(S(?:5000|6000)+(?:[-][\w+]))/i],[m,_,[v,T]],[/(htc)[;_\s-]+([\w\s]+(?=\))|\w+)*/i,/(zte)-(\w+)*/i,/(alcatel|geeksphone|huawei|lenovo|nexian|panasonic|(?=;\s)sony)[_\s-]?([\w-]+)*/i],[m,[_,/_/g," "],[v,S]],[/(nexus\s9)/i],[_,[m,"HTC"],[v,T]],[/[\s\(;](xbox(?:\sone)?)[\s\);]/i],[_,[m,"Microsoft"],[v,E]],[/(kin\.[onetw]{3})/i],[[_,/\./g," "],[m,"Microsoft"],[v,S]],[/\s(milestone|droid(?:[2-4x]|\s(?:bionic|x2|pro|razr))?(:?\s4g)?)[\w\s]+build\//i,/mot[\s-]?(\w+)*/i,/(XT\d{3,4}) build\//i,/(nexus\s[6])/i],[_,[m,"Motorola"],[v,S]],[/android.+\s(mz60\d|xoom[\s2]{0,2})\sbuild\//i],[_,[m,"Motorola"],[v,T]],[/android.+((sch-i[89]0\d|shw-m380s|gt-p\d{4}|gt-n8000|sgh-t8[56]9|nexus 10))/i,/((SM-T\w+))/i],[[m,"Samsung"],_,[v,T]],[/((s[cgp]h-\w+|gt-\w+|galaxy\snexus|sm-n900))/i,/(sam[sung]*)[\s-]*(\w+-?[\w-]*)*/i,/sec-((sgh\w+))/i],[[m,"Samsung"],_,[v,S]],[/(samsung);smarttv/i],[m,_,[v,w]],[/\(dtv[\);].+(aquos)/i],[_,[m,"Sharp"],[v,w]],[/sie-(\w+)*/i],[_,[m,"Siemens"],[v,S]],[/(maemo|nokia).*(n900|lumia\s\d+)/i,/(nokia)[\s_-]?([\w-]+)*/i],[[m,"Nokia"],_,[v,S]],[/android\s3\.[\s\w;-]{10}(a\d{3})/i],[_,[m,"Acer"],[v,T]],[/android\s3\.[\s\w;-]{10}(lg?)-([06cv9]{3,4})/i],[[m,"LG"],_,[v,T]],[/(lg) netcast\.tv/i],[m,_,[v,w]],[/(nexus\s[45])/i,/lg[e;\s\/-]+(\w+)*/i],[_,[m,"LG"],[v,S]],[/android.+(ideatab[a-z0-9\-\s]+)/i],[_,[m,"Lenovo"],[v,T]],[/linux;.+((jolla));/i],[m,_,[v,S]],[/((pebble))app\/[\d\.]+\s/i],[m,_,[v,b]],[/android.+;\s(glass)\s\d/i],[_,[m,"Google"],[v,b]],[/android.+(\w+)\s+build\/hm\1/i,/android.+(hm[\s\-_]*note?[\s_]*(?:\d\w)?)\s+build/i,/android.+(mi[\s\-_]*(?:one|one[\s_]plus)?[\s_]*(?:\d\w)?)\s+build/i],[[_,/_/g," "],[m,"Xiaomi"],[v,S]],[/\s(tablet)[;\/\s]/i,/\s(mobile)[;\/\s]/i],[[v,C.lowerize],m,_]],engine:[[/windows.+\sedge\/([\w\.]+)/i],[g,[p,"EdgeHTML"]],[/(presto)\/([\w\.]+)/i,/(webkit|trident|netfront|netsurf|amaya|lynx|w3m)\/([\w\.]+)/i,/(khtml|tasman|links)[\/\s]\(?([\w\.]+)/i,/(icab)[\/\s]([23]\.[\d\.]+)/i],[p,g],[/rv\:([\w\.]+).*(gecko)/i],[g,p]],os:[[/microsoft\s(windows)\s(vista|xp)/i],[p,g],[/(windows)\snt\s6\.2;\s(arm)/i,/(windows\sphone(?:\sos)*|windows\smobile|windows)[\s\/]?([ntce\d\.\s]+\w)/i],[p,[g,R.str,k.os.windows.version]],[/(win(?=3|9|n)|win\s9x\s)([nt\d\.]+)/i],[[p,"Windows"],[g,R.str,k.os.windows.version]],[/\((bb)(10);/i],[[p,"BlackBerry"],g],[/(blackberry)\w*\/?([\w\.]+)*/i,/(tizen)[\/\s]([\w\.]+)/i,/(android|webos|palm\sos|qnx|bada|rim\stablet\sos|meego|contiki)[\/\s-]?([\w\.]+)*/i,/linux;.+(sailfish);/i],[p,g],[/(symbian\s?os|symbos|s60(?=;))[\/\s-]?([\w\.]+)*/i],[[p,"Symbian"],g],[/\((series40);/i],[p],[/mozilla.+\(mobile;.+gecko.+firefox/i],[[p,"Firefox OS"],g],[/(nintendo|playstation)\s([wids34portablevu]+)/i,/(mint)[\/\s\(]?(\w+)*/i,/(mageia|vectorlinux)[;\s]/i,/(joli|[kxln]?ubuntu|debian|[open]*suse|gentoo|(?=\s)arch|slackware|fedora|mandriva|centos|pclinuxos|redhat|zenwalk|linpus)[\/\s-]?([\w\.-]+)*/i,/(hurd|linux)\s?([\w\.]+)*/i,/(gnu)\s?([\w\.]+)*/i],[p,g],[/(cros)\s[\w]+\s([\w\.]+\w)/i],[[p,"Chromium OS"],g],[/(sunos)\s?([\w\.]+\d)*/i],[[p,"Solaris"],g],[/\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i],[p,g],[/(ip[honead]+)(?:.*os\s([\w]+)*\slike\smac|;\sopera)/i],[[p,"iOS"],[g,/_/g,"."]],[/(mac\sos\sx)\s?([\w\s\.]+\w)*/i,/(macintosh|mac(?=_powerpc)\s)/i],[[p,"Mac OS"],[g,/_/g,"."]],[/((?:open)?solaris)[\/\s-]?([\w\.]+)*/i,/(haiku)\s(\w+)/i,/(aix)\s((\d)(?=\.|\)|\s)[\w\.]*)*/i,/(plan\s9|minix|beos|os\/2|amigaos|morphos|risc\sos|openvms)/i,/(unix)\s?([\w\.]+)*/i],[p,g]]},P=function(e,t){if(!(this instanceof P))return new P(e,t).getResult();var n=e||(i&&i.navigator&&i.navigator.userAgent?i.navigator.userAgent:s),r=t?C.extend(A,t):A;return this.getBrowser=function(){var e=R.rgx.apply(this,r.browser);return e.major=C.major(e.version),e},this.getCPU=function(){return R.rgx.apply(this,r.cpu)},this.getDevice=function(){return R.rgx.apply(this,r.device)},this.getEngine=function(){return R.rgx.apply(this,r.engine)},this.getOS=function(){return R.rgx.apply(this,r.os)},this.getResult=function(){return{ua:this.getUA(),browser:this.getBrowser(),engine:this.getEngine(),os:this.getOS(),device:this.getDevice(),cpu:this.getCPU()}},this.getUA=function(){return n},this.setUA=function(e){return n=e,this},this.setUA(n),this};P.VERSION=o,P.BROWSER={NAME:p,MAJOR:h,VERSION:g},P.CPU={ARCHITECTURE:y},P.DEVICE={MODEL:_,VENDOR:m,TYPE:v,CONSOLE:E,MOBILE:S,SMARTTV:w,TABLET:T,WEARABLE:b,EMBEDDED:D},P.ENGINE={NAME:p,VERSION:g},P.OS={NAME:p,VERSION:g},typeof t!==l?(typeof e!==l&&e.exports&&(t=e.exports=P),t.UAParser=P):"function"===c&&n(258)?(r=function(){return P}.call(t,n,t,e),!(r!==a&&(e.exports=r))):i.UAParser=P;var M=i.jQuery||i.Zepto;if(typeof M!==l){var I=new P;M.ua=I.getResult(),M.ua.get=function(){return I.getUA()},M.ua.set=function(e){I.setUA(e);var t=I.getResult();for(var n in t)M.ua[n]=t[n]}}}("object"==typeof window?window:this)},function(e,t,n){var r;(function(e,i){!function(a){function o(e){throw RangeError(I[e])}function s(e,t){for(var n=e.length,r=[];n--;)r[n]=t(e[n]);return r}function u(e,t){var n=e.split("@"),r="";n.length>1&&(r=n[0]+"@",e=n[1]),e=e.replace(M,".");var i=e.split("."),a=s(i,t).join(".");return r+a}function c(e){for(var t,n,r=[],i=0,a=e.length;i<a;)t=e.charCodeAt(i++),t>=55296&&t<=56319&&i<a?(n=e.charCodeAt(i++),56320==(64512&n)?r.push(((1023&t)<<10)+(1023&n)+65536):(r.push(t),i--)):r.push(t);return r}function l(e){return s(e,function(e){var t="";return e>65535&&(e-=65536,t+=L(e>>>10&1023|55296),e=56320|1023&e),t+=L(e)}).join("")}function f(e){return e-48<10?e-22:e-65<26?e-65:e-97<26?e-97:S}function d(e,t){return e+22+75*(e<26)-((0!=t)<<5)}function h(e,t,n){var r=0;for(e=n?N(e/D):e>>1,e+=N(e/t);e>O*w>>1;r+=S)e=N(e/O);return N(r+(O+1)*e/(e+b))}function _(e){var t,n,r,i,a,s,u,c,d,_,p=[],v=e.length,m=0,g=R,y=C;for(n=e.lastIndexOf(k),n<0&&(n=0),r=0;r<n;++r)e.charCodeAt(r)>=128&&o("not-basic"),p.push(e.charCodeAt(r));for(i=n>0?n+1:0;i<v;){for(a=m,s=1,u=S;i>=v&&o("invalid-input"),c=f(e.charCodeAt(i++)),(c>=S||c>N((E-m)/s))&&o("overflow"),m+=c*s,d=u<=y?T:u>=y+w?w:u-y,!(c<d);u+=S)_=S-d,s>N(E/_)&&o("overflow"),s*=_;t=p.length+1,y=h(m-a,t,0==a),N(m/t)>E-g&&o("overflow"),g+=N(m/t),m%=t,p.splice(m++,0,g)}return l(p)}function p(e){var t,n,r,i,a,s,u,l,f,_,p,v,m,g,y,b=[];for(e=c(e),v=e.length,t=R,n=0,a=C,s=0;s<v;++s)p=e[s],p<128&&b.push(L(p));for(r=i=b.length,i&&b.push(k);r<v;){for(u=E,s=0;s<v;++s)p=e[s],p>=t&&p<u&&(u=p);for(m=r+1,u-t>N((E-n)/m)&&o("overflow"),n+=(u-t)*m,t=u,s=0;s<v;++s)if(p=e[s],p<t&&++n>E&&o("overflow"),p==t){for(l=n,f=S;_=f<=a?T:f>=a+w?w:f-a,!(l<_);f+=S)y=l-_,g=S-_,b.push(L(d(_+y%g,0))),l=N(y/g);b.push(L(d(l,0))),a=h(n,m,r==i),n=0,++r}++n,++t}return b.join("")}function v(e){return u(e,function(e){return A.test(e)?_(e.slice(4).toLowerCase()):e})}function m(e){return u(e,function(e){return P.test(e)?"xn--"+p(e):e})}var g=("object"==typeof t&&t&&!t.nodeType&&t,"object"==typeof e&&e&&!e.nodeType&&e,"object"==typeof i&&i);g.global!==g&&g.window!==g&&g.self!==g||(a=g);var y,E=2147483647,S=36,T=1,w=26,b=38,D=700,C=72,R=128,k="-",A=/^xn--/,P=/[^\x20-\x7E]/,M=/[\x2E\u3002\uFF0E\uFF61]/g,I={overflow:"Overflow: input needs wider integers to process","not-basic":"Illegal input >= 0x80 (not a basic code point)","invalid-input":"Invalid input"},O=S-T,N=Math.floor,L=String.fromCharCode;y={version:"1.3.2",ucs2:{decode:c,encode:l},decode:_,encode:p,toASCII:m,toUnicode:v},r=function(){return y}.call(t,n,t,e),!(void 0!==r&&(e.exports=r))}(this)}).call(t,n(259)(e),function(){return this}())},function(e,t,n){"use strict";function r(){this.protocol=null,this.slashes=null,this.auth=null,this.host=null,this.port=null,this.hostname=null,this.hash=null,this.search=null,this.query=null,this.pathname=null,this.path=null,this.href=null}function i(e,t,n){if(e&&c.isObject(e)&&e instanceof r)return e;var i=new r;return i.parse(e,t,n),i}function a(e){return c.isString(e)&&(e=i(e)),e instanceof r?e.format():r.prototype.format.call(e)}function o(e,t){return i(e,!1,!0).resolve(t)}function s(e,t){return e?i(e,!1,!0).resolveObject(t):t}var u=n(254),c=n(256);t.parse=i,t.resolve=o,t.resolveObject=s,t.format=a,t.Url=r;var l=/^([a-z0-9.+-]+:)/i,f=/:[0-9]*$/,d=/^(\/\/?(?!\/)[^\?\s]*)(\?[^\s]*)?$/,h=["<",">",'"',"`"," ","\r","\n","\t"],_=["{","}","|","\\","^","`"].concat(h),p=["'"].concat(_),v=["%","/","?",";","#"].concat(p),m=["/","?","#"],g=255,y=/^[+a-z0-9A-Z_-]{0,63}$/,E=/^([+a-z0-9A-Z_-]{0,63})(.*)$/,S={javascript:!0,"javascript:":!0},T={javascript:!0,"javascript:":!0},w={http:!0,https:!0,ftp:!0,gopher:!0,file:!0,"http:":!0,"https:":!0,"ftp:":!0,"gopher:":!0,"file:":!0},b=n(251);r.prototype.parse=function(e,t,n){if(!c.isString(e))throw new TypeError("Parameter 'url' must be a string, not "+typeof e);var r=e.indexOf("?"),i=r!==-1&&r<e.indexOf("#")?"?":"#",a=e.split(i),o=/\\/g;a[0]=a[0].replace(o,"/"),e=a.join(i);var s=e;if(s=s.trim(),!n&&1===e.split("#").length){var f=d.exec(s);if(f)return this.path=s,this.href=s,this.pathname=f[1],f[2]?(this.search=f[2],t?this.query=b.parse(this.search.substr(1)):this.query=this.search.substr(1)):t&&(this.search="",this.query={}),this}var h=l.exec(s);if(h){h=h[0];var _=h.toLowerCase();this.protocol=_,s=s.substr(h.length)}if(n||h||s.match(/^\/\/[^@\/]+@[^@\/]+/)){var D="//"===s.substr(0,2);!D||h&&T[h]||(s=s.substr(2),this.slashes=!0)}if(!T[h]&&(D||h&&!w[h])){for(var C=-1,R=0;R<m.length;R++){var k=s.indexOf(m[R]);k!==-1&&(C===-1||k<C)&&(C=k)}var A,P;P=C===-1?s.lastIndexOf("@"):s.lastIndexOf("@",C),P!==-1&&(A=s.slice(0,P),s=s.slice(P+1),this.auth=decodeURIComponent(A)),C=-1;for(var R=0;R<v.length;R++){var k=s.indexOf(v[R]);k!==-1&&(C===-1||k<C)&&(C=k)}C===-1&&(C=s.length),this.host=s.slice(0,C),s=s.slice(C),this.parseHost(),this.hostname=this.hostname||"";var M="["===this.hostname[0]&&"]"===this.hostname[this.hostname.length-1];if(!M)for(var I=this.hostname.split(/\./),R=0,O=I.length;R<O;R++){var N=I[R];if(N&&!N.match(y)){for(var L="",x=0,U=N.length;x<U;x++)L+=N.charCodeAt(x)>127?"x":N[x];if(!L.match(y)){var j=I.slice(0,R),F=I.slice(R+1),B=N.match(E);B&&(j.push(B[1]),F.unshift(B[2])),F.length&&(s="/"+F.join(".")+s),this.hostname=j.join(".");break}}}this.hostname.length>g?this.hostname="":this.hostname=this.hostname.toLowerCase(),M||(this.hostname=u.toASCII(this.hostname));var H=this.port?":"+this.port:"",G=this.hostname||"";this.host=G+H,this.href+=this.host,M&&(this.hostname=this.hostname.substr(1,this.hostname.length-2),"/"!==s[0]&&(s="/"+s))}if(!S[_])for(var R=0,O=p.length;R<O;R++){var q=p[R];if(s.indexOf(q)!==-1){var V=encodeURIComponent(q);V===q&&(V=escape(q)),s=s.split(q).join(V)}}var W=s.indexOf("#");W!==-1&&(this.hash=s.substr(W),s=s.slice(0,W));var K=s.indexOf("?");if(K!==-1?(this.search=s.substr(K),this.query=s.substr(K+1),t&&(this.query=b.parse(this.query)),s=s.slice(0,K)):t&&(this.search="",this.query={}),s&&(this.pathname=s),w[_]&&this.hostname&&!this.pathname&&(this.pathname="/"),this.pathname||this.search){var H=this.pathname||"",Y=this.search||"";this.path=H+Y}return this.href=this.format(),this},r.prototype.format=function(){var e=this.auth||"";e&&(e=encodeURIComponent(e),e=e.replace(/%3A/i,":"),e+="@");var t=this.protocol||"",n=this.pathname||"",r=this.hash||"",i=!1,a="";this.host?i=e+this.host:this.hostname&&(i=e+(this.hostname.indexOf(":")===-1?this.hostname:"["+this.hostname+"]"),this.port&&(i+=":"+this.port)),this.query&&c.isObject(this.query)&&Object.keys(this.query).length&&(a=b.stringify(this.query));var o=this.search||a&&"?"+a||"";return t&&":"!==t.substr(-1)&&(t+=":"),this.slashes||(!t||w[t])&&i!==!1?(i="//"+(i||""),n&&"/"!==n.charAt(0)&&(n="/"+n)):i||(i=""),r&&"#"!==r.charAt(0)&&(r="#"+r),o&&"?"!==o.charAt(0)&&(o="?"+o),n=n.replace(/[?#]/g,function(e){return encodeURIComponent(e)}),o=o.replace("#","%23"),t+i+n+o+r},r.prototype.resolve=function(e){return this.resolveObject(i(e,!1,!0)).format()},r.prototype.resolveObject=function(e){if(c.isString(e)){var t=new r;t.parse(e,!1,!0),e=t}for(var n=new r,i=Object.keys(this),a=0;a<i.length;a++){var o=i[a];n[o]=this[o]}if(n.hash=e.hash,""===e.href)return n.href=n.format(),n;if(e.slashes&&!e.protocol){for(var s=Object.keys(e),u=0;u<s.length;u++){var l=s[u];"protocol"!==l&&(n[l]=e[l])}return w[n.protocol]&&n.hostname&&!n.pathname&&(n.path=n.pathname="/"),n.href=n.format(),n}if(e.protocol&&e.protocol!==n.protocol){if(!w[e.protocol]){for(var f=Object.keys(e),d=0;d<f.length;d++){var h=f[d];n[h]=e[h]}return n.href=n.format(),n}if(n.protocol=e.protocol,e.host||T[e.protocol])n.pathname=e.pathname;else{for(var _=(e.pathname||"").split("/");_.length&&!(e.host=_.shift()););e.host||(e.host=""),e.hostname||(e.hostname=""),""!==_[0]&&_.unshift(""),_.length<2&&_.unshift(""),n.pathname=_.join("/")}if(n.search=e.search,n.query=e.query,n.host=e.host||"",n.auth=e.auth,n.hostname=e.hostname||e.host,n.port=e.port,n.pathname||n.search){var p=n.pathname||"",v=n.search||"";n.path=p+v}return n.slashes=n.slashes||e.slashes,n.href=n.format(),n}var m=n.pathname&&"/"===n.pathname.charAt(0),g=e.host||e.pathname&&"/"===e.pathname.charAt(0),y=g||m||n.host&&e.pathname,E=y,S=n.pathname&&n.pathname.split("/")||[],_=e.pathname&&e.pathname.split("/")||[],b=n.protocol&&!w[n.protocol];if(b&&(n.hostname="",n.port=null,n.host&&(""===S[0]?S[0]=n.host:S.unshift(n.host)),n.host="",e.protocol&&(e.hostname=null,e.port=null,e.host&&(""===_[0]?_[0]=e.host:_.unshift(e.host)),e.host=null),y=y&&(""===_[0]||""===S[0])),g)n.host=e.host||""===e.host?e.host:n.host,n.hostname=e.hostname||""===e.hostname?e.hostname:n.hostname,n.search=e.search,n.query=e.query,S=_;else if(_.length)S||(S=[]),S.pop(),S=S.concat(_),n.search=e.search,n.query=e.query;else if(!c.isNullOrUndefined(e.search)){if(b){n.hostname=n.host=S.shift();var D=!!(n.host&&n.host.indexOf("@")>0)&&n.host.split("@");D&&(n.auth=D.shift(),n.host=n.hostname=D.shift())}return n.search=e.search,n.query=e.query,c.isNull(n.pathname)&&c.isNull(n.search)||(n.path=(n.pathname?n.pathname:"")+(n.search?n.search:"")),n.href=n.format(),n}if(!S.length)return n.pathname=null,n.search?n.path="/"+n.search:n.path=null,n.href=n.format(),n;for(var C=S.slice(-1)[0],R=(n.host||e.host||S.length>1)&&("."===C||".."===C)||""===C,k=0,A=S.length;A>=0;A--)C=S[A],"."===C?S.splice(A,1):".."===C?(S.splice(A,1),k++):k&&(S.splice(A,1),k--);if(!y&&!E)for(;k--;k)S.unshift("..");!y||""===S[0]||S[0]&&"/"===S[0].charAt(0)||S.unshift(""),R&&"/"!==S.join("/").substr(-1)&&S.push("");var P=""===S[0]||S[0]&&"/"===S[0].charAt(0);if(b){n.hostname=n.host=P?"":S.length?S.shift():"";var D=!!(n.host&&n.host.indexOf("@")>0)&&n.host.split("@");D&&(n.auth=D.shift(),n.host=n.hostname=D.shift())}return y=y||n.host&&S.length,y&&!P&&S.unshift(""),S.length?n.pathname=S.join("/"):(n.pathname=null,n.path=null),c.isNull(n.pathname)&&c.isNull(n.search)||(n.path=(n.pathname?n.pathname:"")+(n.search?n.search:"")),n.auth=e.auth||n.auth,n.slashes=n.slashes||e.slashes,n.href=n.format(),n},r.prototype.parseHost=function(){var e=this.host,t=f.exec(e);t&&(t=t[0],":"!==t&&(this.port=t.substr(1)),e=e.substr(0,e.length-t.length)),e&&(this.hostname=e)}},function(e,t){"use strict";e.exports={isString:function(e){return"string"==typeof e},isObject:function(e){return"object"==typeof e&&null!==e},isNull:function(e){return null===e},isNullOrUndefined:function(e){return null==e}}},function(e,t){(function(t){var n;if(t.crypto&&crypto.getRandomValues){var r=new Uint8Array(16);n=function(){return crypto.getRandomValues(r),r}}if(!n){var i=new Array(16);n=function(){for(var e,t=0;t<16;t++)0===(3&t)&&(e=4294967296*Math.random()),i[t]=e>>>((3&t)<<3)&255;return i}}e.exports=n}).call(t,function(){return this}())},function(e,t){(function(t){e.exports=t}).call(t,{})},function(e,t){e.exports=function(e){return e.webpackPolyfill||(e.deprecate=function(){},e.paths=[],e.children=[],e.webpackPolyfill=1),e}}])})}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}]},{},[17])(17)});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],124:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -34972,7 +24316,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],125:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 function clean (s) {
   return s.replace(/\n\r?\s*/g, '')
 }
@@ -34987,7 +24331,7 @@ module.exports = function tsml (sa) {
 
   return s
 }
-},{}],126:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast-button.js
@@ -35315,7 +24659,7 @@ Component.registerComponent('ChromeCastButton', ChromeCastButton);
 exports['default'] = ChromeCastButton;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],127:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -35349,7 +24693,7 @@ _videoJs2['default'].plugin('chromecast', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./videojs-chromecast":129}],128:[function(require,module,exports){
+},{"./videojs-chromecast":65}],64:[function(require,module,exports){
 (function (global){
 /**
  * @file chromecast.js
@@ -35881,7 +25225,7 @@ Tech.registerTech('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],129:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-chromecast - v1.0.0 - 2016-02-15
@@ -35963,7 +25307,7 @@ Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/chromecast-button":126,"./tech/chromecast":128}],130:[function(require,module,exports){
+},{"./component/control-bar/chromecast-button":62,"./tech/chromecast":64}],66:[function(require,module,exports){
 (function (global){
 /**
  * @file sub-poster-image.js
@@ -36038,7 +25382,7 @@ Component.registerComponent('SubPosterImage', SubPosterImage);
 exports['default'] = SubPosterImage;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],131:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 (function (global){
 /**
  * @file Deezer.js
@@ -36455,7 +25799,7 @@ Tech.registerTech('Deezer', Deezer);
 exports['default'] = Deezer;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Externals":132}],132:[function(require,module,exports){
+},{"./Externals":68}],68:[function(require,module,exports){
 (function (global){
 /**
  * @file videojs-externals.js
@@ -36948,7 +26292,7 @@ Tech.registerTech('Externals', Externals);
 exports['default'] = Externals;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],133:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 (function (global){
 /**
  * @file Soundcloud.js
@@ -37360,7 +26704,7 @@ Tech.registerTech('Soundcloud', Soundcloud);
 exports['default'] = Soundcloud;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Externals":132}],134:[function(require,module,exports){
+},{"./Externals":68}],70:[function(require,module,exports){
 (function (global){
 /**
  * @file spotify.js
@@ -37567,7 +26911,7 @@ Tech.registerTech('Spotify', Spotify);
 exports['default'] = Spotify;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Externals":132}],135:[function(require,module,exports){
+},{"./Externals":68}],71:[function(require,module,exports){
 (function (global){
 /**
  * @file Vimeo.js
@@ -37930,7 +27274,7 @@ Tech.registerTech('Vimeo', Vimeo);
 exports['default'] = Vimeo;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Externals":132}],136:[function(require,module,exports){
+},{"./Externals":68}],72:[function(require,module,exports){
 (function (global){
 /**
  * @file Youtube.js
@@ -38333,7 +27677,7 @@ Tech.registerTech('Youtube', Youtube);
 exports['default'] = Youtube;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Externals":132,"global/window":20}],137:[function(require,module,exports){
+},{"./Externals":68,"global/window":20}],73:[function(require,module,exports){
 /**
  * @file videojs-externals.js
  * Externals (iframe) Media Controller - Wrapper for HTML5 Media API
@@ -38353,7 +27697,7 @@ require('./tech/Vimeo');
 require('./tech/Soundcloud');
 
 require('./component/sub-poster-image');
-},{"./component/sub-poster-image":130,"./tech/Deezer":131,"./tech/Externals":132,"./tech/Soundcloud":133,"./tech/Spotify":134,"./tech/Vimeo":135,"./tech/Youtube":136}],138:[function(require,module,exports){
+},{"./component/sub-poster-image":66,"./tech/Deezer":67,"./tech/Externals":68,"./tech/Soundcloud":69,"./tech/Spotify":70,"./tech/Vimeo":71,"./tech/Youtube":72}],74:[function(require,module,exports){
 (function (global){
 /**
  * ! videojs-metrics - v0.0.0 - 2016-02-15
@@ -38636,7 +27980,7 @@ Component.registerComponent('Metrics', Metrics);
 // register the plugin
 _videoJs2['default'].options.children.metrics = {};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":140,"global/document":19,"global/window":20,"xhr":141}],139:[function(require,module,exports){
+},{"./utils.js":76,"global/document":19,"global/window":20,"xhr":77}],75:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -38669,7 +28013,7 @@ _videoJs2['default'].plugin('metrics', plugin);
 exports['default'] = plugin;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./metrics":138}],140:[function(require,module,exports){
+},{"./metrics":74}],76:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -38757,7 +28101,7 @@ function getBrowser() {
 
 	return data;
 }
-},{"global/document":19,"global/window":20}],141:[function(require,module,exports){
+},{"global/document":19,"global/window":20}],77:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -38978,9 +28322,9 @@ function _createXHR(options) {
 
 function noop() {}
 
-},{"global/window":20,"is-function":142,"once":143,"parse-headers":146,"xtend":147}],142:[function(require,module,exports){
+},{"global/window":20,"is-function":78,"once":79,"parse-headers":82,"xtend":83}],78:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
-},{"dup":21}],143:[function(require,module,exports){
+},{"dup":21}],79:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -39001,13 +28345,13 @@ function once (fn) {
   }
 }
 
-},{}],144:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 arguments[4][18][0].apply(exports,arguments)
-},{"dup":18,"is-function":142}],145:[function(require,module,exports){
-arguments[4][124][0].apply(exports,arguments)
-},{"dup":124}],146:[function(require,module,exports){
-arguments[4][121][0].apply(exports,arguments)
-},{"dup":121,"for-each":144,"trim":145}],147:[function(require,module,exports){
+},{"dup":18,"is-function":78}],81:[function(require,module,exports){
+arguments[4][60][0].apply(exports,arguments)
+},{"dup":60}],82:[function(require,module,exports){
+arguments[4][58][0].apply(exports,arguments)
+},{"dup":58,"for-each":80,"trim":81}],83:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -39028,9 +28372,9 @@ function extend() {
     return target
 }
 
-},{}],148:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"dup":147}],149:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
+arguments[4][83][0].apply(exports,arguments)
+},{"dup":83}],85:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -39064,9 +28408,7 @@ require('videojs-chromecast');
 
 require('videojs-externals');
 
-var _komentJs = require('koment-js');
-
-var _komentJs2 = _interopRequireDefault(_komentJs);
+require('koment-js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39215,12 +28557,10 @@ _video2.default.browser.IS_SAFARI = /safari/i.test(USER_AGENT);
  */
 _video2.default.options.children.push('afrostream');
 
-_video2.default.koment = _komentJs2.default;
-
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
 
 Component.registerComponent('Afrostream', Afrostream);
 exports.default = Afrostream;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"koment-js":46,"videojs-chromecast":127,"videojs-externals":137,"videojs-metrics":139}]},{},[149])(149)
+},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"koment-js":36,"videojs-chromecast":63,"videojs-externals":73,"videojs-metrics":75}]},{},[85])(85)
 });

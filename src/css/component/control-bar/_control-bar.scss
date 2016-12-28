@@ -22,6 +22,8 @@
   background-color: $primary-background-color;
   /* Opacity: 1.0 = 100%, 0.0 = 0% */
   background-color: rgba($primary-background-color, 0.3);
+
+  color: $primary-foreground-color;
 }
 
 /* The slider bar color is used for the progress bar and the volume bar
