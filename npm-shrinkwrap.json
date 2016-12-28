@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.33",
+  "version": "2.2.34",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9"
@@ -5477,7 +5477,7 @@
       "version": "1.1.0"
     },
     "codem-isoboxer": {
-      "version": "0.2.7"
+      "version": "0.2.2"
     },
     "combine-source-map": {
       "version": "0.6.1",
@@ -5659,7 +5659,7 @@
       }
     },
     "dashjs": {
-      "version": "2.4.0"
+      "version": "2.3.0"
     },
     "date-now": {
       "version": "0.1.4"

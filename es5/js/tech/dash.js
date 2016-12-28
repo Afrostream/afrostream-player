@@ -181,7 +181,7 @@ var Dash = function (_Html) {
         // But make a fresh MediaPlayer each time the sourceHandler is used
         this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
 
-        //this.initYoubora()
+        this.initYoubora();
         // Must run controller before these two lines or else there is no
         // element to bind to.
         this.mediaPlayer_.initialize();
@@ -222,7 +222,6 @@ var Dash = function (_Html) {
       this.mediaPlayer_.setFragmentLoaderRetryInterval(this.options_.buffer.fragmentLoaderRetryInterval);
       // ReplaceMediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
       // ReplaceMediaController.TRACK_SWITCH_MODE_NEVER_REPLACE
-      //player.setInitialMediaSettingsFor("video", {role: $scope.initialSettings.video})
 
       this.mediaPlayer_.attachView(this.el_);
       this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
@@ -466,7 +465,7 @@ var Dash = function (_Html) {
           plTrack = plTracks[i];
           track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
           if (track.defaultTrack) {
-            this.mediaPlayer_.setTextTrack(i);
+            this.mediaPlayer_.setTextTrack(track.index);
             if (plTrack) {
               plTrack.mode = 'showing';
             }
@@ -602,7 +601,7 @@ Dash.prototype.options_ = {
    * (used to forbid clearing the buffered data (prior to current playback position) after track switch. Default for video)
    * MediaController.TRACK_SWITCH_MODE_ALWAYS_REPLACE
    * (used to clear the buffered data (prior to current playback position) after track switch. Default for audio)*/
-  trackSwitchMode: 'neverReplace', //alwaysReplace
+  trackSwitchMode: 'neverReplace', //alwaysReplace//neverReplace
   //Enabling buffer-occupancy ABR will switch to the *experimental* implementation of BOLA
   bolaEnabled: true,
   //When enabled, The maximum time to render a higher quality is current time + (1.5 * fragment duration).
