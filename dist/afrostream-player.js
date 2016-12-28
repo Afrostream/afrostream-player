@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.33
+ * @version 2.2.34
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -25484,8 +25484,6 @@ var Deezer = (function (_Externals) {
       switch (state) {
         case -1:
           this.trigger('loadstart');
-          this.trigger('loadedmetadata');
-          this.trigger('durationchange');
           this.trigger('waiting');
           break;
 
@@ -25555,7 +25553,6 @@ var Deezer = (function (_Externals) {
       });
       this.widgetPlayer = DZ.player;
       _get(Object.getPrototypeOf(Deezer.prototype), 'initTech', this).call(this);
-      this.onStateChange({ type: -1 });
     }
   }, {
     key: 'setupTriggers',
@@ -26009,6 +26006,7 @@ var Externals = (function (_Tech) {
     key: 'initTech',
     value: function initTech() {
       this.setupTriggers();
+      this.onStateChange({ data: -1, type: -1 });
     }
   }, {
     key: 'setupTriggers',
@@ -26041,8 +26039,9 @@ var Externals = (function (_Tech) {
 
         case 'apiready':
           this.trigger('loadedmetadata');
-          this.onReady();
+          this.trigger('canplay');
           this.trigger('durationchange');
+          this.onReady();
           break;
 
         case 'ended':
@@ -26457,7 +26456,6 @@ var Soundcloud = (function (_Externals) {
     value: function initTech() {
       this.widgetPlayer = SC.Widget(this.options_.techId);
       _get(Object.getPrototypeOf(Soundcloud.prototype), 'initTech', this).call(this);
-      this.onStateChange({ type: -1 });
     }
   }, {
     key: 'setupTriggers',
@@ -26758,6 +26756,8 @@ var Spotify = (function (_Externals) {
   _createClass(Spotify, [{
     key: 'createEl',
     value: function createEl() {
+      var _this = this;
+
       var source = null;
       if ('string' === typeof this.options_.source) {
         source = this.options_.source;
@@ -26768,6 +26768,9 @@ var Spotify = (function (_Externals) {
       var el_ = _get(Object.getPrototypeOf(Spotify.prototype), 'createEl', this).call(this, 'iframe', {
         width: '100%',
         height: '100%',
+        onload: function onload() {
+          return _this.onStateChange({ type: 'apiready' });
+        },
         src: 'https://embed.spotify.com/?uri=' + source
       }, false);
 
@@ -26830,7 +26833,9 @@ var Spotify = (function (_Externals) {
   }, {
     key: 'src',
     value: function src(_src) {
-      this.el_.src(_src);
+      if (typeof _src !== 'undefined') {
+        this.el_.src(_src);
+      }
     }
   }]);
 
@@ -27359,7 +27364,6 @@ var Youtube = (function (_Externals) {
         case -1:
           this.trigger('loadstart');
           this.trigger('loadedmetadata');
-          this.trigger('durationchange');
           break;
 
         case YT.PlayerState.PLAYING:
@@ -27463,7 +27467,6 @@ var Youtube = (function (_Externals) {
           onError: this.onPlayerError.bind(this)
         }
       });
-
       _get(Object.getPrototypeOf(Youtube.prototype), 'initTech', this).call(this);
     }
   }, {
