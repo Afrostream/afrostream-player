@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.35
+ * @version 2.2.36
  * @copyright 2016 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -3445,7 +3445,7 @@ var KomentDisplay = (function (_Component) {
   _createClass(KomentDisplay, [{
     key: 'videoId',
     value: function videoId() {
-      return this.player_.options_.videoId || this.player_.currentSrc();
+      return this.player_.koment.options_.videoId || this.player_.currentSrc();
     }
   }, {
     key: 'initKoment',
