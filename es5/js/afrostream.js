@@ -30,6 +30,8 @@ require('videojs-chromecast');
 
 require('videojs-externals');
 
+require('videojs-mux');
+
 require('koment-js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
