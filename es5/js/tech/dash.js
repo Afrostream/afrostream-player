@@ -175,8 +175,9 @@ var Dash = function (_Html) {
       if (this.options_.lib && !this.libLoaded) {
         // Set the source when ready
         this.loadLibTimeout = this.setTimeout(function () {
+          _this3.options_.lib = null;
           _this3.src(_src);
-        }, 2000);
+        }, 5000);
         return this.injectJs(_src);
       }
 
