@@ -165,9 +165,21 @@ var Dash = function (_Html) {
   }, {
     key: 'src',
     value: function src(_src) {
+      var _this3 = this;
+
       if (!_src) {
         return this.el_.src;
       }
+
+      this.clearTimeout(this.loadLibTimeout);
+      if (this.options_.lib && !this.libLoaded) {
+        // Set the source when ready
+        this.loadLibTimeout = this.setTimeout(function () {
+          _this3.src(_src);
+        }, 2000);
+        return this.injectJs(_src);
+      }
+
       this.trigger('loadstart');
 
       this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
@@ -557,14 +569,14 @@ var Dash = function (_Html) {
   }, {
     key: 'showErrors',
     value: function showErrors() {
-      var _this3 = this;
+      var _this4 = this;
 
       // The video element's src is set asynchronously so we have to wait a while
       // before we unhide any errors
       // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
       // in my testing
       this.setTimeout(function () {
-        _this3.player_.removeClass('vjs-dashjs-hide-errors');
+        _this4.player_.removeClass('vjs-dashjs-hide-errors');
       }, 250);
     }
   }, {
@@ -575,6 +587,29 @@ var Dash = function (_Html) {
       }
       _get(Object.getPrototypeOf(Dash.prototype), 'dispose', this).call(this, this);
     }
+  }, {
+    key: 'injectJs',
+    value: function injectJs(src) {
+      var self = this;
+      var url = this.options_.lib;
+      var t = 'script';
+      var d = document;
+      var s = d.getElementsByTagName('head')[0] || d.documentElement;
+      var js = d.createElement(t);
+      var cb = this.src.bind(this);
+      js.async = true;
+      js.type = 'text/javascript';
+
+      js.onload = js.onreadystatechange = function () {
+        var rs = this.readyState;
+        if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
+          self.libLoaded = true;
+          cb(src);
+        }
+      };
+      js.src = url;
+      s.insertBefore(js, s.firstChild);
+    }
   }]);
 
   return Dash;
@@ -582,7 +617,12 @@ var Dash = function (_Html) {
 
 Dash.prototype.isDynamic_ = false;
 
+Dash.prototype.loadLibTimeout = 0;
+
+Dash.prototype.libLoaded = false;
+
 Dash.prototype.options_ = {
+  lib: null,
   inititalMediaSettings: {
     text: {
       lang: 'fra'

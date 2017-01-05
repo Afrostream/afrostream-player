@@ -33,13 +33,8 @@ class EasyBroadcast extends Dash {
       return this.el_.src
     }
 
-    this.clearTimeout(this.loadEBTimeout)
-    if (!EasyBroadcast.ebLoaded) {
-      // Set the source when ready
-      this.loadEBTimeout = this.setTimeout(()=> {
-        super.src(src)
-      }, 2000)
-      return this.injectJs(src)
+    if (!this.libLoaded) {
+      super.src(src)
     } else {
       this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, src, true)
       this.initYoubora()
@@ -77,32 +72,10 @@ class EasyBroadcast extends Dash {
     this.triggerReady()
   }
 
-  injectJs (src) {
-    let url = this.options_.ebLib
-    let t = 'script'
-    let d = document
-    let s = d.getElementsByTagName('head')[0] || d.documentElement
-    let js = d.createElement(t)
-    let cb = ::this.src
-    js.async = true
-    js.type = 'text/javascript'
-
-    js.onload = js.onreadystatechange = function () {
-      let rs = this.readyState;
-      if (!EasyBroadcast.ebLoaded && (!rs || /loaded|complete/.test(rs))) {
-        EasyBroadcast.ebLoaded = true
-        cb(src)
-      }
-    }
-    js.src = url
-    s.insertBefore(js, s.firstChild)
-  }
-
-
 }
 
 EasyBroadcast.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
-  ebLib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
+  lib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'
 })
@@ -145,10 +118,6 @@ EasyBroadcast.supportsNativeVideoTracks = Dash.supportsNativeVideoTracks
  * @return {Boolean}
  */
 EasyBroadcast.supportsNativeAudioTracks = Dash.supportsNativeAudioTracks
-
-EasyBroadcast.loadEBTimeout = 0
-
-EasyBroadcast.ebLoaded = false
 
 videojs.options.easybroadcast = {}
 

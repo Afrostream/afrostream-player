@@ -62,19 +62,12 @@ var EasyBroadcast = function (_Dash) {
   _createClass(EasyBroadcast, [{
     key: 'src',
     value: function src(_src) {
-      var _this2 = this;
-
       if (!_src) {
         return this.el_.src;
       }
 
-      this.clearTimeout(this.loadEBTimeout);
-      if (!EasyBroadcast.ebLoaded) {
-        // Set the source when ready
-        this.loadEBTimeout = this.setTimeout(function () {
-          _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', _this2).call(_this2, _src);
-        }, 2000);
-        return this.injectJs(_src);
+      if (!this.libLoaded) {
+        _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
       } else {
         this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
         this.initYoubora();
@@ -112,35 +105,13 @@ var EasyBroadcast = function (_Dash) {
     value: function onReady() {
       this.triggerReady();
     }
-  }, {
-    key: 'injectJs',
-    value: function injectJs(src) {
-      var url = this.options_.ebLib;
-      var t = 'script';
-      var d = document;
-      var s = d.getElementsByTagName('head')[0] || d.documentElement;
-      var js = d.createElement(t);
-      var cb = this.src.bind(this);
-      js.async = true;
-      js.type = 'text/javascript';
-
-      js.onload = js.onreadystatechange = function () {
-        var rs = this.readyState;
-        if (!EasyBroadcast.ebLoaded && (!rs || /loaded|complete/.test(rs))) {
-          EasyBroadcast.ebLoaded = true;
-          cb(src);
-        }
-      };
-      js.src = url;
-      s.insertBefore(js, s.firstChild);
-    }
   }]);
 
   return EasyBroadcast;
 }(_dash2.default);
 
 EasyBroadcast.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
-  ebLib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
+  lib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'
 });
@@ -183,10 +154,6 @@ EasyBroadcast.supportsNativeVideoTracks = _dash2.default.supportsNativeVideoTrac
  * @return {Boolean}
  */
 EasyBroadcast.supportsNativeAudioTracks = _dash2.default.supportsNativeAudioTracks;
-
-EasyBroadcast.loadEBTimeout = 0;
-
-EasyBroadcast.ebLoaded = false;
 
 _video2.default.options.easybroadcast = {};
 

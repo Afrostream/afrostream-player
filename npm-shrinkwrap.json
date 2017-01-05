@@ -17580,9 +17580,9 @@
       }
     },
     "streamroot-dashjs-p2p-wrapper": {
-      "version": "1.8.4",
-      "from": "streamroot-dashjs-p2p-wrapper@1.8.4",
-      "resolved": "https://registry.npmjs.org/streamroot-dashjs-p2p-wrapper/-/streamroot-dashjs-p2p-wrapper-1.8.4.tgz"
+      "version": "1.8.7",
+      "from": "streamroot-dashjs-p2p-wrapper@latest",
+      "resolved": "https://registry.npmjs.org/streamroot-dashjs-p2p-wrapper/-/streamroot-dashjs-p2p-wrapper-1.8.7.tgz"
     },
     "string_decoder": {
       "version": "0.10.31",

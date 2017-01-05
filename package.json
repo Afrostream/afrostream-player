@@ -135,7 +135,7 @@
     "serve-static": "^1.10.0",
     "sinon": "1.14.1",
     "smoothie": "^1.27.0",
-    "streamroot-dashjs-p2p-wrapper": "^1.8.4",
+    "streamroot-dashjs-p2p-wrapper": "^1.8.7",
     "uglify-js": "^2.5.0",
     "video.js": "^5.14.1",
     "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.8",

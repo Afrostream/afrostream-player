@@ -119,6 +119,17 @@ class Dash extends Html5 {
     if (!src) {
       return this.el_.src
     }
+
+    this.clearTimeout(this.loadLibTimeout)
+    if (this.options_.lib && !this.libLoaded) {
+      // Set the source when ready
+      this.loadLibTimeout = this.setTimeout(() => {
+        this.options_.lib = null
+        this.src(src)
+      }, 5000)
+      return this.injectJs(src)
+    }
+
     this.trigger('loadstart')
 
     this.featuresNativeTextTracks = Dash.supportsNativeTextTracks()
@@ -514,11 +525,37 @@ class Dash extends Html5 {
     super.dispose(this)
   }
 
+  injectJs (src) {
+    const self = this
+    let url = this.options_.lib
+    let t = 'script'
+    let d = document
+    let s = d.getElementsByTagName('head')[0] || d.documentElement
+    let js = d.createElement(t)
+    let cb = ::this.src
+    js.async = true
+    js.type = 'text/javascript'
+
+    js.onload = js.onreadystatechange = function () {
+      let rs = this.readyState;
+      if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
+        self.libLoaded = true
+        cb(src)
+      }
+    }
+    js.src = url
+    s.insertBefore(js, s.firstChild)
+  }
 }
 
 Dash.prototype.isDynamic_ = false
 
+Dash.prototype.loadLibTimeout = 0
+
+Dash.prototype.libLoaded = false
+
 Dash.prototype.options_ = {
+  lib: null,
   inititalMediaSettings: {
     text: {
       lang: 'fra'

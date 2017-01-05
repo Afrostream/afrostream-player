@@ -4,7 +4,6 @@
  */
 import videojs from 'video.js'
 import Dash from './dash'
-import DashjsWrapper from 'streamroot-dashjs-p2p-wrapper'
 import { MediaPlayer } from 'dashjs'
 
 const Component = videojs.getComponent('Component')
@@ -33,14 +32,19 @@ class Streamroot extends Dash {
     if (!src) {
       return this.el_.src
     }
-    // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = MediaPlayer(this.context_).create()
-    this.initYoubora()
-    this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30)
-    // Apply any options that are set
-    this.mediaPlayer_.initialize()
-    this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
-    super.src(src)
+
+    if (!this.libLoaded) {
+      super.src(src)
+    } else {
+      // But make a fresh MediaPlayer each time the sourceHandler is used
+      this.mediaPlayer_ = MediaPlayer(this.context_).create()
+      this.initYoubora()
+      this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30)
+      // Apply any options that are set
+      this.mediaPlayer_.initialize()
+      this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+      super.src(src)
+    }
 
   }
 
@@ -71,6 +75,7 @@ class Streamroot extends Dash {
 }
 
 Streamroot.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
+  lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js ',
   p2pConfig: {
     streamrootKey: 'none',
     debug: true
