@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.39
+ * @version 2.2.40
  * @copyright 2017 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -53125,7 +53125,7 @@ arguments[4][183][0].apply(exports,arguments)
 },{"dup":183}],185:[function(require,module,exports){
 module.exports={
   "name": "afrostream-player",
-  "version": "2.2.39",
+  "version": "2.2.40",
   "description": "Player afrostream",
   "main": "es5/js/afrostream.js",
   "scripts": {
@@ -53227,7 +53227,7 @@ module.exports={
     "babel-preset-stage-0": "^6.5.0",
     "babelify": "^7.3.0",
     "bannerize": "^1.0.0",
-    "bootstrap-slider": "^6.1.7",
+    "bootstrap-slider": "^9.7.1",
     "bootstrap-switch": "^3.3.2",
     "browserify": "^13.0.1",
     "browserify-shim": "^3.0.0",
