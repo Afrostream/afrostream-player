@@ -54,6 +54,16 @@ class Dash extends Html5 {
       })
     }
 
+    this.clearTimeout(this.loadLibTimeout)
+    if (this.options_.lib && !this.libLoaded) {
+      // Set the source when ready
+      this.loadLibTimeout = this.setTimeout(() => {
+        this.options_.lib = null
+        this.triggerReady()
+      }, 5000)
+      return this.injectJs()
+    }
+
   }
 
   currentSrc () {
@@ -118,16 +128,6 @@ class Dash extends Html5 {
   src (src) {
     if (!src) {
       return this.el_.src
-    }
-
-    this.clearTimeout(this.loadLibTimeout)
-    if (this.options_.lib && !this.libLoaded) {
-      // Set the source when ready
-      this.loadLibTimeout = this.setTimeout(() => {
-        this.options_.lib = null
-        this.src(src)
-      }, 5000)
-      return this.injectJs(src)
     }
 
     this.trigger('loadstart')
@@ -525,14 +525,14 @@ class Dash extends Html5 {
     super.dispose(this)
   }
 
-  injectJs (src) {
+  injectJs () {
     const self = this
     let url = this.options_.lib
     let t = 'script'
     let d = document
     let s = d.getElementsByTagName('head')[0] || d.documentElement
     let js = d.createElement(t)
-    let cb = ::this.src
+    let cb = ::this.triggerReady
     js.async = true
     js.type = 'text/javascript'
 
@@ -540,7 +540,7 @@ class Dash extends Html5 {
       let rs = this.readyState;
       if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
         self.libLoaded = true
-        cb(src)
+        cb()
       }
     }
     js.src = url

@@ -110,7 +110,7 @@ var Streamroot = function (_Dash) {
   return Streamroot;
 }(_dash2.default);
 
-Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
+Streamroot.prototype.options_ = Object.assign(_dash2.default.prototype.options_, {
   lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js ',
   p2pConfig: {
     streamrootKey: 'none',

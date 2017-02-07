@@ -100,17 +100,12 @@ var EasyBroadcast = function (_Dash) {
       }
       _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'onMetricChanged', this).call(this, e);
     }
-  }, {
-    key: 'onReady',
-    value: function onReady() {
-      this.triggerReady();
-    }
   }]);
 
   return EasyBroadcast;
 }(_dash2.default);
 
-EasyBroadcast.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
+EasyBroadcast.prototype.options_ = Object.assign(_dash2.default.prototype.options_, {
   lib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'
@@ -153,6 +148,7 @@ EasyBroadcast.supportsNativeVideoTracks = _dash2.default.supportsNativeVideoTrac
  *
  * @return {Boolean}
  */
+21021;
 EasyBroadcast.supportsNativeAudioTracks = _dash2.default.supportsNativeAudioTracks;
 
 _video2.default.options.easybroadcast = {};

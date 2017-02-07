@@ -86,6 +86,18 @@ var Dash = function (_Html) {
       })();
     }
 
+    _this.clearTimeout(_this.loadLibTimeout);
+    if (_this.options_.lib && !_this.libLoaded) {
+      var _ret;
+
+      // Set the source when ready
+      _this.loadLibTimeout = _this.setTimeout(function () {
+        _this.options_.lib = null;
+        _this.triggerReady();
+      }, 5000);
+      return _ret = _this.injectJs(), _possibleConstructorReturn(_this, _ret);
+    }
+
     return _this;
   }
 
@@ -165,20 +177,8 @@ var Dash = function (_Html) {
   }, {
     key: 'src',
     value: function src(_src) {
-      var _this3 = this;
-
       if (!_src) {
         return this.el_.src;
-      }
-
-      this.clearTimeout(this.loadLibTimeout);
-      if (this.options_.lib && !this.libLoaded) {
-        // Set the source when ready
-        this.loadLibTimeout = this.setTimeout(function () {
-          _this3.options_.lib = null;
-          _this3.src(_src);
-        }, 5000);
-        return this.injectJs(_src);
       }
 
       this.trigger('loadstart');
@@ -570,14 +570,14 @@ var Dash = function (_Html) {
   }, {
     key: 'showErrors',
     value: function showErrors() {
-      var _this4 = this;
+      var _this3 = this;
 
       // The video element's src is set asynchronously so we have to wait a while
       // before we unhide any errors
       // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
       // in my testing
       this.setTimeout(function () {
-        _this4.player_.removeClass('vjs-dashjs-hide-errors');
+        _this3.player_.removeClass('vjs-dashjs-hide-errors');
       }, 250);
     }
   }, {
@@ -590,14 +590,14 @@ var Dash = function (_Html) {
     }
   }, {
     key: 'injectJs',
-    value: function injectJs(src) {
+    value: function injectJs() {
       var self = this;
       var url = this.options_.lib;
       var t = 'script';
       var d = document;
       var s = d.getElementsByTagName('head')[0] || d.documentElement;
       var js = d.createElement(t);
-      var cb = this.src.bind(this);
+      var cb = this.triggerReady.bind(this);
       js.async = true;
       js.type = 'text/javascript';
 
@@ -605,7 +605,7 @@ var Dash = function (_Html) {
         var rs = this.readyState;
         if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
           self.libLoaded = true;
-          cb(src);
+          cb();
         }
       };
       js.src = url;

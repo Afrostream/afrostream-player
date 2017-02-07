@@ -68,13 +68,9 @@ class EasyBroadcast extends Dash {
     super.onMetricChanged(e)
   }
 
-  onReady () {
-    this.triggerReady()
-  }
-
 }
 
-EasyBroadcast.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
+EasyBroadcast.prototype.options_ = Object.assign(Dash.prototype.options_, {
   lib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'
@@ -117,6 +113,7 @@ EasyBroadcast.supportsNativeVideoTracks = Dash.supportsNativeVideoTracks
  *
  * @return {Boolean}
  */
+21021
 EasyBroadcast.supportsNativeAudioTracks = Dash.supportsNativeAudioTracks
 
 videojs.options.easybroadcast = {}

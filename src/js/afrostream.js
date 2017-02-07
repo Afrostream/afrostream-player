@@ -18,6 +18,8 @@ import 'videojs-externals'
 import 'videojs-mux'
 import 'koment-js'
 
+import pkg from '../../package.json'
+
 const Component = videojs.getComponent('Component')
 const ControlBar = videojs.getComponent('ControlBar')
 
@@ -139,4 +141,7 @@ videojs.options.children.push('afrostream')
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0])
 
 Component.registerComponent('Afrostream', Afrostream)
+
+videojs.AFROSTREAM_VERSION = pkg.version
+
 export default Afrostream

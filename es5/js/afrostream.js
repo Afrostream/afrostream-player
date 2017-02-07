@@ -34,6 +34,10 @@ require('videojs-mux');
 
 require('koment-js');
 
+var _package = require('../../package.json');
+
+var _package2 = _interopRequireDefault(_package);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -184,4 +188,7 @@ _video2.default.options.children.push('afrostream');
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
 
 Component.registerComponent('Afrostream', Afrostream);
+
+_video2.default.AFROSTREAM_VERSION = _package2.default.version;
+
 exports.default = Afrostream;

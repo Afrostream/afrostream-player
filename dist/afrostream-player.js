@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.2.38
+ * @version 2.2.39
  * @copyright 2017 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -1399,6 +1399,18 @@ var Dash = function (_Html) {
       })();
     }
 
+    _this.clearTimeout(_this.loadLibTimeout);
+    if (_this.options_.lib && !_this.libLoaded) {
+      var _ret;
+
+      // Set the source when ready
+      _this.loadLibTimeout = _this.setTimeout(function () {
+        _this.options_.lib = null;
+        _this.triggerReady();
+      }, 5000);
+      return _ret = _this.injectJs(), _possibleConstructorReturn(_this, _ret);
+    }
+
     return _this;
   }
 
@@ -1478,20 +1490,8 @@ var Dash = function (_Html) {
   }, {
     key: 'src',
     value: function src(_src) {
-      var _this3 = this;
-
       if (!_src) {
         return this.el_.src;
-      }
-
-      this.clearTimeout(this.loadLibTimeout);
-      if (this.options_.lib && !this.libLoaded) {
-        // Set the source when ready
-        this.loadLibTimeout = this.setTimeout(function () {
-          _this3.options_.lib = null;
-          _this3.src(_src);
-        }, 5000);
-        return this.injectJs(_src);
       }
 
       this.trigger('loadstart');
@@ -1883,14 +1883,14 @@ var Dash = function (_Html) {
   }, {
     key: 'showErrors',
     value: function showErrors() {
-      var _this4 = this;
+      var _this3 = this;
 
       // The video element's src is set asynchronously so we have to wait a while
       // before we unhide any errors
       // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
       // in my testing
       this.setTimeout(function () {
-        _this4.player_.removeClass('vjs-dashjs-hide-errors');
+        _this3.player_.removeClass('vjs-dashjs-hide-errors');
       }, 250);
     }
   }, {
@@ -1903,14 +1903,14 @@ var Dash = function (_Html) {
     }
   }, {
     key: 'injectJs',
-    value: function injectJs(src) {
+    value: function injectJs() {
       var self = this;
       var url = this.options_.lib;
       var t = 'script';
       var d = document;
       var s = d.getElementsByTagName('head')[0] || d.documentElement;
       var js = d.createElement(t);
-      var cb = this.src.bind(this);
+      var cb = this.triggerReady.bind(this);
       js.async = true;
       js.type = 'text/javascript';
 
@@ -1918,7 +1918,7 @@ var Dash = function (_Html) {
         var rs = this.readyState;
         if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
           self.libLoaded = true;
-          cb(src);
+          cb();
         }
       };
       js.src = url;
@@ -2682,17 +2682,12 @@ var EasyBroadcast = function (_Dash) {
       }
       _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'onMetricChanged', this).call(this, e);
     }
-  }, {
-    key: 'onReady',
-    value: function onReady() {
-      this.triggerReady();
-    }
   }]);
 
   return EasyBroadcast;
 }(_dash2.default);
 
-EasyBroadcast.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
+EasyBroadcast.prototype.options_ = Object.assign(_dash2.default.prototype.options_, {
   lib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'
@@ -2735,6 +2730,7 @@ EasyBroadcast.supportsNativeVideoTracks = _dash2.default.supportsNativeVideoTrac
  *
  * @return {Boolean}
  */
+21021;
 EasyBroadcast.supportsNativeAudioTracks = _dash2.default.supportsNativeAudioTracks;
 
 _video2.default.options.easybroadcast = {};
@@ -2977,7 +2973,7 @@ var Streamroot = function (_Dash) {
   return Streamroot;
 }(_dash2.default);
 
-Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
+Streamroot.prototype.options_ = Object.assign(_dash2.default.prototype.options_, {
   lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js ',
   p2pConfig: {
     streamrootKey: 'none',
@@ -3387,7 +3383,7 @@ Component.registerComponent('ClickableComponent', ClickableComponent);
 exports['default'] = ClickableComponent;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils/dom.js":38,"./utils/fn.js":39,"./utils/log.js":42,"global/document":19,"object.assign":51}],23:[function(require,module,exports){
+},{"./utils/dom.js":38,"./utils/fn.js":39,"./utils/log.js":42,"global/document":19,"object.assign":52}],23:[function(require,module,exports){
 (function (global){
 /**
  * @file koment-display.js
@@ -23803,7 +23799,39 @@ function getXml(xhr) {
 
 function noop() {}
 
-},{"global/window":20,"is-function":21,"parse-headers":60,"xtend":184}],47:[function(require,module,exports){
+},{"global/window":20,"is-function":21,"parse-headers":47,"xtend":184}],47:[function(require,module,exports){
+var trim = require('trim')
+  , forEach = require('for-each')
+  , isArray = function(arg) {
+      return Object.prototype.toString.call(arg) === '[object Array]';
+    }
+
+module.exports = function (headers) {
+  if (!headers)
+    return {}
+
+  var result = {}
+
+  forEach(
+      trim(headers).split('\n')
+    , function (row) {
+        var index = row.indexOf(':')
+          , key = trim(row.slice(0, index)).toLowerCase()
+          , value = trim(row.slice(index + 1))
+
+        if (typeof(result[key]) === 'undefined') {
+          result[key] = value
+        } else if (isArray(result[key])) {
+          result[key].push(value)
+        } else {
+          result[key] = [ result[key], value ]
+        }
+      }
+  )
+
+  return result
+}
+},{"for-each":18,"trim":62}],48:[function(require,module,exports){
 /**
  * lodash (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -24442,7 +24470,7 @@ function keys(object) {
 
 module.exports = assign;
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -25541,7 +25569,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 }();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 var keys = require('object-keys');
@@ -25580,7 +25608,7 @@ module.exports = function hasSymbols() {
 	return true;
 };
 
-},{"object-keys":56}],50:[function(require,module,exports){
+},{"object-keys":57}],51:[function(require,module,exports){
 'use strict';
 
 // modified from https://github.com/es-shims/es6-shim
@@ -25621,7 +25649,7 @@ module.exports = function assign(target, source1) {
 	return objTarget;
 };
 
-},{"./hasSymbols":49,"function-bind":55,"object-keys":56}],51:[function(require,module,exports){
+},{"./hasSymbols":50,"function-bind":56,"object-keys":57}],52:[function(require,module,exports){
 'use strict';
 
 var defineProperties = require('define-properties');
@@ -25638,7 +25666,7 @@ defineProperties(implementation, {
 
 module.exports = implementation;
 
-},{"./implementation":50,"./polyfill":58,"./shim":59,"define-properties":52}],52:[function(require,module,exports){
+},{"./implementation":51,"./polyfill":59,"./shim":60,"define-properties":53}],53:[function(require,module,exports){
 'use strict';
 
 var keys = require('object-keys');
@@ -25696,7 +25724,7 @@ defineProperties.supportsDescriptors = !!supportsDescriptors;
 
 module.exports = defineProperties;
 
-},{"foreach":53,"object-keys":56}],53:[function(require,module,exports){
+},{"foreach":54,"object-keys":57}],54:[function(require,module,exports){
 
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
@@ -25720,7 +25748,7 @@ module.exports = function forEach (obj, fn, ctx) {
 };
 
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
 var slice = Array.prototype.slice;
 var toStr = Object.prototype.toString;
@@ -25770,12 +25798,12 @@ module.exports = function bind(that) {
     return bound;
 };
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 var implementation = require('./implementation');
 
 module.exports = Function.prototype.bind || implementation;
 
-},{"./implementation":54}],56:[function(require,module,exports){
+},{"./implementation":55}],57:[function(require,module,exports){
 'use strict';
 
 // modified from https://github.com/es-shims/es5-shim
@@ -25905,7 +25933,7 @@ keysShim.shim = function shimObjectKeys() {
 
 module.exports = keysShim;
 
-},{"./isArguments":57}],57:[function(require,module,exports){
+},{"./isArguments":58}],58:[function(require,module,exports){
 'use strict';
 
 var toStr = Object.prototype.toString;
@@ -25924,7 +25952,7 @@ module.exports = function isArguments(value) {
 	return isArgs;
 };
 
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 'use strict';
 
 var implementation = require('./implementation');
@@ -25976,7 +26004,7 @@ module.exports = function getPolyfill() {
 	return Object.assign;
 };
 
-},{"./implementation":50}],59:[function(require,module,exports){
+},{"./implementation":51}],60:[function(require,module,exports){
 'use strict';
 
 var define = require('define-properties');
@@ -25992,39 +26020,7 @@ module.exports = function shimAssign() {
 	return polyfill;
 };
 
-},{"./polyfill":58,"define-properties":52}],60:[function(require,module,exports){
-var trim = require('trim')
-  , forEach = require('for-each')
-  , isArray = function(arg) {
-      return Object.prototype.toString.call(arg) === '[object Array]';
-    }
-
-module.exports = function (headers) {
-  if (!headers)
-    return {}
-
-  var result = {}
-
-  forEach(
-      trim(headers).split('\n')
-    , function (row) {
-        var index = row.indexOf(':')
-          , key = trim(row.slice(0, index)).toLowerCase()
-          , value = trim(row.slice(index + 1))
-
-        if (typeof(result[key]) === 'undefined') {
-          result[key] = value
-        } else if (isArray(result[key])) {
-          result[key].push(value)
-        } else {
-          result[key] = [ result[key], value ]
-        }
-      }
-  )
-
-  return result
-}
-},{"for-each":18,"trim":62}],61:[function(require,module,exports){
+},{"./polyfill":59,"define-properties":53}],61:[function(require,module,exports){
 module.exports = SafeParseTuple
 
 function SafeParseTuple(obj, reviver) {
@@ -52742,7 +52738,7 @@ function _interopRequireDefault(e) {
     _muxEmbed2 = _interopRequireDefault(_muxEmbed),
     secondsToMs = _muxEmbed2.default.utils.secondsToMs;
 
-},{"mux-embed":48}],174:[function(require,module,exports){
+},{"mux-embed":49}],174:[function(require,module,exports){
 "use strict";
 function _interopRequireDefault(e) {
   return e && e.__esModule ? e : { default: e };
@@ -52853,7 +52849,7 @@ function _interopRequireDefault(e) {
   });
 }), exports.default = {};
 
-},{"./ads/brightcove.js":172,"./ads/onceux.js":174,"./ads/videojs-ima.js":175,"global/window":20,"lodash.assign":47,"mux-embed":48,"video.js":156}],177:[function(require,module,exports){
+},{"./ads/brightcove.js":172,"./ads/onceux.js":174,"./ads/videojs-ima.js":175,"global/window":20,"lodash.assign":48,"mux-embed":49,"video.js":156}],177:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -53102,8 +53098,8 @@ arguments[4][18][0].apply(exports,arguments)
 },{"dup":18,"is-function":178}],181:[function(require,module,exports){
 arguments[4][62][0].apply(exports,arguments)
 },{"dup":62}],182:[function(require,module,exports){
-arguments[4][60][0].apply(exports,arguments)
-},{"dup":60,"for-each":180,"trim":181}],183:[function(require,module,exports){
+arguments[4][47][0].apply(exports,arguments)
+},{"dup":47,"for-each":180,"trim":181}],183:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -53127,6 +53123,164 @@ function extend() {
 },{}],184:[function(require,module,exports){
 arguments[4][183][0].apply(exports,arguments)
 },{"dup":183}],185:[function(require,module,exports){
+module.exports={
+  "name": "afrostream-player",
+  "version": "2.2.39",
+  "description": "Player afrostream",
+  "main": "es5/js/afrostream.js",
+  "scripts": {
+    "prebuild": "npm run clean",
+    "build": "npm-run-all -p build:*",
+    "build:js": "npm-run-all mkdirs build:js:babel build:js:browserify build:js:bannerize copy",
+    "build:js:babel": "babel src -d es5",
+    "build:js:bannerize": "bannerize dist/afrostream-player.js --banner=scripts/banner.ejs",
+    "build:js:browserify": "browserify . -s afrostream-player -o dist/afrostream-player.js",
+    "build:js:uglify": "uglifyjs dist/afrostream-player.js --comments --mangle --compress -o dist/afrostream-player.min.js",
+    "copy:swf": "cp -R dashas.swf dist",
+    "copy:font": "cp -R src/fonts/VideoJS.* dist/fonts",
+    "copy:fontkmt": "cp -R node_modules/koment-js/src/fonts/koment.* dist/fonts",
+    "copy": "npm-run-all -p copy:*",
+    "build:css": "node-sass --include-path ./node_modules/video.js/ --include-path src  --importer importer_file.js --output-style compressed src/css/afrostream-player.scss -o dist && replace '�screen' 'screen' dist/afrostream-player.css",
+    "build:test": "npm-run-all mkdirs build:test:browserify",
+    "build:test:browserify": "browserify `find test -name '*.test.js'` -t babelify -o dist-test/afrostream-player.js",
+    "clean": "rm -rf dist dist-test es5",
+    "docs": "doctoc README.md docs/api.md",
+    "lint": "vjsstandard",
+    "mkdirs": "mkdir -p dist dist-test dist/fonts es5",
+    "prepublish": "npm run build",
+    "prestart": "npm-run-all -p docs build",
+    "dev": "echo 'requiring node v6.9.1' && . ~/.nvm/nvm.sh && nvm use 6.9.1 && npm-run-all -p start watch",
+    "start": "npm-run-all -p start:serve",
+    "start:serve": "babel-node scripts/server.js",
+    "pretest": "npm-run-all build:test",
+    "test": "karma start test/karma/detected.js",
+    "test:chrome": "npm run pretest && karma start test/karma/chrome.js",
+    "test:firefox": "npm run pretest && karma start test/karma/firefox.js",
+    "test:ie": "npm run pretest && karma start test/karma/ie.js",
+    "test:safari": "npm run pretest && karma start test/karma/safari.js",
+    "preversion": "./scripts/npm-preversion-for-bower.sh",
+    "version": "./scripts/npm-version-for-bower.sh",
+    "postversion": "./scripts/npm-postversion-for-bower.sh",
+    "watch": "npm run mkdirs && npm-run-all -p watch:*",
+    "watch:css": "nodemon -e scss -x \"npm run build:css\"",
+    "watch:js": "watchify src/js/afrostream.js -t babelify -v -o dist/afrostream-player.js",
+    "watch:test": "watchify `find test -name '*.test.js'` -t babelify -o dist-test/afrostream-player.js",
+    "shrink": "shrinkwarp --ignore fsevents",
+    "postshrinkwrap": "npm run shrink"
+  },
+  "keywords": [
+    "afrostream",
+    "videojs",
+    "player"
+  ],
+  "shrinkwrapIgnore": [
+    "fsevents"
+  ],
+  "author": "Afrostream, Inc.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Afrostream/afrostream-player"
+  },
+  "files": [
+    "CONTRIBUTING.md",
+    "bower.json",
+    "dist-test/",
+    "dist/",
+    "dist/fonts",
+    "docs/",
+    "libs/",
+    "es5/",
+    "index.html",
+    "scripts/",
+    "src/",
+    "test/"
+  ],
+  "devDependencies": {
+    "shrinkwarp": "^2.0.0"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "qunit": "global:QUnit",
+    "sinon": "global:sinon",
+    "video.js": "global:videojs",
+    "dashjs": "global:dashjs",
+    "dashjs.MediaPlayer": "global:dashjs.MediaPlayer"
+  },
+  "vjsstandard": {
+    "ignore": [
+      "dist",
+      "dist-test",
+      "docs",
+      "es5",
+      "test/karma",
+      "scripts"
+    ]
+  },
+  "dependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babelify": "^7.3.0",
+    "bannerize": "^1.0.0",
+    "bootstrap-slider": "^6.1.7",
+    "bootstrap-switch": "^3.3.2",
+    "browserify": "^13.0.1",
+    "browserify-shim": "^3.0.0",
+    "browserify-versionify": "^1.0.6",
+    "connect": "^3.4.0",
+    "cowsay": "^1.1.0",
+    "dashjs": "^2.3.0",
+    "doctoc": "^0.15.0",
+    "global": "^4.3.0",
+    "include-media": "^1.4.2",
+    "karma": "^0.13.0",
+    "karma-browserify": "^4.4.0",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-detect-browsers": "^2.0.0",
+    "karma-firefox-launcher": "^0.1.0",
+    "karma-ie-launcher": "^0.2.0",
+    "karma-qunit": "^0.1.0",
+    "karma-safari-launcher": "^0.1.0",
+    "koment-js": "git+https://de75ef098b5bf0f4c9e4b464d74a34a60e71ef50:x-oauth-basic@github.com/Afrostream/koment-js.git#1.1.1",
+    "lodash": "^4.13.1",
+    "minimist": "^1.2.0",
+    "node-sass": "^3.4.2",
+    "node.extend": "^1.1.5",
+    "nodemon": "^1.9.1",
+    "npm-run-all": "~1.2.0",
+    "object.assign": "^4.0.3",
+    "portscanner": "^1.0.0",
+    "qunitjs": "^1.0.0",
+    "replace": "^0.3.0",
+    "serve-static": "^1.10.0",
+    "sinon": "1.14.1",
+    "smoothie": "^1.27.0",
+    "streamroot-dashjs-p2p-wrapper": "^1.8.7",
+    "uglify-js": "^2.5.0",
+    "video.js": "^5.14.1",
+    "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.8",
+    "videojs-externals": "git+https://github.com/Afrostream/videojs-externals.git#1.0.13",
+    "videojs-font": "^2.0.0",
+    "videojs-metrics": "git+https://github.com/Afrostream/videojs-metrics.git#2.0.1",
+    "videojs-mux": "^2.0.23",
+    "videojs-standard": "^4.0.0",
+    "watchify": "^3.6.0",
+    "xhr": "^2.2.0"
+  },
+  "peerDependencies": {},
+  "private": true,
+  "engines": {
+    "node": "6.9.1",
+    "npm": "3.10.7"
+  }
+}
+
+},{}],186:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53163,6 +53317,10 @@ require('videojs-externals');
 require('videojs-mux');
 
 require('koment-js');
+
+var _package = require('../../package.json');
+
+var _package2 = _interopRequireDefault(_package);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -53314,7 +53472,10 @@ _video2.default.options.children.push('afrostream');
 ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.options_.children.splice(1, 1)[0]);
 
 Component.registerComponent('Afrostream', Afrostream);
+
+_video2.default.AFROSTREAM_VERSION = _package2.default.version;
+
 exports.default = Afrostream;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"koment-js":36,"videojs-chromecast":158,"videojs-externals":168,"videojs-metrics":170,"videojs-mux":176}]},{},[185])(185)
+},{"../../package.json":185,"./component/control-bar/":1,"./tech/dash":12,"./tech/dashas":13,"./tech/easy-broadcast":14,"./tech/media":15,"./tech/streamroot":16,"koment-js":36,"videojs-chromecast":158,"videojs-externals":168,"videojs-metrics":170,"videojs-mux":176}]},{},[186])(186)
 });

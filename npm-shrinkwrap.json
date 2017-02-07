@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.37",
+  "version": "2.2.38",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -6749,9 +6749,9 @@
       }
     },
     "babel-runtime": {
-      "version": "6.20.0",
+      "version": "6.22.0",
       "from": "babel-runtime@>=6.9.2 <7.0.0",
-      "resolved": "https://registry.npmjs.org/babel-runtime/-/babel-runtime-6.20.0.tgz",
+      "resolved": "https://registry.npmjs.org/babel-runtime/-/babel-runtime-6.22.0.tgz",
       "dependencies": {
         "core-js": {
           "version": "2.4.1",
@@ -14554,7 +14554,14 @@
         "xhr": {
           "version": "2.3.2",
           "from": "xhr@>=2.2.2 <3.0.0",
-          "resolved": "https://registry.npmjs.org/xhr/-/xhr-2.3.2.tgz"
+          "resolved": "https://registry.npmjs.org/xhr/-/xhr-2.3.2.tgz",
+          "dependencies": {
+            "parse-headers": {
+              "version": "2.0.1",
+              "from": "parse-headers@>=2.0.0 <3.0.0",
+              "resolved": "https://registry.npmjs.org/parse-headers/-/parse-headers-2.0.1.tgz"
+            }
+          }
         }
       }
     },
@@ -16645,11 +16652,6 @@
       "from": "parse-glob@>=3.0.4 <4.0.0",
       "resolved": "https://registry.npmjs.org/parse-glob/-/parse-glob-3.0.4.tgz"
     },
-    "parse-headers": {
-      "version": "2.0.1",
-      "from": "parse-headers@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/parse-headers/-/parse-headers-2.0.1.tgz"
-    },
     "parse-json": {
       "version": "2.2.0",
       "from": "parse-json@>=2.2.0 <3.0.0",
@@ -17961,7 +17963,7 @@
     },
     "video.js": {
       "version": "5.14.1",
-      "from": "video.js@latest",
+      "from": "video.js@5.14.1",
       "resolved": "https://registry.npmjs.org/video.js/-/video.js-5.14.1.tgz"
     },
     "videojs-chromecast": {

@@ -18,6 +18,7 @@ const Tech = videojs.getComponent('Tech')
  * @class EasyBroadcast
  */
 class Streamroot extends Dash {
+
   constructor (options, ready) {
     super(options, ready)
   }
@@ -45,8 +46,8 @@ class Streamroot extends Dash {
       this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
       super.src(src)
     }
-
   }
+
 
   getCribbedMetricsFor (type) {
     if (type !== 'p2p') {
@@ -74,7 +75,7 @@ class Streamroot extends Dash {
   }
 }
 
-Streamroot.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
+Streamroot.prototype.options_ = Object.assign(Dash.prototype.options_, {
   lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js ',
   p2pConfig: {
     streamrootKey: 'none',
