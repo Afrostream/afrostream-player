@@ -68,6 +68,14 @@ class EasyBroadcast extends Dash {
     super.onMetricChanged(e)
   }
 
+  get libLoaded () {
+    return window.DashEB
+  }
+
+  set libLoaded (loaded) {
+    this.libLoaded_ = window.DashEB || loaded
+  }
+
 }
 
 EasyBroadcast.prototype.options_ = Object.assign(Dash.prototype.options_, {

@@ -813,6 +813,11 @@ Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD', 'Full HD'];
  * @param  {Flash} tech   The instance of the Flash tech
  */
 Dash.nativeSourceHandler.handleSource = function (source, tech) {
+  if (!tech.isReady_) {
+    return tech.ready(function () {
+      tech.src(source.src);
+    });
+  }
   tech.src(source.src);
 };
 

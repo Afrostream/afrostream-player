@@ -100,6 +100,14 @@ var EasyBroadcast = function (_Dash) {
       }
       _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'onMetricChanged', this).call(this, e);
     }
+  }, {
+    key: 'libLoaded',
+    get: function get() {
+      return window.DashEB;
+    },
+    set: function set(loaded) {
+      this.libLoaded_ = window.DashEB || loaded;
+    }
   }]);
 
   return EasyBroadcast;
