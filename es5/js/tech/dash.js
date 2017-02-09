@@ -47,6 +47,12 @@ var Dash = function (_Html) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dash).call(this, options, ready));
 
+    _this.triggerReady = Html5.prototype.triggerReady;
+
+    _this.ready(function () {
+      _video2.default.log('player : ready');
+    });
+
     var tTracks = _this.textTracks();
 
     if (tTracks) {
@@ -93,6 +99,7 @@ var Dash = function (_Html) {
       // Set the source when ready
       _this.loadLibTimeout = _this.setTimeout(function () {
         _this.options_.lib = null;
+        _video2.default.log('player : fallback ready');
         _this.triggerReady();
       }, 5000);
       return _ret = _this.injectJs(), _possibleConstructorReturn(_this, _ret);
@@ -557,17 +564,6 @@ var Dash = function (_Html) {
       }
     }
   }, {
-    key: 'afterMediaKeysReset',
-    value: function afterMediaKeysReset(manifest) {
-      this.showErrors();
-
-      // Attach the source with any protection data
-      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
-      this.mediaPlayer_.attachSource(manifest);
-
-      this.triggerReady();
-    }
-  }, {
     key: 'showErrors',
     value: function showErrors() {
       var _this3 = this;
@@ -600,11 +596,13 @@ var Dash = function (_Html) {
       var cb = this.triggerReady.bind(this);
       js.async = true;
       js.type = 'text/javascript';
-
+      _video2.default.log('player : load');
       js.onload = js.onreadystatechange = function () {
         var rs = this.readyState;
         if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
           self.libLoaded = true;
+          _video2.default.log('player : loaded');
+          self.clearTimeout(self.loadLibTimeout);
           cb();
         }
       };
@@ -701,6 +699,10 @@ Tech.withSourceHandlers(Dash);
  * @param  {Flash} tech  The instance of the Flash tech
  */
 Dash.nativeSourceHandler = {};
+
+Dash.prototype.isReady_ = false;
+
+Dash.prototype.triggerReady = function () {};
 
 Dash.prototype['featuresNativeTextTracks'] = false;
 /*

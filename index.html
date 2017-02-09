@@ -281,6 +281,7 @@
     var mergedOpts = videojs.mergeOptions(options || {}, opts || {});
 
     player = videojs('player', mergedOpts).ready(function () {
+      console.log('player ready')
       initMetrics();
     });
 

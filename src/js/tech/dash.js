@@ -19,7 +19,15 @@ const Html5 = videojs.getComponent('Html5')
  */
 class Dash extends Html5 {
   constructor (options, ready) {
+
     super(options, ready)
+
+    this.triggerReady = Html5.prototype.triggerReady
+
+    this.ready(() => {
+      videojs.log('player : ready')
+    })
+
     let tTracks = this.textTracks()
 
     if (tTracks) {
@@ -59,6 +67,7 @@ class Dash extends Html5 {
       // Set the source when ready
       this.loadLibTimeout = this.setTimeout(() => {
         this.options_.lib = null
+        videojs.log('player : fallback ready')
         this.triggerReady()
       }, 5000)
       return this.injectJs()
@@ -498,16 +507,6 @@ class Dash extends Html5 {
     }
   }
 
-  afterMediaKeysReset (manifest) {
-    this.showErrors()
-
-    // Attach the source with any protection data
-    this.mediaPlayer_.setProtectionData(this.keySystemOptions_)
-    this.mediaPlayer_.attachSource(manifest)
-
-    this.triggerReady()
-  }
-
   showErrors () {
     // The video element's src is set asynchronously so we have to wait a while
     // before we unhide any errors
@@ -535,11 +534,13 @@ class Dash extends Html5 {
     let cb = ::this.triggerReady
     js.async = true
     js.type = 'text/javascript'
-
+    videojs.log('player : load')
     js.onload = js.onreadystatechange = function () {
-      let rs = this.readyState;
+      let rs = this.readyState
       if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
         self.libLoaded = true
+        videojs.log('player : loaded')
+        self.clearTimeout(self.loadLibTimeout)
         cb()
       }
     }
@@ -633,6 +634,11 @@ Tech.withSourceHandlers(Dash)
  * @param  {Flash} tech  The instance of the Flash tech
  */
 Dash.nativeSourceHandler = {}
+
+Dash.prototype.isReady_ = false
+
+Dash.prototype.triggerReady = () => {
+}
 
 Dash.prototype['featuresNativeTextTracks'] = false
 /*
