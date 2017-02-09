@@ -49,10 +49,6 @@ var Dash = function (_Html) {
 
     _this.triggerReady = Html5.prototype.triggerReady;
 
-    _this.ready(function () {
-      _video2.default.log('player : ready');
-    });
-
     var tTracks = _this.textTracks();
 
     if (tTracks) {
@@ -102,6 +98,9 @@ var Dash = function (_Html) {
         _video2.default.log('player : fallback ready');
         _this.triggerReady();
       }, 5000);
+      _this.ready(function () {
+        _video2.default.log('player : ready');
+      });
       return _ret = _this.injectJs(), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -599,7 +598,7 @@ var Dash = function (_Html) {
       _video2.default.log('player : load');
       js.onload = js.onreadystatechange = function () {
         var rs = this.readyState;
-        if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
+        if (!rs || /loaded|complete/.test(rs)) {
           self.libLoaded = true;
           _video2.default.log('player : loaded');
           self.clearTimeout(self.loadLibTimeout);
@@ -608,6 +607,14 @@ var Dash = function (_Html) {
       };
       js.src = url;
       s.insertBefore(js, s.firstChild);
+    }
+  }, {
+    key: 'libLoaded',
+    get: function get() {
+      return this.libLoaded_;
+    },
+    set: function set(loaded) {
+      this.libLoaded_ = loaded;
     }
   }]);
 
@@ -618,7 +625,7 @@ Dash.prototype.isDynamic_ = false;
 
 Dash.prototype.loadLibTimeout = 0;
 
-Dash.prototype.libLoaded = false;
+Dash.prototype.libLoaded_ = false;
 
 Dash.prototype.options_ = {
   lib: null,

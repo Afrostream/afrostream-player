@@ -24,10 +24,6 @@ class Dash extends Html5 {
 
     this.triggerReady = Html5.prototype.triggerReady
 
-    this.ready(() => {
-      videojs.log('player : ready')
-    })
-
     let tTracks = this.textTracks()
 
     if (tTracks) {
@@ -70,6 +66,9 @@ class Dash extends Html5 {
         videojs.log('player : fallback ready')
         this.triggerReady()
       }, 5000)
+      this.ready(() => {
+        videojs.log('player : ready')
+      })
       return this.injectJs()
     }
 
@@ -524,6 +523,14 @@ class Dash extends Html5 {
     super.dispose(this)
   }
 
+  get libLoaded () {
+    return this.libLoaded_
+  }
+
+  set libLoaded (loaded) {
+    this.libLoaded_ = loaded
+  }
+
   injectJs () {
     const self = this
     let url = this.options_.lib
@@ -537,7 +544,7 @@ class Dash extends Html5 {
     videojs.log('player : load')
     js.onload = js.onreadystatechange = function () {
       let rs = this.readyState
-      if (!self.libLoaded && (!rs || /loaded|complete/.test(rs))) {
+      if ((!rs || /loaded|complete/.test(rs))) {
         self.libLoaded = true
         videojs.log('player : loaded')
         self.clearTimeout(self.loadLibTimeout)
@@ -553,7 +560,7 @@ Dash.prototype.isDynamic_ = false
 
 Dash.prototype.loadLibTimeout = 0
 
-Dash.prototype.libLoaded = false
+Dash.prototype.libLoaded_ = false
 
 Dash.prototype.options_ = {
   lib: null,

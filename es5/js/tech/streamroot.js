@@ -105,6 +105,14 @@ var Streamroot = function (_Dash) {
       }
       _get(Object.getPrototypeOf(Streamroot.prototype), 'onMetricChanged', this).call(this, e);
     }
+  }, {
+    key: 'libLoaded',
+    get: function get() {
+      return window.DashjsWrapper;
+    },
+    set: function set(loaded) {
+      this.libLoaded_ = window.DashjsWrapper || loaded;
+    }
   }]);
 
   return Streamroot;

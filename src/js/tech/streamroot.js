@@ -73,6 +73,14 @@ class Streamroot extends Dash {
     }
     super.onMetricChanged(e)
   }
+
+  get libLoaded () {
+    return window.DashjsWrapper
+  }
+
+  set libLoaded (loaded) {
+    this.libLoaded_ = window.DashjsWrapper || loaded
+  }
 }
 
 Streamroot.prototype.options_ = Object.assign(Dash.prototype.options_, {
