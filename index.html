@@ -408,11 +408,6 @@
 //      src: "https://origin.cdn.afrostream.net/live/betdev.isml/bet.mpd",
 //      type: "application/dash+xml"
 //    }
-    //EXTERNAL SIMPLE
-//    {
-//      "src": "http://dashas.castlabs.com/videos/files/bbb/Manifest.mpd",
-//      "type": "application/dash+xml"
-//    }
     //{
     //  "src": "http://playertest.longtailvideo.com/adaptive/eleph-audio/playlist.m3u8",
     //  "type": "application/vnd.apple.mpegurl"
@@ -495,7 +490,7 @@
     //}
   ];
 
-  techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'dashas', 'youtube', 'soundcloud'];
+  techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'youtube', 'soundcloud'];
   muted = qs.muted ? qs.muted : false;
   drm = qs.drm ? qs.drm : false;
   userId = qs.userId ? qs.userId : 12345;
@@ -579,9 +574,6 @@
     },
     metrics: {
       "user_id": 666
-    },
-    dashas: {
-      swf: './dashas.swf'
     },
     dash: dashOpts,
     streamroot: videojs.mergeOptions(dashOpts, {

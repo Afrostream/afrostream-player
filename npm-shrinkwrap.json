@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.42",
+  "version": "2.2.44",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9"
@@ -9534,6 +9534,9 @@
     "parse-glob": {
       "version": "3.0.4"
     },
+    "parse-headers": {
+      "version": "2.0.1"
+    },
     "parse-json": {
       "version": "2.2.0"
     },
@@ -10413,7 +10416,12 @@
       "version": "1.3.6"
     },
     "video.js": {
-      "version": "5.14.1"
+      "version": "5.16.0",
+      "dependencies": {
+        "xhr": {
+          "version": "2.2.2"
+        }
+      }
     },
     "videojs-chromecast": {
       "version": "2.0.8",
