@@ -137,7 +137,7 @@
     "smoothie": "^1.27.0",
     "streamroot-dashjs-p2p-wrapper": "^1.8.7",
     "uglify-js": "^2.5.0",
-    "video.js": "^5.16.0",
+    "video.js": "^5.14.1",
     "videojs": "^1.0.0",
     "videojs-chromecast": "git+https://github.com/benjipott/video.js-chromecast.git#2.0.8",
     "videojs-externals": "git+https://github.com/Afrostream/videojs-externals.git#1.0.13",
