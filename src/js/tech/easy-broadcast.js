@@ -29,17 +29,13 @@ class EasyBroadcast extends Dash {
    * @method setSrc
    */
   src (src) {
-    if (!src) {
+    if (!src || !this.libLoaded) {
       return this.el_.src
     }
 
-    if (!this.libLoaded) {
-      super.src(src)
-    } else {
-      this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, src, true)
-      this.initYoubora()
-      super.src(src)
-    }
+    this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, src, true)
+    this.initYoubora()
+    super.src(src)
 
   }
 
@@ -78,7 +74,7 @@ class EasyBroadcast extends Dash {
 
 }
 
-EasyBroadcast.prototype.options_ = Object.assign(Dash.prototype.options_, {
+EasyBroadcast.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
   lib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'

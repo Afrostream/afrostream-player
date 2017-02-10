@@ -22,8 +22,6 @@ class Dash extends Html5 {
 
     super(options, ready)
 
-    this.isReady_ = false
-
     let tTracks = this.textTracks()
 
     if (tTracks) {
@@ -57,20 +55,16 @@ class Dash extends Html5 {
         vTracks.removeEventListener('change', vTracksChangeHandler)
       })
     }
-
     this.clearTimeout(this.loadLibTimeout)
     if (this.options_.lib && !this.libLoaded) {
       // Set the source when ready
       this.loadLibTimeout = this.setTimeout(() => {
         this.options_.lib = null
         videojs.log('player : fallback ready')
-        this.triggerReady()
       }, 5000)
-      this.ready(() => {
-        videojs.log('player : ready')
-      })
-      return this.injectJs()
+      return this.injectJs(options.source)
     }
+
 
   }
 
@@ -138,18 +132,8 @@ class Dash extends Html5 {
       return this.el_.src
     }
 
-    if (!this.isReady_) {
-      return this.ready(() => {
-        this.src(src)
-      })
-    }
-
     this.trigger('loadstart')
 
-    this.featuresNativeTextTracks = Dash.supportsNativeTextTracks()
-    this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks()
-    this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks()
-    this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData)
     // Save the context after the first initialization for subsequent instances
     this.context_ = this.context_ || {}
     // reuse MediaPlayer if it already exists
@@ -162,6 +146,19 @@ class Dash extends Html5 {
       // element to bind to.
       this.mediaPlayer_.initialize()
     }
+
+    videojs.log('player init : ', src)
+
+    this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData)
+
+    this.featuresNativeTextTracks = Dash.supportsNativeTextTracks()
+    this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks()
+    this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks()
+
+    videojs.log('this.featuresNativeTextTracks : ', this.featuresNativeTextTracks)
+    videojs.log('this.featuresNativeAudioTracks : ', this.featuresNativeAudioTracks)
+    videojs.log('this.featuresNativeVideoTracks : ', this.featuresNativeVideoTracks)
+    videojs.log('this.keySystemOptions_ : ', this.keySystemOptions_)
 
     this.mediaPlayer_.on(MediaPlayer.events.STREAM_INITIALIZED, ::this.onInitialized)
     this.mediaPlayer_.on(MediaPlayer.events.TEXT_TRACKS_ADDED, ::this.onTextTracksAdded)
@@ -427,14 +424,19 @@ class Dash extends Html5 {
     return keySystemOptions
   }
 
+  textTracks () {
+    return this.el_.textTracks || super.textTracks()
+  }
+
   onTextTracksAdded (e) {
-    const tracks = e.tracks
+    const tracks = e.tracks || this.mediaPlayer_.getTracksFor('text')
     if (tracks) {
       const plTracks = this.textTracks()
       var l = tracks.length, track, plTrack
       for (var i = 0; i < l; i++) {
         track = tracks[i]
         track.label = track.label || track.lang
+        track.kind = 'captions'
         plTrack = plTracks[i]
         track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang
         if (track.defaultTrack) {
@@ -537,14 +539,14 @@ class Dash extends Html5 {
     this.libLoaded_ = loaded
   }
 
-  injectJs () {
+  injectJs (source) {
     const self = this
     let url = this.options_.lib
     let t = 'script'
     let d = document
     let s = d.getElementsByTagName('head')[0] || d.documentElement
     let js = d.createElement(t)
-    let cb = ::this.triggerReady
+    let cb = ::this.setSource
     js.async = true
     js.type = 'text/javascript'
     videojs.log('player : load')
@@ -554,7 +556,7 @@ class Dash extends Html5 {
         self.libLoaded = true
         videojs.log('player : loaded')
         self.clearTimeout(self.loadLibTimeout)
-        cb()
+        cb(source)
       }
     }
     js.src = url
@@ -648,7 +650,7 @@ Tech.withSourceHandlers(Dash)
  */
 Dash.nativeSourceHandler = {}
 
-Dash.prototype['featuresNativeTextTracks'] = false
+Dash.prototype['featuresNativeTextTracks'] = true
 /*
  * Sets the tech's status on native audio track support
  *

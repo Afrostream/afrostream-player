@@ -62,22 +62,17 @@ var Streamroot = function (_Dash) {
   _createClass(Streamroot, [{
     key: 'src',
     value: function src(_src) {
-      if (!_src) {
+      if (!_src || !this.libLoaded) {
         return this.el_.src;
       }
-
-      if (!this.libLoaded) {
-        _get(Object.getPrototypeOf(Streamroot.prototype), 'src', this).call(this, _src);
-      } else {
-        // But make a fresh MediaPlayer each time the sourceHandler is used
-        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-        this.initYoubora();
-        this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30);
-        // Apply any options that are set
-        this.mediaPlayer_.initialize();
-        this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
-        _get(Object.getPrototypeOf(Streamroot.prototype), 'src', this).call(this, _src);
-      }
+      // But make a fresh MediaPlayer each time the sourceHandler is used
+      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+      this.initYoubora();
+      this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30);
+      // Apply any options that are set
+      this.mediaPlayer_.initialize();
+      this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+      _get(Object.getPrototypeOf(Streamroot.prototype), 'src', this).call(this, _src);
     }
   }, {
     key: 'getCribbedMetricsFor',
@@ -118,7 +113,7 @@ var Streamroot = function (_Dash) {
   return Streamroot;
 }(_dash2.default);
 
-Streamroot.prototype.options_ = Object.assign(_dash2.default.prototype.options_, {
+Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
   lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js',
   p2pConfig: {
     streamrootKey: 'none',

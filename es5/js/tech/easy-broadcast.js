@@ -62,17 +62,13 @@ var EasyBroadcast = function (_Dash) {
   _createClass(EasyBroadcast, [{
     key: 'src',
     value: function src(_src) {
-      if (!_src) {
+      if (!_src || !this.libLoaded) {
         return this.el_.src;
       }
 
-      if (!this.libLoaded) {
-        _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
-      } else {
-        this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
-        this.initYoubora();
-        _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
-      }
+      this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
+      this.initYoubora();
+      _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
     }
   }, {
     key: 'getCribbedMetricsFor',
@@ -113,7 +109,7 @@ var EasyBroadcast = function (_Dash) {
   return EasyBroadcast;
 }(_dash2.default);
 
-EasyBroadcast.prototype.options_ = Object.assign(_dash2.default.prototype.options_, {
+EasyBroadcast.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
   lib: '//www.libs.easybroadcast.fr/afrostream/EB.js',
   //override option EB, cause switch lang too long
   trackSwitchMode: 'alwaysReplace'

@@ -47,8 +47,6 @@ var Dash = function (_Html) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dash).call(this, options, ready));
 
-    _this.isReady_ = false;
-
     var tTracks = _this.textTracks();
 
     if (tTracks) {
@@ -87,7 +85,6 @@ var Dash = function (_Html) {
         });
       })();
     }
-
     _this.clearTimeout(_this.loadLibTimeout);
     if (_this.options_.lib && !_this.libLoaded) {
       var _ret;
@@ -96,12 +93,8 @@ var Dash = function (_Html) {
       _this.loadLibTimeout = _this.setTimeout(function () {
         _this.options_.lib = null;
         _video2.default.log('player : fallback ready');
-        _this.triggerReady();
       }, 5000);
-      _this.ready(function () {
-        _video2.default.log('player : ready');
-      });
-      return _ret = _this.injectJs(), _possibleConstructorReturn(_this, _ret);
+      return _ret = _this.injectJs(options.source), _possibleConstructorReturn(_this, _ret);
     }
 
     return _this;
@@ -183,24 +176,12 @@ var Dash = function (_Html) {
   }, {
     key: 'src',
     value: function src(_src) {
-      var _this3 = this;
-
       if (!_src) {
         return this.el_.src;
       }
 
-      if (!this.isReady_) {
-        return this.ready(function () {
-          _this3.src(_src);
-        });
-      }
-
       this.trigger('loadstart');
 
-      this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
-      this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks();
-      this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks();
-      this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
       // Save the context after the first initialization for subsequent instances
       this.context_ = this.context_ || {};
       // reuse MediaPlayer if it already exists
@@ -213,6 +194,19 @@ var Dash = function (_Html) {
         // element to bind to.
         this.mediaPlayer_.initialize();
       }
+
+      _video2.default.log('player init : ', _src);
+
+      this.keySystemOptions_ = this.buildDashJSProtData(this.options_.protData);
+
+      this.featuresNativeTextTracks = Dash.supportsNativeTextTracks();
+      this.featuresNativeAudioTracks = Dash.supportsNativeAudioTracks();
+      this.featuresNativeVideoTracks = Dash.supportsNativeVideoTracks();
+
+      _video2.default.log('this.featuresNativeTextTracks : ', this.featuresNativeTextTracks);
+      _video2.default.log('this.featuresNativeAudioTracks : ', this.featuresNativeAudioTracks);
+      _video2.default.log('this.featuresNativeVideoTracks : ', this.featuresNativeVideoTracks);
+      _video2.default.log('this.keySystemOptions_ : ', this.keySystemOptions_);
 
       this.mediaPlayer_.on(_dashjs.MediaPlayer.events.STREAM_INITIALIZED, this.onInitialized.bind(this));
       this.mediaPlayer_.on(_dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, this.onTextTracksAdded.bind(this));
@@ -478,9 +472,14 @@ var Dash = function (_Html) {
       return keySystemOptions;
     }
   }, {
+    key: 'textTracks',
+    value: function textTracks() {
+      return this.el_.textTracks || _get(Object.getPrototypeOf(Dash.prototype), 'textTracks', this).call(this);
+    }
+  }, {
     key: 'onTextTracksAdded',
     value: function onTextTracksAdded(e) {
-      var tracks = e.tracks;
+      var tracks = e.tracks || this.mediaPlayer_.getTracksFor('text');
       if (tracks) {
         var plTracks = this.textTracks();
         var l = tracks.length,
@@ -489,6 +488,7 @@ var Dash = function (_Html) {
         for (var i = 0; i < l; i++) {
           track = tracks[i];
           track.label = track.label || track.lang;
+          track.kind = 'captions';
           plTrack = plTracks[i];
           track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
           if (track.defaultTrack) {
@@ -573,14 +573,14 @@ var Dash = function (_Html) {
   }, {
     key: 'showErrors',
     value: function showErrors() {
-      var _this4 = this;
+      var _this3 = this;
 
       // The video element's src is set asynchronously so we have to wait a while
       // before we unhide any errors
       // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
       // in my testing
       this.setTimeout(function () {
-        _this4.player_.removeClass('vjs-dashjs-hide-errors');
+        _this3.player_.removeClass('vjs-dashjs-hide-errors');
       }, 250);
     }
   }, {
@@ -593,14 +593,14 @@ var Dash = function (_Html) {
     }
   }, {
     key: 'injectJs',
-    value: function injectJs() {
+    value: function injectJs(source) {
       var self = this;
       var url = this.options_.lib;
       var t = 'script';
       var d = document;
       var s = d.getElementsByTagName('head')[0] || d.documentElement;
       var js = d.createElement(t);
-      var cb = this.triggerReady.bind(this);
+      var cb = this.setSource.bind(this);
       js.async = true;
       js.type = 'text/javascript';
       _video2.default.log('player : load');
@@ -610,7 +610,7 @@ var Dash = function (_Html) {
           self.libLoaded = true;
           _video2.default.log('player : loaded');
           self.clearTimeout(self.loadLibTimeout);
-          cb();
+          cb(source);
         }
       };
       js.src = url;
@@ -715,7 +715,7 @@ Tech.withSourceHandlers(Dash);
  */
 Dash.nativeSourceHandler = {};
 
-Dash.prototype['featuresNativeTextTracks'] = false;
+Dash.prototype['featuresNativeTextTracks'] = true;
 /*
  * Sets the tech's status on native audio track support
  *

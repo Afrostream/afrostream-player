@@ -16,6 +16,8 @@ require('./tech/media');
 
 require('./tech/dash');
 
+require('./tech/dashas');
+
 require('./tech/easy-broadcast');
 
 require('./tech/streamroot');
