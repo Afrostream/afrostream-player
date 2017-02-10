@@ -62,12 +62,15 @@ var EasyBroadcast = function (_Dash) {
   _createClass(EasyBroadcast, [{
     key: 'src',
     value: function src(_src) {
-      if (!_src || !this.libLoaded) {
+      if (!_src || this.options_.lib && !this.libLoaded) {
         return this.el_.src;
       }
 
-      this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
-      this.initYoubora();
+      if (this.libLoaded) {
+        this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
+        this.initYoubora();
+      }
+
       _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
     }
   }, {

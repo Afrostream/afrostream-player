@@ -20,6 +20,9 @@ const Html5 = videojs.getComponent('Html5')
 class Dash extends Html5 {
   constructor (options, ready) {
 
+    const source = options.source
+    //delete options.source
+
     super(options, ready)
 
     let tTracks = this.textTracks()
@@ -61,8 +64,9 @@ class Dash extends Html5 {
       this.loadLibTimeout = this.setTimeout(() => {
         this.options_.lib = null
         videojs.log('player : fallback ready')
+        this.setSource(source)
       }, 5000)
-      return this.injectJs(options.source)
+      return this.injectJs(source)
     }
 
 
@@ -547,6 +551,7 @@ class Dash extends Html5 {
     let s = d.getElementsByTagName('head')[0] || d.documentElement
     let js = d.createElement(t)
     let cb = ::this.setSource
+
     js.async = true
     js.type = 'text/javascript'
     videojs.log('player : load')
@@ -556,6 +561,7 @@ class Dash extends Html5 {
         self.libLoaded = true
         videojs.log('player : loaded')
         self.clearTimeout(self.loadLibTimeout)
+        self.options_.lib = null
         cb(source)
       }
     }

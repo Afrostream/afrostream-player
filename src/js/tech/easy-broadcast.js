@@ -29,12 +29,15 @@ class EasyBroadcast extends Dash {
    * @method setSrc
    */
   src (src) {
-    if (!src || !this.libLoaded) {
+    if (!src || (this.options_.lib && !this.libLoaded)) {
       return this.el_.src
     }
 
-    this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, src, true)
-    this.initYoubora()
+    if (this.libLoaded) {
+      this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, src, true)
+      this.initYoubora()
+    }
+
     super.src(src)
 
   }

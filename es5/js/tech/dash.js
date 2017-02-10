@@ -45,6 +45,9 @@ var Dash = function (_Html) {
   function Dash(options, ready) {
     _classCallCheck(this, Dash);
 
+    var source = options.source;
+    //delete options.source
+
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dash).call(this, options, ready));
 
     var tTracks = _this.textTracks();
@@ -93,8 +96,9 @@ var Dash = function (_Html) {
       _this.loadLibTimeout = _this.setTimeout(function () {
         _this.options_.lib = null;
         _video2.default.log('player : fallback ready');
+        _this.setSource(source);
       }, 5000);
-      return _ret = _this.injectJs(options.source), _possibleConstructorReturn(_this, _ret);
+      return _ret = _this.injectJs(source), _possibleConstructorReturn(_this, _ret);
     }
 
     return _this;
@@ -601,6 +605,7 @@ var Dash = function (_Html) {
       var s = d.getElementsByTagName('head')[0] || d.documentElement;
       var js = d.createElement(t);
       var cb = this.setSource.bind(this);
+
       js.async = true;
       js.type = 'text/javascript';
       _video2.default.log('player : load');
@@ -610,6 +615,7 @@ var Dash = function (_Html) {
           self.libLoaded = true;
           _video2.default.log('player : loaded');
           self.clearTimeout(self.loadLibTimeout);
+          self.options_.lib = null;
           cb(source);
         }
       };

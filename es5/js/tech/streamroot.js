@@ -62,16 +62,20 @@ var Streamroot = function (_Dash) {
   _createClass(Streamroot, [{
     key: 'src',
     value: function src(_src) {
-      if (!_src || !this.libLoaded) {
+      if (!_src || this.options_.lib && !this.libLoaded) {
         return this.el_.src;
       }
-      // But make a fresh MediaPlayer each time the sourceHandler is used
-      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-      this.initYoubora();
-      this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30);
-      // Apply any options that are set
-      this.mediaPlayer_.initialize();
-      this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+
+      if (this.libLoaded) {
+        // But make a fresh MediaPlayer each time the sourceHandler is used
+        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+        this.initYoubora();
+        this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30);
+        // Apply any options that are set
+        this.mediaPlayer_.initialize();
+        this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+      }
+
       _get(Object.getPrototypeOf(Streamroot.prototype), 'src', this).call(this, _src);
     }
   }, {

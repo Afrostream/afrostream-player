@@ -30,16 +30,20 @@ class Streamroot extends Dash {
    * @method setSrc
    */
   src (src) {
-    if (!src || !this.libLoaded) {
+    if (!src || (this.options_.lib && !this.libLoaded)) {
       return this.el_.src
     }
-    // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = MediaPlayer(this.context_).create()
-    this.initYoubora()
-    this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30)
-    // Apply any options that are set
-    this.mediaPlayer_.initialize()
-    this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+
+    if (this.libLoaded) {
+      // But make a fresh MediaPlayer each time the sourceHandler is used
+      this.mediaPlayer_ = MediaPlayer(this.context_).create()
+      this.initYoubora()
+      this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30)
+      // Apply any options that are set
+      this.mediaPlayer_.initialize()
+      this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+    }
+
     super.src(src)
   }
 

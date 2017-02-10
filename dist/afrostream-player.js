@@ -1358,6 +1358,9 @@ var Dash = function (_Html) {
   function Dash(options, ready) {
     _classCallCheck(this, Dash);
 
+    var source = options.source;
+    //delete options.source
+
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dash).call(this, options, ready));
 
     var tTracks = _this.textTracks();
@@ -1406,8 +1409,9 @@ var Dash = function (_Html) {
       _this.loadLibTimeout = _this.setTimeout(function () {
         _this.options_.lib = null;
         _video2.default.log('player : fallback ready');
+        _this.setSource(source);
       }, 5000);
-      return _ret = _this.injectJs(options.source), _possibleConstructorReturn(_this, _ret);
+      return _ret = _this.injectJs(source), _possibleConstructorReturn(_this, _ret);
     }
 
     return _this;
@@ -1914,6 +1918,7 @@ var Dash = function (_Html) {
       var s = d.getElementsByTagName('head')[0] || d.documentElement;
       var js = d.createElement(t);
       var cb = this.setSource.bind(this);
+
       js.async = true;
       js.type = 'text/javascript';
       _video2.default.log('player : load');
@@ -1923,6 +1928,7 @@ var Dash = function (_Html) {
           self.libLoaded = true;
           _video2.default.log('player : loaded');
           self.clearTimeout(self.loadLibTimeout);
+          self.options_.lib = null;
           cb(source);
         }
       };
@@ -2657,12 +2663,15 @@ var EasyBroadcast = function (_Dash) {
   _createClass(EasyBroadcast, [{
     key: 'src',
     value: function src(_src) {
-      if (!_src || !this.libLoaded) {
+      if (!_src || this.options_.lib && !this.libLoaded) {
         return this.el_.src;
       }
 
-      this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
-      this.initYoubora();
+      if (this.libLoaded) {
+        this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
+        this.initYoubora();
+      }
+
       _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
     }
   }, {
@@ -2942,16 +2951,20 @@ var Streamroot = function (_Dash) {
   _createClass(Streamroot, [{
     key: 'src',
     value: function src(_src) {
-      if (!_src || !this.libLoaded) {
+      if (!_src || this.options_.lib && !this.libLoaded) {
         return this.el_.src;
       }
-      // But make a fresh MediaPlayer each time the sourceHandler is used
-      this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-      this.initYoubora();
-      this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30);
-      // Apply any options that are set
-      this.mediaPlayer_.initialize();
-      this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+
+      if (this.libLoaded) {
+        // But make a fresh MediaPlayer each time the sourceHandler is used
+        this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
+        this.initYoubora();
+        this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30);
+        // Apply any options that are set
+        this.mediaPlayer_.initialize();
+        this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
+      }
+
       _get(Object.getPrototypeOf(Streamroot.prototype), 'src', this).call(this, _src);
     }
   }, {
