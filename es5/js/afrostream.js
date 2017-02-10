@@ -189,6 +189,8 @@ ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.option
 
 Component.registerComponent('Afrostream', Afrostream);
 
-_video2.default.AFROSTREAM_VERSION = _package2.default.version;
+window.Afrostream = window.Afrostream || {};
+
+_video2.default.AFROSTREAM_VERSION = window.Afrostream.PLAYER_VERSION = _package2.default.version;
 
 exports.default = Afrostream;

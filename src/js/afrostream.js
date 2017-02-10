@@ -142,6 +142,8 @@ ControlBar.prototype.options_.children.splice(11, 0, ControlBar.prototype.option
 
 Component.registerComponent('Afrostream', Afrostream)
 
-videojs.AFROSTREAM_VERSION = pkg.version
+window.Afrostream = window.Afrostream || {}
+
+videojs.AFROSTREAM_VERSION = window.Afrostream.PLAYER_VERSION = pkg.version
 
 export default Afrostream

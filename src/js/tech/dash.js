@@ -22,7 +22,7 @@ class Dash extends Html5 {
 
     super(options, ready)
 
-    this.triggerReady = Html5.prototype.triggerReady
+    this.isReady_ = false
 
     let tTracks = this.textTracks()
 
@@ -136,6 +136,12 @@ class Dash extends Html5 {
   src (src) {
     if (!src) {
       return this.el_.src
+    }
+
+    if (!this.isReady_) {
+      return this.ready(() => {
+        this.src(src)
+      })
     }
 
     this.trigger('loadstart')
@@ -642,11 +648,6 @@ Tech.withSourceHandlers(Dash)
  */
 Dash.nativeSourceHandler = {}
 
-Dash.prototype.isReady_ = false
-
-Dash.prototype.triggerReady = () => {
-}
-
 Dash.prototype['featuresNativeTextTracks'] = false
 /*
  * Sets the tech's status on native audio track support
@@ -750,11 +751,6 @@ Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD', 'Full HD']
  * @param  {Flash} tech   The instance of the Flash tech
  */
 Dash.nativeSourceHandler.handleSource = function (source, tech) {
-  if (!tech.isReady_) {
-    return tech.ready(() => {
-      tech.src(source.src)
-    })
-  }
   tech.src(source.src)
 }
 

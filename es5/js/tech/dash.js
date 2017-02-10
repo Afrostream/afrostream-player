@@ -47,7 +47,7 @@ var Dash = function (_Html) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dash).call(this, options, ready));
 
-    _this.triggerReady = Html5.prototype.triggerReady;
+    _this.isReady_ = false;
 
     var tTracks = _this.textTracks();
 
@@ -183,8 +183,16 @@ var Dash = function (_Html) {
   }, {
     key: 'src',
     value: function src(_src) {
+      var _this3 = this;
+
       if (!_src) {
         return this.el_.src;
+      }
+
+      if (!this.isReady_) {
+        return this.ready(function () {
+          _this3.src(_src);
+        });
       }
 
       this.trigger('loadstart');
@@ -565,14 +573,14 @@ var Dash = function (_Html) {
   }, {
     key: 'showErrors',
     value: function showErrors() {
-      var _this3 = this;
+      var _this4 = this;
 
       // The video element's src is set asynchronously so we have to wait a while
       // before we unhide any errors
       // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
       // in my testing
       this.setTimeout(function () {
-        _this3.player_.removeClass('vjs-dashjs-hide-errors');
+        _this4.player_.removeClass('vjs-dashjs-hide-errors');
       }, 250);
     }
   }, {
@@ -707,10 +715,6 @@ Tech.withSourceHandlers(Dash);
  */
 Dash.nativeSourceHandler = {};
 
-Dash.prototype.isReady_ = false;
-
-Dash.prototype.triggerReady = function () {};
-
 Dash.prototype['featuresNativeTextTracks'] = false;
 /*
  * Sets the tech's status on native audio track support
@@ -813,11 +817,6 @@ Dash.qualityLabels = ['bas', 'moyen', 'normal', 'HD', 'Full HD'];
  * @param  {Flash} tech   The instance of the Flash tech
  */
 Dash.nativeSourceHandler.handleSource = function (source, tech) {
-  if (!tech.isReady_) {
-    return tech.ready(function () {
-      tech.src(source.src);
-    });
-  }
   tech.src(source.src);
 };
 

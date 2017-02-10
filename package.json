@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.43",
+  "version": "2.2.44",
   "description": "Player afrostream",
   "main": "es5/js/afrostream.js",
   "scripts": {
