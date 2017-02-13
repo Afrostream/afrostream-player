@@ -6,6 +6,8 @@ import videojs from 'video.js'
 import Dash from './dash'
 import { MediaPlayer } from 'dashjs'
 
+import DashjsWrapper from 'streamroot-dashjs-p2p-wrapper'
+
 const Component = videojs.getComponent('Component')
 const Tech = videojs.getComponent('Tech')
 
@@ -74,16 +76,16 @@ class Streamroot extends Dash {
   }
 
   get libLoaded () {
-    return window.DashjsWrapper
+    return DashjsWrapper
   }
 
   set libLoaded (loaded) {
-    this.libLoaded_ = window.DashjsWrapper || loaded
+    this.libLoaded_ = DashjsWrapper || loaded
   }
 }
 
 Streamroot.prototype.options_ = videojs.mergeOptions(Dash.prototype.options_, {
-  lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js',
+  //lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js',
   p2pConfig: {
     streamrootKey: 'none',
     debug: true

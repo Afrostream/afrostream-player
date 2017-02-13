@@ -18,6 +18,10 @@ var _dash2 = _interopRequireDefault(_dash);
 
 var _dashjs = require('dashjs');
 
+var _streamrootDashjsP2pWrapper = require('streamroot-dashjs-p2p-wrapper');
+
+var _streamrootDashjsP2pWrapper2 = _interopRequireDefault(_streamrootDashjsP2pWrapper);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -70,7 +74,7 @@ var Streamroot = function (_Dash) {
         // But make a fresh MediaPlayer each time the sourceHandler is used
         this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
         this.initYoubora();
-        this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30);
+        this.dashjsWrapper_ = new _streamrootDashjsP2pWrapper2.default(this.mediaPlayer_, this.options_.p2pConfig, 30);
         // Apply any options that are set
         this.mediaPlayer_.initialize();
         this.mediaPlayer_.setLimitBitrateByPortal(this.options_.limitBitrateByPortal);
@@ -107,10 +111,10 @@ var Streamroot = function (_Dash) {
   }, {
     key: 'libLoaded',
     get: function get() {
-      return window.DashjsWrapper;
+      return _streamrootDashjsP2pWrapper2.default;
     },
     set: function set(loaded) {
-      this.libLoaded_ = window.DashjsWrapper || loaded;
+      this.libLoaded_ = _streamrootDashjsP2pWrapper2.default || loaded;
     }
   }]);
 
@@ -118,7 +122,7 @@ var Streamroot = function (_Dash) {
 }(_dash2.default);
 
 Streamroot.prototype.options_ = _video2.default.mergeOptions(_dash2.default.prototype.options_, {
-  lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js',
+  //lib: '//cdn.streamroot.io/dashjs-p2p-wrapper/stable/dashjs-p2p-wrapper.js',
   p2pConfig: {
     streamrootKey: 'none',
     debug: true

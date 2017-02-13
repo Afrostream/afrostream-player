@@ -428,21 +428,37 @@ class Dash extends Html5 {
     return keySystemOptions
   }
 
-  textTracks () {
-    return this.el_.textTracks || super.textTracks()
-  }
 
   onTextTracksAdded (e) {
     const tracks = e.tracks || this.mediaPlayer_.getTracksFor('text')
     if (tracks) {
       const plTracks = this.textTracks()
       var l = tracks.length, track, plTrack
+      //if (plTracks.length != l) {
+      //  while (this.el_.firstChild) {
+      //    this.el_.removeChild(this.el_.firstChild)
+      //  }
+      //}
+
       for (var i = 0; i < l; i++) {
         track = tracks[i]
         track.label = track.label || track.lang
         track.kind = 'captions'
-        plTrack = plTracks[i]
         track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang
+        plTrack = plTracks[i]
+        //if (!plTrack) {
+        //  plTrack = this.addTextTrack(track.kind, track.label, track.lang)
+        //  if (!track.src && track.captionData) {
+        //    track.captionData.forEach((cue) => {
+        //      const Cue = window.VTTCue || window.TextTrackCue
+        //      const newCue = new Cue(cue.start, cue.end, cue.data)
+        //      plTrack.addCue(newCue)
+        //    })
+        //  }
+        //  plTracks.addTrack_(plTrack)
+        //  plTracks.mode = track.defaultTrack ? 'showing' : 'hidden'
+        //  track.mode = 'hidden'
+        //}
         if (track.defaultTrack) {
           this.mediaPlayer_.setTextTrack(track.index)
           if (plTrack) {
