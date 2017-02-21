@@ -221,6 +221,11 @@ var Dash = function (_Html) {
         this.mediaPlayer_.setAutoPlay(false);
       }
 
+      this.options_.inititalMediaSettings.text.lang = this.options_.inititalMediaSettings.text.lang && this.options_.inititalMediaSettings.text.lang.slice(0, 2);
+      this.options_.inititalMediaSettings.audio.lang = this.options_.inititalMediaSettings.audio.lang && this.options_.inititalMediaSettings.audio.lang.slice(0, 2);
+      this.options_.inititalMediaSettings.video.lang = this.options_.inititalMediaSettings.video.lang && this.options_.inititalMediaSettings.video.lang.slice(0, 2);
+
+      this.mediaPlayer_.setInitialMediaSettingsFor('text', this.options_.inititalMediaSettings.text);
       this.mediaPlayer_.setInitialMediaSettingsFor('audio', this.options_.inititalMediaSettings.audio);
       this.mediaPlayer_.setInitialMediaSettingsFor('video', this.options_.inititalMediaSettings.video);
       this.mediaPlayer_.setTrackSwitchModeFor('audio', this.options_.trackSwitchMode); //alwaysReplace
@@ -280,16 +285,21 @@ var Dash = function (_Html) {
 
       var i = void 0;
 
+      var initAudioLang = this.options_.inititalMediaSettings.audio.lang && this.options_.inititalMediaSettings.audio.lang.slice(0, 2);
+
       for (i = 0; i < audioDashTracks.length; i++) {
         var track = audioDashTracks[i];
         track.label = track.label || track.lang;
         var plTrack = this.addAudioTrack('main', track.label, track.lang);
-        plTrack.enabled = plTrack['language'] === (defaultAudio && defaultAudio.lang.indexOf(this.options_.inititalMediaSettings.audio.lang) && defaultAudio.lang || this.options_.inititalMediaSettings.audio.lang);
+        plTrack.enabled = plTrack['language'] === (defaultAudio && ~defaultAudio.lang.indexOf(initAudioLang) && defaultAudio.lang || initAudioLang);
+        if (plTrack.enabled) {
+          this.mediaPlayer_.setCurrentTrack(track);
+        }
       }
 
       for (i = 0; i < bitrates.length; i++) {
         var bitrate = bitrates[i];
-        var bandwidth = bitrate.bitrate;
+        var bandwidth = bitrate.bitrate / 1000;
         var qualityIndex = bitrate.qualityIndex;
         var label = Dash.qualityLabels[qualityIndex] || bandwidth;
         var bitRateTrack = this.addVideoTrack('main', label, bandwidth);
@@ -489,12 +499,13 @@ var Dash = function (_Html) {
         //    this.el_.removeChild(this.el_.firstChild)
         //  }
         //}
+        var defaultTrackFounded = false;
 
         for (var i = 0; i < l; i++) {
           track = tracks[i];
           track.label = track.label || track.lang;
           track.kind = 'captions';
-          track.defaultTrack = track.lang === this.options_.inititalMediaSettings.text.lang;
+          track.defaultTrack = ~track.lang.indexOf(this.options_.inititalMediaSettings.text.lang);
           plTrack = plTracks[i];
           //if (!plTrack) {
           //  plTrack = this.addTextTrack(track.kind, track.label, track.lang)
@@ -509,12 +520,17 @@ var Dash = function (_Html) {
           //  plTracks.mode = track.defaultTrack ? 'showing' : 'hidden'
           //  track.mode = 'hidden'
           //}
-          if (track.defaultTrack) {
-            this.mediaPlayer_.setTextTrack(track.index);
-            if (plTrack) {
-              plTrack.mode = 'showing';
-            }
+          if (plTrack) {
+            plTrack.mode = track.defaultTrack ? 'showing' : 'hidden';
           }
+          if (track.defaultTrack) {
+            defaultTrackFounded = true;
+            this.mediaPlayer_.setTextTrack(track.index);
+          }
+        }
+
+        if (!defaultTrackFounded) {
+          this.mediaPlayer_.setTextTrack(-1);
         }
       }
     }
