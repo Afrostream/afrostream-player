@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.3.0
+ * @version 2.3.1
  * @copyright 2017 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -1473,7 +1473,7 @@ var Dash = function (_Html) {
     value: function initYoubora() {
       //init youbora
       // Plugin initialization must come right after the player initialization
-      if ($YB) {
+      if ($YB && this.options_.youbora) {
         // if youbora is correctly loaded
         try {
           var youbora = new $YB.plugins.Dashjs(this.mediaPlayer_, this.options_.youbora);
@@ -53208,7 +53208,7 @@ arguments[4][184][0].apply(exports,arguments)
 },{"dup":184}],186:[function(require,module,exports){
 module.exports={
   "name": "afrostream-player",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Player afrostream",
   "main": "es5/js/afrostream.js",
   "scripts": {

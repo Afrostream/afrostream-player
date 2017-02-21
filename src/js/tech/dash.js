@@ -116,7 +116,7 @@ class Dash extends Html5 {
   initYoubora () {
     //init youbora
     // Plugin initialization must come right after the player initialization
-    if ($YB) { // if youbora is correctly loaded
+    if ($YB && this.options_.youbora) { // if youbora is correctly loaded
       try {
         const youbora = new $YB.plugins.Dashjs(this.mediaPlayer_, this.options_.youbora);
       } catch (err) {
