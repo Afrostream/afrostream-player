@@ -1,6 +1,6 @@
 {
   "name": "afrostream-player",
-  "version": "2.2.46",
+  "version": "2.2.47",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9"
@@ -5483,7 +5483,7 @@
       "version": "1.1.0"
     },
     "codem-isoboxer": {
-      "version": "0.2.2"
+      "version": "0.2.7"
     },
     "combine-source-map": {
       "version": "0.6.1",
@@ -5665,7 +5665,7 @@
       }
     },
     "dashjs": {
-      "version": "2.3.0"
+      "version": "2.4.1"
     },
     "date-now": {
       "version": "0.1.4"
@@ -10151,7 +10151,7 @@
       }
     },
     "streamroot-dashjs-p2p-wrapper": {
-      "version": "1.8.7"
+      "version": "1.10.2"
     },
     "string_decoder": {
       "version": "0.10.31"
