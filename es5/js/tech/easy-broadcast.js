@@ -68,7 +68,6 @@ var EasyBroadcast = function (_Dash) {
 
       if (this.libLoaded) {
         this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
-        this.initYoubora();
       }
 
       _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);

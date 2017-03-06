@@ -39,7 +39,6 @@ class Streamroot extends Dash {
     if (this.libLoaded) {
       // But make a fresh MediaPlayer each time the sourceHandler is used
       this.mediaPlayer_ = MediaPlayer(this.context_).create()
-      this.initYoubora()
       this.dashjsWrapper_ = new DashjsWrapper(this.mediaPlayer_, this.options_.p2pConfig, 30)
       // Apply any options that are set
       this.mediaPlayer_.initialize()

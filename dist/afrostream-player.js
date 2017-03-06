@@ -1,6 +1,6 @@
 /**
  * afrostream-player
- * @version 2.3.2
+ * @version 2.3.3
  * @copyright 2017 Afrostream, Inc.
  * @license Apache-2.0
  */
@@ -1468,20 +1468,6 @@ var Dash = function (_Html) {
       }
       _get(Object.getPrototypeOf(Dash.prototype), 'setCurrentTime', this).call(this, seconds);
     }
-  }, {
-    key: 'initYoubora',
-    value: function initYoubora() {
-      //init youbora
-      // Plugin initialization must come right after the player initialization
-      if ($YB && this.options_.youbora) {
-        // if youbora is correctly loaded
-        try {
-          var youbora = new $YB.plugins.Dashjs(this.mediaPlayer_, this.options_.youbora);
-        } catch (err) {
-          console.log('Youbora init plugin error', err);
-        }
-      }
-    }
 
     /**
      * Set video
@@ -1506,7 +1492,6 @@ var Dash = function (_Html) {
         // But make a fresh MediaPlayer each time the sourceHandler is used
         this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
 
-        this.initYoubora();
         // Must run controller before these two lines or else there is no
         // element to bind to.
         this.mediaPlayer_.initialize();
@@ -2699,7 +2684,6 @@ var EasyBroadcast = function (_Dash) {
 
       if (this.libLoaded) {
         this.mediaPlayer_ = new DashEB.MediaPlayer(this.el_, _src, true);
-        this.initYoubora();
       }
 
       _get(Object.getPrototypeOf(EasyBroadcast.prototype), 'src', this).call(this, _src);
@@ -2992,7 +2976,6 @@ var Streamroot = function (_Dash) {
       if (this.libLoaded) {
         // But make a fresh MediaPlayer each time the sourceHandler is used
         this.mediaPlayer_ = (0, _dashjs.MediaPlayer)(this.context_).create();
-        this.initYoubora();
         this.dashjsWrapper_ = new _streamrootDashjsP2pWrapper2.default(this.mediaPlayer_, this.options_.p2pConfig, 30);
         // Apply any options that are set
         this.mediaPlayer_.initialize();
@@ -53224,7 +53207,7 @@ arguments[4][184][0].apply(exports,arguments)
 },{"dup":184}],186:[function(require,module,exports){
 module.exports={
   "name": "afrostream-player",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "Player afrostream",
   "main": "es5/js/afrostream.js",
   "scripts": {

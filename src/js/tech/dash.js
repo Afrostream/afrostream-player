@@ -113,18 +113,6 @@ class Dash extends Html5 {
     super.setCurrentTime(seconds)
   }
 
-  initYoubora () {
-    //init youbora
-    // Plugin initialization must come right after the player initialization
-    if ($YB && this.options_.youbora) { // if youbora is correctly loaded
-      try {
-        const youbora = new $YB.plugins.Dashjs(this.mediaPlayer_, this.options_.youbora);
-      } catch (err) {
-        console.log('Youbora init plugin error', err)
-      }
-    }
-  }
-
   /**
    * Set video
    *
@@ -145,7 +133,6 @@ class Dash extends Html5 {
       // But make a fresh MediaPlayer each time the sourceHandler is used
       this.mediaPlayer_ = MediaPlayer(this.context_).create()
 
-      this.initYoubora()
       // Must run controller before these two lines or else there is no
       // element to bind to.
       this.mediaPlayer_.initialize()
