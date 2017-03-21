@@ -12,10 +12,6 @@ var _video = require('video.js');
 
 var _video2 = _interopRequireDefault(_video);
 
-var _audioTrackMenuItem = require('./audio-track-menu-item');
-
-var _audioTrackMenuItem2 = _interopRequireDefault(_audioTrackMenuItem);
-
 require('./off-audio-track-menu-item');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -28,11 +24,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @file audio-track-button.js
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
+//import AudioTrackMenuItem from './audio-track-menu-item';
+
 
 var Component = _video2.default.getComponent('Component');
 var ControlBar = _video2.default.getComponent('ControlBar');
-var MenuButton = _video2.default.getComponent('MenuButton');
-var MenuItem = _video2.default.getComponent('MenuItem');
+var TrackButton = _video2.default.getComponent('TrackButton');
+var AudioTrackMenuItem = _video2.default.getComponent('AudioTrackMenuItem');
 
 /**
  * The base class for buttons that toggle specific audio track types (e.g. description)
@@ -43,29 +41,14 @@ var MenuItem = _video2.default.getComponent('MenuItem');
  * @class AudioTrackButton
  */
 
-var AudioTrackButton = function (_MenuButton) {
-  _inherits(AudioTrackButton, _MenuButton);
+var AudioTrackButton = function (_TrackButton) {
+  _inherits(AudioTrackButton, _TrackButton);
 
   function AudioTrackButton(player, options) {
     _classCallCheck(this, AudioTrackButton);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AudioTrackButton).call(this, player, options));
-
-    var tracks = _this.player_.audioTracks();
-
-    if (!tracks) {
-      return _possibleConstructorReturn(_this);
-    }
-
-    var updateHandler = _this.update.bind(_this);
-    tracks.addEventListener('removetrack', updateHandler);
-    tracks.addEventListener('addtrack', updateHandler);
-
-    _this.player_.on('dispose', function () {
-      tracks.removeEventListener('removetrack', updateHandler);
-      tracks.removeEventListener('addtrack', updateHandler);
-    });
-    return _this;
+    options.tracks = player.audioTracks();
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(AudioTrackButton).call(this, player, options));
   }
 
   /**
@@ -88,41 +71,53 @@ var AudioTrackButton = function (_MenuButton) {
     key: 'createItems',
     value: function createItems() {
       var items = [];
-      items.push(new MenuItem(this.player_, {
-        label: this.controlText_,
-        selectable: false
-      }));
+      // if there's only one audio track, there no point in showing it
+      this.hideThreshold_ = 1;
 
       var tracks = this.player_.audioTracks();
-
-      if (!tracks) {
-        return items;
-      }
-
-      if (tracks.length < 2) {
-        this.hide();
-        return items;
-      }
 
       for (var i = 0; i < tracks.length; i++) {
         var track = tracks[i];
 
-        // only add tracks that are of the appropriate kind and have a label
-        if (track['kind'] === 'main') {
-          items.push(new _audioTrackMenuItem2.default(this.player_, {
-            // MenuItem is selectable
-            'selectable': true,
-            'track': track
-          }));
-        }
+        items.push(new AudioTrackMenuItem(this.player_, {
+          track: track,
+          // MenuItem is selectable
+          selectable: true
+        }));
       }
 
       return items;
+
+      /*let items = []
+      items.push(new AudioTrackMenuItem(this.player_, {
+        label: this.controlText_,
+        selectable: false
+      }))
+       let tracks = this.player_.audioTracks()
+       if (!tracks) {
+        return items
+      }
+       if (tracks.length < 2) {
+        this.hide()
+        return items
+      }
+       for (let i = 0; i < tracks.length; i++) {
+        let track = tracks[i]
+         // only add tracks that are of the appropriate kind and have a label
+        if (track['kind'] === 'main') {
+          items.push(new AudioTrackMenuItem(this.player_, {
+            // MenuItem is selectable
+            'selectable': true,
+            'track': track
+          }))
+        }
+      }
+       return items*/
     }
   }]);
 
   return AudioTrackButton;
-}(MenuButton);
+}(TrackButton);
 
 AudioTrackButton.prototype.kind_ = 'audio';
 AudioTrackButton.prototype.controlText_ = 'Audio Selection';

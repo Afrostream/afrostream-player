@@ -2,13 +2,13 @@
  * @file audio-track-button.js
  */
 import videojs from 'video.js';
-import AudioTrackMenuItem from './audio-track-menu-item';
+//import AudioTrackMenuItem from './audio-track-menu-item';
 import './off-audio-track-menu-item'
 
 const Component = videojs.getComponent('Component')
 const ControlBar = videojs.getComponent('ControlBar')
-const MenuButton = videojs.getComponent('MenuButton')
-const MenuItem = videojs.getComponent('MenuItem')
+const TrackButton = videojs.getComponent('TrackButton')
+const AudioTrackMenuItem = videojs.getComponent('AudioTrackMenuItem')
 
 /**
  * The base class for buttons that toggle specific audio track types (e.g. description)
@@ -18,25 +18,11 @@ const MenuItem = videojs.getComponent('MenuItem')
  * @extends MenuButton
  * @class AudioTrackButton
  */
-class AudioTrackButton extends MenuButton {
+class AudioTrackButton extends TrackButton {
 
   constructor (player, options) {
+    options.tracks = player.audioTracks();
     super(player, options)
-
-    let tracks = this.player_.audioTracks()
-
-    if (!tracks) {
-      return
-    }
-
-    let updateHandler = ::this.update
-    tracks.addEventListener('removetrack', updateHandler)
-    tracks.addEventListener('addtrack', updateHandler)
-
-    this.player_.on('dispose', function () {
-      tracks.removeEventListener('removetrack', updateHandler)
-      tracks.removeEventListener('addtrack', updateHandler)
-    })
   }
 
   /**
@@ -52,7 +38,25 @@ class AudioTrackButton extends MenuButton {
   // Create a menu item for each text track
   createItems () {
     let items = []
-    items.push(new MenuItem(this.player_, {
+    // if there's only one audio track, there no point in showing it
+    this.hideThreshold_ = 1;
+
+    const tracks = this.player_.audioTracks();
+
+    for (let i = 0; i < tracks.length; i++) {
+      const track = tracks[i];
+
+      items.push(new AudioTrackMenuItem(this.player_, {
+        track,
+        // MenuItem is selectable
+        selectable: true
+      }));
+    }
+
+    return items;
+
+    /*let items = []
+    items.push(new AudioTrackMenuItem(this.player_, {
       label: this.controlText_,
       selectable: false
     }))
@@ -81,7 +85,7 @@ class AudioTrackButton extends MenuButton {
       }
     }
 
-    return items
+    return items*/
   }
 
 }

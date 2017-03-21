@@ -49,4 +49,13 @@ Object.defineProperty(exports, 'MouseThumbnailDisplay', {
   }
 });
 
+var _audioTrackButton = require('./track-controls/audio-track-button');
+
+Object.defineProperty(exports, 'AudioTrackButton', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_audioTrackButton).default;
+  }
+});
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
