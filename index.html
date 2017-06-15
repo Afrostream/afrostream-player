@@ -73,6 +73,7 @@
   var token;
   var url;
   var bola;
+  var tag;
   var captions;
   var dashOpts;
 
@@ -226,7 +227,7 @@
   };
   var generateDomPlayer = function (opts) {
     var container = document.getElementById('video-container');
-    var video = document.createElement('video');
+    var video = document.createElement(tag);
 
     video.id = 'player';
     video.className = 'video-js vjs-afrostream-skin';
@@ -491,6 +492,7 @@
 
   techOrder = qs.tech ? qs.tech.split(',') : ['dash', 'html5', 'youtube', 'soundcloud'];
   muted = qs.muted ? qs.muted : false;
+  tag = qs.tag ? qs.tag : 'video';
   drm = qs.drm ? qs.drm : false;
   userId = qs.userId ? qs.userId : 12345;
   token = qs.token ? qs.token : 'faketoken';
