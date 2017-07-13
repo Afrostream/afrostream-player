@@ -150,7 +150,7 @@
   "peerDependencies": {},
   "private": true,
   "engines": {
-    "node": "6.9.1",
+    "node": "6.11.1",
     "npm": "3.10.7"
   }
 }
